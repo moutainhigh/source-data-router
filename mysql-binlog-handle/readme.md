@@ -1,0 +1,1 @@
+从 kafka 中读取 binlog 数据，如为订单商品数据，则根据 userid sku 去 redis 中查询埋点加购事件数据

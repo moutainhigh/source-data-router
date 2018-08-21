@@ -1,0 +1,176 @@
+package com.globalegrow.dy.service.impl;
+
+import com.globalegrow.dy.dto.BtsReportParameterDto;
+import com.globalegrow.dy.dto.KylinBtsReportDto;
+import com.globalegrow.dy.dto.ReportPageDto;
+import com.globalegrow.dy.enums.BtsQueryConditions;
+import com.globalegrow.dy.model.BtsReportKylinConfig;
+import com.globalegrow.dy.service.BtsReportConfigService;
+import com.globalegrow.dy.service.BtsReportService;
+import com.google.gson.JsonObject;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.text.StringSubstitutor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+@Service
+public class BtsReportServiceImpl implements BtsReportService {
+
+    private final Logger logger = LoggerFactory.getLogger(getClass());
+
+    @Autowired
+    private BtsReportConfigService btsReportConfigService;
+
+    @Autowired
+    private RestTemplate restTemplate;
+
+    @Override
+    public ReportPageDto<Map<String, Object>> btsReport(BtsReportParameterDto btsReportParameterDto) {
+        ReportPageDto<Map<String, Object>> mapReportPageDto = new ReportPageDto<>();
+        mapReportPageDto.setCurrentPage(btsReportParameterDto.getStartPage());
+        mapReportPageDto.setPageSize(btsReportParameterDto.getPageSize());
+        BtsReportKylinConfig btsReportKylinConfig = this.btsReportConfigService.getConfigByBtsPlanId(btsReportParameterDto.getPlanId());
+        if (btsReportKylinConfig != null) {
+            this.logger.debug("bts report config info: {}", btsReportKylinConfig);
+            String sourceSql = btsReportKylinConfig.getKylinQuerySql();
+            Map valuesMap = new HashMap();
+            this.logger.debug("处理分组");
+            if (btsReportParameterDto.getGroupByFields().size() > 0) {
+                List<String> groups = btsReportParameterDto.getGroupByFields();
+                this.logger.debug("根据传入分组条件设置");
+                StringBuilder stringBuilder = new StringBuilder();
+                if (groups.size() == 1) {
+                    stringBuilder.append(groups.get(0));
+                }else {
+                    for (int i = 0; i < groups.size(); i++) {
+                        if (i == 0) {
+                            stringBuilder.append(groups.get(i));
+                        }else {
+                            stringBuilder.append("," + groups.get(i));
+                        }
+                    }
+                }
+                valuesMap.put(BtsQueryConditions.groupByFields.name(), stringBuilder.toString());
+            }else {
+                this.logger.debug("默认分组");
+                valuesMap.put(BtsQueryConditions.groupByFields.name(), " day_start,bts_plan_id,bts_version_id,bts_bucket_id ");
+            }
+            this.logger.debug("处理 where 条件");
+            StringBuilder where = new StringBuilder();
+            if (btsReportParameterDto.getBetweenFields().size() > 0) {
+                this.logger.debug("处理 between and 条件");
+                Map<String, Map<String, String>> between = btsReportParameterDto.getBetweenFields();
+                between.entrySet().forEach(entry -> {
+                    where.append(entry.getKey() + " between '" + entry.getValue().get("min") + "' and '" + entry.getValue().get("max") + "'");
+                });
+            }
+            if (btsReportParameterDto.getWhereFields().size() > 0) {
+                this.logger.debug("处理 where value = 条件");
+                Map<String, String> whereCondition = btsReportParameterDto.getWhereFields();
+
+                whereCondition.entrySet().forEach(entry -> {
+                    if ("day_start".equals(entry.getKey())) {
+                        this.logger.debug("between 日期类型处理");
+                        if (StringUtils.isNotEmpty(where.toString())) {
+                            where.append(" and " + entry.getKey() + "= date '" + entry.getValue() + "' ");
+                        }else {
+                            where.append(" " + entry.getKey() + "= date '" + entry.getValue() + "' ");
+                        }
+                    }else {
+                        if (StringUtils.isNotEmpty(where.toString())) {
+                            where.append(" and " + entry.getKey() + "= '" + entry.getValue() + "' ");
+                        }else {
+                            where.append(" " + entry.getKey() + "= '" + entry.getValue() + "' ");
+                        }
+                    }
+                });
+
+            }
+            valuesMap.put(BtsQueryConditions.whereFields.name(), where.toString());
+
+            this.logger.debug("处理排序字段");
+            StringBuilder orderBy = new StringBuilder();
+            if (btsReportParameterDto.getOrderFields().size() > 0) {
+                int i = 0;
+                btsReportParameterDto.getOrderFields().entrySet().forEach(entry -> {
+                    if (i == 0) {
+                        orderBy.append(" " + entry.getKey() + " " + entry.getValue());
+                    }else {
+                        orderBy.append(", " + entry.getKey() + " " + entry.getValue());
+                    }
+                });
+
+            }else {
+                orderBy.append(" day_start desc ");
+            }
+
+            valuesMap.put(BtsQueryConditions.orderByFields.name(), orderBy.toString());
+
+            this.logger.debug("组装 sql");
+            StringSubstitutor sub = new StringSubstitutor(valuesMap);
+            String resolvedString = sub.replace(sourceSql);
+            this.logger.debug("请求 kylin 服务端, url: {}, sql: {}", btsReportKylinConfig.getKylinQueryAdress(), resolvedString);
+            Map<String, Object> postParameters = new HashMap<>();
+            postParameters.put("project", btsReportKylinConfig.getKylinProjectName());
+            postParameters.put("sql", resolvedString);
+            if (btsReportParameterDto.getStartPage() == 0) {
+                this.logger.debug("不分页请求");
+            }else {
+                this.logger.debug("分页请求");
+                postParameters.put("limit", btsReportParameterDto.getPageSize());
+                postParameters.put("offset", (btsReportParameterDto.getStartPage() - 1) * btsReportParameterDto.getPageSize());
+            }
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.add("Content-Type", "application/json;charset=UTF-8");
+            headers.add("Authorization", btsReportKylinConfig.getKylinUserNamePassword());
+            HttpEntity<Map<String, Object>> params = new HttpEntity<>(postParameters, headers);
+            Map<String, Object> result = this.restTemplate.postForObject(btsReportKylinConfig.getKylinQueryAdress(), params, Map.class);
+            this.logger.debug("报表返回结果: {}", result);
+            List<Map<String, Object>> columnMetas = (List<Map<String, Object>>) result.get("columnMetas");
+            List<List<Object>> data = (List<List<Object>>) result.get("results");
+            data.forEach(report -> {
+                Map<String, Object> reportData = new HashMap<>();
+                for (int i = 0; i < report.size(); i++) {
+                    reportData.put(String.valueOf(columnMetas.get(i).get("label")), report.get(i));
+                }
+                mapReportPageDto.getData().add(reportData);
+            });
+            if (btsReportParameterDto.getStartPage() > 0) {
+                this.logger.debug("请求总条数");
+                String countSql = "select count(*) from (" + resolvedString + ")";
+                this.logger.debug("请求数据总数 sql: {}", countSql);
+                Map<String, Object> postParametersCount = new HashMap<>();
+                postParametersCount.put("project", btsReportKylinConfig.getKylinProjectName());
+                postParametersCount.put("sql", countSql);
+                postParametersCount.put("limit", 50000);
+                postParametersCount.put("offset", 0);
+                HttpEntity<Map<String, Object>> countParams = new HttpEntity<>(postParametersCount, headers);
+                Map<String, Object> countResult = this.restTemplate.postForObject(btsReportKylinConfig.getKylinQueryAdress(), countParams, Map.class);
+                this.logger.debug("count 请求返回结果: {}", countResult);
+                if (countResult != null) {
+                    List<List<Object>> countResultValues = (List<List<Object>>) countResult.get("results");
+                    this.logger.debug("count result: {}", countResultValues);
+                    String count = String.valueOf(countResultValues.get(0).get(0));
+                    if (StringUtils.isNotBlank(count)) {
+                        Long totalCount = Long.valueOf(count);
+                        this.logger.debug("total count: {}", totalCount);
+                        mapReportPageDto.setTotalCount(totalCount);
+                        mapReportPageDto.setTotalPage(totalCount%mapReportPageDto.getPageSize() == 0? totalCount/mapReportPageDto.getPageSize(): (totalCount/mapReportPageDto.getPageSize() + 1));
+                    }
+                }
+            }
+
+        }
+        return mapReportPageDto;
+    }
+}

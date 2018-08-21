@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.globalegrow.mapper.ProductMapper">
+
+	<resultMap type="com.globalegrow.bean.ProductInfo"
+		id="productInfoMap">
+		<id column="id" property="id" jdbcType="BIGINT" />
+		<result column="sku" property="goods_sn" jdbcType="VARCHAR" />
+		<result column="spu" property="product_sn" jdbcType="VARCHAR" />
+		<result column="product_name" property="product_name"
+			jdbcType="VARCHAR" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		id, sku, spu, product_name
+	</sql>
+	<select id="getProductInfo" resultMap="productInfoMap">
+		select
+		<include refid="Base_Column_List" />
+		from p_product_base_info
+		where sku = #{sku}
+	</select>
+
+
+	<insert id="saveProductInfo"
+		parameterType="com.globalegrow.bean.ProductInfo" keyProperty="id"
+		useGeneratedKeys="true">
+		insert p_product_base_info
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="goods_sn != null">
+				sku,
+			</if>
+			<if test="product_sn != null">
+				spu,
+			</if>
+			<if test="catalog_id != null">
+				catalog_id,
+			</if>
+			<if test="product_name != null">
+				product_name,
+			</if>
+			<if test="brand_code != null">
+				brand_code,
+			</if>
+			<if test="color != null">
+				color_en,
+			</if>
+			<if test="color_cn != null">
+				color_cn,
+			</if>
+			<if test="supplier_sn != null">
+				supplier_code,
+			</if>
+			<if test="researcher != null">
+				researcher,
+			</if>
+			<if test="goods_resource_status != null">
+				goods_resource_status,
+			</if>
+			<if test="sell_out != null">
+				sell_out,
+			</if>
+			<if test="shelf_time != null">
+				shelf_time,
+			</if>
+			<if test="purchase_price != null">
+				purchase_price,
+			</if>
+			<if test="sale_weight != null">
+				sale_weight,
+			</if>
+			<if test="img_original != null">
+				media_url,
+			</if>
+			<if test="create_time != null">
+				create_time,
+			</if>
+			<if test="updateDate != null">
+				update_time
+			</if>
+		</trim>
+
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="goods_sn != null">
+				#{goods_sn,jdbcType=VARCHAR},
+			</if>
+			<if test="product_sn != null">
+				#{product_sn,jdbcType=VARCHAR},
+			</if>
+			<if test="catalog_id != null">
+				#{catalog_id,jdbcType=BIGINT},
+			</if>
+			<if test="product_name != null">
+				#{product_name,jdbcType=VARCHAR},
+			</if>
+			<if test="brand_code != null">
+				#{brand_code,jdbcType=VARCHAR},
+			</if>
+			<if test="color != null">
+				#{color,jdbcType=VARCHAR},
+			</if>
+			<if test="color_cn != null">
+				#{color_cn,jdbcType=VARCHAR},
+			</if>
+			<if test="supplier_sn != null">
+				#{supplier_sn,jdbcType=VARCHAR},
+			</if>
+			<if test="researcher != null">
+				#{researcher,jdbcType=VARCHAR},
+			</if>
+			<if test="goods_resource_status != null">
+				#{goods_resource_status,jdbcType=TINYINT},
+			</if>
+			<if test="sell_out != null">
+				#{sell_out,jdbcType=TINYINT},
+			</if>
+			<if test="shelf_time != null">
+				#{shelf_time,jdbcType=VARCHAR},
+			</if>
+			<if test="purchase_price != null">
+				#{purchase_price,jdbcType=DOUBLE},
+			</if>
+			<if test="sale_weight != null">
+				#{sale_weight,jdbcType=DOUBLE},
+			</if>
+			<if test="img_original != null">
+				#{img_original,jdbcType=VARCHAR},
+			</if>
+			<if test="create_time != null">
+				#{create_time,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateDate != null">
+				#{updateDate,jdbcType=TIMESTAMP},
+			</if>
+		</trim>
+	</insert>
+
+	<update id="updateProductInfo"
+		parameterType="com.globalegrow.bean.ProductInfo">
+		update p_product_base_info
+		<set>
+			<if test="product_sn != null">
+				spu= #{product_sn,jdbcType=VARCHAR},
+			</if>
+			<if test="catalog_id != null">
+				catalog_id= #{catalog_id,jdbcType=BIGINT},
+			</if>
+			<if test="product_name != null">
+				product_name= #{product_name,jdbcType=VARCHAR},
+			</if>
+			<if test="brand_code != null">
+				brand_code= #{brand_code,jdbcType=VARCHAR},
+			</if>
+			<if test="color != null">
+				color_en= #{color,jdbcType=VARCHAR},
+			</if>
+			<if test="color_cn != null">
+				color_cn= #{color_cn,jdbcType=VARCHAR},
+			</if>
+			<if test="supplier_sn != null">
+				supplier_code= #{supplier_sn,jdbcType=VARCHAR},
+			</if>
+			<if test="researcher != null">
+				researcher= #{researcher,jdbcType=VARCHAR},
+			</if>
+			<if test="goods_resource_status != null">
+				goods_resource_status=
+				#{goods_resource_status,jdbcType=TINYINT},
+			</if>
+			<if test="sell_out != null">
+				sell_out= #{sell_out,jdbcType=TINYINT},
+			</if>
+			<if test="shelf_time != null">
+				shelf_time= #{shelf_time,jdbcType=VARCHAR},
+			</if>
+			<if test="purchase_price != null">
+				purchase_price= #{purchase_price,jdbcType=DOUBLE},
+			</if>
+			<if test="sale_weight != null">
+				sale_weight= #{sale_weight,jdbcType=DOUBLE},
+			</if>
+			<if test="img_original != null">
+				media_url= #{img_original,jdbcType=VARCHAR},
+			</if>
+			<if test="create_time != null">
+				create_time= #{create_time,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateDate != null">
+				update_time= #{updateDate,jdbcType=TIMESTAMP},
+			</if>
+		</set>
+		where id = #{id,jdbcType=BIGINT}
+	</update>
+
+</mapper>

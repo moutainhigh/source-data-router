@@ -1,0 +1,32 @@
+spring:
+  profiles:
+    active: @profiles.active@
+logging:
+  path: ./logs
+  file: log-source.log
+  level: info
+
+---
+spring:
+  profiles: test
+  kafka:
+    consumer:
+      bootstrap-servers: 172.18.0.2:9092
+      auto-offset-reset: earliest
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      group-id: dy_bts_topic_1_group
+
+datasource:
+  bts:
+    url: jdbc:mysql://172.31.24.20:3306/bts_kylin_report_test
+    driver-class-name: com.mysql.jdbc.Driver
+    username: root
+    password: Hqyg@123456
+  zaful:
+    url: jdbc:mysql://172.31.24.20:3306/bts_zaful_order
+    driver-class-name: com.mysql.jdbc.Driver
+    username: root
+    password: Hqyg@123456
+server:
+  port: 38083

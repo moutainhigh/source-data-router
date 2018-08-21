@@ -1,0 +1,107 @@
+spring:
+  profiles:
+    active:  @profiles.active@
+logging:
+  config: classpath:logback-spring.xml
+  path: logs
+  file: to-cookie_userid_rel.log
+  level:
+    root: info
+    org.springframework: ERROR
+
+---
+spring:
+  profiles: test
+  hbase:
+    zkServers: 172.18.0.2:2181
+  kafka:
+    consumer:
+      bootstrap-servers: 172.18.0.2:9092
+      auto-offset-reset: earliest
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      group-id: group-cu-rel
+  redis:
+    timeout: 86400
+    password: 6e1KWyC29w
+    sentinel:
+      master: sentinel-172.31.42.160-6383
+      nodes: 172.31.24.20:6383
+    #出现异常最大重试此时  
+    maxAttempts: 3
+    pool:
+      # 连接池最大连接数（使用负值表示没有限制）
+      max-active: 1000
+      # 连接池最大阻塞等待时间（使用负值表示没有限制）
+      max-wait: 3000
+      # 连接池中的最大空闲连接 
+      max-idle: 50
+      # 连接池中的最小空闲连接   
+      min-idle: 50   
+app:
+  kafka:
+    log-json-topic: kylin_bts_zaful_log_1
+  enable-junit: false
+  hbase:
+    query:
+       wait-seconds: 15
+       recent-time: 1h
+       compatible-time: 10s
+       
+redis:
+   bury-point-data:
+     expireSeconds: 86400
+     
+     
+server:
+  port: 38083
+  
+ 
+---
+spring:
+  profiles: prod
+  hbase:
+    zkServers: bts-master:2181,bts-masterbak:2181,bts-datanode01:2181,bts-datanode02:2181,bts-datanode03:2181,bts-datanode04:2181
+  kafka:
+    consumer:
+      #bootstrap-servers: 172.31.35.194:9092,172.31.50.250:9092,172.31.63.112:9092
+      auto-offset-reset: latest
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      group-id: group-cu-rel
+    bootstrap-servers: 172.31.35.194:9092,172.31.50.250:9092,172.31.63.112:9092
+  
+  redis:
+    timeout: 86400
+    password: 6e1KWyC29w
+    sentinel:
+      master: sentinel-172.31.42.160-6383
+      nodes: 172.31.34.55:6384,172.31.42.160:6384,172.31.54.133:6383
+    #出现异常最大重试此时  
+    maxAttempts: 3
+    pool:
+      # 连接池最大连接数（使用负值表示没有限制）
+      max-active: 1000
+      # 连接池最大阻塞等待时间（使用负值表示没有限制）
+      max-wait: 3000
+      # 连接池中的最大空闲连接 
+      max-idle: 50
+      # 连接池中的最小空闲连接   
+      min-idle: 50   
+app:
+  kafka:
+    log-json-topic: dy_zaful_bury_source_data
+  enable-junit: false
+  hbase:
+    query:
+       wait-seconds: 15
+       recent-time: 1h
+       compatible-time: 10s
+       
+redis:
+   bury-point-data:
+     expireSeconds: 172800
+     
+     
+server:
+  port: 38085

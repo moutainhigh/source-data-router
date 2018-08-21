@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper
+	namespace="com.globalegrow.ips.mapper.pdm.ProductCatalogMapper">
+
+	<resultMap type="com.globalegrow.ips.bean.ProductCatalog"
+		id="productCatalogMap">
+		<id column="id" property="catalogId" jdbcType="BIGINT" />
+		<result column="name_en" property="nameEn" jdbcType="VARCHAR" />
+		<result column="name_ch" property="nameCh" jdbcType="VARCHAR" />
+		<result column="path" property="path" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		id,name_en ,name_ch,path
+	</sql>
+	<select id="getProductCatalogs" resultMap="productCatalogMap" >
+		select
+		<include refid="Base_Column_List" />
+		from c_product_catalog
+		limit #{pstart},#{psize}
+	</select>
+
+      <select id="getProductCatalog" resultMap="productCatalogMap" >
+		select
+		<include refid="Base_Column_List" />
+		from c_product_catalog
+		where id=#{id}
+	</select>
+</mapper>
