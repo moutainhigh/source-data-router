@@ -30,6 +30,7 @@
     $KAFKA_HOME/bin/kafka-consumer-groups.sh --new-consumer --bootstrap-server 172.31.35.194:9092,172.31.50.250:9092,172.31.63.112:9092 --group mysql-bin-log-zaful --describe<br>
     $KAFKA_HOME/bin/kafka-consumer-groups.sh --new-consumer --bootstrap-server 172.31.35.194:9092,172.31.50.250:9092,172.31.63.112:9092 --group bts-log-dimensions_zafu_recommend --describe<br>
     $KAFKA_HOME/bin/kafka-console-consumer.sh --bootstrap-server 172.31.35.194:9092,172.31.50.250:9092,172.31.63.112:9092 --topic dy_bts_report_recommend_zaful --from-beginning<br>
+    $KAFKA_HOME/bin/kafka-console-consumer.sh --bootstrap-server 172.31.35.194:9092,172.31.50.250:9092,172.31.63.112:9092 --topic dy_bts_gb_gd_rec_report --from-beginning<br>
 ###6、cube <br>
 curl -X PUT --user ADMIN:KYLIN -H "Content-Type: application/json;charset=utf-8" -d '{ "sourceOffsetStart": 0, "sourceOffsetEnd": 9223372036854775807, "buildType": "BUILD"}' http://localhost:7070/kylin/api/cubes/pv_uv_test/build2 <br>
 ###7、sql
@@ -70,3 +71,8 @@ getengq
 cd /opt/cachecloud/bin/ <br>info<br>
 ./redis-cli -p 6383 -h 172.31.42.160<br>
 172.31.42.160:6383> auth 6e1KWyC29w<br>
+
+### GB db
+db_url=jdbc:mysql://169.60.204.58:3306/gb_order?tinyInt1isBit=false<br>
+db_user=etl_big<br>
+db_password=mPe@@1rYGUbV<br>

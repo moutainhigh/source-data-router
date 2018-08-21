@@ -31,4 +31,23 @@ public class BtsReportConfigServiceImpl implements BtsReportConfigService {
         }
         return null;
     }
+
+    /**
+     * 查询指定实验报表配置
+     *
+     * @param planId          实验id
+     * @param productLineCode 产品线
+     * @param queryType       查询类型
+     * @return
+     */
+    @Override
+    public BtsReportKylinConfig getBtsReportKylinConfig(Long planId, String productLineCode, String queryType) {
+        BtsReportKylinConfigExample example = new BtsReportKylinConfigExample();
+        example.createCriteria().andBtsPlanIdEqualTo(planId).andBtsProductLineCodeEqualTo(productLineCode).andQueryTypeEqualTo(queryType);
+        List<BtsReportKylinConfig> btsReportKylinConfigs = this.btsReportKylinConfigMapper.selectByExampleWithBLOBs(example);
+        if (btsReportKylinConfigs.size() > 0) {
+            return btsReportKylinConfigs.get(0);
+        }
+        return null;
+    }
 }

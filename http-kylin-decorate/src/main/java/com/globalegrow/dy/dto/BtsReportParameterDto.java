@@ -20,6 +20,26 @@ public class BtsReportParameterDto {
     private Integer startPage = 1;
     // 分页时，每页数据量
     private Integer pageSize = 10;
+    // 类型，query/export 查询 or 导出源数据
+    private String type;
+    // bts 产品线
+    private String productLineCode;
+
+    public String getProductLineCode() {
+        return productLineCode;
+    }
+
+    public void setProductLineCode(String productLineCode) {
+        this.productLineCode = productLineCode;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
 
     public Long getPlanId() {
         return planId;

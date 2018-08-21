@@ -4,7 +4,6 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
-import org.apache.ibatis.annotations.Param;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -30,22 +29,23 @@ public class SkuHandlerServiceImpl implements SkuHandlerService {
 	private IpsProductMapper ipsProductMapper;
 
 	@Override
+	@Transactional(value = "dyTransactionManager", propagation = Propagation.REQUIRED)
 	public void skuSpuSaveRedis() {
 		logger.info("dyTransactionManager beginnig!");
 		int pstart = 0;
-		int psize = 1000;
+		int psize = 500;
 		boolean isContinue = false;
 		do {
 			isContinue = false;
-			List<ProductBaseInfo> productBaseInfos = this.getProductBaseInfosServ(pstart, psize);
+			List<ProductBaseInfo> productBaseInfos = ipsProductMapper.getProductBaseInfos(pstart, psize);
 			if (productBaseInfos != null && !productBaseInfos.isEmpty()) {
 				isContinue = true;
 				for (ProductBaseInfo productBaseInfo : productBaseInfos) {
 					try {
 						String sku = productBaseInfo.getSku();
 						String spu = productBaseInfo.getSpu();
-						logger.info("skuSpuSaveRedis save" + sku);
-						SpringRedisUtil.put(IpsCatalogContant.P_SKU_PREFIX + sku, spu);
+//						System.out.println("+++++++++++++sku:"+sku);
+						SpringRedisUtil.put(IpsCatalogContant.P_SKU_PREFIX + sku, spu, expireSeconds);
 					} catch (Exception e) {
 						logger.error("skuSpuSaveRedis save fail!");
 					}
@@ -54,10 +54,5 @@ public class SkuHandlerServiceImpl implements SkuHandlerService {
 			}
 		} while (isContinue);
 
-	}
-
-	@Transactional(value = "dyTransactionManager", propagation = Propagation.REQUIRED)
-	public List<ProductBaseInfo> getProductBaseInfosServ(int pstart, int psize) {
-		return ipsProductMapper.getProductBaseInfos(pstart, psize);
 	}
 }

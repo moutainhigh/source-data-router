@@ -88,7 +88,6 @@ public class WebCatalogHandlerServiceImpl implements WebCatalogHandlerService {
 							webCatName.append(",");
 							webCatName.append(catNameMap.get(i));
 						}
-						logger.info("webCatalogNameSaveRedis :"+catalogId + webSiteCode);
 						SpringRedisUtil.put(IpsCatalogContant.WEB_CATALOG_PATH_PREFIX + catalogId + webSiteCode,
 								webCatName.toString(), expireSeconds);
 					} catch (Exception e) {

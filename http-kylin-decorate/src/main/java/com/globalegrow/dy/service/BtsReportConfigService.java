@@ -11,4 +11,12 @@ public interface BtsReportConfigService {
      */
     BtsReportKylinConfig getConfigByBtsPlanId(Long planId);
 
+    /**
+     * 查询指定实验报表配置
+     * @param planId 实验id
+     * @param productLineCode 产品线
+     * @param queryType 查询类型
+     * @return
+     */
+    BtsReportKylinConfig getBtsReportKylinConfig(Long planId, String productLineCode, String queryType);
 }

@@ -19,7 +19,7 @@ public class DyBeanUtils {
             // 去除class属性
             for (Object key : beanMap.keySet()) {
                 if (!"class".equals(key) && !"skip".equals(key)) {
-                    System.out.println(key);
+                    // System.out.println(key);
                     map.put(String.valueOf(key), beanMap.get(key));
                 }
             }

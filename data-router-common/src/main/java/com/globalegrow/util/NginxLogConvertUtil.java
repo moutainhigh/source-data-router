@@ -76,7 +76,7 @@ public class NginxLogConvertUtil {
                     if (key.startsWith("_ubc.gif?")) {
                         map.put(key.replace("_ubc.gif?", ""), URLDecoder.decode(p[1], "utf-8"));
                     }else {
-                        map.put(p[0], URLDecoder.decode(p[1], "utf-8"));
+                        map.put(p[0], valueHex(URLDecoder.decode(p[1], "utf-8")));
                     }
                 } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
@@ -84,5 +84,13 @@ public class NginxLogConvertUtil {
             }
         }
         return map;
+    }
+
+    private static Object valueHex(Object o) {
+        String s = String.valueOf(o);
+        if (StringUtils.isNotEmpty(s) && s.contains("\\x22")) {
+            return s.replaceAll("\\\\x22", "\"");
+        }
+        return o;
     }
 }

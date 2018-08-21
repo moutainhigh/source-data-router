@@ -70,15 +70,17 @@ public class GbCookieAndUserIdPersistence extends CommonLogConvert {
     }
 
     public void saveCookieAndUserRel(String logString) {
+        this.logger.debug("save_rel_source:{}" ,logString);
         Map<String, Object> logMap = this.logToMap(logString);
+        this.logger.debug("save_rel_map:{}" ,logMap);
         if (logMap != null && logMap.size() > 0) {
 
             String cookie = String.valueOf(logMap.get("glb_od"));
             String userId = String.valueOf(logMap.get("glb_u"));
             if (StringUtils.isNotBlank(cookie) && StringUtils.isNotBlank(userId) && !"null".equals(cookie) && !"null".equals(userId)) {
-                this.logger.debug("保存 cookie userid 的关系: {},{}", cookie, userId);
+                this.logger.debug("save_rel_hbase 保存 cookie userid 的关系: {},{}", cookie, userId);
                 Map<String, Object> data = new HashMap<>();
-                data.put("cookie", cookie);
+                //data.put("cookie", cookie);
                 data.put("userid", userId);
                 this.hbaseQuery.insertData(this.hbaseTableName, data, cookie,
                         this.columnFamily);

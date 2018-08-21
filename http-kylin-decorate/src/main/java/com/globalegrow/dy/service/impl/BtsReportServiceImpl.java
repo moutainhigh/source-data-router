@@ -32,70 +32,40 @@ public class BtsReportServiceImpl implements BtsReportService {
 
     @Autowired
     private RestTemplate restTemplate;
+    /**
+     * bts_plan_id,bts_version_id,bts_bucket_id
+     */
+    static final Map<String, String> BTS_FIELDS = new HashMap() {
+        {
+            put("bts_plan_id", "bts_planid");
+            put("bts_version_id", "bts_versionid");
+            put("bts_plan_id", "bts_bucketid");
+        }
+    };
+
+    static final Map<String, String> BTS_FIELDS_FLIP = new HashMap() {
+        {
+            put("bts_planid", "bts_plan_id");
+            put("bts_versionid", "bts_version_id");
+            put("bts_bucketid", "bts_bucket_id");
+        }
+    };
 
     @Override
     public ReportPageDto<Map<String, Object>> btsReport(BtsReportParameterDto btsReportParameterDto) {
         ReportPageDto<Map<String, Object>> mapReportPageDto = new ReportPageDto<>();
         mapReportPageDto.setCurrentPage(btsReportParameterDto.getStartPage());
         mapReportPageDto.setPageSize(btsReportParameterDto.getPageSize());
-        BtsReportKylinConfig btsReportKylinConfig = this.btsReportConfigService.getConfigByBtsPlanId(btsReportParameterDto.getPlanId());
+        //BtsReportKylinConfig btsReportKylinConfig = this.btsReportConfigService.getConfigByBtsPlanId(btsReportParameterDto.getPlanId());
+        BtsReportKylinConfig btsReportKylinConfig = this.btsReportConfigService.getBtsReportKylinConfig(btsReportParameterDto.getPlanId(), btsReportParameterDto.getProductLineCode(), btsReportParameterDto.getType());
         if (btsReportKylinConfig != null) {
             this.logger.debug("bts report config info: {}", btsReportKylinConfig);
             String sourceSql = btsReportKylinConfig.getKylinQuerySql();
             Map valuesMap = new HashMap();
             this.logger.debug("处理分组");
-            if (btsReportParameterDto.getGroupByFields().size() > 0) {
-                List<String> groups = btsReportParameterDto.getGroupByFields();
-                this.logger.debug("根据传入分组条件设置");
-                StringBuilder stringBuilder = new StringBuilder();
-                if (groups.size() == 1) {
-                    stringBuilder.append(groups.get(0));
-                }else {
-                    for (int i = 0; i < groups.size(); i++) {
-                        if (i == 0) {
-                            stringBuilder.append(groups.get(i));
-                        }else {
-                            stringBuilder.append("," + groups.get(i));
-                        }
-                    }
-                }
-                valuesMap.put(BtsQueryConditions.groupByFields.name(), stringBuilder.toString());
-            }else {
-                this.logger.debug("默认分组");
-                valuesMap.put(BtsQueryConditions.groupByFields.name(), " day_start,bts_plan_id,bts_version_id,bts_bucket_id ");
-            }
+            valuesMap.put(BtsQueryConditions.groupByFields.name(), this.groupFields(btsReportParameterDto, btsReportKylinConfig));
             this.logger.debug("处理 where 条件");
-            StringBuilder where = new StringBuilder();
-            if (btsReportParameterDto.getBetweenFields().size() > 0) {
-                this.logger.debug("处理 between and 条件");
-                Map<String, Map<String, String>> between = btsReportParameterDto.getBetweenFields();
-                between.entrySet().forEach(entry -> {
-                    where.append(entry.getKey() + " between '" + entry.getValue().get("min") + "' and '" + entry.getValue().get("max") + "'");
-                });
-            }
-            if (btsReportParameterDto.getWhereFields().size() > 0) {
-                this.logger.debug("处理 where value = 条件");
-                Map<String, String> whereCondition = btsReportParameterDto.getWhereFields();
-
-                whereCondition.entrySet().forEach(entry -> {
-                    if ("day_start".equals(entry.getKey())) {
-                        this.logger.debug("between 日期类型处理");
-                        if (StringUtils.isNotEmpty(where.toString())) {
-                            where.append(" and " + entry.getKey() + "= date '" + entry.getValue() + "' ");
-                        }else {
-                            where.append(" " + entry.getKey() + "= date '" + entry.getValue() + "' ");
-                        }
-                    }else {
-                        if (StringUtils.isNotEmpty(where.toString())) {
-                            where.append(" and " + entry.getKey() + "= '" + entry.getValue() + "' ");
-                        }else {
-                            where.append(" " + entry.getKey() + "= '" + entry.getValue() + "' ");
-                        }
-                    }
-                });
-
-            }
-            valuesMap.put(BtsQueryConditions.whereFields.name(), where.toString());
+            valuesMap.put(BtsQueryConditions.whereFields.name(), this.whereFields(btsReportParameterDto, btsReportKylinConfig));
 
             this.logger.debug("处理排序字段");
             StringBuilder orderBy = new StringBuilder();
@@ -104,12 +74,12 @@ public class BtsReportServiceImpl implements BtsReportService {
                 btsReportParameterDto.getOrderFields().entrySet().forEach(entry -> {
                     if (i == 0) {
                         orderBy.append(" " + entry.getKey() + " " + entry.getValue());
-                    }else {
+                    } else {
                         orderBy.append(", " + entry.getKey() + " " + entry.getValue());
                     }
                 });
 
-            }else {
+            } else {
                 orderBy.append(" day_start desc ");
             }
 
@@ -124,7 +94,7 @@ public class BtsReportServiceImpl implements BtsReportService {
             postParameters.put("sql", resolvedString);
             if (btsReportParameterDto.getStartPage() == 0) {
                 this.logger.debug("不分页请求");
-            }else {
+            } else {
                 this.logger.debug("分页请求");
                 postParameters.put("limit", btsReportParameterDto.getPageSize());
                 postParameters.put("offset", (btsReportParameterDto.getStartPage() - 1) * btsReportParameterDto.getPageSize());
@@ -141,7 +111,13 @@ public class BtsReportServiceImpl implements BtsReportService {
             data.forEach(report -> {
                 Map<String, Object> reportData = new HashMap<>();
                 for (int i = 0; i < report.size(); i++) {
-                    reportData.put(String.valueOf(columnMetas.get(i).get("label")), report.get(i));
+                    String label = String.valueOf(columnMetas.get(i).get("label"));
+                    if (label.startsWith("BTS_")) {
+                        if (btsReportKylinConfig.getKylinQuerySql().contains("BTS_RG_CART_REPORT") || btsReportKylinConfig.getKylinQuerySql().contains("BTS_ZAFUL_RECOMMEND_REPORT")) {
+                            label = BTS_FIELDS.get(label.toLowerCase()).toUpperCase();
+                        }
+                    }
+                    reportData.put(label, report.get(i));
                 }
                 mapReportPageDto.getData().add(reportData);
             });
@@ -165,7 +141,7 @@ public class BtsReportServiceImpl implements BtsReportService {
                         Long totalCount = Long.valueOf(count);
                         this.logger.debug("total count: {}", totalCount);
                         mapReportPageDto.setTotalCount(totalCount);
-                        mapReportPageDto.setTotalPage(totalCount%mapReportPageDto.getPageSize() == 0? totalCount/mapReportPageDto.getPageSize(): (totalCount/mapReportPageDto.getPageSize() + 1));
+                        mapReportPageDto.setTotalPage(totalCount % mapReportPageDto.getPageSize() == 0 ? totalCount / mapReportPageDto.getPageSize() : (totalCount / mapReportPageDto.getPageSize() + 1));
                     }
                 }
             }
@@ -173,4 +149,97 @@ public class BtsReportServiceImpl implements BtsReportService {
         }
         return mapReportPageDto;
     }
+
+    /**
+     * 分组条件处理
+     * BTS_RG_CART_REPORT,BTS_ZAFUL_RECOMMEND_REPORT，两张表的字段需特殊处理
+     *
+     * @param btsReportParameterDto
+     * @param btsReportKylinConfig
+     * @return
+     */
+    private String groupFields(BtsReportParameterDto btsReportParameterDto, BtsReportKylinConfig btsReportKylinConfig) {
+        if (btsReportParameterDto.getGroupByFields().size() > 0) {
+            List<String> groups = btsReportParameterDto.getGroupByFields();
+            this.logger.debug("根据传入分组条件设置");
+            StringBuilder stringBuilder = new StringBuilder();
+            if (groups.size() == 1) {
+                stringBuilder.append(this.compatibilityBtsFields(groups.get(0), btsReportKylinConfig));
+            } else {
+                for (int i = 0; i < groups.size(); i++) {
+                    if (i == 0) {
+                        stringBuilder.append(this.compatibilityBtsFields(groups.get(i), btsReportKylinConfig));
+                    } else {
+                        stringBuilder.append("," + this.compatibilityBtsFields(groups.get(i), btsReportKylinConfig));
+                    }
+                }
+            }
+            return stringBuilder.toString();
+        } else {
+            this.logger.debug("默认分组");
+            if (btsReportKylinConfig.getKylinQuerySql().contains("BTS_RG_CART_REPORT") || btsReportKylinConfig.getKylinQuerySql().contains("BTS_ZAFUL_RECOMMEND_REPORT")) {
+                return " day_start,bts_plan_id,bts_version_id,bts_bucket_id ";
+            }
+            return " day_start,bts_planid,bts_versionid,bts_bucketid ";
+        }
+    }
+
+    /**
+     * 部分报表 bts 字段名称不同，此处做一下兼容
+     *
+     * @param condition
+     * @param btsReportKylinConfig
+     * @return
+     */
+    private String compatibilityBtsFields(String condition, BtsReportKylinConfig btsReportKylinConfig) {
+        if (condition.startsWith("bts_")) {
+            if (btsReportKylinConfig.getKylinQuerySql().contains("BTS_RG_CART_REPORT") || btsReportKylinConfig.getKylinQuerySql().contains("BTS_ZAFUL_RECOMMEND_REPORT")) {
+                return BTS_FIELDS_FLIP.get(condition);
+            }
+        }
+        return condition;
+    }
+
+    /**
+     * where 条件处理
+     *
+     * @param btsReportParameterDto
+     * @param btsReportKylinConfig
+     * @return
+     */
+    private String whereFields(BtsReportParameterDto btsReportParameterDto, BtsReportKylinConfig btsReportKylinConfig) {
+        StringBuilder where = new StringBuilder();
+        if (btsReportParameterDto.getBetweenFields().size() > 0) {
+            this.logger.debug("处理 between and 条件");
+            Map<String, Map<String, String>> between = btsReportParameterDto.getBetweenFields();
+            between.entrySet().forEach(entry -> {
+                where.append(entry.getKey() + " between '" + entry.getValue().get("min") + "' and '" + entry.getValue().get("max") + "'");
+            });
+        }
+        if (btsReportParameterDto.getWhereFields().size() > 0) {
+            this.logger.debug("处理 where value = 条件");
+            Map<String, String> whereCondition = btsReportParameterDto.getWhereFields();
+
+            whereCondition.entrySet().forEach(entry -> {
+                if ("day_start".equals(entry.getKey())) {
+                    this.logger.debug("between 日期类型处理");
+                    if (StringUtils.isNotEmpty(where.toString())) {
+                        where.append(" and " + entry.getKey() + "= date '" + entry.getValue() + "' ");
+                    } else {
+                        where.append(" " + entry.getKey() + "= date '" + entry.getValue() + "' ");
+                    }
+                } else {
+                    if (StringUtils.isNotEmpty(where.toString())) {
+                        where.append(" and " + this.compatibilityBtsFields(entry.getKey(), btsReportKylinConfig) + "= '" + entry.getValue() + "' ");
+                    } else {
+                        where.append(" " + this.compatibilityBtsFields(entry.getKey(), btsReportKylinConfig) + "= '" + entry.getValue() + "' ");
+                    }
+                }
+            });
+
+        }
+        return where.toString();
+    }
+
+
 }

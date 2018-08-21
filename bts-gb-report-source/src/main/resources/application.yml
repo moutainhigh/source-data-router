@@ -4,7 +4,7 @@ spring:
 logging:
   config: classpath:logback-spring.xml
   path: logs
-  file: bts-zaful-report.log
+  file: bts-gb-report.log
   level:
     root: info
     org.springframework: ERROR
@@ -24,9 +24,9 @@ spring:
       auto-offset-reset: latest
       value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-      group-id: bts-log-dimensions_gb_recommend
+      group-id: bts-log-dimensions_gb_recommend-test
     producer:
-      client-id: bts-gb-log
+      client-id: bts-gb-log-test
     bootstrap-servers: 172.31.35.194:9092,172.31.50.250:9092,172.31.63.112:9092
 
 
@@ -37,9 +37,11 @@ app:
   hbase:
     gb-cookie-userid-table: dy_gb_cookie_userid_rel
     gb-cookie-user-clumn-family: cookie_userid
+  redis:
+    gb-adt-expired-seconds: 1209600
 
 server:
-  port: 38086
+  port: 38087
 
 ---
 spring:
@@ -70,6 +72,8 @@ app:
   hbase:
     gb-cookie-userid-table: dy_gb_cookie_userid_rel
     gb-cookie-user-clumn-family: cookie_userid
+  redis:
+    gb-adt-expired-seconds: 1209600
 
 server:
-  port: 38086
+  port: 38087

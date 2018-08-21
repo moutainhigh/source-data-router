@@ -37,6 +37,7 @@ app:
     log-zaful-out-topic: dy_bts_zaful_re_simple_report
     zaful-list-page-topic: dy_bts_zaful_list_page_report
 
+
 server:
   port: 38086
 
