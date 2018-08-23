@@ -1,6 +1,9 @@
 package com.globalegrow.dy.service;
 
+import com.globalegrow.dy.dto.BtsReportFieldConfigDto;
 import com.globalegrow.dy.model.BtsReportKylinConfig;
+
+import java.util.List;
 
 public interface BtsReportConfigService {
 
@@ -19,4 +22,13 @@ public interface BtsReportConfigService {
      * @return
      */
     BtsReportKylinConfig getBtsReportKylinConfig(Long planId, String productLineCode, String queryType);
+
+    /**
+     * 报表字段名配置
+     * @param planId
+     * @param produceLineCode
+     * @return
+     */
+    List<BtsReportFieldConfigDto> btsReportFieldConfig(Long planId, String produceLineCode);
+
 }

@@ -72,7 +72,11 @@
             <!--<property name="rootInterface" value="com.lakala.lfuc.dal.entity.LfucBaseEnty"/>-->
         </javaClientGenerator>
 
-        <table tableName="DY_BTS_REPORT_KYLIN_CONFIG" domainObjectName="BtsReportKylinConfig" enableSelectByExample="true" enableCountByExample="true">
+        <!--<table tableName="DY_BTS_REPORT_KYLIN_CONFIG" domainObjectName="BtsReportKylinConfig" enableSelectByExample="true" enableCountByExample="true">
+            <generatedKey column="id" sqlStatement="Mysql"   identity="true"/>
+        </table>-->
+
+        <table tableName="DY_BTS_REPORT_FIELD_CONFIG" domainObjectName="BtsReportFieldConfig" enableSelectByExample="true" enableCountByExample="true">
             <generatedKey column="id" sqlStatement="Mysql"   identity="true"/>
         </table>
 
