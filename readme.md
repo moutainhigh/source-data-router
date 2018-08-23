@@ -4,6 +4,7 @@
 	create 'h_source_bts_recommend','run_result'<br> 
 	create 'dy_cookie_userid_rel','cookie_userid'<br> 
 	create 'dy_gb_cookie_userid_rel','cookie_userid'<br> 
+	create 'dy_zfapp_deviceid_userid_rel','cookie_userid'<br> 
 	scan 'dy_cookie_userid_rel', { COLUMNS => 'cookie_userid:user_id', LIMIT => 10, FILTER => "ValueFilter( =, 'binaryprefix:14838230')" }<br>
 	
 ###2、package<br>

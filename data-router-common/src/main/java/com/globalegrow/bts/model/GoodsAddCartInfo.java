@@ -89,4 +89,17 @@ public class GoodsAddCartInfo {
     public void setPam(Integer pam) {
         this.pam = pam;
     }
+
+    @Override
+    public String toString() {
+        return "GoodsAddCartInfo{" +
+                "cookie='" + cookie + '\'' +
+                ", userId='" + userId + '\'' +
+                ", sku='" + sku + '\'' +
+                ", pam=" + pam +
+                ", salesVolume=" + salesVolume +
+                ", salesAmount=" + salesAmount +
+                ", bts=" + bts +
+                '}';
+    }
 }

@@ -40,7 +40,7 @@ public class NginxLogConvertUtil {
         return null;
     }
 
-    private static Long getTimestamp(String log) {
+    public static Long getTimestamp(String log) {
         Pattern p = Pattern.compile(TIMESTAMP_PATTERN);
         Matcher m = p.matcher(log);
         String requestStr = "";
@@ -62,7 +62,7 @@ public class NginxLogConvertUtil {
         return System.currentTimeMillis();
     }
 
-    private static Map<String, Object> getUrlParams(String param) {
+    public static Map<String, Object> getUrlParams(String param) {
         Map<String, Object> map = new HashMap(0);
         if (StringUtils.isBlank(param)) {
             return map;
@@ -86,7 +86,7 @@ public class NginxLogConvertUtil {
         return map;
     }
 
-    private static Object valueHex(Object o) {
+    public static Object valueHex(Object o) {
         String s = String.valueOf(o);
         if (StringUtils.isNotEmpty(s) && s.contains("\\x22")) {
             return s.replaceAll("\\\\x22", "\"");

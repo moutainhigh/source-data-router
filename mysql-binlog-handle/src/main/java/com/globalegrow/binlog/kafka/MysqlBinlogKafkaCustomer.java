@@ -10,10 +10,8 @@ import com.globalegrow.bts.model.GoodsAddCartInfo;
 import com.globalegrow.dy.report.enums.RecommendQuotaFields;
 import com.globalegrow.dy.report.enums.RecommendReportFields;
 import com.globalegrow.dy.report.enums.ValueType;
-import com.globalegrow.util.GsonUtil;
-import com.globalegrow.util.JacksonUtil;
-import com.globalegrow.util.MD5CipherUtil;
-import com.globalegrow.util.SpringRedisUtil;
+import com.globalegrow.enums.CartRedisKeysPrefix;
+import com.globalegrow.util.*;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.slf4j.Logger;
@@ -230,7 +228,43 @@ public class MysqlBinlogKafkaCustomer {
                     this.handleListPageOrderInfo(goodsAddCartInfo);
                 }
             }
+            GoodsAddCartInfo appGoodCartInfo = this.appGoodCartInfo(orderGoodInfo.getSku(), redisOrderInfo.getOrderInfo().getUserId());
+            this.logger.info("pre_listpage根据 sku: {}，userid: {} 获取到,app 端加购埋点信息: {}", orderGoodInfo.getSku(), redisOrderInfo.getOrderInfo().getUserId(), goodsAddCartInfo);
+            if (appGoodCartInfo != null) {
+                this.logger.debug("处理 app 端订单信息");
+                Map<String, Object> outJson = new HashMap<>();
+                outJson.put("bts", appGoodCartInfo.getBts());
+                outJson.put(RecommendQuotaFields.exposure.recommendReportFields.name(), 0);
+                outJson.put(RecommendQuotaFields.skuClick.recommendReportFields.name(), 0);
+                outJson.put(RecommendQuotaFields.skuAddCart.recommendReportFields.name(), 0);
+                outJson.put(RecommendQuotaFields.specimen.recommendReportFields.name(), appGoodCartInfo.getCookie());
+                outJson.put(RecommendQuotaFields.userOrder.recommendReportFields.name(), 0);
+                outJson.put(RecommendQuotaFields.paidOrder.recommendReportFields.name(), 0);
+                outJson.put(RecommendQuotaFields.payAmount.recommendReportFields.name(), 0);
+                outJson.put(NginxLogConvertUtil.TIMESTAMP_KEY, System.currentTimeMillis());
+                String orderStatus = redisOrderInfo.getOrderInfo().getOrderStatus();
+
+                if ("0".equals(orderStatus)) {
+                    outJson.put(RecommendReportFields.sku_order_num.name(), orderGoodInfo.getGoodsNum());
+                }
+                if ("1".equals(orderStatus) || "8".equals(orderStatus)) {
+                    outJson.put(RecommendReportFields.paid_order_num.name(), 1);
+                    outJson.put(RecommendReportFields.paid_amount.name(), orderGoodInfo.getAmount());
+                }
+
+                this.send("dy_bts_zaful_re_simple_report", outJson);
+            }
         }
+    }
+
+    private GoodsAddCartInfo appGoodCartInfo(String sku, String userId) {
+        String key = CartRedisKeysPrefix.redisCartKey(CartRedisKeysPrefix.dyZafulAppCartInfo, userId, sku);
+        this.logger.info("从 redis 获取 app 埋点中的加购数据: {}", key);
+        String listPageOrder = SpringRedisUtil.getStringValue(key);
+        if (StringUtils.isNotBlank(listPageOrder)) {
+            return GsonUtil.readValue(listPageOrder, GoodsAddCartInfo.class);
+        }
+        return null;
     }
 
     private Map<String, Object> order(OrderGoodInfo orderGoodInfo, RedisOrderInfo redisOrderInfo) {

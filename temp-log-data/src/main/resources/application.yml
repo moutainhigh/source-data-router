@@ -1,0 +1,24 @@
+spring:
+  profiles:
+    active: test
+logging:
+  path: logs
+  file: temp.log
+  level: info
+
+---
+spring:
+  profiles: test
+  kafka:
+    bootstrap-servers: 172.31.35.194:9092,172.31.50.250:9092,172.31.63.112:9092
+    consumer:
+      auto-offset-reset: latest
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      group-id: mysql-bin-log-zaful
+    listener:
+      concurrency: 5
+
+zaful-json-source-topic: dy_zaful_bury_source_data
+server:
+  port: 38089

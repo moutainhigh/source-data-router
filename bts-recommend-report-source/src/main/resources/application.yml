@@ -36,6 +36,9 @@ app:
     log-output-topic: dy_bts_report_recommend_zaful
     log-zaful-out-topic: dy_bts_zaful_re_simple_report
     zaful-list-page-topic: dy_bts_zaful_list_page_report
+  hbase:
+    zfapp-userid-table: dy_gb_cookie_userid_rel
+    zfapp-user-clumn-family: cookie_userid
 
 
 server:
@@ -71,6 +74,9 @@ app:
     log-output-topic: dy_bts_report_recommend_zaful
     log-zaful-out-topic: dy_bts_zaful_re_simple_report
     zaful-list-page-topic: dy_bts_zaful_list_page_report
+  hbase:
+    zfapp-userid-table: dy_gb_cookie_userid_rel
+    zfapp-user-clumn-family: cookie_userid
 
 server:
   port: 38086
