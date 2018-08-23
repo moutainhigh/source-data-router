@@ -2,6 +2,7 @@ package com.globalegrow.dy.controller;
 
 import com.globalegrow.dy.dto.BtsReportFieldConfigDto;
 import com.globalegrow.dy.dto.BtsReportParameterDto;
+import com.globalegrow.dy.dto.FieldConfigParameterDto;
 import com.globalegrow.dy.dto.ReportPageDto;
 import com.globalegrow.dy.service.BtsReportConfigService;
 import com.globalegrow.dy.service.BtsReportService;
@@ -30,8 +31,8 @@ public class KylinReportController {
     }
 
     @RequestMapping(value = "config", method = RequestMethod.GET, produces="application/json;charset=UTF-8")
-    public List<BtsReportFieldConfigDto> fieldConfigDtos(Long planId, String productLineCode) {
-        return this.btsReportConfigService.btsReportFieldConfig(planId, productLineCode);
+    public List<BtsReportFieldConfigDto> fieldConfigDtos(@RequestBody FieldConfigParameterDto dto) {
+        return this.btsReportConfigService.btsReportFieldConfig(dto.getPlanId(), dto.getProductLineCode());
     }
 
 }
