@@ -63,10 +63,10 @@
 			<if test="shelf_time != null">
 				shelf_time,
 			</if>
-			<if test="purchase_price != null">
+			<if test="purchasePrice != null">
 				purchase_price,
 			</if>
-			<if test="sale_weight != null">
+			<if test="saleWeight != null">
 				sale_weight,
 			</if>
 			<if test="img_original != null">
@@ -117,11 +117,11 @@
 			<if test="shelf_time != null">
 				#{shelf_time,jdbcType=VARCHAR},
 			</if>
-			<if test="purchase_price != null">
-				#{purchase_price,jdbcType=DOUBLE},
+			<if test="purchasePrice != null">
+				#{purchasePrice,jdbcType=DOUBLE},
 			</if>
-			<if test="sale_weight != null">
-				#{sale_weight,jdbcType=DOUBLE},
+			<if test="saleWeight != null">
+				#{saleWeight,jdbcType=DOUBLE},
 			</if>
 			<if test="img_original != null">
 				#{img_original,jdbcType=VARCHAR},
@@ -173,11 +173,11 @@
 			<if test="shelf_time != null">
 				shelf_time= #{shelf_time,jdbcType=VARCHAR},
 			</if>
-			<if test="purchase_price != null">
-				purchase_price= #{purchase_price,jdbcType=DOUBLE},
+			<if test="purchasePrice != null">
+				purchase_price= #{purchasePrice,jdbcType=DOUBLE},
 			</if>
-			<if test="sale_weight != null">
-				sale_weight= #{sale_weight,jdbcType=DOUBLE},
+			<if test="saleWeight != null">
+				sale_weight= #{saleWeight,jdbcType=DOUBLE},
 			</if>
 			<if test="img_original != null">
 				media_url= #{img_original,jdbcType=VARCHAR},
@@ -191,5 +191,120 @@
 		</set>
 		where id = #{id,jdbcType=BIGINT}
 	</update>
+
+	<!-- <insert id="insertProductInfoBatch" parameterType="java.util.List"> 
+		<selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER"> 
+		SELECT LAST_INSERT_ID() </selectKey> insert into p_product_base_info ( <if 
+		test="item.goods_sn != null"> sku, </if> <if test="item.product_sn != null"> 
+		spu, </if> <if test="item.catalog_id != null"> catalog_id, </if> <if test="item.product_name 
+		!= null"> product_name, </if> <if test="item.brand_code != null"> brand_code, 
+		</if> <if test="item.color != null"> color_en, </if> <if test="item.color_cn 
+		!= null"> color_cn, </if> <if test="item.supplier_sn != null"> supplier_code, 
+		</if> <if test="item.researcher != null"> researcher, </if> <if test="item.goods_resource_status 
+		!= null"> goods_resource_status, </if> <if test="item.sell_out != null"> 
+		sell_out, </if> <if test="shelf_time != null"> shelf_time, </if> <if test="item.purchase_price 
+		!= null"> purchase_price, </if> <if test="item.sale_weight != null"> sale_weight, 
+		</if> <if test="item.img_original != null"> media_url, </if> <if test="item.create_time 
+		!= null"> create_time, </if> update_time) values <foreach collection="list" 
+		item="item" index="index" separator=","> ( <if test="goods_sn != null"> #{item.goods_sn,jdbcType=VARCHAR}, 
+		</if> <if test="product_sn != null"> #{item.product_sn,jdbcType=VARCHAR}, 
+		</if> <if test="catalog_id != null"> #{item.catalog_id,jdbcType=BIGINT}, 
+		</if> <if test="product_name != null"> #{item.product_name,jdbcType=VARCHAR}, 
+		</if> <if test="brand_code != null"> #{item.brand_code,jdbcType=VARCHAR}, 
+		</if> <if test="color != null"> #{item.color,jdbcType=VARCHAR}, </if> <if 
+		test="color_cn != null"> #{item.color_cn,jdbcType=VARCHAR}, </if> <if test="supplier_sn 
+		!= null"> #{item.supplier_sn,jdbcType=VARCHAR}, </if> <if test="researcher 
+		!= null"> #{item.researcher,jdbcType=VARCHAR}, </if> <if test="goods_resource_status 
+		!= null"> #{item.goods_resource_status,jdbcType=TINYINT}, </if> <if test="sell_out 
+		!= null"> #{item.sell_out,jdbcType=TINYINT}, </if> <if test="shelf_time != 
+		null"> #{item.shelf_time,jdbcType=VARCHAR}, </if> <if test="purchase_price 
+		!= null"> #{item.purchase_price,jdbcType=DOUBLE}, </if> <if test="sale_weight 
+		!= null"> #{item.sale_weight,jdbcType=DOUBLE}, </if> <if test="img_original 
+		!= null"> #{item.img_original,jdbcType=VARCHAR}, </if> <if test="create_time 
+		!= null"> #{item.create_time,jdbcType=TIMESTAMP}, </if> #{item.updateDate,jdbcType=TIMESTAMP}) 
+		</foreach> </insert> -->
+	<insert id="insertProductInfoBatch"
+		parameterType="java.util.List">
+		<selectKey resultType="java.lang.Integer" keyProperty="id"
+			order="AFTER">
+			SELECT LAST_INSERT_ID()
+
+		</selectKey>
+		insert into p_product_base_info
+		(
+		sku,
+
+		spu,
+
+		catalog_id,
+
+		product_name,
+
+		brand_code,
+
+		color_en,
+
+		color_cn,
+
+		supplier_code,
+
+		researcher,
+
+		goods_resource_status,
+
+		sell_out,
+
+		shelf_time,
+
+		purchase_price,
+
+		sale_weight,
+
+		media_url,
+
+		create_time,
+
+		update_time)
+
+		values
+		<foreach collection="list" item="productInfo" index="index"
+			separator=",">
+			(
+			#{productInfo.goods_sn,jdbcType=VARCHAR},
+
+			#{productInfo.product_sn,jdbcType=VARCHAR},
+
+			#{productInfo.catalog_id,jdbcType=BIGINT},
+
+			#{productInfo.product_name,jdbcType=VARCHAR},
+
+			#{productInfo.brand_code,jdbcType=VARCHAR},
+
+			#{productInfo.color,jdbcType=VARCHAR},
+
+			#{productInfo.color_cn,jdbcType=VARCHAR},
+
+			#{productInfo.supplier_sn,jdbcType=VARCHAR},
+
+			#{productInfo.researcher,jdbcType=VARCHAR},
+
+			#{productInfo.goods_resource_status,jdbcType=TINYINT},
+
+			#{productInfo.sell_out,jdbcType=TINYINT},
+
+			#{productInfo.shelf_time,jdbcType=VARCHAR},
+
+			#{productInfo.purchasePrice,jdbcType=DOUBLE},
+
+			#{productInfo.saleWeight,jdbcType=DOUBLE},
+
+			#{productInfo.img_original,jdbcType=VARCHAR},
+
+			#{productInfo.create_time,jdbcType=TIMESTAMP},
+
+			#{productInfo.updateDate,jdbcType=TIMESTAMP})
+
+		</foreach>
+	</insert>
 
 </mapper>

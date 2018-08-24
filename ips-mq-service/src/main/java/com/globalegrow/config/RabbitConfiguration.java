@@ -21,8 +21,8 @@ public class RabbitConfiguration {
 	public SimpleRabbitListenerContainerFactory myFactory(SimpleRabbitListenerContainerFactoryConfigurer configurer) {
 		SimpleRabbitListenerContainerFactory factory = new SimpleRabbitListenerContainerFactory();
 		configurer.configure(factory, connectionFactory);
-		factory.setConcurrentConsumers(3);
-		factory.setMaxConcurrentConsumers(10);
+		factory.setConcurrentConsumers(15);
+		factory.setMaxConcurrentConsumers(15);
 		factory.setPrefetchCount(1);
 //		factory.setMessageConverter(myMessageConverter());
 		return factory;
