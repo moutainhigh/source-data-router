@@ -8,7 +8,6 @@ import javax.annotation.Resource;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,9 +22,6 @@ import com.globalegrow.util.SpringRedisUtil;
 public class WebCatalogHandlerServiceImpl implements WebCatalogHandlerService {
 
 	private Logger logger = LoggerFactory.getLogger(getClass());
-
-	@Value("${catalog.redis.expire.seconds}")
-	private long expireSeconds;
 
 	@Resource
 	private WebCatMapper webCatMapper;
@@ -48,8 +44,7 @@ public class WebCatalogHandlerServiceImpl implements WebCatalogHandlerService {
 						String webSiteCode = webCategory.getWebsiteCode();
 						String value = webCategory.getCatParentId() + "," + webCategory.getCatLevel() + ","
 								+ webCategory.getCatName();
-						SpringRedisUtil.put(IpsCatalogContant.WEB_CATALOG_ID_PREFIX + catalogId + webSiteCode, value,
-								expireSeconds);
+						SpringRedisUtil.put(IpsCatalogContant.WEB_CATALOG_ID_PREFIX + catalogId + webSiteCode, value);
 					} catch (Exception e) {
 						logger.error("singleWebCatalogNameSaveRedis save fail!");
 					}
@@ -88,8 +83,9 @@ public class WebCatalogHandlerServiceImpl implements WebCatalogHandlerService {
 							webCatName.append(",");
 							webCatName.append(catNameMap.get(i));
 						}
+						logger.info("webCatalogNameSaveRedis :"+catalogId + webSiteCode);
 						SpringRedisUtil.put(IpsCatalogContant.WEB_CATALOG_PATH_PREFIX + catalogId + webSiteCode,
-								webCatName.toString(), expireSeconds);
+								webCatName.toString());
 					} catch (Exception e) {
 						logger.error("webCatalogNameSaveRedis save fail!");
 					}

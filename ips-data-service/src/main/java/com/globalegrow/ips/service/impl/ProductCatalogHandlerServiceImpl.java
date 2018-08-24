@@ -44,7 +44,6 @@ public class ProductCatalogHandlerServiceImpl implements ProductCatalogHandlerSe
 				for (ProductCatalog productCatalog : productCatalogs) {
 					try {
 						Long catalogId = productCatalog.getCatalogId();
-						System.out.println("catalogId+++++++++++++++++"+catalogId);
 						SpringRedisUtil.put(IpsCatalogContant.P_CATALOG_ID_PREFIX + catalogId,
 								productCatalog.getNameCh(), expireSeconds);
 						String path = productCatalog.getPath();
