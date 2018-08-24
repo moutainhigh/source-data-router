@@ -14,7 +14,6 @@ public class GoodsMustInfo {
 
 	private String brand_code;
 
-	
 	private Date create_time;
 
 	private String researcher;
@@ -23,11 +22,15 @@ public class GoodsMustInfo {
 
 	private String supplier_sn;
 
-	private Double purchase_price;
+	private Double purchasePrice;
+
+	private String purchase_price;
 
 	private Integer goods_resource_status;
 
-	private Double sale_weight;
+	private Double saleWeight;
+
+	private String sale_weight;
 
 	private String color;
 
@@ -107,12 +110,36 @@ public class GoodsMustInfo {
 		this.supplier_sn = supplier_sn;
 	}
 
-	public Double getPurchase_price() {
+	public Double getPurchasePrice() {
+		return purchasePrice;
+	}
+
+	public void setPurchasePrice(Double purchasePrice) {
+		this.purchasePrice = purchasePrice;
+	}
+
+	public String getPurchase_price() {
 		return purchase_price;
 	}
 
-	public void setPurchase_price(Double purchase_price) {
+	public void setPurchase_price(String purchase_price) {
 		this.purchase_price = purchase_price;
+	}
+
+	public Double getSaleWeight() {
+		return saleWeight;
+	}
+
+	public void setSaleWeight(Double saleWeight) {
+		this.saleWeight = saleWeight;
+	}
+
+	public String getSale_weight() {
+		return sale_weight;
+	}
+
+	public void setSale_weight(String sale_weight) {
+		this.sale_weight = sale_weight;
 	}
 
 	public Integer getGoods_resource_status() {
@@ -121,14 +148,6 @@ public class GoodsMustInfo {
 
 	public void setGoods_resource_status(Integer goods_resource_status) {
 		this.goods_resource_status = goods_resource_status;
-	}
-
-	public Double getSale_weight() {
-		return sale_weight;
-	}
-
-	public void setSale_weight(Double sale_weight) {
-		this.sale_weight = sale_weight;
 	}
 
 	public String getColor() {

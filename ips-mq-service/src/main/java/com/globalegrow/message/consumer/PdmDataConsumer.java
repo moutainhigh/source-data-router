@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.core.Message;
@@ -35,22 +36,19 @@ public class PdmDataConsumer {
 	@Autowired
 	private ProductService productService;
 
-	@RabbitListener(queues = "goodsInfo_DY", containerFactory = "myFactory")
+//	@RabbitListener(queues = "goodsInfo_DY", containerFactory = "myFactory")
 //	@RabbitListener(bindings = @QueueBinding(value = @Queue(value = "goodsInfo_DY", durable = "true", autoDelete = "false"), exchange = @Exchange(value = "amq.direct", durable = "true"), key = "goodsInfo_DY"), containerFactory = "myFactory")
 	public void processMessage(Message message) {
 		String msg = new String(message.getBody());
-		logger.info("goodsInfo_DY msg :" + msg);
 		GoodsInfo goodsInfo = null;
 		GoodsMustInfo goodsMustInfo = null;
 		ProductInfo productInfo = null;
 		Gson gson = GsonUtil.getGson();
 		try {
-			logger.info("use goodsInfo begin!");
 			goodsInfo = gson.fromJson(msg, GoodsInfo.class);
 			productInfo = beanMapper.mapObjectByType(goodsInfo, ProductInfo.class);
 			logger.info("use goodsInfo and sku is:" + goodsInfo.getGoods_sn());
 		} catch (JsonSyntaxException e) {
-			logger.info("use goodsMustInfo begin!");
 			goodsMustInfo = gson.fromJson(msg, GoodsMustInfo.class);
 			productInfo = beanMapper.mapObjectByType(goodsMustInfo, ProductInfo.class);
 			logger.info("use goodsMustInfo and sku is:" + goodsInfo.getGoods_sn());
@@ -79,6 +77,19 @@ public class PdmDataConsumer {
 			} else {
 				productInfo.setSell_out(2);
 			}
+			if (StringUtils.isBlank(productInfo.getSale_weight())) {
+				productInfo.setSaleWeight(0.0);
+			} else {
+				productInfo.setSaleWeight(Double.valueOf(productInfo.getSale_weight()));
+			}
+			if (StringUtils.isBlank(productInfo.getPurchase_price())) {
+				productInfo.setPurchasePrice(0.0);
+			} else {
+				productInfo.setPurchasePrice(Double.valueOf(productInfo.getPurchase_price()));
+			}
+//			if (StringUtils.isBlank(productInfo.getShelf_time())) {
+//				productInfo.setShelf_time("0");
+//			}
 			productInfo.setUpdateDate(new Date());
 			productService.saveProductInfoHandler(productInfo);
 		}

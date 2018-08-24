@@ -10,10 +10,13 @@ import org.springframework.transaction.annotation.Transactional;
 import com.globalegrow.bean.ProductInfo;
 import com.globalegrow.mapper.ProductMapper;
 import com.globalegrow.service.ProductService;
+import com.globalegrow.util.SpringRedisUtil;
 
 @Service
 public class ProductServiceImpl implements ProductService {
 
+	public static final String P_SKU_PREFIX = "p_sku";
+	
 	@Autowired
 	private ProductMapper productMapper;
 
@@ -21,6 +24,7 @@ public class ProductServiceImpl implements ProductService {
 	@Transactional(propagation = Propagation.REQUIRED)
 	public void saveProductInfoHandler(ProductInfo productInfo) {
 		String sku = productInfo.getGoods_sn();
+		SpringRedisUtil.put(P_SKU_PREFIX + sku, productInfo.getProduct_sn());
 		ProductInfo pInfo = productMapper.getProductInfo(sku);
 		if (pInfo != null) {
 			productInfo.setId(pInfo.getId());
@@ -28,6 +32,12 @@ public class ProductServiceImpl implements ProductService {
 		} else {
 			productMapper.saveProductInfo(productInfo);
 		}
+	}
+
+	@Override
+	@Transactional(propagation = Propagation.REQUIRED)
+	public void saveProductInfoHandler(List<ProductInfo> productInfos) {
+		productMapper.insertProductInfoBatch(productInfos);
 	}
 
 }
