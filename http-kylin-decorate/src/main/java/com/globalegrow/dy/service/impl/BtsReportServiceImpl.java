@@ -39,7 +39,7 @@ public class BtsReportServiceImpl implements BtsReportService {
         {
             put("bts_plan_id", "bts_planid");
             put("bts_version_id", "bts_versionid");
-            put("bts_plan_id", "bts_bucketid");
+            put("bts_bucket_id", "bts_bucketid");
         }
     };
 
@@ -70,8 +70,9 @@ public class BtsReportServiceImpl implements BtsReportService {
             valuesMap.put(BtsQueryConditions.whereFields.name(), this.whereFields(btsReportParameterDto, btsReportKylinConfig));
 
             this.logger.debug("处理排序字段");
-            StringBuilder orderBy = new StringBuilder(" order by ");
+            StringBuilder orderBy = new StringBuilder();
             if (btsReportParameterDto.getOrderFields() != null && btsReportParameterDto.getOrderFields().size() > 0) {
+                orderBy.append(" order by ");
                 int i = 0;
                 btsReportParameterDto.getOrderFields().entrySet().forEach(entry -> {
                     if (i == 0) {

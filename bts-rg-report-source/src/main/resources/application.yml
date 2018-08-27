@@ -64,6 +64,8 @@ app:
     rg:
       cart:
         topic: bts_rg_cart_report
+      login:
+        topic: bts_rg_login_report
 
 server:
   port: 38088

@@ -4,7 +4,6 @@ import com.globalegrow.util.GsonUtil;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -57,6 +56,10 @@ public class CommonLogModel {
 
     public String getGlbCl() {
         return this.getLogValue("glb_cl");
+    }
+
+    public String getGlbD() {
+        return this.getLogValue("glb_d");
     }
 
     public Map<String, Object> getSkuMap() {
