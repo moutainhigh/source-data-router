@@ -26,9 +26,10 @@
 		<module>common-es</module>
 		<module>http-kylin-decorate</module>
 		<module>bts-rg-report-source</module>
-		<module>ips-data-service</module>
-		<module>ips-mq-service</module>
+		<!--<module>ips-data-service</module>
+		<module>ips-mq-service</module>-->
         <module>bts-gb-report-source</module>
+        <module>temp-log-data</module>
     </modules>
 
 	<parent>
