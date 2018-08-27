@@ -39,17 +39,20 @@ public class WarehouseHandlerServiceImpl implements WarehouseHandlerService {
 			if (cdpWarehouseRet != null) {
 				logger.info("cdpWarehouseRet not null");
 				List<WarehouseInfo> warehouseInfos = cdpWarehouseRet.getList();
-				for (WarehouseInfo warehouseInfo : warehouseInfos) {
-					try {
-						String warehouseSn = warehouseInfo.getWarehouse_sn();
-						String warehouseName = warehouseInfo.getWarehouse_name();
-						logger.info("warehouseSaveRedis save" + warehouseSn);
-						SpringRedisUtil.put(IpsCatalogContant.WAREHOUSE_CODE_PREFIX + warehouseSn, warehouseName,
-								expireSeconds);
-					} catch (Exception e) {
-						logger.error("warehouseSaveRedis save fail!");
+				if (warehouseInfos != null) {
+					for (WarehouseInfo warehouseInfo : warehouseInfos) {
+						try {
+							String warehouseSn = warehouseInfo.getWarehouse_sn();
+							String warehouseName = warehouseInfo.getWarehouse_name();
+							logger.info("warehouseSaveRedis save" + warehouseSn);
+							SpringRedisUtil.put(IpsCatalogContant.WAREHOUSE_CODE_PREFIX + warehouseSn, warehouseName,
+									expireSeconds);
+						} catch (Exception e) {
+							logger.error("warehouseSaveRedis save fail!");
+						}
 					}
 				}
+
 				String total = cdpWarehouseRet.getTotal();
 				if (total != null) {
 					int totalNum = Integer.valueOf(total);
