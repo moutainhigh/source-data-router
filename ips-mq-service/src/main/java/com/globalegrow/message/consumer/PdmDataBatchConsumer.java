@@ -1,8 +1,10 @@
 package com.globalegrow.message.consumer;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -10,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import com.globalegrow.bean.GoodsImgInfo;
@@ -20,15 +23,12 @@ import com.globalegrow.message.util.BeanMapper;
 import com.globalegrow.message.util.GsonUtil;
 import com.globalegrow.service.ProductService;
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 
 @Component
-public class PdmDataConsumer {
+public class PdmDataBatchConsumer {
 
 	private Logger logger = LoggerFactory.getLogger(getClass());
-
-//	private Gson gson = new GsonBuilder().disableHtmlEscaping().create();
 
 	@Autowired
 	private BeanMapper beanMapper;
@@ -36,8 +36,16 @@ public class PdmDataConsumer {
 	@Autowired
 	private ProductService productService;
 
-//	@RabbitListener(queues = "goodsInfo_DY", containerFactory = "myFactory")
-//	@RabbitListener(bindings = @QueueBinding(value = @Queue(value = "goodsInfo_DY", durable = "true", autoDelete = "false"), exchange = @Exchange(value = "amq.direct", durable = "true"), key = "goodsInfo_DY"), containerFactory = "myFactory")
+	@Value("${save.db.sum}")
+	private int sdm;
+
+	private static final String P_INFO_MAP = "p_info_map";
+
+	private volatile int sum = 0;
+
+	private Map<String, List<ProductInfo>> productInfoMap = new ConcurrentHashMap<>();
+
+	@RabbitListener(queues = "goodsInfo_DY", containerFactory = "myFactory")
 	public void processMessage(Message message) {
 		String msg = new String(message.getBody());
 		GoodsInfo goodsInfo = null;
@@ -47,11 +55,10 @@ public class PdmDataConsumer {
 		try {
 			goodsInfo = gson.fromJson(msg, GoodsInfo.class);
 			productInfo = beanMapper.mapObjectByType(goodsInfo, ProductInfo.class);
-			logger.info("use goodsInfo and sku is:" + goodsInfo.getGoods_sn());
+//			logger.info("use goodsInfo and sku is:" + goodsInfo.getGoods_sn());
 		} catch (JsonSyntaxException e) {
 			goodsMustInfo = gson.fromJson(msg, GoodsMustInfo.class);
 			productInfo = beanMapper.mapObjectByType(goodsMustInfo, ProductInfo.class);
-			logger.info("use goodsMustInfo and sku is:" + goodsInfo.getGoods_sn());
 		}
 		if (goodsInfo != null) {
 			Map<Integer, List<GoodsImgInfo>> goods_img = goodsInfo.getGoods_img();
@@ -77,6 +84,28 @@ public class PdmDataConsumer {
 			} else {
 				productInfo.setSell_out(2);
 			}
+			productInfo.setUpdateDate(new Date());
+			if (StringUtils.isBlank(productInfo.getBrand_code())) {
+				productInfo.setBrand_code("");
+			}
+			if (StringUtils.isBlank(productInfo.getColor())) {
+				productInfo.setColor("");
+			}
+			if (StringUtils.isBlank(productInfo.getColor_cn())) {
+				productInfo.setColor_cn("");
+			}
+			if (StringUtils.isBlank(productInfo.getSupplier_sn())) {
+				productInfo.setSupplier_sn("");
+			}
+			if (StringUtils.isBlank(productInfo.getResearcher())) {
+				productInfo.setResearcher("");
+			}
+			if (StringUtils.isBlank(productInfo.getShelf_time())) {
+				productInfo.setShelf_time("");
+			}
+			if (StringUtils.isBlank(productInfo.getProduct_name())) {
+				productInfo.setProduct_name("");
+			}
 			if (StringUtils.isBlank(productInfo.getSale_weight())) {
 				productInfo.setSaleWeight(0.0);
 			} else {
@@ -87,11 +116,28 @@ public class PdmDataConsumer {
 			} else {
 				productInfo.setPurchasePrice(Double.valueOf(productInfo.getPurchase_price()));
 			}
-//			if (StringUtils.isBlank(productInfo.getShelf_time())) {
-//				productInfo.setShelf_time("0");
-//			}
-			productInfo.setUpdateDate(new Date());
-			productService.saveProductInfoHandler(productInfo);
+			if (StringUtils.isBlank(productInfo.getImg_original())) {
+				productInfo.setImg_original("");
+			}
+			if (productInfo.getCreate_time() == null) {
+				productInfo.setCreate_time(new Date());
+			}
+			synchronized (this) {
+				List<ProductInfo> proinfos = productInfoMap.get(P_INFO_MAP);
+				if (proinfos == null) {
+					proinfos = new ArrayList<>();
+				}
+				proinfos.add(productInfo);
+				productInfoMap.put(P_INFO_MAP, proinfos);
+				sum++;
+				if (sum % sdm == 0) {
+					logger.info("+++++++++sum+++++++++++" + sum);
+					productService.saveProductInfoHandler(proinfos);
+					List<ProductInfo> pinfos = new ArrayList<>();
+					productInfoMap.put(P_INFO_MAP, pinfos);
+				}
+
+			}
 		}
 
 	}
