@@ -40,6 +40,8 @@ public class BtsReportServiceImpl implements BtsReportService {
             put("bts_plan_id", "bts_planid");
             put("bts_version_id", "bts_versionid");
             put("bts_bucket_id", "bts_bucketid");
+            put("bts_policy", "bts_policy");
+            put("bts_plancode", "bts_plancode");
         }
     };
 
@@ -48,6 +50,8 @@ public class BtsReportServiceImpl implements BtsReportService {
             put("bts_planid", "bts_plan_id");
             put("bts_versionid", "bts_version_id");
             put("bts_bucketid", "bts_bucket_id");
+            put("bts_policy", "bts_policy");
+            put("bts_plancode", "bts_plancode");
         }
     };
 
