@@ -4,7 +4,9 @@ spring:
 logging:
   path: logs
   file: temp.log
-  level: info
+  level:
+    root: info
+    org.springframework: ERROR
 
 ---
 spring:

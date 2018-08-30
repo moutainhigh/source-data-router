@@ -16,8 +16,9 @@ public class MLogTemp {
 
     @KafkaListener(topics = { "${zaful-json-source-topic}" }, groupId = "temp_log_file")
     public void listenerGetUser(String record) {
+        this.logger.debug(record);
         Map<String, Object> logMap = GsonUtil.readValue(record, Map.class);
-        if ("m".equals(logMap.get("glb_plf")) && "1".equals(logMap.get("is_order"))) {
+        if ("m".equals(String.valueOf(logMap.get("glb_plf"))) && "1".equals(String.valueOf(logMap.get("is_order")))) {
             this.logger.info(record);
         }
     }

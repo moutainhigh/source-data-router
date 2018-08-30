@@ -19,4 +19,8 @@ public abstract class CommonLogConvert {
         return NginxLogConvertUtil.getNginxLogParameters(logString);
     }
 
+    protected CommonLogModel commonLogModel(Map<String, Object> logMap) {
+        return new CommonLogModel(logMap);
+    }
+
 }

@@ -245,7 +245,8 @@ public class MysqlBinlogKafkaCustomer {
                 String orderStatus = redisOrderInfo.getOrderInfo().getOrderStatus();
 
                 if ("0".equals(orderStatus)) {
-                    outJson.put(RecommendReportFields.sku_order_num.name(), orderGoodInfo.getGoodsNum());
+                    outJson.put(RecommendReportFields.sku_order_num.name(), 1);
+                    //outJson.put(RecommendReportFields.sku_order_num.name(), orderGoodInfo.getGoodsNum());
                 }
                 if ("1".equals(orderStatus) || "8".equals(orderStatus)) {
                     outJson.put(RecommendReportFields.paid_order_num.name(), 1);

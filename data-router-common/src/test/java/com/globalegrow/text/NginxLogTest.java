@@ -19,7 +19,7 @@ public class NginxLogTest {
     String pattern = "(.*?)=(.*?)&";
     String pattrenParameters = "_ubc.gif\\??(.*)HTTP";
     String patternTime = "\\^A\\^\\d{10}";
-    String log = "172.31.49.32^A^-^A^[15/Aug/2018:04:45:52 +0000]^A^\"GET /_ubc.gif?glb_t=ic&glb_w=4561759&glb_tm=1534308352320&glb_x=SIGNIN&glb_ubcta={%22p%22:%22x-273775603%22}&glb_plf=pc&glb_bts=%7B%22plancode%22%3A%22rgcart%22%2C%22versionid%22%3A%2246%22%2C%22bucketid%22%3A%223%22%2C%22planid%22%3A%2220%22%2C%22policy%22%3A%220%22%7D&glb_oi=lh4khl83ej9i4seut30k8p9mn2&glb_d=10007&glb_s=f01&glb_b=f&glb_dc=1301&glb_od=1000715342971986070k8p9mn2632199&glb_osr_referrer=originalurl&glb_osr_landing=https%3A%2F%2Fcart.rosegal.com%2Fm-flow-a-cart.htm&glb_cl=https%3A%2F%2Flogin.rosegal.com%2Fm-users-a-sign.htm%3Fflow%3Dcheckout&glb_pl=https%3A%2F%2Fcart.rosegal.com%2Fm-flow-a-cart.htm HTTP/1.1\"^A^200^A^372^A^\"https://login.rosegal.com/m-users-a-sign.htm?flow=checkout\"^A^\"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:61.0) Gecko/20100101 Firefox/61.0\"^A^s.logsss.com^A^114.113.243.226, 10.55.46.70, 23.55.46.63, 10.32.20.55, 104.84.150.37^A^114.113.243.226^A^HK^A^Hong Kong^A^zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2^A^1534308352";
+    String log = "172.31.49.32^A^-^A^[27/Aug/2018:02:02:48 +0000]^A^\"GET /_ubc.gif?glb_t=ie&glb_w=12573&glb_tm=1535335367251&glb_pm=mp&glb_filter={\\x22view\\x22:60,\\x22sort\\x22:\\x22Recommend\\x22,\\x22page\\x22:1}&glb_bts=%7B%22plancode%22%3A%22recommend%22%2C%22versionid%22%3A%22105%22%2C%22bucketid%22%3A%227%22%2C%22planid%22%3A%2245%22%2C%22policy%22%3A%22B%22%7D&glb_ubcta=[{\\x22sku\\x22:\\x22176061802\\x22},{\\x22sku\\x22:\\x22217726712\\x22},{\\x22sku\\x22:\\x22227532907\\x22},{\\x22sku\\x22:\\x22238426902\\x22},{\\x22sku\\x22:\\x22185278301\\x22},{\\x22sku\\x22:\\x22266027502\\x22},{\\x22sku\\x22:\\x22232930507\\x22},{\\x22sku\\x22:\\x22263587701\\x22}]&glb_plf=pc&glb_oi=22cg4n81n81d3e5dfmmpl8smo0&glb_d=10013&glb_s=b01&glb_b=b&glb_p=14-1&glb_k=sz01&glb_dc=1301&glb_olk=14665422&glb_od=100131503183298048a82k1bh0021636224177064417&glb_osr=ol%3Doriginalurl%7Chref%3Dhttps%3A%2F%2Fwww.zaful.com%2Fb%2Fswimwear-e_14%2F%3Flkid%3D14665422%26admitad_uid%3Da7511d976e80dbe356a34a64aa3d6719%26utm_source%3Dadmitad&glb_cl=https%3A%2F%2Fwww.zaful.com%2Fb%2Fswimwear-e_14%2F%3Flkid%3D14665422%26admitad_uid%3Da7511d976e80dbe356a34a64aa3d6719%26utm_source%3Dadmitad&glb_pl=https%3A%2F%2Fwww.zaful.com%2Fswimwear-e_14%2F%3Flkid%3D14665422%26admitad_uid%3Da7511d976e80dbe356a34a64aa3d6719%26utm_source%3Dadmitad HTTP/1.1\"^A^200^A^372^A^\"https://www.zaful.com/b/swimwear-e_14/?lkid=14665422&admitad_uid=a7511d976e80dbe356a34a64aa3d6719&utm_source=admitad\"^A^\"Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like Gecko\"^A^s.logsss.com^A^184.89.82.120, 23.215.15.83, 10.50.48.159, 23.50.48.182^A^184.89.82.120^A^US^A^United States^A^en-US^A^1535335368";
 
     @Test
     public void utilTest() {
@@ -46,6 +46,11 @@ public class NginxLogTest {
         }
         System.out.println(time.toString());
         System.out.println(new Date(Long.valueOf(time.toString()) * 1000));
+    }
+
+    @Test
+    public void testHex() {
+        System.out.println(GsonUtil.toJson(NginxLogConvertUtil.getNginxLogParameters(log)));
     }
 
     @Test

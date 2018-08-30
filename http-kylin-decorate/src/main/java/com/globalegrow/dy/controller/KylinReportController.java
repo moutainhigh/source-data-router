@@ -1,9 +1,6 @@
 package com.globalegrow.dy.controller;
 
-import com.globalegrow.dy.dto.BtsReportFieldConfigDto;
-import com.globalegrow.dy.dto.BtsReportParameterDto;
-import com.globalegrow.dy.dto.FieldConfigParameterDto;
-import com.globalegrow.dy.dto.ReportPageDto;
+import com.globalegrow.dy.dto.*;
 import com.globalegrow.dy.service.BtsReportConfigService;
 import com.globalegrow.dy.service.BtsReportService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,9 +27,9 @@ public class KylinReportController {
         return this.btsReportService.btsReport(btsReportParameterDto);
     }
 
-    @RequestMapping(value = "config", method = RequestMethod.GET, produces="application/json;charset=UTF-8")
-    public List<BtsReportFieldConfigDto> fieldConfigDtos(@RequestBody FieldConfigParameterDto dto) {
-        return this.btsReportConfigService.btsReportFieldConfig(dto.getPlanId(), dto.getProductLineCode());
+    @RequestMapping(value = "config", method = RequestMethod.POST, produces="application/json;charset=UTF-8")
+    public ReportFieldConfigResultDto fieldConfigDtos(@RequestBody FieldConfigParameterDto dto) {
+        return new ReportFieldConfigResultDto(this.btsReportConfigService.btsReportFieldConfig(dto.getPlanId(), dto.getProductLineCode()));
     }
 
 }

@@ -39,7 +39,9 @@ public class BtsReportServiceImpl implements BtsReportService {
         {
             put("bts_plan_id", "bts_planid");
             put("bts_version_id", "bts_versionid");
-            put("bts_plan_id", "bts_bucketid");
+            put("bts_bucket_id", "bts_bucketid");
+            put("bts_policy", "bts_policy");
+            put("bts_plancode", "bts_plancode");
         }
     };
 
@@ -48,6 +50,8 @@ public class BtsReportServiceImpl implements BtsReportService {
             put("bts_planid", "bts_plan_id");
             put("bts_versionid", "bts_version_id");
             put("bts_bucketid", "bts_bucket_id");
+            put("bts_policy", "bts_policy");
+            put("bts_plancode", "bts_plancode");
         }
     };
 
@@ -55,7 +59,9 @@ public class BtsReportServiceImpl implements BtsReportService {
     public ReportPageDto<Map<String, Object>> btsReport(BtsReportParameterDto btsReportParameterDto) {
         ReportPageDto<Map<String, Object>> mapReportPageDto = new ReportPageDto<>();
         mapReportPageDto.setCurrentPage(btsReportParameterDto.getStartPage());
-        mapReportPageDto.setPageSize(btsReportParameterDto.getPageSize());
+        if (btsReportParameterDto.getPageSize() != null) {
+            mapReportPageDto.setPageSize(btsReportParameterDto.getPageSize());
+        }
         //BtsReportKylinConfig btsReportKylinConfig = this.btsReportConfigService.getConfigByBtsPlanId(btsReportParameterDto.getPlanId());
         BtsReportKylinConfig btsReportKylinConfig = this.btsReportConfigService.getBtsReportKylinConfig(btsReportParameterDto.getPlanId(), btsReportParameterDto.getProductLineCode(), btsReportParameterDto.getType());
         if (btsReportKylinConfig != null) {
@@ -69,7 +75,8 @@ public class BtsReportServiceImpl implements BtsReportService {
 
             this.logger.debug("处理排序字段");
             StringBuilder orderBy = new StringBuilder();
-            if (btsReportParameterDto.getOrderFields().size() > 0) {
+            if (btsReportParameterDto.getOrderFields() != null && btsReportParameterDto.getOrderFields().size() > 0) {
+                orderBy.append(" order by ");
                 int i = 0;
                 btsReportParameterDto.getOrderFields().entrySet().forEach(entry -> {
                     if (i == 0) {
@@ -79,9 +86,11 @@ public class BtsReportServiceImpl implements BtsReportService {
                     }
                 });
 
-            } else {
-                orderBy.append(" day_start desc ");
             }
+            // 默认无排序
+            /*else {
+                orderBy.append(" day_start desc ");
+            }*/
 
             valuesMap.put(BtsQueryConditions.orderByFields.name(), orderBy.toString());
 
@@ -159,7 +168,7 @@ public class BtsReportServiceImpl implements BtsReportService {
      * @return
      */
     private String groupFields(BtsReportParameterDto btsReportParameterDto, BtsReportKylinConfig btsReportKylinConfig) {
-        if (btsReportParameterDto.getGroupByFields().size() > 0) {
+        if (btsReportParameterDto.getGroupByFields() != null && btsReportParameterDto.getGroupByFields().size() > 0) {
             List<String> groups = btsReportParameterDto.getGroupByFields();
             this.logger.debug("根据传入分组条件设置");
             StringBuilder stringBuilder = new StringBuilder();
@@ -209,14 +218,14 @@ public class BtsReportServiceImpl implements BtsReportService {
      */
     private String whereFields(BtsReportParameterDto btsReportParameterDto, BtsReportKylinConfig btsReportKylinConfig) {
         StringBuilder where = new StringBuilder();
-        if (btsReportParameterDto.getBetweenFields().size() > 0) {
+        if (btsReportParameterDto.getBetweenFields() != null && btsReportParameterDto.getBetweenFields().size() > 0) {
             this.logger.debug("处理 between and 条件");
             Map<String, Map<String, String>> between = btsReportParameterDto.getBetweenFields();
             between.entrySet().forEach(entry -> {
                 where.append(entry.getKey() + " between '" + entry.getValue().get("min") + "' and '" + entry.getValue().get("max") + "'");
             });
         }
-        if (btsReportParameterDto.getWhereFields().size() > 0) {
+        if (btsReportParameterDto.getWhereFields() != null && btsReportParameterDto.getWhereFields().size() > 0) {
             this.logger.debug("处理 where value = 条件");
             Map<String, String> whereCondition = btsReportParameterDto.getWhereFields();
 
