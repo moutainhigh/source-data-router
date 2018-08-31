@@ -109,16 +109,21 @@ public class WebCatalogHandlerServiceImpl implements WebCatalogHandlerService {
 	public Map<Integer, String> saveWebCatalogNameHandler(Long catParentId, Long catLevel, String webSiteCode,
 			Map<Integer, String> catNameMap, Integer key) {
 		key++;
-		// 到达一级分类退出
-		if (catLevel == 1) {
+		// 到达一级分类退出或者避免死循环
+		if (catLevel == 1||key>10) {
 			return catNameMap;
 		} else {
 			String redisValue = SpringRedisUtil
 					.getStringValue(IpsCatalogContant.WEB_CATALOG_ID_PREFIX + catParentId + webSiteCode);
-			String[] redisValues = redisValue.split(",");
-			catNameMap.put(key, redisValues[2]);
-			return saveWebCatalogNameHandler(Long.valueOf(redisValues[0]), Long.valueOf(redisValues[1]), webSiteCode,
-					catNameMap, key);
+			if(redisValue!=null) {
+				String[] redisValues = redisValue.split(",");
+				catNameMap.put(key, redisValues[2]);
+				return saveWebCatalogNameHandler(Long.valueOf(redisValues[0]), Long.valueOf(redisValues[1]), webSiteCode,
+						catNameMap, key);
+			}else {
+				return catNameMap;
+			}
+			
 		}
 	}
 }

@@ -45,7 +45,7 @@ public class ProductCatalogHandlerServiceImpl implements ProductCatalogHandlerSe
 					try {
 						Long catalogId = productCatalog.getCatalogId();
 						SpringRedisUtil.put(IpsCatalogContant.P_CATALOG_ID_PREFIX + catalogId,
-								productCatalog.getNameCh(), expireSeconds);
+								productCatalog.getNameCh());
 						String path = productCatalog.getPath();
 						if (path == null) {
 							continue;
@@ -60,8 +60,7 @@ public class ProductCatalogHandlerServiceImpl implements ProductCatalogHandlerSe
 										.getProductCatalog(Long.valueOf(pathKeys[i]));
 								if (pCatalog != null) {
 									ctlChName = pCatalog.getNameCh();
-									SpringRedisUtil.put(IpsCatalogContant.P_CATALOG_ID_PREFIX + pathKeys[i], ctlChName,
-											expireSeconds);
+									SpringRedisUtil.put(IpsCatalogContant.P_CATALOG_ID_PREFIX + pathKeys[i], ctlChName);
 								}
 							}
 							if (i != 1) {
@@ -69,8 +68,7 @@ public class ProductCatalogHandlerServiceImpl implements ProductCatalogHandlerSe
 							}
 							pathName.append(ctlChName);
 						}
-						SpringRedisUtil.put(IpsCatalogContant.P_CATALOG_PATH_PREFIX + catalogId, pathName.toString(),
-								expireSeconds);
+						SpringRedisUtil.put(IpsCatalogContant.P_CATALOG_PATH_PREFIX + catalogId, pathName.toString());
 
 					} catch (Exception e) {
 						logger.error("pdmCatalogSaveRedis save fail!");

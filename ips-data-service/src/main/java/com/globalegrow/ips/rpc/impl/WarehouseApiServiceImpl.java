@@ -2,8 +2,6 @@ package com.globalegrow.ips.rpc.impl;
 
 import javax.ws.rs.core.MediaType;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -33,7 +31,7 @@ public class WarehouseApiServiceImpl implements WarehouseApiService {
 		data.setPer_page(per_page);
 		String token = EncryptUtil
 				.sign("de56be8fa19339d679efa6232455f342" + gson.toJson(data), "MD5");
-		String resp = CLIENT.resource(domain).path("interface/warehouse/get").queryParam("sn", "ips_choose")
+		String resp = CLIENT.resource(domain).path("interface/warehouse/get").queryParam("sn", "ips")
 				.queryParam("data", gson.toJson(data)).queryParam("token", token)
 				.accept(MediaType.APPLICATION_JSON_TYPE).post(String.class);
 		return gson.fromJson(resp, new TypeToken<CdpWarehouseRet>() {

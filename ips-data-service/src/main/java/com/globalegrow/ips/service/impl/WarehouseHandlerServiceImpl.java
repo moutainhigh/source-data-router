@@ -45,8 +45,7 @@ public class WarehouseHandlerServiceImpl implements WarehouseHandlerService {
 							String warehouseSn = warehouseInfo.getWarehouse_sn();
 							String warehouseName = warehouseInfo.getWarehouse_name();
 							logger.info("warehouseSaveRedis save" + warehouseSn);
-							SpringRedisUtil.put(IpsCatalogContant.WAREHOUSE_CODE_PREFIX + warehouseSn, warehouseName,
-									expireSeconds);
+							SpringRedisUtil.put(IpsCatalogContant.WAREHOUSE_CODE_PREFIX + warehouseSn, warehouseName);
 						} catch (Exception e) {
 							logger.error("warehouseSaveRedis save fail!");
 						}
