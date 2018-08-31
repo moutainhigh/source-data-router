@@ -36,6 +36,8 @@ public class BtsReportServiceImpl implements BtsReportService {
      * bts_plan_id,bts_version_id,bts_bucket_id
      */
     static final Map<String, String> BTS_FIELDS = new HashMap() {
+        private static final long serialVersionUID = -2564539190025132306L;
+
         {
             put("bts_plan_id", "bts_planid");
             put("bts_version_id", "bts_versionid");
@@ -46,6 +48,8 @@ public class BtsReportServiceImpl implements BtsReportService {
     };
 
     static final Map<String, String> BTS_FIELDS_FLIP = new HashMap() {
+        private static final long serialVersionUID = 5448417541998224281L;
+
         {
             put("bts_planid", "bts_plan_id");
             put("bts_versionid", "bts_version_id");
@@ -57,6 +61,7 @@ public class BtsReportServiceImpl implements BtsReportService {
 
     @Override
     public ReportPageDto<Map<String, Object>> btsReport(BtsReportParameterDto btsReportParameterDto) {
+        Long start = System.currentTimeMillis();
         ReportPageDto<Map<String, Object>> mapReportPageDto = new ReportPageDto<>();
         mapReportPageDto.setCurrentPage(btsReportParameterDto.getStartPage());
         if (btsReportParameterDto.getPageSize() != null) {
@@ -156,6 +161,7 @@ public class BtsReportServiceImpl implements BtsReportService {
             }
 
         }
+        this.logger.info("query from kylin costs:{}", System.currentTimeMillis() - start);
         return mapReportPageDto;
     }
 
