@@ -1,7 +1,10 @@
 package com.globalegrow.dy.dto;
 
-public class BtsReportFieldConfigDto {
+import java.io.Serializable;
 
+public class BtsReportFieldConfigDto implements Serializable {
+
+    private static final long serialVersionUID = 7421500961280856189L;
     private Long planId;
 
     private String code;

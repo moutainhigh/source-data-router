@@ -8,7 +8,12 @@ import com.globalegrow.dy.model.BtsReportFieldConfigExample;
 import com.globalegrow.dy.model.BtsReportKylinConfig;
 import com.globalegrow.dy.model.BtsReportKylinConfigExample;
 import com.globalegrow.dy.service.BtsReportConfigService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -16,7 +21,10 @@ import java.util.Collections;
 import java.util.List;
 
 @Service
+@CacheConfig(cacheNames = "bts_report_config")
 public class BtsReportConfigServiceImpl implements BtsReportConfigService {
+
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
     private BtsReportKylinConfigMapper btsReportKylinConfigMapper;
@@ -50,7 +58,9 @@ public class BtsReportConfigServiceImpl implements BtsReportConfigService {
      * @return
      */
     @Override
+    @Cacheable("kylin_config")
     public BtsReportKylinConfig getBtsReportKylinConfig(Long planId, String productLineCode, String queryType) {
+        this.logger.debug("查询 bts 报表 kylin 配置");
         BtsReportKylinConfigExample example = new BtsReportKylinConfigExample();
         example.createCriteria().andBtsPlanIdEqualTo(planId).andBtsProductLineCodeEqualTo(productLineCode).andQueryTypeEqualTo(queryType);
         List<BtsReportKylinConfig> btsReportKylinConfigs = this.btsReportKylinConfigMapper.selectByExampleWithBLOBs(example);
@@ -68,7 +78,9 @@ public class BtsReportConfigServiceImpl implements BtsReportConfigService {
      * @return
      */
     @Override
+    @Cacheable("field_config")
     public List<BtsReportFieldConfigDto> btsReportFieldConfig(Long planId, String produceLineCode) {
+        this.logger.debug("查询 bts 报表字段配置");
         BtsReportFieldConfigExample example = new BtsReportFieldConfigExample();
         example.createCriteria().andBtsPlanIdEqualTo(planId).andBtsProductLineCodeEqualTo(produceLineCode);
         List<BtsReportFieldConfig> configs = this.btsReportFieldConfigMapper.selectByExample(example);
@@ -80,5 +92,17 @@ public class BtsReportConfigServiceImpl implements BtsReportConfigService {
             return fieldConfigDtos;
         }
         return Collections.emptyList();
+    }
+
+    @Override
+    @CacheEvict(cacheNames = "kylin_config", allEntries = false)
+    public void removeBtsReportKylinConfig(Long planId, String productLineCode, String queryType) {
+
+    }
+
+    @Override
+    @CacheEvict(cacheNames = "field_config", allEntries = false)
+    public void removeBtsReportFieldConfig(Long planId, String produceLineCode) {
+
     }
 }

@@ -34,7 +34,18 @@ spring:
       test-while-idle: true
       time-between-eviction-runs-millis: 20000
       min-evictable-idle-time-millis: 30000
+  redis:
+    timeout: 86400
+    password: 6e1KWyC29w
+    sentinel:
+      master: sentinel-172.31.42.160-6383
+      nodes: 172.31.34.55:6384,172.31.42.160:6384,172.31.54.133:6383
+  cache:
+    cache-names:
 
 mybatis:
   mapperLocations: classpath*:com/globalegrow/dy/mapper/*.xml
   type-aliases-package: com.globalegrow.dy.model
+
+server:
+  port: 38093

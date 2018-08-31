@@ -31,4 +31,7 @@ public interface BtsReportConfigService {
      */
     List<BtsReportFieldConfigDto> btsReportFieldConfig(Long planId, String produceLineCode);
 
+    void removeBtsReportKylinConfig(Long planId, String productLineCode, String queryType);
+
+    void removeBtsReportFieldConfig(Long planId, String produceLineCode);
 }
