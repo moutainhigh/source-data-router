@@ -43,11 +43,11 @@ public class PdmDataConsumer {
 		try {
 			goodsInfo = gson.fromJson(msg, GoodsInfo.class);
 			productInfo = beanMapper.mapObjectByType(goodsInfo, ProductInfo.class);
-			logger.info("use goodsInfo and sku is:" + goodsInfo.getGoods_sn());
+//			logger.info("use goodsInfo and sku is:" + goodsInfo.getGoods_sn());
 		} catch (JsonSyntaxException e) {
 			goodsMustInfo = gson.fromJson(msg, GoodsMustInfo.class);
 			productInfo = beanMapper.mapObjectByType(goodsMustInfo, ProductInfo.class);
-			logger.info("use goodsMustInfo and sku is:" + goodsInfo.getGoods_sn());
+//			logger.info("use goodsMustInfo and sku is:" + goodsInfo.getGoods_sn());
 		}
 		if (goodsInfo != null) {
 			Map<Integer, List<GoodsImgInfo>> goods_img = goodsInfo.getGoods_img();

@@ -15,7 +15,7 @@ import com.globalegrow.util.SpringRedisUtil;
 @Service
 public class ProductServiceImpl implements ProductService {
 
-	public static final String P_SKU_PREFIX = "p_sku";
+	public static final String P_SKU_PREFIX = "dy_p_sku_";
 
 	@Autowired
 	private ProductMapper productMapper;
