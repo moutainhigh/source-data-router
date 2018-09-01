@@ -4,7 +4,6 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
-import org.apache.ibatis.annotations.Param;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -43,8 +42,7 @@ public class SkuHandlerServiceImpl implements SkuHandlerService {
 				for (ProductBaseInfo productBaseInfo : productBaseInfos) {
 					try {
 						String sku = productBaseInfo.getSku();
-						String spu = productBaseInfo.getSpu();
-						logger.info("skuSpuSaveRedis save" + sku);
+						String spu = productBaseInfo.getSpu();	
 						SpringRedisUtil.put(IpsCatalogContant.P_SKU_PREFIX + sku, spu);
 					} catch (Exception e) {
 						logger.error("skuSpuSaveRedis save fail!");

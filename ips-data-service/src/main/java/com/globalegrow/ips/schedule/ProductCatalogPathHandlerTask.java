@@ -20,4 +20,9 @@ public class ProductCatalogPathHandlerTask {
 		
 	}
 	
+	@Scheduled(cron = "${rel.shelftime.handler.cron}")
+	public void relShelfTimeTask() {
+		productCatalogHandlerService.relShelfTimeForProduct();
+	}
+	
 }
