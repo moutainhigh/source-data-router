@@ -74,7 +74,7 @@ public abstract class AbstractHbaseDataPersistence {
 				Result result = table.get(get);
 
 				if (result.containsColumn(Bytes.toBytes(columnFamily), Bytes.toBytes(qualifier))) {
-					return Bytes.toHex(result.getValue(Bytes.toBytes(columnFamily), Bytes.toBytes(qualifier)));
+					return Bytes.toString(result.getValue(Bytes.toBytes(columnFamily), Bytes.toBytes(qualifier)));
 				}
 				return null;
 			}

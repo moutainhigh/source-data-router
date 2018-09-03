@@ -22,7 +22,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 
-@Component
+//@Component
 public class RgCartReport {
 
     @Autowired

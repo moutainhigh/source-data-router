@@ -103,6 +103,18 @@
         </encoder>
     </appender>
 
+    <appender name="DATACOLLECTLOGGER_COOKIE"
+              class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <File>${LOG_PATH}/backup/cookie.log</File>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${log.backup}/cookie-%d{yyyy-MM-dd_HH}.log</fileNamePattern>
+            <maxHistory>50</maxHistory>
+        </rollingPolicy>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>%msg%n</pattern>
+        </encoder>
+    </appender>
+
     <appender
             name="click_data_back_up"
             class="ch.qos.logback.classic.AsyncAppender">
@@ -118,10 +130,32 @@
     </appender>
 
     <logger
-            name="com.globalegrow.dy.bts.tmp.ClickDataLog"
+            name="com.globalegrow.dy.bts.tmp.ListPageCartCookieUserIdNotFoundLog"
             additivity="false" level="INFO">
         <!-- 		<appender-ref ref="dataStash" /> -->
         <appender-ref ref="click_data_back_up" />
+    </logger>
+
+
+    <appender
+            name="cart_cookie_data_back_up"
+            class="ch.qos.logback.classic.AsyncAppender">
+        <appender-ref
+                ref="DATACOLLECTLOGGER_COOKIE">
+        </appender-ref>
+        <!-- 不丢失日志.默认的,如果队列的80%已满,则会丢弃TRACT、DEBUG、INFO级别的日志 -->
+        <discardingThreshold >0</discardingThreshold>
+        <!-- 更改默认的队列的深度,该值会影响性能.默认值为256 -->
+        <queueSize>2048</queueSize>
+        <includeCallerData>true</includeCallerData>
+        <!-- <immediateFlush>false</immediateFlush>-->
+    </appender>
+
+    <logger
+            name="com.globalegrow.dy.bts.tmp.ClickDataLog"
+            additivity="false" level="INFO">
+        <!-- 		<appender-ref ref="dataStash" /> -->
+        <appender-ref ref="cart_cookie_data_back_up" />
     </logger>
 
     <appender

@@ -1,6 +1,7 @@
 package com.globalegrow.common;
 
 import com.globalegrow.util.GsonUtil;
+import com.globalegrow.util.NginxLogConvertUtil;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.Collections;
@@ -58,6 +59,30 @@ public class CommonLogModel {
         return this.getLogValue("glb_cl");
     }
 
+    public String getGlbDc() {
+        return this.getLogValue("glb_dc");
+    }
+
+    public Integer getGlbW() {
+        return this.getLogIntValue("glb_w");
+    }
+
+    public Long getTimestamp() {
+        return getLong(this.sourceLog.get(NginxLogConvertUtil.TIMESTAMP_KEY));
+    }
+
+    private Long getLong(Object o) {
+        if (o != null) {
+            if (o instanceof Double) {
+                Double d = (Double) o;
+                return d.longValue();
+            } else if (o instanceof Long) {
+                return (Long) o;
+            }
+        }
+        return System.currentTimeMillis();
+    }
+
     public String getGlbD() {
         return this.getLogValue("glb_d");
     }
@@ -81,6 +106,18 @@ public class CommonLogModel {
             return GsonUtil.readValue(this.getGlbUbcta(), List.class);
         }
         return Collections.EMPTY_LIST;
+    }
+
+    private Integer getLogIntValue(String key) {
+        String value = this.getLogValue(key);
+        if (StringUtils.isNotEmpty(value)) {
+            return Integer.valueOf(value);
+        }
+        return 0;
+    }
+
+    public Map<String, Object> getSourceLog() {
+        return sourceLog;
     }
 
     private String getLogValue(String key) {

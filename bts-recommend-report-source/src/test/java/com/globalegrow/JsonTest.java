@@ -2,23 +2,23 @@ package com.globalegrow;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.globalegrow.bts.BtsPlanInfoRedisQuery;
-import com.globalegrow.dy.bts.model.BtsZafulListPageReport;
+import com.globalegrow.bts.model.BtsReport;
+import com.globalegrow.bts.model.BtsZafulListPageReport;
+import com.globalegrow.dy.bts.model.BtsZafulListPageColorReport;
 import com.globalegrow.dy.report.DataTypeConvert;
 import com.globalegrow.dy.report.enums.RecommendQuotaFields;
 import com.globalegrow.dy.report.enums.ValueType;
+import com.globalegrow.util.DyBeanUtils;
 import com.globalegrow.util.GsonUtil;
 import com.globalegrow.util.JacksonUtil;
+import com.globalegrow.util.NginxLogConvertUtil;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.apache.commons.beanutils.BeanMap;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
-import org.springframework.kafka.support.SendResult;
-import org.springframework.util.concurrent.ListenableFuture;
-import org.springframework.util.concurrent.ListenableFutureCallback;
 
-import java.lang.reflect.Type;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -259,6 +259,21 @@ public class JsonTest {
                 }
             }
         }
+        System.out.println(GsonUtil.toJson(map));
+    }
+
+    @Test
+    public void colorReport() {
+        BtsZafulListPageColorReport colorReport = new BtsZafulListPageColorReport();
+        Map<String, String> bts = new HashMap<>();
+        bts.put(BtsReport.btsFields.planid.name(), "");
+        bts.put(BtsReport.btsFields.versionid.name(), "");
+        bts.put(BtsReport.btsFields.bucketid.name(), "");
+        bts.put(BtsReport.btsFields.plancode.name(), "");
+        bts.put(BtsReport.btsFields.policy.name(), "");
+        colorReport.setBts(bts);
+        Map<String, Object> map = DyBeanUtils.objToMap(colorReport);
+        map.put(NginxLogConvertUtil.TIMESTAMP_KEY, System.currentTimeMillis());
         System.out.println(GsonUtil.toJson(map));
     }
 

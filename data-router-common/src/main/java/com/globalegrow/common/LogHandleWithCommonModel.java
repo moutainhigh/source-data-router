@@ -5,7 +5,7 @@ import com.globalegrow.util.NginxLogConvertUtil;
 
 import java.util.Map;
 
-public abstract class CommonLogHandle extends CommonLogConvertAndSend{
+public abstract class LogHandleWithCommonModel  extends CommonLogConvertAndSend{
 
     /**
      * kafka 消息处理通用流程方法
@@ -14,10 +14,12 @@ public abstract class CommonLogHandle extends CommonLogConvertAndSend{
     public void handleLogData(String logString) {
         try {
             Map<String, Object> logMap = this.logToMap(logString);
+            CommonLogModel commonLogModel = this.commonLogModel(logMap);
             if (logMap != null && logMap.size() > 0) {
-                if (this.logDataFilter(logMap)) {
-                    Map<String, Object> reportData = this.reportData(logMap);
+                if (this.logDataFilter(commonLogModel)) {
+                    Map<String, Object> reportData = this.reportData(commonLogModel);
                     if (reportData != null && reportData.size() > 0) {
+                        this.logger.debug("消息发送到 kafka，并填入时间戳字段");
                         reportData.put(NginxLogConvertUtil.TIMESTAMP_KEY, logMap.get(NginxLogConvertUtil.TIMESTAMP_KEY));
                         this.sendToKafka(this.reportKafkaTopic(), reportData);
                     }
@@ -34,17 +36,17 @@ public abstract class CommonLogHandle extends CommonLogConvertAndSend{
 
     /**
      * 最终输出的报表数据结构
-     * @param logMap
+     * @param commonLogModel
      * @return
      */
-    protected abstract Map<String, Object> reportData(Map<String, Object> logMap);
+    protected abstract Map<String, Object> reportData(CommonLogModel commonLogModel);
 
     /**
      * 报表数据过滤，如站点过滤等
-     * @param logMap
+     * @param commonLogModel
      * @return
      */
-    protected abstract boolean logDataFilter(Map<String, Object> logMap);
+    protected abstract boolean logDataFilter(CommonLogModel commonLogModel);
 
     /**
      * 报表输出 topic

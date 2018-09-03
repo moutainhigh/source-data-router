@@ -4,14 +4,15 @@ spring:
 logging:
   config: classpath:logback-spring.xml
   path: logs
-  file: bts-info-query.log
+  file: bts-zaful-report.log
   level:
     root: info
     org.springframework: ERROR
-
 ---
 spring:
   profiles: test
+  hbase:
+    zkServers: 172.31.61.192:2181,172.31.62.7:2181,172.31.59.31:2181,172.31.62.153:2181,172.31.36.227:2181,172.31.40.73:2181
   redis:
     timeout: 86400
     password: 6e1KWyC29w
@@ -25,22 +26,30 @@ spring:
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       group-id: bts-log-dimensions_zafu_recommend
     producer:
-      client-id: bts-rg-log
+      client-id: bts-zaful-log
     bootstrap-servers: 172.31.35.194:9092,172.31.50.250:9092,172.31.63.112:9092
 
 
 app:
   kafka:
-    log-source-topic: dy_zaful_bury_source_data
-    rg:
-      cart:
-        topic: bts_rg_cart_report
-      login:
-        topic: bts_rg_login_report
+    log-json-topic: dy_zaful_bury_source_data
+    log-output-topic: dy_bts_report_recommend_zaful
+    log-zaful-out-topic: dy_bts_zaful_re_simple_report
+    zaful-list-page-topic: dy_bts_zaful_list_page_report
+    zaful-list-page-color-topic: dy_zaful_list_page_color_report
+  hbase:
+    zfapp-userid-table: dy_gb_cookie_userid_rel
+    zfapp-user-clumn-family: cookie_userid
+
+
+server:
+  port: 38095
 
 ---
 spring:
   profiles: prod
+  hbase:
+    zk-servers: bts-master:2181,bts-masterbak:2181,bts-datanode01:2181,bts-datanode02:2181,bts-datanode03:2181,bts-datanode04:2181
   redis:
     timeout: 86400
     password: 6e1KWyC29w
@@ -52,22 +61,24 @@ spring:
       auto-offset-reset: latest
       value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-      group-id: bts-log-rg-cart-report
+      group-id: bts-log-dimensions_zafu_recommend
     producer:
-      client-id: bts-rg-log
+      client-id: bts-zaful-log
     bootstrap-servers: 172.31.35.194:9092,172.31.50.250:9092,172.31.63.112:9092
     listener:
       concurrency: 10
 
-
 app:
   kafka:
     log-source-topic: glbg-analitic
-    rg:
-      cart:
-        topic: bts_rg_cart_report
-      login:
-        topic: bts_rg_login_report
+    log-json-topic: dy_zaful_bury_source_data
+    log-output-topic: dy_bts_report_recommend_zaful
+    log-zaful-out-topic: dy_bts_zaful_re_simple_report
+    zaful-list-page-topic: dy_bts_zaful_list_page_report
+    zaful-list-page-color-topic: dy_zaful_list_page_color_report
+  hbase:
+    zfapp-userid-table: dy_gb_cookie_userid_rel
+    zfapp-user-clumn-family: cookie_userid
 
 server:
-  port: 38088
+  port: 38095

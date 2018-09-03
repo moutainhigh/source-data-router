@@ -30,7 +30,8 @@
 		<module>ips-mq-service</module>-->
         <module>bts-gb-report-source</module>
         <module>temp-log-data</module>
-    </modules>
+		<module>hbase-test</module>
+	</modules>
 
 	<parent>
 		<groupId>org.springframework.boot</groupId>

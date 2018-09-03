@@ -24,7 +24,7 @@ import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 import java.util.zip.DataFormatException;
 
-@Component
+//@Component
 public class BtsSimpleReport {
 
     @Autowired
@@ -93,7 +93,7 @@ public class BtsSimpleReport {
                     }
                 });
             }else {
-                this.logger.info("埋点中无 bts 实验信息：{}", dataMap.get("glb_ubcta"));
+                this.logger.debug("埋点中无 bts 实验信息：{}", dataMap.get("glb_ubcta"));
             }
         }
         this.countDownLatch1.countDown();

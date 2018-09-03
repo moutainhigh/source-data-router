@@ -4,6 +4,10 @@ import java.util.Map;
 
 public abstract class BtsReport {
 
+    public enum btsFields{
+        planid,versionid,bucketid,plancode,policy
+    }
+
     protected static final String skip = "_skip";
 
     private String specimen = skip;
