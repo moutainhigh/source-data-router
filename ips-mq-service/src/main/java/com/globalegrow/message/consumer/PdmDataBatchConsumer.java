@@ -45,7 +45,7 @@ public class PdmDataBatchConsumer {
 
 	private Map<String, List<ProductInfo>> productInfoMap = new ConcurrentHashMap<>();
 
-	@RabbitListener(queues = "goodsInfo_DY", containerFactory = "myFactory")
+//	@RabbitListener(queues = "goodsInfo_DY", containerFactory = "myFactory")
 	public void processMessage(Message message) {
 		String msg = new String(message.getBody());
 		GoodsInfo goodsInfo = null;

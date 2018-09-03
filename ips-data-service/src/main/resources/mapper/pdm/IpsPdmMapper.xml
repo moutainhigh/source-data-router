@@ -10,6 +10,13 @@
 		<result column="name_ch" property="nameCh" jdbcType="VARCHAR" />
 		<result column="path" property="path" jdbcType="VARCHAR" />
 	</resultMap>
+	
+	<resultMap type="com.globalegrow.ips.bean.Product"
+		id="productMap">
+		<id column="id" property="id" jdbcType="BIGINT" />
+		<result column="goods_sn" property="goodsSn" jdbcType="VARCHAR" />
+		<result column="shelf_time" property="shelfTime" jdbcType="VARCHAR" />
+	</resultMap>
 
 	<sql id="Base_Column_List">
 		id,name_en ,name_ch,path
@@ -26,5 +33,12 @@
 		<include refid="Base_Column_List" />
 		from c_product_catalog
 		where id=#{id}
+	</select>
+	
+	<select id="getProducts" resultMap="productMap" >
+		select
+		goods_sn,shelf_time
+		from p_product where draft_status = 2
+		limit #{pstart},#{psize}
 	</select>
 </mapper>

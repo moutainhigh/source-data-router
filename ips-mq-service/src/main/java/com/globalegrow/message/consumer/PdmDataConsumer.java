@@ -20,7 +20,6 @@ import com.globalegrow.message.util.BeanMapper;
 import com.globalegrow.message.util.GsonUtil;
 import com.globalegrow.service.ProductService;
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 
 @Component
@@ -28,16 +27,13 @@ public class PdmDataConsumer {
 
 	private Logger logger = LoggerFactory.getLogger(getClass());
 
-//	private Gson gson = new GsonBuilder().disableHtmlEscaping().create();
-
 	@Autowired
 	private BeanMapper beanMapper;
 
 	@Autowired
 	private ProductService productService;
 
-//	@RabbitListener(queues = "goodsInfo_DY", containerFactory = "myFactory")
-//	@RabbitListener(bindings = @QueueBinding(value = @Queue(value = "goodsInfo_DY", durable = "true", autoDelete = "false"), exchange = @Exchange(value = "amq.direct", durable = "true"), key = "goodsInfo_DY"), containerFactory = "myFactory")
+	@RabbitListener(queues = "goodsInfo_DY", containerFactory = "myFactory")
 	public void processMessage(Message message) {
 		String msg = new String(message.getBody());
 		GoodsInfo goodsInfo = null;
@@ -47,11 +43,11 @@ public class PdmDataConsumer {
 		try {
 			goodsInfo = gson.fromJson(msg, GoodsInfo.class);
 			productInfo = beanMapper.mapObjectByType(goodsInfo, ProductInfo.class);
-			logger.info("use goodsInfo and sku is:" + goodsInfo.getGoods_sn());
+//			logger.info("use goodsInfo and sku is:" + goodsInfo.getGoods_sn());
 		} catch (JsonSyntaxException e) {
 			goodsMustInfo = gson.fromJson(msg, GoodsMustInfo.class);
 			productInfo = beanMapper.mapObjectByType(goodsMustInfo, ProductInfo.class);
-			logger.info("use goodsMustInfo and sku is:" + goodsInfo.getGoods_sn());
+//			logger.info("use goodsMustInfo and sku is:" + goodsInfo.getGoods_sn());
 		}
 		if (goodsInfo != null) {
 			Map<Integer, List<GoodsImgInfo>> goods_img = goodsInfo.getGoods_img();
@@ -77,6 +73,7 @@ public class PdmDataConsumer {
 			} else {
 				productInfo.setSell_out(2);
 			}
+			productInfo.setUpdateDate(new Date());
 			if (StringUtils.isBlank(productInfo.getSale_weight())) {
 				productInfo.setSaleWeight(0.0);
 			} else {
@@ -87,10 +84,9 @@ public class PdmDataConsumer {
 			} else {
 				productInfo.setPurchasePrice(Double.valueOf(productInfo.getPurchase_price()));
 			}
-//			if (StringUtils.isBlank(productInfo.getShelf_time())) {
-//				productInfo.setShelf_time("0");
-//			}
-			productInfo.setUpdateDate(new Date());
+			if (productInfo.getCreate_time() == null) {
+				productInfo.setCreate_time(new Date());
+			}
 			productService.saveProductInfoHandler(productInfo);
 		}
 

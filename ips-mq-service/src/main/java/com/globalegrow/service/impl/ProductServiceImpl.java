@@ -15,8 +15,8 @@ import com.globalegrow.util.SpringRedisUtil;
 @Service
 public class ProductServiceImpl implements ProductService {
 
-	public static final String P_SKU_PREFIX = "p_sku";
-	
+	public static final String P_SKU_PREFIX = "dy_p_sku_";
+
 	@Autowired
 	private ProductMapper productMapper;
 
@@ -25,10 +25,17 @@ public class ProductServiceImpl implements ProductService {
 	public void saveProductInfoHandler(ProductInfo productInfo) {
 		String sku = productInfo.getGoods_sn();
 		SpringRedisUtil.put(P_SKU_PREFIX + sku, productInfo.getProduct_sn());
-		ProductInfo pInfo = productMapper.getProductInfo(sku);
-		if (pInfo != null) {
-			productInfo.setId(pInfo.getId());
-			productMapper.updateProductInfo(productInfo);
+		List<ProductInfo> pInfos = productMapper.getProductInfo(sku);
+		if (pInfos != null && !pInfos.isEmpty()) {
+			if (pInfos.size() > 1) {
+				for (int i = 0; i < pInfos.size(); i++) {
+					productMapper.deleteProductInfoById(pInfos.get(i).getId());
+				}
+				productMapper.saveProductInfo(productInfo);
+			} else {
+				productInfo.setId(pInfos.get(0).getId());
+				productMapper.updateProductInfo(productInfo);
+			}
 		} else {
 			productMapper.saveProductInfo(productInfo);
 		}
