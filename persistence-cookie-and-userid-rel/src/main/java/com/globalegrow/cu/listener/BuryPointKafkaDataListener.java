@@ -47,8 +47,7 @@ public class BuryPointKafkaDataListener {
 			if (StringUtils.isNotBlank(cookie) && !"getDeatilRecommend".equals(cookie)) {
 				Map<String, Object> outJson = new HashMap<>();
 				//满足推荐位加购事件
-				boolean isFmdEvent = "1".equals(isOrder) && StringUtils.isNotBlank(glbSku) && StringUtils.isNotBlank(glbFmd)
-						&& glbFmd.startsWith("mr_");
+				boolean isFmdEvent = "1".equals(isOrder) && StringUtils.isNotBlank(glbSku) && StringUtils.isNotBlank(glbFmd);
 				if (StringUtils.isBlank(userId) && isFmdEvent) {
 					logger.info("select rowKey familyColumn from hbase,cookie :{}", cookie);
 					Object obj = this.cuRelDataEventHandler.selectRowKeyFamilyColumn(GlobalConstants.CU_TABLE_NAME, cookie,

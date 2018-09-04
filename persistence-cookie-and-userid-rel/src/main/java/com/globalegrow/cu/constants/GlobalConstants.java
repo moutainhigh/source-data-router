@@ -34,7 +34,12 @@ public final class GlobalConstants {
 		    "is_pay_amount", 
 		    "glb_sku",
 		    "glb_ubcta",
-		    "glb_fmd"
+		    "glb_fmd",
+		    "is_lp_order",
+		    "glb_ubcta_sckw",
+		    "glb_filter_sort",
+		    "glb_s",
+		    "glb_pm"
 			);
 	
 }
