@@ -8,7 +8,7 @@ import org.springframework.context.annotation.EnableAspectJAutoProxy;
 
 @SpringBootApplication(scanBasePackages = {"com.globalegrow"})
 @MapperScan("com.globalegrow.dy.mapper")
-@EnableCaching
+//@EnableCaching
 @EnableAspectJAutoProxy(proxyTargetClass = true)
 public class ServiceStart {
 

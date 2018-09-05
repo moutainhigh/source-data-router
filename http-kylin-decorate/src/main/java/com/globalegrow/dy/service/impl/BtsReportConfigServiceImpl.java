@@ -21,7 +21,7 @@ import java.util.Collections;
 import java.util.List;
 
 @Service
-@CacheConfig(cacheNames = "bts_report_config")
+//@CacheConfig(cacheNames = "bts_report_config_2")
 public class BtsReportConfigServiceImpl implements BtsReportConfigService {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
@@ -58,7 +58,7 @@ public class BtsReportConfigServiceImpl implements BtsReportConfigService {
      * @return
      */
     @Override
-    @Cacheable("kylin_config")
+    //@Cacheable("kylin_config_2")
     public BtsReportKylinConfig getBtsReportKylinConfig(Long planId, String productLineCode, String queryType) {
         this.logger.debug("查询 bts 报表 kylin 配置");
         BtsReportKylinConfigExample example = new BtsReportKylinConfigExample();
@@ -78,7 +78,7 @@ public class BtsReportConfigServiceImpl implements BtsReportConfigService {
      * @return
      */
     @Override
-    @Cacheable("field_config")
+    @Cacheable("field_config_2")
     public List<BtsReportFieldConfigDto> btsReportFieldConfig(Long planId, String produceLineCode) {
         this.logger.debug("查询 bts 报表字段配置");
         BtsReportFieldConfigExample example = new BtsReportFieldConfigExample();
@@ -95,13 +95,13 @@ public class BtsReportConfigServiceImpl implements BtsReportConfigService {
     }
 
     @Override
-    @CacheEvict(cacheNames = "kylin_config", allEntries = false)
+    @CacheEvict(cacheNames = "kylin_config_2", allEntries = true)
     public void removeBtsReportKylinConfig(Long planId, String productLineCode, String queryType) {
 
     }
 
     @Override
-    @CacheEvict(cacheNames = "field_config", allEntries = false)
+    @CacheEvict(cacheNames = "field_config_2", allEntries = true)
     public void removeBtsReportFieldConfig(Long planId, String produceLineCode) {
 
     }
