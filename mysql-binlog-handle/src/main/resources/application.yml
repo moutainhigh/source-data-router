@@ -28,7 +28,7 @@ spring:
 
 app:
   kafka:
-    order:
+    order:dy_zaful_recommend_order_info
         topics[0]: dy_zaful_recommend_order_info
         topics[1]: dy_zaful_bts_recommend_order_info
 

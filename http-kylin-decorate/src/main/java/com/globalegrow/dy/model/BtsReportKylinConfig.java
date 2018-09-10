@@ -400,4 +400,26 @@ public class BtsReportKylinConfig implements Serializable {
     public void setKylinQuerySql(String kylinQuerySql) {
         this.kylinQuerySql = kylinQuerySql == null ? null : kylinQuerySql.trim();
     }
+
+    @Override
+    public String toString() {
+        return "BtsReportKylinConfig{" +
+                "id=" + id +
+                ", btsPlanId=" + btsPlanId +
+                ", description='" + description + '\'' +
+                ", kylinUserNamePassword='" + kylinUserNamePassword + '\'' +
+                ", kylinQueryAdress='" + kylinQueryAdress + '\'' +
+                ", createTime=" + createTime +
+                ", updateTime=" + updateTime +
+                ", createBy='" + createBy + '\'' +
+                ", kylinProjectName='" + kylinProjectName + '\'' +
+                ", queryType='" + queryType + '\'' +
+                ", btsProductLineCode='" + btsProductLineCode + '\'' +
+                ", kylinQuerySql='" + kylinQuerySql + '\'' +
+                '}';
+    }
+
+   /* public String getCacheKey() {
+        return this.hashCode() + "";
+    }*/
 }

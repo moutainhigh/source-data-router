@@ -1,11 +1,14 @@
 package com.globalegrow.dy.dto;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ReportPageDto<T> {
+public class ReportPageDto implements Serializable {
 
-    private List<T> data = new ArrayList<>();
+    private static final long serialVersionUID = 8864000217789639409L;
+    private List<Object> data = new ArrayList<>();
+
 
     private long totalCount = 0;
 
@@ -15,11 +18,11 @@ public class ReportPageDto<T> {
 
     private int pageSize = 10;
 
-    public List<T> getData() {
+    public List<Object> getData() {
         return data;
     }
 
-    public void setData(List<T> data) {
+    public void setData(List<Object> data) {
         this.data = data;
     }
 
@@ -53,5 +56,16 @@ public class ReportPageDto<T> {
 
     public void setPageSize(int pageSize) {
         this.pageSize = pageSize;
+    }
+
+    @Override
+    public String toString() {
+        return "ReportPageDto{" +
+                "data=" + data +
+                ", totalCount=" + totalCount +
+                ", totalPage=" + totalPage +
+                ", currentPage=" + currentPage +
+                ", pageSize=" + pageSize +
+                '}';
     }
 }

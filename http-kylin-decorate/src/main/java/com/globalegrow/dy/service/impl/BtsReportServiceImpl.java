@@ -13,6 +13,7 @@ import org.apache.commons.text.StringSubstitutor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
@@ -21,6 +22,7 @@ import org.springframework.web.client.RestTemplate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 @Service
 public class BtsReportServiceImpl implements BtsReportService {
@@ -60,15 +62,29 @@ public class BtsReportServiceImpl implements BtsReportService {
     };
 
     @Override
-    public ReportPageDto<Map<String, Object>> btsReport(BtsReportParameterDto btsReportParameterDto) {
+    @Cacheable(cacheNames = "bts_report_cache")
+    public ReportPageDto btsReport(BtsReportParameterDto btsReportParameterDto) {
+        BtsReportKylinConfig btsReportKylinConfig = this.btsReportConfigService.getBtsReportKylinConfig(btsReportParameterDto.getPlanId(), btsReportParameterDto.getProductLineCode(), btsReportParameterDto.getType());
+        if (btsReportKylinConfig != null) {
+            return this.reportPageDto(btsReportKylinConfig, btsReportParameterDto);
+        }
+      return new ReportPageDto();
+    }
+
+    @Override
+    @Cacheable(cacheNames = "bts_report_cache_1", key = "#btsReportParameterDto.getCacheKey()"/*,condition = "#btsReportKylinConfig != null"*/)
+    public ReportPageDto btsReport(BtsReportKylinConfig btsReportKylinConfig, BtsReportParameterDto btsReportParameterDto) {
+        return this.reportPageDto(btsReportKylinConfig, btsReportParameterDto);
+    }
+
+    private ReportPageDto reportPageDto(BtsReportKylinConfig btsReportKylinConfig, BtsReportParameterDto btsReportParameterDto) {
         Long start = System.currentTimeMillis();
-        ReportPageDto<Map<String, Object>> mapReportPageDto = new ReportPageDto<>();
+        ReportPageDto mapReportPageDto = new ReportPageDto();
         mapReportPageDto.setCurrentPage(btsReportParameterDto.getStartPage());
         if (btsReportParameterDto.getPageSize() != null) {
             mapReportPageDto.setPageSize(btsReportParameterDto.getPageSize());
         }
         //BtsReportKylinConfig btsReportKylinConfig = this.btsReportConfigService.getConfigByBtsPlanId(btsReportParameterDto.getPlanId());
-        BtsReportKylinConfig btsReportKylinConfig = this.btsReportConfigService.getBtsReportKylinConfig(btsReportParameterDto.getPlanId(), btsReportParameterDto.getProductLineCode(), btsReportParameterDto.getType());
         if (btsReportKylinConfig != null) {
             this.logger.debug("bts report config info: {}", btsReportKylinConfig);
             String sourceSql = btsReportKylinConfig.getKylinQuerySql();

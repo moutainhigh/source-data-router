@@ -363,6 +363,8 @@ public class MysqlBinlogKafkaCustomer {
                     this.logger.info("加购埋点数据中未找到 bts 绑定信息, cookie: {},recommendType: {}", cookie, recommendType);
                 }
             } else {
+                Map<String, Object> order = (Map<String, Object>) logAdt.get(this.logAdtOrderKey);
+                logAdt.put("goods_num", order.get(this.goodsNumKey) == null? order.get(this.goodsNumKey):0);
                 this.send(topic, logAdt);
             }
         }

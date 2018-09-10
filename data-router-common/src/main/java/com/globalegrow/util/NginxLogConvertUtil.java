@@ -88,8 +88,8 @@ public class NginxLogConvertUtil {
 
     public static Object valueHex(Object o) {
         String s = String.valueOf(o);
-        if (StringUtils.isNotEmpty(s) && s.contains("\\x22")) {
-            return s.replaceAll("\\\\x22", "\"");
+        if (StringUtils.isNotEmpty(s) && (s.contains("\\x22") || s.contains("\\\\x22"))) {
+            return s.replaceAll("\\\\x22", "\"").replaceAll("\\x22", "\"");
         }
         return o;
     }

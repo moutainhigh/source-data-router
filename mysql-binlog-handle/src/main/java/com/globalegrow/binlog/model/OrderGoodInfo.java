@@ -9,14 +9,15 @@ public class OrderGoodInfo implements Serializable {
     public static final String SKU = "goods_sn";
     public static final String PRICE = "goods_price";
     public static final String GOODS_NUM = "goods_number";
+    private static final long serialVersionUID = 2386895577015735850L;
 
     private String orderId;
 
     private String sku;
 
-    private Float price;
+    private Float price = 0F;
 
-    private Integer goodsNum;
+    private Integer goodsNum = 0;
 
     private Integer amount = 0;
 
