@@ -47,10 +47,10 @@ public class KylinReportController {
             Map<String, List<Map<String, Object>>> versionGroups = new HashMap<>();
             data.stream().forEach(o -> {
                 Map<String, Object> map = (Map<String, Object>) o;
-                if (versionGroups.get(map.get("BTS_VERSIONID") + "_" + map.get("DAY_START")) == null) {
-                    versionGroups.put(String.valueOf(map.get("BTS_VERSIONID") + "_" + map.get("DAY_START")), new ArrayList<>());
+                if (versionGroups.get(/*map.get("BTS_VERSIONID") + "_" + map.get("DAY_START") + "_" +*/ map.get("BTS_PLANID")) == null) {
+                    versionGroups.put(/*String.valueOf(map.get("BTS_VERSIONID") + "_" + map.get("DAY_START") + "_" + */String.valueOf(map.get("BTS_PLANID")), new ArrayList<>());
                 }
-                versionGroups.get(map.get("BTS_VERSIONID") + "_" + map.get("DAY_START")).add(map);
+                versionGroups.get(/*map.get("BTS_VERSIONID") + "_" + map.get("DAY_START") + "_" + */map.get("BTS_PLANID")).add(map);
             });
             versionGroups.entrySet().forEach(e -> {
                 Map<String, Object> entry = new HashMap<>();
