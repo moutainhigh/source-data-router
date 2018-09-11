@@ -21,7 +21,7 @@ import java.util.Collections;
 import java.util.List;
 
 @Service
-@CacheConfig(cacheNames = "bts_report_config_string")
+//@CacheConfig(cacheNames = "bts_report_config_string")
 public class BtsReportConfigServiceImpl implements BtsReportConfigService {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
@@ -58,7 +58,7 @@ public class BtsReportConfigServiceImpl implements BtsReportConfigService {
      * @return
      */
     @Override
-    @Cacheable(value = "kylin_config_3", key = "T(String).valueOf(#planId) + #productLineCode + #queryType")
+    //@Cacheable(value = "kylin_config_3", key = "T(String).valueOf(#planId) + #productLineCode + #queryType")
     public BtsReportKylinConfig getBtsReportKylinConfig(Long planId, String productLineCode, String queryType) {
         this.logger.debug("查询 bts 报表 kylin 配置");
         BtsReportKylinConfigExample example = new BtsReportKylinConfigExample();
@@ -78,7 +78,7 @@ public class BtsReportConfigServiceImpl implements BtsReportConfigService {
      * @return
      */
     @Override
-    @Cacheable(cacheNames = "field_config_3", key = "T(String).valueOf(#planId) + #productLineCode")
+    //@Cacheable(cacheNames = "field_config_3", key = "T(String).valueOf(#planId) + #productLineCode")
     public List<BtsReportFieldConfigDto> btsReportFieldConfig(Long planId, String productLineCode) {
         this.logger.debug("查询 bts 报表字段配置");
         BtsReportFieldConfigExample example = new BtsReportFieldConfigExample();
@@ -95,13 +95,13 @@ public class BtsReportConfigServiceImpl implements BtsReportConfigService {
     }
 
     @Override
-    @CacheEvict(cacheNames = "kylin_config_3", allEntries = false, beforeInvocation = true, key = "T(String).valueOf(#planId) + #productLineCode + #queryType")
+    //@CacheEvict(cacheNames = "kylin_config_3", allEntries = false, beforeInvocation = true, key = "T(String).valueOf(#planId) + #productLineCode + #queryType")
     public void removeBtsReportKylinConfig(Long planId, String productLineCode, String queryType) {
 
     }
 
     @Override
-    @CacheEvict(cacheNames = "field_config_3", allEntries = false, beforeInvocation = true, key = "T(String).valueOf(#planId) + #productLineCode")
+    //@CacheEvict(cacheNames = "field_config_3", allEntries = false, beforeInvocation = true, key = "T(String).valueOf(#planId) + #productLineCode")
     public void removeBtsReportFieldConfig(Long planId, String productLineCode) {
 
     }
