@@ -364,7 +364,7 @@ public class MysqlBinlogKafkaCustomer {
                 }
             } else {
                 Map<String, Object> order = (Map<String, Object>) logAdt.get(this.logAdtOrderKey);
-                logAdt.put("goods_num", order.get(this.goodsNumKey) == null? order.get(this.goodsNumKey):0);
+                logAdt.put("goods_num", order.get(this.goodsNumKey) != null? order.get(this.goodsNumKey):0);
                 this.send(topic, logAdt);
             }
         }
