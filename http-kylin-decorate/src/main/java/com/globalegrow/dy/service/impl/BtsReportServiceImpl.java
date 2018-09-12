@@ -135,7 +135,7 @@ public class BtsReportServiceImpl implements BtsReportService {
             headers.add("Authorization", btsReportKylinConfig.getKylinUserNamePassword());
             HttpEntity<Map<String, Object>> params = new HttpEntity<>(postParameters, headers);
             Map<String, Object> result = this.restTemplate.postForObject(btsReportKylinConfig.getKylinQueryAdress(), params, Map.class);
-            this.logger.debug("报表返回结果: {}", result);
+            //this.logger.debug("报表返回结果: {}", result);
             List<Map<String, Object>> columnMetas = (List<Map<String, Object>>) result.get("columnMetas");
             List<List<Object>> data = (List<List<Object>>) result.get("results");
             data.forEach(report -> {
@@ -162,7 +162,7 @@ public class BtsReportServiceImpl implements BtsReportService {
                 postParametersCount.put("offset", 0);
                 HttpEntity<Map<String, Object>> countParams = new HttpEntity<>(postParametersCount, headers);
                 Map<String, Object> countResult = this.restTemplate.postForObject(btsReportKylinConfig.getKylinQueryAdress(), countParams, Map.class);
-                this.logger.debug("count 请求返回结果: {}", countResult);
+                //this.logger.debug("count 请求返回结果: {}", countResult);
                 if (countResult != null) {
                     List<List<Object>> countResultValues = (List<List<Object>>) countResult.get("results");
                     this.logger.debug("count result: {}", countResultValues);

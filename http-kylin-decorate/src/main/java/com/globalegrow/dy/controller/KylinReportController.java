@@ -3,14 +3,17 @@ package com.globalegrow.dy.controller;
 import com.globalegrow.dy.dto.*;
 import com.globalegrow.dy.service.BtsReportConfigService;
 import com.globalegrow.dy.service.BtsReportService;
+import org.apache.commons.lang3.time.DateFormatUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.text.DecimalFormat;
 import java.util.*;
 
 @RestController
@@ -26,6 +29,35 @@ public class KylinReportController {
     private BtsReportConfigService btsReportConfigService;
 
     static final List<String> FIXED_FIELDS = Arrays.asList("bts_planid", "bts_versionid", "bts_bucketid", "bts_policy", "bts_plancode", "day_start");
+
+    /**
+     * BtsReportParameterDto{planId=13, groupByFields=[day_start, bts_planid, bts_versionid], whereFields={bts_planid=13}, betweenFields={day_start={min=2018-08-04, max=2018-08-23}}, orderFields={day_start=desc}, startPage=0, pageSize=10, type='query', productLineCode='ZF'}
+     */
+    @Scheduled(fixedDelay = 300000)
+    public void rgScheduling() {
+        this.logger.info("query rg login cache ahead");
+        List<String> groupFields = new ArrayList<>();
+        groupFields.add("day_start");
+        groupFields.add("bts_planid");
+        groupFields.add("bts_versionid");
+        Map<String, String> whereFields = new HashMap<>();
+        whereFields.put("bts_planid","56");
+        Map<String, Map<String, String>> betweenFields = new HashMap<>();
+        Map<String, String> minAndMax = new HashMap<>();
+        minAndMax.put("min", "2018-09-04");
+        minAndMax.put("max", DateFormatUtils.format(new Date(), "yyyy-MM-dd"));
+        Map<String, String> orderFields = new HashMap<>();
+        orderFields.put("day_start", "desc");
+        BtsReportParameterDto btsReportParameterDto = new BtsReportParameterDto();
+        btsReportParameterDto.setType("query");
+        btsReportParameterDto.setPlanId(56L);
+        btsReportParameterDto.setWhereFields(whereFields);
+        btsReportParameterDto.setProductLineCode("ZF");
+        btsReportParameterDto.setStartPage(0);
+        this.btsReportService.btsReport(this.btsReportConfigService.getBtsReportKylinConfig(btsReportParameterDto.getPlanId(), btsReportParameterDto.getProductLineCode(), btsReportParameterDto.getType()),btsReportParameterDto);
+        btsReportParameterDto.setType("all");
+        this.btsReportService.btsReport(this.btsReportConfigService.getBtsReportKylinConfig(btsReportParameterDto.getPlanId(), btsReportParameterDto.getProductLineCode(), btsReportParameterDto.getType()),btsReportParameterDto);
+    }
 
     @RequestMapping(produces="application/json;charset=UTF-8", method = RequestMethod.POST)
     public ReportPageDto btsReport(@RequestBody BtsReportParameterDto btsReportParameterDto) {
@@ -58,7 +90,7 @@ public class KylinReportController {
                     m.entrySet().forEach(e1 -> {
                         String key = e1.getKey();
                         String valueVersion = String.valueOf(e1.getValue());
-                        logger.debug("报表转换: {}, {}", key, valueVersion);
+                        //logger.debug("报表转换: {}, {}", key, valueVersion);
                         if (FIXED_FIELDS.contains(key.toLowerCase()) && !"DAY_START".equals(key) && !"BTS_VERSIONID".equals(key)) {
                             entry.put(key, valueVersion);
                         }
@@ -67,6 +99,7 @@ public class KylinReportController {
                         }
                     });
                 });
+                handleFloatValue(e, entry);
                 dataConvert.add(entry);
             });
             List<Object> objects = new ArrayList<>();
@@ -89,7 +122,7 @@ public class KylinReportController {
                     m.entrySet().forEach(e1 -> {
                         String key = e1.getKey();
                         String valueVersion = String.valueOf(e1.getValue());
-                        logger.debug("报表转换: {}, {}", key, valueVersion);
+                        //logger.debug("报表转换: {}, {}", key, valueVersion);
                         if (FIXED_FIELDS.contains(key.toLowerCase()) && !"BTS_VERSIONID".equals(key)) {
                             entry.put(key, valueVersion);
                         }
@@ -98,6 +131,7 @@ public class KylinReportController {
                         }
                     });
                 });
+                handleFloatValue(e, entry);
                 dataConvert.add(entry);
             });
             List<Object> objects = new ArrayList<>();
@@ -130,15 +164,31 @@ public class KylinReportController {
                         }
 
                     });
+
                 });
+                handleFloatValue(e, entry);
                 dataConvert.add(entry);
             });
             List<Object> objects = new ArrayList<>();
             dataConvert.stream().forEach(e -> objects.add(e));
             reportPageDto.setData(objects);
         }
-        this.logger.debug("报表转换结果: {}", reportPageDto);
+        //this.logger.debug("报表转换结果: {}", reportPageDto);
         return reportPageDto;
+    }
+
+    /**
+     * 小数去均值
+     * @param e
+     * @param entry
+     */
+    private void handleFloatValue(Map.Entry<String, List<Map<String, Object>>> e, Map<String, Object> entry) {
+        DecimalFormat decimalFormat=new DecimalFormat("0.000");
+        entry.entrySet().forEach(report -> {
+            if (String.valueOf(report.getValue()).contains(".")) {
+                entry.put(report.getKey(), decimalFormat.format(Float.valueOf(String.valueOf(report.getValue()))/e.getValue().size()));
+            }
+        });
     }
 
     private void handleGroupValue(Map<String, Object> entry, String key, String valueVersion) {

@@ -2,13 +2,26 @@ package com.globalegrow;
 
 import com.globalegrow.dy.dto.BtsReportParameterDto;
 import com.globalegrow.util.GsonUtil;
+import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.commons.text.StringSubstitutor;
 import org.junit.Test;
 
+import java.text.DecimalFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 public class SqlTest {
+
+    @Test
+    public void floatTest() {
+        DecimalFormat decimalFormat=new DecimalFormat("0.000");
+        System.out.println(decimalFormat.format(3f/10));
+        System.out.println(decimalFormat.format(10f/3));
+        System.out.println(decimalFormat.format(100f/3));
+        System.out.println(decimalFormat.format(1000f/3));
+        System.out.println(DateFormatUtils.format(new Date(), "yyyy-MM-dd"));
+    }
 
     @Test
     public void testDb() {
