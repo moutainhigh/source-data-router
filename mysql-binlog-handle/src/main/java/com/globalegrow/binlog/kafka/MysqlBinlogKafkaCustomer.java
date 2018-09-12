@@ -406,10 +406,10 @@ public class MysqlBinlogKafkaCustomer {
      * @param logAdt
      */
     private void send(String topic, Object logAdt) throws Exception {
-
+        this.logger.info("send order info to kafka topic: {}", topic);
         String json = JacksonUtil.toSortedJson(logAdt);
 
-        String redisMd5 = "dy_zf_od_distinct_" + MD5CipherUtil.generatePassword(json);
+        String redisMd5 = "dy_zf_od_distinct_" + MD5CipherUtil.generatePassword(json) + topic;
 
         String check = SpringRedisUtil.getStringValue(redisMd5);
         if (StringUtils.isEmpty(check)) {
