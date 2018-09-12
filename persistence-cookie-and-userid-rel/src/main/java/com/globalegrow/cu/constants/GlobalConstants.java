@@ -39,6 +39,7 @@ public final class GlobalConstants {
 		    "glb_ubcta_sckw",
 		    "glb_filter_sort",
 		    "glb_s",
+		    "geoip_city_country_code",
 		    "glb_pm"
 			);
 	
