@@ -8,4 +8,6 @@
 ### 报表配置查询
 
 ## 缓存清理
-curl http://localhost:38093/report-config/bts-kylin?planId=13&productLineCode=ZF&queryType=query <br>
+172.31.44.72<br>
+curl "http://localhost:38093/report-config/bts-kylin?planId=45&productLineCode=ZF&queryType=query" <br>
+curl "http://localhost:38093/report-config/bts-field?planId=45&productLineCode=ZF" <br>

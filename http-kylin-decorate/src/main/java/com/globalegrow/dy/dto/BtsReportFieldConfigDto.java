@@ -11,6 +11,9 @@ public class BtsReportFieldConfigDto implements Serializable {
 
     private String name;
 
+    public BtsReportFieldConfigDto() {
+    }
+
     public BtsReportFieldConfigDto(Long planId, String code, String name) {
         this.planId = planId;
         this.code = code;

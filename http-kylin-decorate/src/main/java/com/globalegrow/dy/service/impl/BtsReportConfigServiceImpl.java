@@ -21,7 +21,7 @@ import java.util.Collections;
 import java.util.List;
 
 @Service
-@CacheConfig(cacheNames = "bts_report_config")
+//@CacheConfig(cacheNames = "bts_report_config_string")
 public class BtsReportConfigServiceImpl implements BtsReportConfigService {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
@@ -58,7 +58,7 @@ public class BtsReportConfigServiceImpl implements BtsReportConfigService {
      * @return
      */
     @Override
-    @Cacheable("kylin_config")
+    //@Cacheable(value = "kylin_config_3", key = "T(String).valueOf(#planId) + #productLineCode + #queryType")
     public BtsReportKylinConfig getBtsReportKylinConfig(Long planId, String productLineCode, String queryType) {
         this.logger.debug("查询 bts 报表 kylin 配置");
         BtsReportKylinConfigExample example = new BtsReportKylinConfigExample();
@@ -74,15 +74,15 @@ public class BtsReportConfigServiceImpl implements BtsReportConfigService {
      * 报表字段名配置
      *
      * @param planId
-     * @param produceLineCode
+     * @param productLineCode
      * @return
      */
     @Override
-    @Cacheable("field_config")
-    public List<BtsReportFieldConfigDto> btsReportFieldConfig(Long planId, String produceLineCode) {
+    //@Cacheable(cacheNames = "field_config_3", key = "T(String).valueOf(#planId) + #productLineCode")
+    public List<BtsReportFieldConfigDto> btsReportFieldConfig(Long planId, String productLineCode) {
         this.logger.debug("查询 bts 报表字段配置");
         BtsReportFieldConfigExample example = new BtsReportFieldConfigExample();
-        example.createCriteria().andBtsPlanIdEqualTo(planId).andBtsProductLineCodeEqualTo(produceLineCode);
+        example.createCriteria().andBtsPlanIdEqualTo(planId).andBtsProductLineCodeEqualTo(productLineCode);
         List<BtsReportFieldConfig> configs = this.btsReportFieldConfigMapper.selectByExample(example);
         if (!configs.isEmpty()) {
             List<BtsReportFieldConfigDto> fieldConfigDtos = new ArrayList<>();
@@ -95,14 +95,14 @@ public class BtsReportConfigServiceImpl implements BtsReportConfigService {
     }
 
     @Override
-    @CacheEvict(cacheNames = "kylin_config", allEntries = false)
+    //@CacheEvict(cacheNames = "kylin_config_3", allEntries = false, beforeInvocation = true, key = "T(String).valueOf(#planId) + #productLineCode + #queryType")
     public void removeBtsReportKylinConfig(Long planId, String productLineCode, String queryType) {
 
     }
 
     @Override
-    @CacheEvict(cacheNames = "field_config", allEntries = false)
-    public void removeBtsReportFieldConfig(Long planId, String produceLineCode) {
+    //@CacheEvict(cacheNames = "field_config_3", allEntries = false, beforeInvocation = true, key = "T(String).valueOf(#planId) + #productLineCode")
+    public void removeBtsReportFieldConfig(Long planId, String productLineCode) {
 
     }
 }

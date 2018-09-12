@@ -82,7 +82,15 @@ public class BtsPlanInfoRedisQuery implements BtsPlanInfoQuery {
             }
 
         }
-
+        if (bts == null) {
+            Object btsObj = dataMap.get("glb_bts");
+            if (btsObj != null) {
+                Map<String, String> btsSource = GsonUtil.readValue(String.valueOf(btsObj), Map.class);
+                if (btsSource != null) {
+                    bts = this.buildBtsMap(btsSource);
+                }
+            }
+        }
         return bts;
     }
 

@@ -363,6 +363,8 @@ public class MysqlBinlogKafkaCustomer {
                     this.logger.info("加购埋点数据中未找到 bts 绑定信息, cookie: {},recommendType: {}", cookie, recommendType);
                 }
             } else {
+                Map<String, Object> order = (Map<String, Object>) logAdt.get(this.logAdtOrderKey);
+                logAdt.put("goods_num", order.get(this.goodsNumKey) != null? order.get(this.goodsNumKey):0);
                 this.send(topic, logAdt);
             }
         }
@@ -404,10 +406,10 @@ public class MysqlBinlogKafkaCustomer {
      * @param logAdt
      */
     private void send(String topic, Object logAdt) throws Exception {
-
+        this.logger.info("send order info to kafka topic: {}", topic);
         String json = JacksonUtil.toSortedJson(logAdt);
 
-        String redisMd5 = "dy_zf_od_distinct_" + MD5CipherUtil.generatePassword(json);
+        String redisMd5 = "dy_zf_od_distinct_" + MD5CipherUtil.generatePassword(json) + topic;
 
         String check = SpringRedisUtil.getStringValue(redisMd5);
         if (StringUtils.isEmpty(check)) {

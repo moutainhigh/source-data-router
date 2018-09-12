@@ -1,11 +1,15 @@
 package com.globalegrow.dy.dto;
 
+import com.globalegrow.dy.utils.MD5CipherUtil;
+
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class BtsReportParameterDto {
+public class BtsReportParameterDto implements Serializable {
+    private static final long serialVersionUID = 5311287586975858122L;
     // 实验 id
     private Long planId;
     // 分组字段
@@ -95,5 +99,24 @@ public class BtsReportParameterDto {
 
     public void setPageSize(Integer pageSize) {
         this.pageSize = pageSize;
+    }
+
+    @Override
+    public String toString() {
+        return "BtsReportParameterDto{" +
+                "planId=" + planId +
+                ", groupByFields=" + groupByFields +
+                ", whereFields=" + whereFields +
+                ", betweenFields=" + betweenFields +
+                ", orderFields=" + orderFields +
+                ", startPage=" + startPage +
+                ", pageSize=" + pageSize +
+                ", type='" + type + '\'' +
+                ", productLineCode='" + productLineCode + '\'' +
+                '}';
+    }
+
+    public String getCacheKey() {
+        return MD5CipherUtil.generatePassword(this.toString());
     }
 }
