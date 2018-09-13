@@ -31,9 +31,12 @@ public class KylinReportController {
     static final List<String> FIXED_FIELDS = Arrays.asList("bts_planid", "bts_versionid", "bts_bucketid", "bts_policy", "bts_plancode", "day_start");
 
     /**
+     * BtsReportParameterDto{planId=56, groupByFields=[bts_planid, bts_versionid], whereFields={bts_planid=56}, betweenFields={day_start={min=2018-09-04, max=2099-01-01}}, orderFields={}, startPage=0, pageSize=10, type='all', productLineCode='RG'}
+     * BtsReportParameterDto{planId=56, groupByFields=[bts_planid, bts_versionid], whereFields={bts_planid=56}, betweenFields={day_start={min=2018-09-04, max=2099-01-01}}, orderFields={}, startPage=0, pageSize=10, type='query', productLineCode='RG'}
+     * BtsReportParameterDto{planId=56, groupByFields=[day_start, bts_planid, bts_versionid], whereFields={bts_planid=56}, betweenFields={day_start={min=2018-09-04, max=2018-09-12}}, orderFields={day_start=desc}, startPage=0, pageSize=10, type='query', productLineCode='RG'}
      * BtsReportParameterDto{planId=13, groupByFields=[day_start, bts_planid, bts_versionid], whereFields={bts_planid=13}, betweenFields={day_start={min=2018-08-04, max=2018-08-23}}, orderFields={day_start=desc}, startPage=0, pageSize=10, type='query', productLineCode='ZF'}
      */
-    @Scheduled(fixedDelay = 300000)
+    @Scheduled(fixedDelay = 50000)
     public void rgScheduling() {
         this.logger.info("query rg login cache ahead");
         List<String> groupFields = new ArrayList<>();
@@ -46,17 +49,48 @@ public class KylinReportController {
         Map<String, String> minAndMax = new HashMap<>();
         minAndMax.put("min", "2018-09-04");
         minAndMax.put("max", DateFormatUtils.format(new Date(), "yyyy-MM-dd"));
+        betweenFields.put("day_start", minAndMax);
         Map<String, String> orderFields = new HashMap<>();
         orderFields.put("day_start", "desc");
         BtsReportParameterDto btsReportParameterDto = new BtsReportParameterDto();
+        btsReportParameterDto.setBetweenFields(betweenFields);
         btsReportParameterDto.setType("query");
         btsReportParameterDto.setPlanId(56L);
         btsReportParameterDto.setWhereFields(whereFields);
-        btsReportParameterDto.setProductLineCode("ZF");
+        btsReportParameterDto.setProductLineCode("RG");
         btsReportParameterDto.setStartPage(0);
-        this.btsReportService.btsReport(this.btsReportConfigService.getBtsReportKylinConfig(btsReportParameterDto.getPlanId(), btsReportParameterDto.getProductLineCode(), btsReportParameterDto.getType()),btsReportParameterDto);
-        btsReportParameterDto.setType("all");
-        this.btsReportService.btsReport(this.btsReportConfigService.getBtsReportKylinConfig(btsReportParameterDto.getPlanId(), btsReportParameterDto.getProductLineCode(), btsReportParameterDto.getType()),btsReportParameterDto);
+        btsReportParameterDto.setOrderFields(orderFields);
+        this.btsReportService.btsReport(/*this.btsReportConfigService.getBtsReportKylinConfig(btsReportParameterDto.getPlanId(), btsReportParameterDto.getProductLineCode(), btsReportParameterDto.getType()),*/btsReportParameterDto);
+        BtsReportParameterDto btsReportParameterDto2 = new BtsReportParameterDto();
+        btsReportParameterDto2.setType("query");
+        btsReportParameterDto2.setPlanId(56L);
+        Map<String, Map<String, String>> betweenFields2 = new HashMap<>();
+        Map<String, String> minAndMax2 = new HashMap<>();
+        minAndMax2.put("min", "2018-09-04");
+        minAndMax2.put("max", "2099-01-01");
+        betweenFields.put("day_start", minAndMax2);
+        btsReportParameterDto2.setWhereFields(whereFields);
+        btsReportParameterDto2.setBetweenFields(betweenFields2);
+        btsReportParameterDto2.setProductLineCode("RG");
+        btsReportParameterDto2.setStartPage(0);
+        //btsReportParameterDto2.setType("query");
+        this.btsReportService.btsReport(/*this.btsReportConfigService.getBtsReportKylinConfig(btsReportParameterDto2.getPlanId(), btsReportParameterDto2.getProductLineCode(), btsReportParameterDto2.getType()),*/btsReportParameterDto2);
+
+
+        BtsReportParameterDto btsReportParameterDto3 = new BtsReportParameterDto();
+        //btsReportParameterDto3.setType("query");
+        btsReportParameterDto3.setPlanId(56L);
+        Map<String, Map<String, String>> betweenFields3 = new HashMap<>();
+        Map<String, String> minAndMax3 = new HashMap<>();
+        minAndMax2.put("min", "2018-09-04");
+        minAndMax2.put("max", "2099-01-01");
+        betweenFields.put("day_start", minAndMax3);
+        btsReportParameterDto3.setWhereFields(whereFields);
+        btsReportParameterDto3.setBetweenFields(betweenFields3);
+        btsReportParameterDto3.setProductLineCode("RG");
+        btsReportParameterDto3.setStartPage(0);
+        btsReportParameterDto3.setType("all");
+        this.btsReportService.btsReport(/*this.btsReportConfigService.getBtsReportKylinConfig(btsReportParameterDto3.getPlanId(), btsReportParameterDto3.getProductLineCode(), btsReportParameterDto3.getType()),*/btsReportParameterDto3);
     }
 
     @RequestMapping(produces="application/json;charset=UTF-8", method = RequestMethod.POST)
@@ -71,7 +105,8 @@ public class KylinReportController {
         if (!groupByVersion) {
             groupString.add("bts_versionid");
         }
-        ReportPageDto reportPageDto = this.btsReportService.btsReport(this.btsReportConfigService.getBtsReportKylinConfig(btsReportParameterDto.getPlanId(), btsReportParameterDto.getProductLineCode(), btsReportParameterDto.getType()),btsReportParameterDto);
+        //ReportPageDto reportPageDto = this.btsReportService.btsReport(this.btsReportConfigService.getBtsReportKylinConfig(btsReportParameterDto.getPlanId(), btsReportParameterDto.getProductLineCode(), btsReportParameterDto.getType()),btsReportParameterDto);
+        ReportPageDto reportPageDto = this.btsReportService.btsReport(btsReportParameterDto);
         List<Object> data = reportPageDto.getData();
 
         if (!groupByDay && !groupByVersion) {

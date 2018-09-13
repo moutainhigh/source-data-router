@@ -26,6 +26,7 @@ public class RedisCacheConfig {
         cacheManager.setUsePrefix(true);
         Map<String, Long> expires = new HashMap<>();
         expires.put("bts_report_cache_1", 900L);
+        expires.put("bts_report_data_cache", 900L);
         cacheManager.setExpires(expires);
         return cacheManager;
     }

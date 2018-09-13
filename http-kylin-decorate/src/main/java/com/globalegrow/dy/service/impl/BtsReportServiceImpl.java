@@ -61,18 +61,25 @@ public class BtsReportServiceImpl implements BtsReportService {
         }
     };
 
+    /**
+     *
+     * @param btsReportParameterDto
+     * @return
+     */
+    // /*, sync = true*//*condition = "#btsReportKylinConfig.getData().size() > 0",#result != null && */
     @Override
-    @Cacheable(cacheNames = "bts_report_cache")
+    @Cacheable(cacheNames = "bts_report_data_cache", key = "#btsReportParameterDto.getCacheKey()" ,unless = "#result.data.size() == 0"  )
     public ReportPageDto btsReport(BtsReportParameterDto btsReportParameterDto) {
         BtsReportKylinConfig btsReportKylinConfig = this.btsReportConfigService.getBtsReportKylinConfig(btsReportParameterDto.getPlanId(), btsReportParameterDto.getProductLineCode(), btsReportParameterDto.getType());
         if (btsReportKylinConfig != null) {
             return this.reportPageDto(btsReportKylinConfig, btsReportParameterDto);
         }
+        this.logger.error("bts kylin 配置为空");
       return new ReportPageDto();
     }
 
     @Override
-    @Cacheable(cacheNames = "bts_report_cache_1", key = "#btsReportParameterDto.getCacheKey()"/*,condition = "#btsReportKylinConfig != null"*/)
+    @Cacheable(cacheNames = "bts_report_cache_1", key = "#btsReportParameterDto.getCacheKey()",/*condition = "#btsReportKylinConfig.getData().size() > 0",#result != null && */ unless = "#result.data.size() > 0")
     public ReportPageDto btsReport(BtsReportKylinConfig btsReportKylinConfig, BtsReportParameterDto btsReportParameterDto) {
         return this.reportPageDto(btsReportKylinConfig, btsReportParameterDto);
     }
