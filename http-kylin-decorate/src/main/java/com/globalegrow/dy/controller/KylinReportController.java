@@ -30,12 +30,12 @@ public class KylinReportController {
 
     static final List<String> FIXED_FIELDS = Arrays.asList("bts_planid", "bts_versionid", "bts_bucketid", "bts_policy", "bts_plancode", "day_start");
 
-    /**
-     * BtsReportParameterDto{planId=56, groupByFields=[bts_planid, bts_versionid], whereFields={bts_planid=56}, betweenFields={day_start={min=2018-09-04, max=2099-01-01}}, orderFields={}, startPage=0, pageSize=10, type='all', productLineCode='RG'}
+/*    *//**
+     * BtsReportParameterDto{planId=56, groupByFields=[bts_planid], whereFields={bts_planid=56}, betweenFields={day_start={min=2018-09-04, max=2099-01-01}}, orderFields={}, startPage=0, pageSize=10, type='query', productLineCode='RG'}
      * BtsReportParameterDto{planId=56, groupByFields=[bts_planid, bts_versionid], whereFields={bts_planid=56}, betweenFields={day_start={min=2018-09-04, max=2099-01-01}}, orderFields={}, startPage=0, pageSize=10, type='query', productLineCode='RG'}
-     * BtsReportParameterDto{planId=56, groupByFields=[day_start, bts_planid, bts_versionid], whereFields={bts_planid=56}, betweenFields={day_start={min=2018-09-04, max=2018-09-12}}, orderFields={day_start=desc}, startPage=0, pageSize=10, type='query', productLineCode='RG'}
-     * BtsReportParameterDto{planId=13, groupByFields=[day_start, bts_planid, bts_versionid], whereFields={bts_planid=13}, betweenFields={day_start={min=2018-08-04, max=2018-08-23}}, orderFields={day_start=desc}, startPage=0, pageSize=10, type='query', productLineCode='ZF'}
-     */
+     * BtsReportParameterDto{planId=56, groupByFields=[day_start, bts_planid, bts_versionid], whereFields={bts_planid=56}, betweenFields={day_start={min=2018-09-04, max=2018-09-14}}, orderFields={day_start=desc}, startPage=0, pageSize=10, type='query', productLineCode='RG'}
+     * BtsReportParameterDto{planId=56, groupByFields=[bts_planid, bts_versionid], whereFields={bts_planid=56}, betweenFields={day_start={min=2018-09-04, max=2099-01-01}}, orderFields={}, startPage=0, pageSize=10, type='all', productLineCode='RG'}
+     *//*
     @Scheduled(fixedDelay = 50000)
     public void rgScheduling() {
         this.logger.info("query rg login cache ahead");
@@ -59,8 +59,9 @@ public class KylinReportController {
         btsReportParameterDto.setWhereFields(whereFields);
         btsReportParameterDto.setProductLineCode("RG");
         btsReportParameterDto.setStartPage(0);
+        btsReportParameterDto.setPageSize(10);
         btsReportParameterDto.setOrderFields(orderFields);
-        this.btsReportService.btsReport(/*this.btsReportConfigService.getBtsReportKylinConfig(btsReportParameterDto.getPlanId(), btsReportParameterDto.getProductLineCode(), btsReportParameterDto.getType()),*/btsReportParameterDto);
+        this.btsReportService.btsReport(*//*this.btsReportConfigService.getBtsReportKylinConfig(btsReportParameterDto.getPlanId(), btsReportParameterDto.getProductLineCode(), btsReportParameterDto.getType()),*//*btsReportParameterDto);
         BtsReportParameterDto btsReportParameterDto2 = new BtsReportParameterDto();
         btsReportParameterDto2.setType("query");
         btsReportParameterDto2.setPlanId(56L);
@@ -74,7 +75,7 @@ public class KylinReportController {
         btsReportParameterDto2.setProductLineCode("RG");
         btsReportParameterDto2.setStartPage(0);
         //btsReportParameterDto2.setType("query");
-        this.btsReportService.btsReport(/*this.btsReportConfigService.getBtsReportKylinConfig(btsReportParameterDto2.getPlanId(), btsReportParameterDto2.getProductLineCode(), btsReportParameterDto2.getType()),*/btsReportParameterDto2);
+        this.btsReportService.btsReport(*//*this.btsReportConfigService.getBtsReportKylinConfig(btsReportParameterDto2.getPlanId(), btsReportParameterDto2.getProductLineCode(), btsReportParameterDto2.getType()),*//*btsReportParameterDto2);
 
 
         BtsReportParameterDto btsReportParameterDto3 = new BtsReportParameterDto();
@@ -90,8 +91,8 @@ public class KylinReportController {
         btsReportParameterDto3.setProductLineCode("RG");
         btsReportParameterDto3.setStartPage(0);
         btsReportParameterDto3.setType("all");
-        this.btsReportService.btsReport(/*this.btsReportConfigService.getBtsReportKylinConfig(btsReportParameterDto3.getPlanId(), btsReportParameterDto3.getProductLineCode(), btsReportParameterDto3.getType()),*/btsReportParameterDto3);
-    }
+        this.btsReportService.btsReport(*//*this.btsReportConfigService.getBtsReportKylinConfig(btsReportParameterDto3.getPlanId(), btsReportParameterDto3.getProductLineCode(), btsReportParameterDto3.getType()),*//*btsReportParameterDto3);
+    }*/
 
     @RequestMapping(produces="application/json;charset=UTF-8", method = RequestMethod.POST)
     public ReportPageDto btsReport(@RequestBody BtsReportParameterDto btsReportParameterDto) {
