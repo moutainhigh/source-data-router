@@ -31,7 +31,8 @@
         <module>bts-gb-report-source</module>
         <module>temp-log-data</module>
 		<module>hbase-test</module>
-	</modules>
+        <module>gb-mysql-binlog-handle</module>
+    </modules>
 
 	<parent>
 		<groupId>org.springframework.boot</groupId>
