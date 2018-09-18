@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 
-//@Component
+@Component
 @ConfigurationProperties(prefix = "app.kafka")
 public class BtsInfoAddListener {
 
