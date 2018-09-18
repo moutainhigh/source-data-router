@@ -67,8 +67,10 @@ public class GbMysqlBinlog {
                     String finalUserId = userId;
                     skuInfos.forEach(sku -> {
                         String skuValue = String.valueOf(sku.get("sku"));
+                        String redisKey = "dy_gb_m" + finalUserId + "_" + skuValue;
+                        this.logger.info("redis key: {}", redisKey);
                         GoodsAddCartInfo goodsAddCartInfo = new GoodsAddCartInfo(String.valueOf(m.get("glb_u")), finalUserId, skuValue, 0, GbBtsInfoUtil.gbBtsInfo(m));
-                        SpringRedisUtil.put("dy_gb_m" + finalUserId + "_" + skuValue, GsonUtil.toJson(goodsAddCartInfo), 1209600);
+                        SpringRedisUtil.put(redisKey, GsonUtil.toJson(goodsAddCartInfo), 1209600);
                     });
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -79,8 +81,14 @@ public class GbMysqlBinlog {
         }
     }
 
+    /**
+     * 从 elasticsearch 查找 userid
+     * @param map
+     * @return
+     */
     private String getUserIdFromEs(Map<String, Object> map) {
         Map<String, Object> userId = getDoc("cookie-userid-rel", "userid", String.valueOf(map.get("glb_od")) + "_" + String.valueOf(map.get("glb_d")) + "_" + String.valueOf(map.get("glb_dc")));
+        this.logger.info("userid and cookie rel: {}", userId);
         if (userId != null) {
             return String.valueOf(userId.get("userid"));
         }
@@ -127,6 +135,10 @@ public class GbMysqlBinlog {
         return btsJson;
     }
 
+    /**
+     * 处理订单
+     * @param record
+     */
     @KafkaListener(topics = {"dy_gb_mysql_binlog"})
     public void listen(ConsumerRecord<String, String> record) {
         String mysqlBinLog = record.value();
@@ -136,8 +148,9 @@ public class GbMysqlBinlog {
             PictureCounter pictureCounter = new PictureCounter();
             String userId = String.valueOf(dataMap.get("user_id"));
             String sku = String.valueOf(dataMap.get("goods_sn"));
-            String redisCache = SpringRedisUtil.getStringValue("dy_gb_m" + userId + "_" + sku);
-            this.logger.info("redis cache info: {}", redisCache);
+            String redisKey = "dy_gb_m" + userId + "_" + sku;
+            String redisCache = SpringRedisUtil.getStringValue(redisKey);
+            this.logger.info("redis cache info, redis key: {} data: {}",redisKey, redisCache);
             if (StringUtils.isNotEmpty(redisCache)) {
                 GoodsAddCartInfo goodsAddCartInfo = GsonUtil.readValue(redisCache, GoodsAddCartInfo.class);
                 pictureCounter.setSpecimen(goodsAddCartInfo.getCookie());

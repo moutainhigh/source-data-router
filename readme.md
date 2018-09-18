@@ -23,7 +23,7 @@
     bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic kylin_bts_report --from-beginning <br>
     bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic kylin_bts_zaful_report --from-beginning <br>
     bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic kylin_bts_zaful_log --from-beginning <br>
-    bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic zaful_mysql_binlog_kylin --from-beginning <br>
+    bin/kafka-console-consumer.sh --bootstrap-server 172.31.35.194:9092,172.31.50.250:9092,172.31.63.112:9092 --topic zaful_mysql_binlog_kylin --from-beginning <br>
     bin/kafka-console-producer.sh --broker-list localhost:9092 --topic bury_point_log_default <br>
     bin/kafka-topics.sh --list --zookeeper localhost:2181 <br>
     bin/kafka-topics.sh --zookeeper localhost:2181 --create --topic kylin_bts_zaful_report --partitions 1 --replication-factor 1 <br>
