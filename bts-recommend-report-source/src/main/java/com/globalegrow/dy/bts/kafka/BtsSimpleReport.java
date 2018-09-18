@@ -24,7 +24,7 @@ import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 import java.util.zip.DataFormatException;
 
-//@Component
+@Component
 public class BtsSimpleReport {
 
     @Autowired
