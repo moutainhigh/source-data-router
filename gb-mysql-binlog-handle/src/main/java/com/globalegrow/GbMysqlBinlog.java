@@ -68,7 +68,7 @@ public class GbMysqlBinlog {
                     skuInfos.forEach(sku -> {
                         String skuValue = String.valueOf(sku.get("sku"));
                         String redisKey = "dy_gb_m" + finalUserId + "_" + skuValue;
-                        this.logger.info("add_cart_to_redis_key: {}", redisKey);
+                        this.logger.info("userid and cookie rel add_cart_to_redis_key: {}", redisKey);
                         GoodsAddCartInfo goodsAddCartInfo = new GoodsAddCartInfo(String.valueOf(m.get("glb_u")), finalUserId, skuValue, 0, GbBtsInfoUtil.gbBtsInfo(m));
                         SpringRedisUtil.put(redisKey, GsonUtil.toJson(goodsAddCartInfo), 1209600);
                     });
@@ -87,8 +87,9 @@ public class GbMysqlBinlog {
      * @return
      */
     private String getUserIdFromEs(Map<String, Object> map) {
-        Map<String, Object> userId = getDoc("cookie-userid-rel", "userid", String.valueOf(map.get("glb_od")) + "_" + String.valueOf(map.get("glb_d")) + "_" + String.valueOf(map.get("glb_dc")));
-        this.logger.info("userid and cookie rel: {}", userId);
+        String id = String.valueOf(map.get("glb_od")) + "_" + String.valueOf(map.get("glb_d")) + "_" + String.valueOf(map.get("glb_dc"));
+        Map<String, Object> userId = getDoc("cookie-userid-rel", "userid", id);
+        this.logger.info("userid and cookie rel, id: {}: {}", id, userId);
         if (userId != null) {
             return String.valueOf(userId.get("userid"));
         }
@@ -143,6 +144,7 @@ public class GbMysqlBinlog {
     public void listen(ConsumerRecord<String, String> record) {
         String mysqlBinLog = record.value();
         Map<String, Object> dataMap = GsonUtil.readValue(mysqlBinLog, Map.class);
+        // sku 下单数
         if ("insert".equals(dataMap.get("type")) && StringUtils.isNumeric(String.valueOf(dataMap.get("table")).replace("order_goods_", ""))) {
             Map<String, Object> tableData = (Map<String, Object>) dataMap.get("data");
             this.logger.info("db order data: {}", mysqlBinLog);
@@ -154,6 +156,27 @@ public class GbMysqlBinlog {
             this.logger.info("redis cache info, redis key: {} data: {}",redisKey, redisCache);
             if (StringUtils.isNotEmpty(redisCache)) {
                 GoodsAddCartInfo goodsAddCartInfo = GsonUtil.readValue(redisCache, GoodsAddCartInfo.class);
+                String orderId = String.valueOf(tableData.get("order_goods_id"));
+                // 缓存订单商品金额
+                String amountKey = "dy_gb_m_amount_" + orderId;
+                String redisAmount = SpringRedisUtil.getEnvRedisKey(amountKey);
+                String goodNum = String.valueOf(tableData.get("qty"));
+                if (goodNum.indexOf(".") > 0) {
+                    goodNum = goodNum.substring(0, goodNum.indexOf("."));
+                }
+                Float f = ((Float.valueOf(String.valueOf(tableData.get("price"))) * Integer.valueOf(goodNum)) * 100);
+                if (StringUtils.isEmpty(redisAmount)) {
+                    goodsAddCartInfo.setSalesAmount(f.intValue());
+                    SpringRedisUtil.put(amountKey, GsonUtil.toJson(goodsAddCartInfo) + "", 1209600);
+                    //SpringRedisUtil.put(amountKey, f.intValue() + "", 1209600);
+                }else {
+                    GoodsAddCartInfo goodsAddCartInfo1 = GsonUtil.readValue(redisAmount, GoodsAddCartInfo.class);
+                    Integer intAmount = Integer.valueOf(amountKey) + f.intValue();
+                    goodsAddCartInfo1.setSalesAmount(intAmount);
+                    SpringRedisUtil.put(amountKey, GsonUtil.toJson(goodsAddCartInfo) + "", 1209600);
+                    //SpringRedisUtil.put(amountKey, intAmount + "", 1209600);
+                }
+
                 pictureCounter.setSpecimen(goodsAddCartInfo.getCookie());
                 pictureCounter.setSkuOrder(1);
                 Map reportMap = DyBeanUtils.objToMap(pictureCounter);
@@ -173,23 +196,46 @@ public class GbMysqlBinlog {
                     }
                 });
 
-            }/*else {
-                Map reportMap = DyBeanUtils.objToMap(pictureCounter);
-                reportMap.putAll(defaultBtsTestInfo());
-                reportMap.put(NginxLogConvertUtil.TIMESTAMP_KEY, System.currentTimeMillis());
-                ListenableFuture<SendResult<String, String>> future = kafkaTemplate.send("bts-gb-gdd-m-pic-report-precisely", GsonUtil.toJson(reportMap));
-                future.addCallback(new ListenableFutureCallback<SendResult<String, String>>() {
-                    @Override
-                    public void onSuccess(SendResult<String, String> result) {
-                        logger.info("log json with dimensions send success!");
-                    }
+            }
+        }else
+        // 订单金额
+        if (StringUtils.isNumeric(String.valueOf(dataMap.get("table")).replace("order_info_", ""))) {
+            Map<String, Object> tableData = (Map<String, Object>) dataMap.get("data");
+            String orderId = String.valueOf(tableData.get("id"));
+            String status = String.valueOf(dataMap.get("pay_status"));
 
-                    @Override
-                    public void onFailure(Throwable ex) {
-                        logger.error("log json with dimensions send failed! msg: {}", GsonUtil.toJson(reportMap), ex);
-                    }
-                });
-            }*/
+            if (status.indexOf(".") > 0) {
+                status = status.substring(0, status.indexOf("."));
+            }
+
+            if ("1".equals(status) || "3".equals(status)){
+                String amountKey = "dy_gb_m_amount_" + orderId;
+                String redisAmount = SpringRedisUtil.getEnvRedisKey(amountKey);
+                if (StringUtils.isNotEmpty(redisAmount)) {
+                    GoodsAddCartInfo goodsAddCartInfo1 = GsonUtil.readValue(redisAmount, GoodsAddCartInfo.class);
+                    PictureCounter pictureCounter = new PictureCounter();
+
+                    pictureCounter.setSpecimen(goodsAddCartInfo1.getCookie());
+                    pictureCounter.setAmount(goodsAddCartInfo1.getSalesAmount());
+                    Map reportMap = DyBeanUtils.objToMap(pictureCounter);
+                    reportMap.putAll(goodsAddCartInfo1.getBts());
+                    reportMap.put(NginxLogConvertUtil.TIMESTAMP_KEY, System.currentTimeMillis());
+
+                    ListenableFuture<SendResult<String, String>> future = kafkaTemplate.send("bts-gb-gdd-m-pic-report-precisely", GsonUtil.toJson(reportMap));
+                    future.addCallback(new ListenableFutureCallback<SendResult<String, String>>() {
+                        @Override
+                        public void onSuccess(SendResult<String, String> result) {
+                            logger.info("log json with dimensions send success!");
+                        }
+
+                        @Override
+                        public void onFailure(Throwable ex) {
+                            logger.error("log json with dimensions send failed! msg: {}", GsonUtil.toJson(reportMap), ex);
+                        }
+                    });
+
+                }
+            }
 
         }
 
