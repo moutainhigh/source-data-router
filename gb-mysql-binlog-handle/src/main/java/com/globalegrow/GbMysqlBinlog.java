@@ -68,7 +68,7 @@ public class GbMysqlBinlog {
                     skuInfos.forEach(sku -> {
                         String skuValue = String.valueOf(sku.get("sku"));
                         String redisKey = "dy_gb_m" + finalUserId + "_" + skuValue;
-                        this.logger.info("redis key: {}", redisKey);
+                        this.logger.info("add_cart_to_redis_key: {}", redisKey);
                         GoodsAddCartInfo goodsAddCartInfo = new GoodsAddCartInfo(String.valueOf(m.get("glb_u")), finalUserId, skuValue, 0, GbBtsInfoUtil.gbBtsInfo(m));
                         SpringRedisUtil.put(redisKey, GsonUtil.toJson(goodsAddCartInfo), 1209600);
                     });
@@ -144,10 +144,11 @@ public class GbMysqlBinlog {
         String mysqlBinLog = record.value();
         Map<String, Object> dataMap = GsonUtil.readValue(mysqlBinLog, Map.class);
         if ("insert".equals(dataMap.get("type")) && StringUtils.isNumeric(String.valueOf(dataMap.get("table")).replace("order_goods_", ""))) {
-
+            Map<String, Object> tableData = (Map<String, Object>) dataMap.get("data");
+            this.logger.info("db order data: {}", mysqlBinLog);
             PictureCounter pictureCounter = new PictureCounter();
-            String userId = String.valueOf(dataMap.get("user_id"));
-            String sku = String.valueOf(dataMap.get("goods_sn"));
+            String userId = String.valueOf(((Double)tableData.get("user_id")).longValue());
+            String sku = String.valueOf(tableData.get("goods_sn"));
             String redisKey = "dy_gb_m" + userId + "_" + sku;
             String redisCache = SpringRedisUtil.getStringValue(redisKey);
             this.logger.info("redis cache info, redis key: {} data: {}",redisKey, redisCache);
