@@ -70,7 +70,7 @@ public class BtsReportServiceImpl implements BtsReportService {
     @Override
     @Cacheable(cacheNames = "bts_report_data_cache", key = "#btsReportParameterDto.getCacheKey()" ,unless = "#result.data.size() == 0"  )
     public ReportPageDto btsReport(BtsReportParameterDto btsReportParameterDto) {
-        BtsReportKylinConfig btsReportKylinConfig = this.btsReportConfigService.getBtsReportKylinConfig(btsReportParameterDto.getPlanId(), btsReportParameterDto.getProductLineCode(), btsReportParameterDto.getType());
+        BtsReportKylinConfig btsReportKylinConfig = this.btsReportConfigService.configMixedQuery(btsReportParameterDto);
         if (btsReportKylinConfig != null) {
             return this.reportPageDto(btsReportKylinConfig, btsReportParameterDto);
         }

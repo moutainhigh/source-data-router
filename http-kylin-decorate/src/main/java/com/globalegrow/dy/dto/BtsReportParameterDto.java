@@ -28,6 +28,16 @@ public class BtsReportParameterDto implements Serializable {
     private String type;
     // bts 产品线
     private String productLineCode;
+    // 实验 code
+    private String planCode;
+
+    public String getPlanCode() {
+        return planCode;
+    }
+
+    public void setPlanCode(String planCode) {
+        this.planCode = planCode;
+    }
 
     public String getProductLineCode() {
         return productLineCode;

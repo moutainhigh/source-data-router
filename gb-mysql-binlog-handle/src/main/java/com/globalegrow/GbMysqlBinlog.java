@@ -159,6 +159,7 @@ public class GbMysqlBinlog {
                 String orderId = String.valueOf(tableData.get("order_goods_id"));
                 // 缓存订单商品金额
                 String amountKey = "dy_gb_m_amount_" + orderId;
+
                 String redisAmount = SpringRedisUtil.getEnvRedisKey(amountKey);
                 String goodNum = String.valueOf(tableData.get("qty"));
                 if (goodNum.indexOf(".") > 0) {
@@ -168,12 +169,14 @@ public class GbMysqlBinlog {
                 if (StringUtils.isEmpty(redisAmount)) {
                     goodsAddCartInfo.setSalesAmount(f.intValue());
                     SpringRedisUtil.put(amountKey, GsonUtil.toJson(goodsAddCartInfo) + "", 1209600);
+                    this.logger.info("支付金额缓存: {}, {}", amountKey, goodsAddCartInfo);
                     //SpringRedisUtil.put(amountKey, f.intValue() + "", 1209600);
                 }else {
                     GoodsAddCartInfo goodsAddCartInfo1 = GsonUtil.readValue(redisAmount, GoodsAddCartInfo.class);
                     Integer intAmount = Integer.valueOf(amountKey) + f.intValue();
                     goodsAddCartInfo1.setSalesAmount(intAmount);
-                    SpringRedisUtil.put(amountKey, GsonUtil.toJson(goodsAddCartInfo) + "", 1209600);
+                    SpringRedisUtil.put(amountKey, GsonUtil.toJson(goodsAddCartInfo1) + "", 1209600);
+                    this.logger.info("支付金额缓存: {}, {}", amountKey, goodsAddCartInfo1);
                     //SpringRedisUtil.put(amountKey, intAmount + "", 1209600);
                 }
 
@@ -212,6 +215,7 @@ public class GbMysqlBinlog {
                 String amountKey = "dy_gb_m_amount_" + orderId;
                 String redisAmount = SpringRedisUtil.getEnvRedisKey(amountKey);
                 if (StringUtils.isNotEmpty(redisAmount)) {
+                    this.logger.info("已支付 m 端订单信息: {}", redisAmount);
                     GoodsAddCartInfo goodsAddCartInfo1 = GsonUtil.readValue(redisAmount, GoodsAddCartInfo.class);
                     PictureCounter pictureCounter = new PictureCounter();
 

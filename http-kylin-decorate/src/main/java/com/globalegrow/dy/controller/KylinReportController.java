@@ -246,7 +246,7 @@ public class KylinReportController {
 
     @RequestMapping(value = "config", method = RequestMethod.POST, produces="application/json;charset=UTF-8")
     public ReportFieldConfigResultDto fieldConfigDtos(@RequestBody FieldConfigParameterDto dto) {
-        return new ReportFieldConfigResultDto(this.btsReportConfigService.btsReportFieldConfig(dto.getPlanId(), dto.getProductLineCode()));
+        return new ReportFieldConfigResultDto(this.btsReportConfigService.btsReportFieldConfigMixedQuery(dto));
     }
 
  /*   public static void main(String[] args) {
