@@ -1,9 +1,6 @@
 package com.globalegrow;
 
-import com.globalegrow.util.DyBeanUtils;
-import com.globalegrow.util.GsonUtil;
-import com.globalegrow.util.NginxLogConvertUtil;
-import com.globalegrow.util.SpringRedisUtil;
+import com.globalegrow.util.*;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.StringEscapeUtils;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
@@ -88,7 +85,7 @@ public class GbMysqlBinlog {
      */
     private String getUserIdFromEs(Map<String, Object> map) {
         String id = String.valueOf(map.get("glb_od")) + "_" + String.valueOf(map.get("glb_d")) + "_" + String.valueOf(map.get("glb_dc"));
-        Map<String, Object> userId = getDoc("cookie-userid-rel", "userid", id);
+        Map<String, Object> userId = getDoc("cookie-userid-rel", "userid", MD5CipherUtil.generatePassword(id));
         this.logger.info("userid and cookie rel, id: {}: {}", id, userId);
         if (userId != null) {
             return String.valueOf(userId.get("userid"));
@@ -173,7 +170,7 @@ public class GbMysqlBinlog {
                     //SpringRedisUtil.put(amountKey, f.intValue() + "", 1209600);
                 }else {
                     GoodsAddCartInfo goodsAddCartInfo1 = GsonUtil.readValue(redisAmount, GoodsAddCartInfo.class);
-                    Integer intAmount = Integer.valueOf(amountKey) + f.intValue();
+                    Integer intAmount = goodsAddCartInfo1.getSalesAmount() + f.intValue();
                     goodsAddCartInfo1.setSalesAmount(intAmount);
                     SpringRedisUtil.put(amountKey, GsonUtil.toJson(goodsAddCartInfo1) + "", 1209600);
                     this.logger.info("支付金额缓存: {}, {}", amountKey, goodsAddCartInfo1);
@@ -214,8 +211,9 @@ public class GbMysqlBinlog {
             if ("1".equals(status) || "3".equals(status)){
                 String amountKey = "dy_gb_m_amount_" + orderId;
                 String redisAmount = SpringRedisUtil.getEnvRedisKey(amountKey);
+                this.logger.info("paid_order: {}, {}", amountKey, redisAmount);
                 if (StringUtils.isNotEmpty(redisAmount)) {
-                    this.logger.info("已支付 m 端订单信息: {}", redisAmount);
+                    this.logger.info("paid_order 已支付 m 端订单信息: {}", redisAmount);
                     GoodsAddCartInfo goodsAddCartInfo1 = GsonUtil.readValue(redisAmount, GoodsAddCartInfo.class);
                     PictureCounter pictureCounter = new PictureCounter();
 
