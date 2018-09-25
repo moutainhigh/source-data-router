@@ -17,9 +17,10 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
+import java.util.stream.Collectors;
 
 @Component
-public class GbGoodDetailRecommendReportListener extends CommonBtsLogHandle {
+public class GbGoodDetailRecommendReportListener extends GbBtsInfo {
 
     @Value("${app.kafka.gb-good-detail-rec-topic}")
     private String goodDetailRecommendReportTopic;
@@ -123,10 +124,12 @@ public class GbGoodDetailRecommendReportListener extends CommonBtsLogHandle {
                 if (isExposureEvent && pmIsMr && StringUtils.isNotEmpty(glbUbcta) && !"null".equals(glbUbcta)) {
                     this.logger.debug("推荐位曝光 pv");
                     btsGbRecommendReport.setRecommendTypeExposurePv(1);
-                    List ubcs = GsonUtil.readValue(glbUbcta, List.class);
+                    List<Map<String, String>> ubcs = GsonUtil.readValue(glbUbcta, List.class);
                     if (ubcs != null && ubcs.size() > 0) {
                         this.logger.debug("曝光商品数");
-                        btsGbRecommendReport.setSkuExposure(ubcs.size());
+                        String policy = btsInfo.get("mdlc");
+                        List<Map<String, String>> ubcsBts =  ubcs.stream().filter(e -> policy.equals(e.get("mrlc"))).collect(Collectors.toList());
+                        btsGbRecommendReport.setSkuExposure(ubcsBts.size());
                     }
                     return this.reportDataToMap(btsGbRecommendReport);
                 }
