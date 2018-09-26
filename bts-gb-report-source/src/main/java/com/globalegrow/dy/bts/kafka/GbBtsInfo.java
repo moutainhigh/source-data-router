@@ -22,6 +22,7 @@ public abstract class GbBtsInfo  extends CommonBtsLogHandle {
                 fieldInfo.put("bts_bucketid", bts.get("bucketid"));
                 fieldInfo.put("bts_policy", bts.get("policy"));
                 fieldInfo.put("bts_plancode", bts.get("plancode"));
+                fieldInfo.put("mdlc", bts.get("mdlc"));
                 return fieldInfo;
             }
         }
