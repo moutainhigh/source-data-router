@@ -128,8 +128,12 @@ public class GbGoodDetailRecommendReportListener extends GbBtsInfo {
                     if (ubcs != null && ubcs.size() > 0) {
                         this.logger.debug("曝光商品数");
                         String policy = btsInfo.get("mdlc");
-                        List<Map<String, String>> ubcsBts =  ubcs.stream().filter(e -> policy.equals(e.get("mrlc"))).collect(Collectors.toList());
-                        btsGbRecommendReport.setSkuExposure(ubcsBts.size());
+                        if (StringUtils.isNotEmpty(policy)) {
+                            List<Map<String, String>> ubcsBts =  ubcs.stream().filter(e -> policy.equals(e.get("mrlc"))).collect(Collectors.toList());
+                            btsGbRecommendReport.setSkuExposure(ubcsBts.size());
+                        }else {
+                            this.logger.warn("埋点中推荐位状态为空！");
+                        }
                     }
                     return this.reportDataToMap(btsGbRecommendReport);
                 }
