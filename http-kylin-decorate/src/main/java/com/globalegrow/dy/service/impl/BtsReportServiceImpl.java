@@ -1,13 +1,13 @@
 package com.globalegrow.dy.service.impl;
 
 import com.globalegrow.dy.dto.BtsReportParameterDto;
-import com.globalegrow.dy.dto.KylinBtsReportDto;
 import com.globalegrow.dy.dto.ReportPageDto;
 import com.globalegrow.dy.enums.BtsQueryConditions;
+import com.globalegrow.dy.enums.ReportServerType;
 import com.globalegrow.dy.model.BtsReportKylinConfig;
 import com.globalegrow.dy.service.BtsReportConfigService;
 import com.globalegrow.dy.service.BtsReportService;
-import com.google.gson.JsonObject;
+import com.globalegrow.util.GsonUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.StringSubstitutor;
 import org.slf4j.Logger;
@@ -19,10 +19,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.text.DecimalFormat;
+import java.util.*;
 
 @Service
 public class BtsReportServiceImpl implements BtsReportService {
@@ -93,6 +91,11 @@ public class BtsReportServiceImpl implements BtsReportService {
         }
         //BtsReportKylinConfig btsReportKylinConfig = this.btsReportConfigService.getConfigByBtsPlanId(btsReportParameterDto.getPlanId());
         if (btsReportKylinConfig != null) {
+            if (ReportServerType.EMP.name().equals(btsReportKylinConfig.getServerType())) {
+                this.logger.info("EMP 邮件系统接口");
+                mapReportPageDto.setData(this.empReport(btsReportParameterDto, btsReportKylinConfig));
+                return mapReportPageDto;
+            }
             this.logger.debug("bts report config info: {}", btsReportKylinConfig);
             String sourceSql = btsReportKylinConfig.getKylinQuerySql();
             Map valuesMap = new HashMap();
@@ -279,5 +282,134 @@ public class BtsReportServiceImpl implements BtsReportService {
         return where.toString();
     }
 
+    /**
+     * EMP 邮件营销报表
+     * @param btsReportParameterDto
+     * @param btsReportKylinConfig
+     */
+    public List<Object> empReport(BtsReportParameterDto btsReportParameterDto, BtsReportKylinConfig btsReportKylinConfig) {
+        List<String> groupByFields = btsReportParameterDto.getGroupByFields();
+        StringBuilder stringBuilder = new StringBuilder(btsReportKylinConfig.getKylinQueryAdress());
+        /*Map<String, Object> getParameters = new HashMap<>();
+        getParameters.put("module_name", "marketing_email");*/
+        stringBuilder.append("&plan_id=" + btsReportParameterDto.getPlanId());
+        if (groupByFields == null || groupByFields.size() == 0 || (groupByFields.contains("bts_planid") && groupByFields.contains("bts_versionid") && groupByFields.contains("day_start"))) {
+            stringBuilder.append("&data_flag=3");
+        } else if (groupByFields.contains("bts_planid") && groupByFields.contains("bts_versionid") && !groupByFields.contains("day_start")) {
+            stringBuilder.append("&data_flag=2");
+        } else if (groupByFields.contains("bts_planid") && !groupByFields.contains("bts_versionid")) {
+            stringBuilder.append("&data_flag=1");
+        }
+        Map<String, Map<String, String>> betweenFields = btsReportParameterDto.getBetweenFields();
+        if (betweenFields != null && betweenFields.size() > 0) {
+            Map<String, String> dayBetween = betweenFields.get("day_start");
+            if (dayBetween != null && dayBetween.size() > 0) {
+                String day = dayBetween.get("min") + "_" + dayBetween.get("max");
+                stringBuilder.append("&day=" + day);
+            }
+        }
+        String o = this.restTemplate.getForObject(stringBuilder.toString(), String.class);
+        System.out.println(o);
+        Map<String, Object> result = GsonUtil.readValue(o, Map.class);
+
+        List<Map<String, String>> data = (List<Map<String, String>>) result.get("data");
+        List<Object> outReportData = new ArrayList<>();
+        if (data != null && data.size() > 0) {
+            for (Map<String, String> reportData : data) {
+                Map<String, String> rowData = new HashMap<>();
+                reportData.entrySet().forEach(e -> rowData.put("send_ok_count".equals(e.getKey()) ? "SPECIMEN" : "SUM_" + e.getKey().toUpperCase(), e.getValue()));
+                // 转换率处理
+                // 送达率
+                rowData.put("SUM_DELIVER_RATE", divPer(rowData.get("SPECIMEN"), rowData.get("SUM_TOTAL_COUNT")));
+                // 打开率
+                rowData.put("SUM_OPEN_RATE", divPer(rowData.get("SUM_OPEN_COUNT"), rowData.get("SPECIMEN")));
+                // 点击转化率
+                rowData.put("SUM_TRANS_RATE", divPer(rowData.get("SUM_CLICK_COUNT"), rowData.get("SUM_OPEN_COUNT")));
+                // 下单转化率
+                rowData.put("SUM_ORDER_TRANS_RATE", divPer(rowData.get("SUM_ORDER_USER"), rowData.get("SUM_CLICK_COUNT")));
+                // 下单率
+                rowData.put("SUM_ORDER_RATE", divPer(rowData.get("SUM_ORDER_USER"), rowData.get("SPECIMEN")));
+                // 生单客均价
+                rowData.put("SUM_ORDER_USER_AVG", divLongFloat(rowData.get("SUM_ORDER_USER"), rowData.get("SUM_ORDER_MONEY")));
+                // 付款订单率
+                rowData.put("SUM_PAYED_ORDER_RATE", divPer(rowData.get("SUM_PAYED_ORDER_NUMS"), rowData.get("SUM_ORDER_NUMS")));
+                // 付款金额率
+                rowData.put("SUM_PAY_AMOUNT_RATE", divFloatFloatPer(rowData.get("SUM_PAYED_ORDER_MONEY"), rowData.get("SUM_ORDER_MONEY")));
+                // 付款客均价
+                rowData.put("SUM_ORDER_USER_AVG_PRICE", divFloatLong(rowData.get("SUM_PAYED_ORDER_MONEY"), rowData.get("SUM_PAYED_USER")));
+                outReportData.add(rowData);
+            }
+        }
+        // 均值处理&总值处理
+        if ("query".equals(btsReportParameterDto.getType())) {
+            List<Object> avgReport = new ArrayList<>();
+            outReportData.stream().forEach(ro -> {
+                Map<String, String> m = (Map<String, String>) ro;
+                Map<String, String> avgRow = new HashMap<>();
+                m.entrySet().forEach(e -> {
+                    if ("SPECIMEN".equals(e.getKey())) {
+                        avgRow.put(e.getKey(), e.getValue());
+                    } else if (e.getKey().endsWith("_RATE")) {
+                        avgRow.put(e.getKey().replace("SUM_", "AVG_"), e.getValue());
+                    }else {
+                        avgRow.put(e.getKey().replace("SUM_", "AVG_"), formatDivResult(Float.valueOf(e.getValue())/ Float.valueOf(m.get("SPECIMEN"))));
+                    }
+                    avgReport.add(avgRow);
+                });
+            });
+            // System.out.println(GsonUtil.toJson(avgReport));
+            return avgReport;
+        } else if ("all".equals(btsReportParameterDto.getType())) {
+            List<Object> allReport = new ArrayList<>();
+            outReportData.stream().forEach(ro -> {
+                Map<String, String> m = (Map<String, String>) ro;
+                Map<String, String> avgRow = new HashMap<>();
+                avgRow.putAll(m);
+                m.entrySet().forEach(e -> {
+                    if ("SPECIMEN".equals(e.getKey())) {
+                        avgRow.put(e.getKey(), e.getValue());
+                    } else if (e.getKey().endsWith("_RATE")) {
+                        avgRow.put(e.getKey().replace("SUM_", "AVG_"), e.getValue());
+                    }else {
+                        avgRow.put(e.getKey().replace("SUM_", "AVG_"), formatDivResult(Float.valueOf(e.getValue())/ Float.valueOf(m.get("SPECIMEN"))));
+                    }
+                    allReport.add(avgRow);
+                });
+            });
+            // System.out.println(GsonUtil.toJson(allReport));
+            return allReport;
+        }
+        //System.out.println(GsonUtil.toJson(outReportData));
+        return outReportData;
+    }
+
+    private String divLongFloat(String top, String bottom) {
+        return formatDivResult(Long.valueOf(top) / Float.valueOf(bottom)) ;
+    }
+
+    private String divFloatLong(String top, String bottom) {
+        return formatDivResult(Float.valueOf(top) / Float.valueOf(bottom)) ;
+    }
+
+    private String divFloatFloatPer(String top, String bottom) {
+        return formatDivResult((Float.valueOf(top) / Float.valueOf(bottom)) * 100) ;
+    }
+
+    private String divLongFloatPer(String top, String bottom) {
+        return formatDivResult((Long.valueOf(top) / Float.valueOf(bottom))*100) ;
+    }
+
+    private String divFloatLongPer(String top, String bottom) {
+        return formatDivResult((Float.valueOf(top) / Float.valueOf(bottom))*100) ;
+    }
+
+    private String divPer(String top, String bottom) {
+        return formatDivResult((Long.valueOf(top) / Float.valueOf(bottom))*100) ;
+    }
+
+    private String formatDivResult(Object dresult) {
+        DecimalFormat decimalFormat = new DecimalFormat("0.000");
+        return decimalFormat.format(dresult);
+    }
 
 }
