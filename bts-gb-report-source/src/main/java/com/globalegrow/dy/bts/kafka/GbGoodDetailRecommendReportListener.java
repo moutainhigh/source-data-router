@@ -44,14 +44,14 @@ public class GbGoodDetailRecommendReportListener extends GbBtsInfo {
     public final CountDownLatch countDownLatch5 = new CountDownLatch(1);
 
 
-    @KafkaListener(topicPartitions = {@TopicPartition(topic = "${app.kafka.log-source-topic}", partitions = {"6","7"})}, groupId = "bts_gb_gooddetail_recommend_report")
+    @KafkaListener(topics = "${app.kafka.log-source-topic}", groupId = "bts_gb_gooddetail_recommend_report")
     public void listen1(String logString) throws Exception {
         this.logger.debug("customer thread 1");
         this.handleLogData(logString);
         this.countDownLatch1.countDown();
     }
 
-    @KafkaListener(topicPartitions = {@TopicPartition(topic = "${app.kafka.log-source-topic}", partitions = {"8","9"})}, groupId = "bts_gb_gooddetail_recommend_report")
+    /*@KafkaListener(topicPartitions = {@TopicPartition(topic = "${app.kafka.log-source-topic}", partitions = {"8","9"})}, groupId = "bts_gb_gooddetail_recommend_report")
     public void listen2(String logString) throws Exception {
         this.logger.debug("customer thread 2");
         this.handleLogData(logString);
@@ -72,17 +72,17 @@ public class GbGoodDetailRecommendReportListener extends GbBtsInfo {
         this.countDownLatch4.countDown();
     }
 
-    /**
+    *//**
      *
      * @throws Exception
-     */
+     *//*
     //@KafkaListener(topics = {"${app.kafka.log-source-topic}"}, groupId = "bts_gb_gooddetail_recommend_report")
     @KafkaListener(topicPartitions = {@TopicPartition(topic = "${app.kafka.log-source-topic}", partitions = {"0","1"})}, groupId = "bts_gb_gooddetail_recommend_report")
     public void listen5(String logString) throws Exception {
         this.logger.debug("customer thread 5");
         this.handleLogData(logString);
         this.countDownLatch5.countDown();
-    }
+    }*/
 
     /**
      * 最终输出的报表数据结构
