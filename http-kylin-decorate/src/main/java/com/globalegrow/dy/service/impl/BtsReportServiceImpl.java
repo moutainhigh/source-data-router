@@ -317,7 +317,18 @@ public class BtsReportServiceImpl implements BtsReportService {
         if (data != null && data.size() > 0) {
             for (Map<String, String> reportData : data) {
                 Map<String, String> rowData = new HashMap<>();
-                reportData.entrySet().forEach(e -> rowData.put("send_ok_count".equals(e.getKey()) ? "SPECIMEN" : "SUM_" + e.getKey().toUpperCase(), e.getValue()));
+                reportData.entrySet().forEach(e -> {
+                    if ("plan_id".equals(e.getKey())) {
+                        rowData.put("BTS_PLANID", e.getValue());
+                    } else if ("version_id".equals(e.getKey())) {
+                        rowData.put("BTS_VERSIONID", e.getValue());
+                    } else if ("day".equals(e.getKey())) {
+                        rowData.put("DAY_START", e.getValue());
+                    } else {
+                        rowData.put("send_ok_count".equals(e.getKey()) ? "SPECIMEN" : "SUM_" + e.getKey().toUpperCase(), e.getValue());
+                    }
+
+                });
                 // 转换率处理
                 // 送达率
                 rowData.put("SUM_DELIVER_RATE", divPer(rowData.get("SPECIMEN"), rowData.get("SUM_TOTAL_COUNT")));
@@ -347,7 +358,7 @@ public class BtsReportServiceImpl implements BtsReportService {
                 Map<String, String> m = (Map<String, String>) ro;
                 Map<String, String> avgRow = new HashMap<>();
                 m.entrySet().forEach(e -> {
-                    if ("SPECIMEN".equals(e.getKey())) {
+                    if ("SPECIMEN".equals(e.getKey()) || e.getKey().contains("BTS") || "DAY_START".equals(e.getKey())) {
                         avgRow.put(e.getKey(), e.getValue());
                     } else if (e.getKey().endsWith("_RATE")) {
                         avgRow.put(e.getKey().replace("SUM_", "AVG_"), e.getValue());
@@ -384,27 +395,45 @@ public class BtsReportServiceImpl implements BtsReportService {
     }
 
     private String divLongFloat(String top, String bottom) {
-        return formatDivResult(Long.valueOf(top) / Float.valueOf(bottom)) ;
+        if (Float.valueOf(bottom) > 0) {
+            return formatDivResult(Long.valueOf(top) / Float.valueOf(bottom)) ;
+        }
+        return "0";
     }
 
     private String divFloatLong(String top, String bottom) {
-        return formatDivResult(Float.valueOf(top) / Float.valueOf(bottom)) ;
+        if (Float.valueOf(bottom) > 0) {
+            return formatDivResult(Float.valueOf(top) / Float.valueOf(bottom));
+        }
+        return "0";
     }
 
     private String divFloatFloatPer(String top, String bottom) {
-        return formatDivResult((Float.valueOf(top) / Float.valueOf(bottom)) * 100) ;
+        if (Float.valueOf(bottom) > 0) {
+            return formatDivResult((Float.valueOf(top) / Float.valueOf(bottom)) * 100);
+        }
+        return "0";
     }
 
     private String divLongFloatPer(String top, String bottom) {
-        return formatDivResult((Long.valueOf(top) / Float.valueOf(bottom))*100) ;
+        if (Float.valueOf(bottom) > 0) {
+            return formatDivResult((Long.valueOf(top) / Float.valueOf(bottom)) * 100);
+        }
+        return "0";
     }
 
     private String divFloatLongPer(String top, String bottom) {
-        return formatDivResult((Float.valueOf(top) / Float.valueOf(bottom))*100) ;
+        if (Float.valueOf(bottom) > 0) {
+            return formatDivResult((Float.valueOf(top) / Float.valueOf(bottom)) * 100);
+        }
+        return "0";
     }
 
     private String divPer(String top, String bottom) {
-        return formatDivResult((Long.valueOf(top) / Float.valueOf(bottom))*100) ;
+        if (Float.valueOf(bottom) > 0) {
+            return formatDivResult((Long.valueOf(top) / Float.valueOf(bottom)) * 100);
+        }
+        return "0";
     }
 
     private String formatDivResult(Object dresult) {
