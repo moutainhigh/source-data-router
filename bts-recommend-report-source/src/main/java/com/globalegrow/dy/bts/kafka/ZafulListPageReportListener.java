@@ -161,19 +161,22 @@ public class ZafulListPageReportListener extends BtsListener {
                             String pam = String.valueOf(skuInfo.get("pam"));
                             if (StringUtils.isNotBlank(pam)) {
                                 Integer cartNum = Integer.valueOf(pam);
-                                reportData.setAddCart(cartNum);
-                                String userId = "";
-                                if (StringUtils.isNotBlank(glbU) && !"null".equals(glbU)) {
-                                    userId = glbU;
-                                }else {
-                                    userId = this.queryUserId(glbOd);
+                                if (cartNum <= 50) {
+                                    reportData.setAddCart(cartNum);
+                                    String userId = "";
+                                    if (StringUtils.isNotBlank(glbU) && !"null".equals(glbU)) {
+                                        userId = glbU;
+                                    }else {
+                                        userId = this.queryUserId(glbOd);
+                                    }
+                                    if (StringUtils.isNotBlank(userId)) {
+                                        this.logger.info("加购事件放入 redis: {}", glbOd);
+                                        String redisKey = this.LOG_REDIS_KEY_START + "c_list_" + userId + "_" + sku;
+                                        GoodsAddCartInfo goodsAddCartInfo = new GoodsAddCartInfo(glbOd, userId, sku, cartNum, btsInfo);
+                                        SpringRedisUtil.put(redisKey, GsonUtil.toJson(goodsAddCartInfo), expiredSeconds);
+                                    }
                                 }
-                                if (StringUtils.isNotBlank(userId)) {
-                                    this.logger.info("加购事件放入 redis: {}", glbOd);
-                                    String redisKey = this.LOG_REDIS_KEY_START + "c_list_" + userId + "_" + sku;
-                                    GoodsAddCartInfo goodsAddCartInfo = new GoodsAddCartInfo(glbOd, userId, sku, cartNum, btsInfo);
-                                    SpringRedisUtil.put(redisKey, GsonUtil.toJson(goodsAddCartInfo), expiredSeconds);
-                                }
+
                             }
                         }
                     }
