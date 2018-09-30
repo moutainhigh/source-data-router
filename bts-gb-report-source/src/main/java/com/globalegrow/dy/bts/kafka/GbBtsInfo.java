@@ -17,11 +17,11 @@ public abstract class GbBtsInfo  extends CommonBtsLogHandle {
             if (list.size() > 0) {
                 Map<String, String> bts = list.get(0);
                 Map<String, String> fieldInfo = new HashMap<>();
-                fieldInfo.put("bts_planid", bts.get("planid"));
-                fieldInfo.put("bts_versionid", bts.get("versionid"));
-                fieldInfo.put("bts_bucketid", bts.get("bucketid"));
-                fieldInfo.put("bts_policy", bts.get("policy"));
-                fieldInfo.put("bts_plancode", bts.get("plancode"));
+                fieldInfo.put("planid", bts.get("planid"));
+                fieldInfo.put("versionid", bts.get("versionid"));
+                fieldInfo.put("bucketid", bts.get("bucketid"));
+                fieldInfo.put("policy", bts.get("policy"));
+                fieldInfo.put("plancode", bts.get("plancode"));
                 fieldInfo.put("mdlc", bts.get("mdlc"));
                 return fieldInfo;
             }
