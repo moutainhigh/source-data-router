@@ -1,5 +1,7 @@
 package com.globalegrow;
 
+import com.globalegrow.bts.model.BtsGbRecommendReport;
+import com.globalegrow.enums.CartRedisKeysPrefix;
 import com.globalegrow.util.*;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.StringEscapeUtils;
@@ -157,7 +159,7 @@ public class GbMysqlBinlog {
                 // 缓存订单商品金额
                 String amountKey = "dy_gb_m_amount_" + orderId;
 
-                String redisAmount = SpringRedisUtil.getEnvRedisKey(amountKey);
+                String redisAmount = SpringRedisUtil.getStringValue(amountKey);
                 String goodNum = String.valueOf(tableData.get("qty"));
                 if (goodNum.indexOf(".") > 0) {
                     goodNum = goodNum.substring(0, goodNum.indexOf("."));
@@ -183,19 +185,45 @@ public class GbMysqlBinlog {
                 reportMap.putAll(goodsAddCartInfo.getBts());
                 reportMap.put(NginxLogConvertUtil.TIMESTAMP_KEY, System.currentTimeMillis());
 
-                ListenableFuture<SendResult<String, String>> future = kafkaTemplate.send("bts-gb-gdd-m-pic-report-precisely", GsonUtil.toJson(reportMap));
-                future.addCallback(new ListenableFutureCallback<SendResult<String, String>>() {
-                    @Override
-                    public void onSuccess(SendResult<String, String> result) {
-                        logger.info("log json with dimensions send success!");
-                    }
+                this.send("bts-gb-gdd-m-pic-report-precisely", reportMap);
 
-                    @Override
-                    public void onFailure(Throwable ex) {
-                        logger.error("log json with dimensions send failed! msg: {}", GsonUtil.toJson(reportMap), ex);
-                    }
-                });
+            }
+            // 推荐位加购事件处理
+            String recommendRedisKey = CartRedisKeysPrefix.redisCartKey(CartRedisKeysPrefix.dyGbCartInfo, userId, sku);
+            String recommendRedisCache = SpringRedisUtil.getStringValue(recommendRedisKey);
+            if (StringUtils.isNotEmpty(recommendRedisCache)) {
+                com.globalegrow.bts.model.GoodsAddCartInfo goodsAddCartInfo = GsonUtil.readValue(recommendRedisCache, com.globalegrow.bts.model.GoodsAddCartInfo.class);
+                // dy_bts_gb_gd_rec_report
+                BtsGbRecommendReport btsGbRecommendReport = new BtsGbRecommendReport();
+                btsGbRecommendReport.setBts(goodsAddCartInfo.getBts());
+                btsGbRecommendReport.setSkuOrder(1);
+                Map reportMap = DyBeanUtils.objToMap(btsGbRecommendReport);
+                reportMap.put(NginxLogConvertUtil.TIMESTAMP_KEY, System.currentTimeMillis());
+                this.send("dy_bts_gb_gd_rec_report", reportMap);
 
+                String orderId = String.valueOf(tableData.get("order_goods_id"));
+                // 缓存订单商品金额
+                String amountKey = "dy_gb_recommend_amount_" + orderId;
+
+                String redisAmount = SpringRedisUtil.getStringValue(amountKey);
+                String goodNum = String.valueOf(tableData.get("qty"));
+                if (goodNum.indexOf(".") > 0) {
+                    goodNum = goodNum.substring(0, goodNum.indexOf("."));
+                }
+                Float f = ((Float.valueOf(String.valueOf(tableData.get("price"))) * Integer.valueOf(goodNum)) * 100);
+                if (StringUtils.isEmpty(redisAmount)) {
+                    goodsAddCartInfo.setSalesAmount(f.intValue());
+                    SpringRedisUtil.put(amountKey, GsonUtil.toJson(goodsAddCartInfo), 1209600);
+                    this.logger.info("支付金额缓存: {}, {}", amountKey, goodsAddCartInfo);
+                    //SpringRedisUtil.put(amountKey, f.intValue() + "", 1209600);
+                }else {
+                    com.globalegrow.bts.model.GoodsAddCartInfo goodsAddCartInfo1 = GsonUtil.readValue(redisAmount, com.globalegrow.bts.model.GoodsAddCartInfo.class);
+                    Integer intAmount = goodsAddCartInfo1.getSalesAmount() + f.intValue();
+                    goodsAddCartInfo1.setSalesAmount(intAmount);
+                    SpringRedisUtil.put(amountKey, GsonUtil.toJson(goodsAddCartInfo1) + "", 1209600);
+                    this.logger.info("支付金额缓存: {}, {}", amountKey, goodsAddCartInfo1);
+                    //SpringRedisUtil.put(amountKey, intAmount + "", 1209600);
+                }
             }
         }else
         // 订单金额
@@ -210,7 +238,7 @@ public class GbMysqlBinlog {
 
             if ("1".equals(status) || "3".equals(status)){
                 String amountKey = "dy_gb_m_amount_" + orderId;
-                String redisAmount = SpringRedisUtil.getEnvRedisKey(amountKey);
+                String redisAmount = SpringRedisUtil.getStringValue(amountKey);
                 this.logger.info("paid_order: {}, {}", amountKey, redisAmount);
                 if (StringUtils.isNotEmpty(redisAmount)) {
                     this.logger.info("paid_order 已支付 m 端订单信息: {}", redisAmount);
@@ -223,24 +251,57 @@ public class GbMysqlBinlog {
                     reportMap.putAll(goodsAddCartInfo1.getBts());
                     reportMap.put(NginxLogConvertUtil.TIMESTAMP_KEY, System.currentTimeMillis());
 
-                    ListenableFuture<SendResult<String, String>> future = kafkaTemplate.send("bts-gb-gdd-m-pic-report-precisely", GsonUtil.toJson(reportMap));
-                    future.addCallback(new ListenableFutureCallback<SendResult<String, String>>() {
-                        @Override
-                        public void onSuccess(SendResult<String, String> result) {
-                            logger.info("log json with dimensions send success!");
-                        }
+                    this.send("bts-gb-gdd-m-pic-report-precisely", reportMap);
 
-                        @Override
-                        public void onFailure(Throwable ex) {
-                            logger.error("log json with dimensions send failed! msg: {}", GsonUtil.toJson(reportMap), ex);
-                        }
-                    });
+                }
+                // 推荐位金额处理
+                String recommendAmountKey = "dy_gb_recommend_amount_" + orderId;
+                String redisRecommendAmount = SpringRedisUtil.getStringValue(recommendAmountKey);
+                if (StringUtils.isNotEmpty(redisAmount)) {
+                    this.logger.info("paid_order 已支付 m 端订单信息: {}", redisAmount);
+                    com.globalegrow.bts.model.GoodsAddCartInfo goodsAddCartInfo1 = GsonUtil.readValue(redisRecommendAmount, com.globalegrow.bts.model.GoodsAddCartInfo.class);
+                    BtsGbRecommendReport btsGbRecommendReport = new BtsGbRecommendReport();
+                    btsGbRecommendReport.setBts(goodsAddCartInfo1.getBts());
+                    btsGbRecommendReport.setAmount(goodsAddCartInfo1.getSalesAmount());
+                    Map reportMap = DyBeanUtils.objToMap(btsGbRecommendReport);
+                    reportMap.put(NginxLogConvertUtil.TIMESTAMP_KEY, System.currentTimeMillis());
+
+                    this.send("dy_bts_gb_gd_rec_report", reportMap);
 
                 }
             }
 
         }
 
+    }
+
+    /**
+     * m 端订单处理
+     */
+    private void mOrderHandle() {
+
+    }
+
+    /**
+     * pc 推荐位订单处理
+     */
+    private void recommendHandle() {
+
+    }
+
+    private void send(String topic, Object msg) {
+        ListenableFuture<SendResult<String, String>> future = kafkaTemplate.send(topic, GsonUtil.toJson(msg));
+        future.addCallback(new ListenableFutureCallback<SendResult<String, String>>() {
+            @Override
+            public void onSuccess(SendResult<String, String> result) {
+                logger.info("log json with dimensions send success!");
+            }
+
+            @Override
+            public void onFailure(Throwable ex) {
+                logger.error("log json with dimensions send failed! msg: {}", GsonUtil.toJson(msg), ex);
+            }
+        });
     }
 
     public static Map<String, String> defaultBtsTestInfo() {
