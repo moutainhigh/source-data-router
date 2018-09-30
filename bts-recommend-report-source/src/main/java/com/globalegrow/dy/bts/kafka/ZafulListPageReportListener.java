@@ -77,12 +77,12 @@ public class ZafulListPageReportListener extends BtsListener {
      * @throws Exception
      */
     //@KafkaListener(topics = {"${app.kafka.log-source-topic}"}, groupId = "bts_zaful_list_page_report")
-    @KafkaListener(topicPartitions = {@TopicPartition(topic = "${app.kafka.log-source-topic}", partitions = {"0","1"})}, groupId = "bts_zaful_list_page_report")
+    /*@KafkaListener(topicPartitions = {@TopicPartition(topic = "${app.kafka.log-source-topic}", partitions = {"0","1"})}, groupId = "bts_zaful_list_page_report")
     public void listen5(String logString) throws Exception {
         this.logger.debug("customer thread 5");
         this.handleLogData(logString);
         this.countDownLatch5.countDown();
-    }
+    }*/
 
     /**
      * 最终输出的报表数据结构
