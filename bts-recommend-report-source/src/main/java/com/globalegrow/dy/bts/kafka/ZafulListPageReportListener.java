@@ -44,14 +44,21 @@ public class ZafulListPageReportListener extends BtsListener {
     @Value("${app.redis.zaful-list-adt-expired-seconds:604800}")
     private Long expiredSeconds;
 
-    @KafkaListener(/*topicPartitions = {@TopicPartition(topic = "${app.kafka.log-source-topic}"*//*, partitions = {"6","7"}*//*)},*/topics = {"${app.kafka.log-source-topic}"},  groupId = "bts_zaful_list_page_report")
+    /*@KafkaListener(*//*topicPartitions = {@TopicPartition(topic = "${app.kafka.log-source-topic}"*//**//*, partitions = {"6","7"}*//**//*)},*//*topics = {"${app.kafka.log-source-topic}"},  groupId = "bts_zaful_list_page_report")
+    public void listen1(String logString) throws Exception {
+        this.logger.debug("customer thread 1");
+        this.handleLogData(logString);
+        this.countDownLatch1.countDown();
+    }*/
+
+    @KafkaListener(topicPartitions = {@TopicPartition(topic = "${app.kafka.log-source-topic}", partitions = {"6","7"})}, groupId = "bts_zaful_list_page_report")
     public void listen1(String logString) throws Exception {
         this.logger.debug("customer thread 1");
         this.handleLogData(logString);
         this.countDownLatch1.countDown();
     }
 
-    /*@KafkaListener(topicPartitions = {@TopicPartition(topic = "${app.kafka.log-source-topic}", partitions = {"8","9"})}, groupId = "bts_zaful_list_page_report")
+    @KafkaListener(topicPartitions = {@TopicPartition(topic = "${app.kafka.log-source-topic}", partitions = {"8","9"})}, groupId = "bts_zaful_list_page_report")
     public void listen2(String logString) throws Exception {
         this.logger.debug("customer thread 2");
         this.handleLogData(logString);
@@ -70,19 +77,18 @@ public class ZafulListPageReportListener extends BtsListener {
         this.logger.debug("customer thread 4");
         this.handleLogData(logString);
         this.countDownLatch4.countDown();
-    }*/
+    }
 
     /**
      *
-     * @throws Exception
-     */
+     * @throws Exception*/
     //@KafkaListener(topics = {"${app.kafka.log-source-topic}"}, groupId = "bts_zaful_list_page_report")
-    /*@KafkaListener(topicPartitions = {@TopicPartition(topic = "${app.kafka.log-source-topic}", partitions = {"0","1"})}, groupId = "bts_zaful_list_page_report")
+    @KafkaListener(topicPartitions = {@TopicPartition(topic = "${app.kafka.log-source-topic}", partitions = {"0","1"})}, groupId = "bts_zaful_list_page_report")
     public void listen5(String logString) throws Exception {
         this.logger.debug("customer thread 5");
         this.handleLogData(logString);
         this.countDownLatch5.countDown();
-    }*/
+    }
 
     /**
      * 最终输出的报表数据结构
