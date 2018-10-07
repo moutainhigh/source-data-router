@@ -150,14 +150,14 @@ public class KylinReportController {
     }
 
     /**
-     * 小数去均值
+     * 小数取均值
      * @param e
      * @param entry
      */
     private void handleFloatValue(Map.Entry<String, List<Map<String, Object>>> e, Map<String, Object> entry) {
         DecimalFormat decimalFormat=new DecimalFormat("0.000");
         entry.entrySet().forEach(report -> {
-            if (String.valueOf(report.getValue()).contains(".") && !"SUM_AMOUNT".equals(report.getKey())) {
+            if (String.valueOf(report.getValue()).contains(".") && !"SUM_AMOUNT".equals(report.getKey()) && report.getKey().contains("SUM_ORDER_MONEY")) {
                 entry.put(report.getKey(), decimalFormat.format(Float.valueOf(String.valueOf(report.getValue()))/e.getValue().size()));
             }
         });
