@@ -157,7 +157,7 @@ public class KylinReportController {
     private void handleFloatValue(Map.Entry<String, List<Map<String, Object>>> e, Map<String, Object> entry) {
         DecimalFormat decimalFormat=new DecimalFormat("0.000");
         entry.entrySet().forEach(report -> {
-            if (String.valueOf(report.getValue()).contains(".")) {
+            if (String.valueOf(report.getValue()).contains(".") && !"SUM_AMOUNT".equals(report.getKey())) {
                 entry.put(report.getKey(), decimalFormat.format(Float.valueOf(String.valueOf(report.getValue()))/e.getValue().size()));
             }
         });
