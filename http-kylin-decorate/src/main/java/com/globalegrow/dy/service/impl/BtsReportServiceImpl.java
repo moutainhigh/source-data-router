@@ -377,7 +377,7 @@ public class BtsReportServiceImpl implements BtsReportService {
                 Map<String, String> avgRow = new HashMap<>();
                 avgRow.putAll(m);
                 m.entrySet().forEach(e -> {
-                    if ("SPECIMEN".equals(e.getKey())) {
+                    if ("SPECIMEN".equals(e.getKey())  || e.getKey().contains("BTS") || "DAY_START".equals(e.getKey())) {
                         avgRow.put(e.getKey(), e.getValue());
                     } else if (e.getKey().endsWith("_RATE")) {
                         avgRow.put(e.getKey().replace("SUM_", "AVG_"), e.getValue());
