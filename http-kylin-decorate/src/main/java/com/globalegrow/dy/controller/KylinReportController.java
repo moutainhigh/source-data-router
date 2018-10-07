@@ -168,11 +168,12 @@ public class KylinReportController {
             if (entry.get(key) == null) {
                 entry.put(key, valueVersion);
             }else {
-                if (valueVersion.contains(".")) {
-                    entry.put(key, (Float.valueOf(String.valueOf(entry.get(key))) + Float.valueOf(valueVersion)) + "");
+                String currentValue = String.valueOf(entry.get(key));
+                if (valueVersion.contains(".") || currentValue.contains(".")) {
+                    entry.put(key, (Float.valueOf(currentValue) + Float.valueOf(valueVersion)) + "");
                 }else {
-                    this.logger.debug("report data value handle:{},{},{}", entry, key, valueVersion);
-                    entry.put(key, (Integer.valueOf(String.valueOf(entry.get(key))) + Integer.valueOf(valueVersion)) + "");
+                    this.logger.debug("report data value handle: {},{}", key, valueVersion);
+                    entry.put(key, (Integer.valueOf(currentValue) + Integer.valueOf(valueVersion)) + "");
                 }
             }
 
