@@ -155,7 +155,7 @@ public class GbMysqlBinlog {
             this.logger.info("redis cache info, redis key: {} data: {}",redisKey, redisCache);
             if (StringUtils.isNotEmpty(redisCache)) {
                 GoodsAddCartInfo goodsAddCartInfo = GsonUtil.readValue(redisCache, GoodsAddCartInfo.class);
-                String orderId = String.valueOf(tableData.get("order_goods_id"));
+                String orderId = String.valueOf(tableData.get("order_sn"));
                 // 缓存订单商品金额
                 String amountKey = "dy_gb_m_amount_" + orderId;
 
@@ -201,7 +201,8 @@ public class GbMysqlBinlog {
                 reportMap.put(NginxLogConvertUtil.TIMESTAMP_KEY, System.currentTimeMillis());
                 this.send("dy_bts_gb_gd_rec_report", reportMap);
 
-                String orderId = String.valueOf(tableData.get("order_goods_id"));
+                //String orderId = String.valueOf(tableData.get("order_goods_id"));
+                String orderId = String.valueOf(tableData.get("order_sn"));
                 // 缓存订单商品金额
                 String amountKey = "dy_gb_recommend_amount_" + orderId;
 
@@ -229,7 +230,8 @@ public class GbMysqlBinlog {
         // 订单金额
         if (StringUtils.isNumeric(String.valueOf(dataMap.get("table")).replace("order_info_", ""))) {
             Map<String, Object> tableData = (Map<String, Object>) dataMap.get("data");
-            String orderId = String.valueOf(tableData.get("id"));
+            this.logger.info("order_info_event: {}", tableData);
+            String orderId = String.valueOf(tableData.get("order_sn"));
             String status = String.valueOf(dataMap.get("pay_status"));
 
             if (status.indexOf(".") > 0) {
