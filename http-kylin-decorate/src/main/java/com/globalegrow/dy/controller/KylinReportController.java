@@ -1,6 +1,8 @@
 package com.globalegrow.dy.controller;
 
 import com.globalegrow.dy.dto.*;
+import com.globalegrow.dy.enums.ReportServerType;
+import com.globalegrow.dy.model.BtsReportKylinConfig;
 import com.globalegrow.dy.service.BtsReportConfigService;
 import com.globalegrow.dy.service.BtsReportService;
 import org.apache.commons.lang3.time.DateFormatUtils;
@@ -30,9 +32,16 @@ public class KylinReportController {
 
     static final List<String> FIXED_FIELDS = Arrays.asList("bts_planid", "bts_versionid", "bts_bucketid", "bts_policy", "bts_plancode", "day_start");
 
-    @RequestMapping(produces="application/json;charset=UTF-8", method = RequestMethod.POST)
+    @RequestMapping(produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     public ReportPageDto btsReport(@RequestBody BtsReportParameterDto btsReportParameterDto) {
         this.logger.debug("报表请求参数: {}", btsReportParameterDto);
+        // 判断是否为 EMP 邮件接口
+        BtsReportKylinConfig btsReportKylinConfig = this.btsReportConfigService.configMixedQuery(btsReportParameterDto);
+        if (btsReportKylinConfig != null) {
+            if (ReportServerType.EMP.name().equals(btsReportKylinConfig.getServerType())) {
+                return this.btsReportService.btsReport(btsReportParameterDto);
+            }
+        }
         List<String> groupString = btsReportParameterDto.getGroupByFields();
         boolean groupByVersion = groupString.contains("bts_versionid");
         boolean groupByDay = groupString.contains("day_start");
@@ -65,8 +74,7 @@ public class KylinReportController {
                         //logger.debug("报表转换: {}, {}", key, valueVersion);
                         if (FIXED_FIELDS.contains(key.toLowerCase()) && !"DAY_START".equals(key) && !"BTS_VERSIONID".equals(key)) {
                             entry.put(key, valueVersion);
-                        }
-                        else if(!FIXED_FIELDS.contains(key.toLowerCase())){
+                        } else if (!FIXED_FIELDS.contains(key.toLowerCase())) {
                             handleGroupValue(entry, key, valueVersion);
                         }
                     });
@@ -77,8 +85,7 @@ public class KylinReportController {
             List<Object> objects = new ArrayList<>();
             dataConvert.stream().forEach(e -> objects.add(e));
             reportPageDto.setData(objects);
-        }else
-        if (!groupByVersion && groupByDay) {
+        } else if (!groupByVersion && groupByDay) {
             List<Map<String, Object>> dataConvert = new ArrayList<>();
             Map<String, List<Map<String, Object>>> versionGroups = new HashMap<>();
             data.stream().forEach(o -> {
@@ -97,8 +104,7 @@ public class KylinReportController {
                         //logger.debug("报表转换: {}, {}", key, valueVersion);
                         if (FIXED_FIELDS.contains(key.toLowerCase()) && !"BTS_VERSIONID".equals(key)) {
                             entry.put(key, valueVersion);
-                        }
-                        else if(!FIXED_FIELDS.contains(key.toLowerCase())){
+                        } else if (!FIXED_FIELDS.contains(key.toLowerCase())) {
                             handleGroupValue(entry, key, valueVersion);
                         }
                     });
@@ -109,8 +115,7 @@ public class KylinReportController {
             List<Object> objects = new ArrayList<>();
             dataConvert.stream().forEach(e -> objects.add(e));
             reportPageDto.setData(objects);
-        }else
-        if (!groupByDay && groupByVersion) {
+        } else if (!groupByDay && groupByVersion) {
             List<Map<String, Object>> dataConvert = new ArrayList<>();
             Map<String, List<Map<String, Object>>> versionGroups = new HashMap<>();
             data.stream().forEach(o -> {
@@ -131,7 +136,7 @@ public class KylinReportController {
                         //logger.debug("报表转换: {}, {}", key, valueVersion);
                         if (FIXED_FIELDS.contains(key.toLowerCase()) && !"DAY_START".equals(key)) {
                             entry.put(key, valueVersion);
-                        }else if(!FIXED_FIELDS.contains(key.toLowerCase())){
+                        } else if (!FIXED_FIELDS.contains(key.toLowerCase())) {
                             handleGroupValue(entry, key, valueVersion);
                         }
 
@@ -151,15 +156,16 @@ public class KylinReportController {
 
     /**
      * 小数取均值
+     *
      * @param e
      * @param entry
      */
     private void handleFloatValue(Map.Entry<String, List<Map<String, Object>>> e, Map<String, Object> entry) {
-        DecimalFormat decimalFormat=new DecimalFormat("0.000");
+        DecimalFormat decimalFormat = new DecimalFormat("0.000");
         entry.entrySet().forEach(report -> {
             if (String.valueOf(report.getValue()).contains(".") && !"SUM_AMOUNT".equals(report.getKey()) && !report.getKey().contains("SUM_ORDER_MONEY")
-                && !"SUM_PAYED_ORDER_MONEY".equals(report.getKey())) {
-                entry.put(report.getKey(), decimalFormat.format(Float.valueOf(String.valueOf(report.getValue()))/e.getValue().size()));
+                    && !"SUM_PAYED_ORDER_MONEY".equals(report.getKey())) {
+                entry.put(report.getKey(), decimalFormat.format(Float.valueOf(String.valueOf(report.getValue())) / e.getValue().size()));
             }
         });
     }
@@ -168,22 +174,22 @@ public class KylinReportController {
         if (valueVersion != null && !"null".equals(valueVersion)) {
             if (entry.get(key) == null) {
                 entry.put(key, valueVersion);
-            }else {
+            } else {
                 String currentValue = String.valueOf(entry.get(key));
                 if (valueVersion.contains(".") || currentValue.contains(".")) {
                     entry.put(key, (Float.valueOf(currentValue) + Float.valueOf(valueVersion)) + "");
-                }else {
+                } else {
                     //this.logger.debug("report data value handle: {},{}", key, valueVersion);
                     entry.put(key, (Integer.valueOf(currentValue) + Integer.valueOf(valueVersion)) + "");
                 }
             }
 
-        }else {
+        } else {
             entry.put(key, 0);
         }
     }
 
-    @RequestMapping(value = "config", method = RequestMethod.POST, produces="application/json;charset=UTF-8")
+    @RequestMapping(value = "config", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     public ReportFieldConfigResultDto fieldConfigDtos(@RequestBody FieldConfigParameterDto dto) {
         return new ReportFieldConfigResultDto(this.btsReportConfigService.btsReportFieldConfigMixedQuery(dto));
     }
