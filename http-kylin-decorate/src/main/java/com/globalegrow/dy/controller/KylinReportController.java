@@ -171,6 +171,7 @@ public class KylinReportController {
                 if (valueVersion.contains(".")) {
                     entry.put(key, (Float.valueOf(String.valueOf(entry.get(key))) + Float.valueOf(valueVersion)) + "");
                 }else {
+                    this.logger.debug("report data value handle:{},{},{}", entry, key, valueVersion);
                     entry.put(key, (Integer.valueOf(String.valueOf(entry.get(key))) + Integer.valueOf(valueVersion)) + "");
                 }
             }
