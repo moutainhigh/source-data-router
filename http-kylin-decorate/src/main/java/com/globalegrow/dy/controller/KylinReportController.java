@@ -39,7 +39,7 @@ public class KylinReportController {
         BtsReportKylinConfig btsReportKylinConfig = this.btsReportConfigService.configMixedQuery(btsReportParameterDto);
         if (btsReportKylinConfig != null) {
             if (ReportServerType.EMP.name().equals(btsReportKylinConfig.getServerType())) {
-                return this.btsReportService.btsReport(btsReportParameterDto);
+                return this.btsReportService.btsReport(btsReportKylinConfig, btsReportParameterDto);
             }
         }
         List<String> groupString = btsReportParameterDto.getGroupByFields();
@@ -52,7 +52,7 @@ public class KylinReportController {
             groupString.add("bts_versionid");
         }
         //ReportPageDto reportPageDto = this.btsReportService.btsReport(this.btsReportConfigService.getBtsReportKylinConfig(btsReportParameterDto.getPlanId(), btsReportParameterDto.getProductLineCode(), btsReportParameterDto.getType()),btsReportParameterDto);
-        ReportPageDto reportPageDto = this.btsReportService.btsReport(btsReportParameterDto);
+        ReportPageDto reportPageDto = this.btsReportService.btsReport(btsReportKylinConfig, btsReportParameterDto);
         List<Object> data = reportPageDto.getData();
 
         if (!groupByDay && !groupByVersion) {
