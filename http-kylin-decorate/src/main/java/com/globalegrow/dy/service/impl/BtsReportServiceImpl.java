@@ -77,7 +77,7 @@ public class BtsReportServiceImpl implements BtsReportService {
     }
 
     @Override
-    @Cacheable(cacheNames = "bts_report_cache_1", key = "#btsReportParameterDto.getCacheKey()",/*condition = "#btsReportKylinConfig.getData().size() > 0",#result != null && */ unless = "#result.data.size() > 0")
+    @Cacheable(cacheNames = "bts_report_cache_1", key = "#btsReportParameterDto.getCacheKey()",/*condition = "#btsReportKylinConfig.getData().size() > 0",#result != null && */ unless = "#result.data.size() == 0")
     public ReportPageDto btsReport(BtsReportKylinConfig btsReportKylinConfig, BtsReportParameterDto btsReportParameterDto) {
         return this.reportPageDto(btsReportKylinConfig, btsReportParameterDto);
     }
