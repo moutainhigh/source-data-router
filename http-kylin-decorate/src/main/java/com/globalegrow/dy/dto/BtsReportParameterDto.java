@@ -123,6 +123,7 @@ public class BtsReportParameterDto implements Serializable {
                 ", pageSize=" + pageSize +
                 ", type='" + type + '\'' +
                 ", productLineCode='" + productLineCode + '\'' +
+                ", planCode='" + planCode + '\'' +
                 '}';
     }
 
