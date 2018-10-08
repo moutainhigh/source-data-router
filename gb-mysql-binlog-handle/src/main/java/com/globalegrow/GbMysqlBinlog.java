@@ -259,8 +259,8 @@ public class GbMysqlBinlog {
                 // 推荐位金额处理
                 String recommendAmountKey = "dy_gb_recommend_amount_" + orderId;
                 String redisRecommendAmount = SpringRedisUtil.getStringValue(recommendAmountKey);
-                if (StringUtils.isNotEmpty(redisAmount)) {
-                    this.logger.info("paid_order 已支付 m 端订单信息: {}", redisAmount);
+                if (StringUtils.isNotEmpty(redisRecommendAmount)) {
+                    this.logger.info("paid_order 已支付 推荐位订单信息: {}", redisRecommendAmount);
                     com.globalegrow.bts.model.GoodsAddCartInfo goodsAddCartInfo1 = GsonUtil.readValue(redisRecommendAmount, com.globalegrow.bts.model.GoodsAddCartInfo.class);
                     BtsGbRecommendReport btsGbRecommendReport = new BtsGbRecommendReport();
                     btsGbRecommendReport.setBts(goodsAddCartInfo1.getBts());
