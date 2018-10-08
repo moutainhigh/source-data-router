@@ -230,14 +230,14 @@ public class GbMysqlBinlog {
         // 订单金额
         if (StringUtils.isNumeric(String.valueOf(dataMap.get("table")).replace("order_info_", ""))) {
             Map<String, Object> tableData = (Map<String, Object>) dataMap.get("data");
-            this.logger.info("order_info_event: {}", tableData);
+            this.logger.info("order_info_event: {}", mysqlBinLog);
             String orderId = String.valueOf(tableData.get("order_sn"));
-            String status = String.valueOf(dataMap.get("pay_status"));
+            String status = String.valueOf(tableData.get("pay_status"));
 
             if (status.indexOf(".") > 0) {
                 status = status.substring(0, status.indexOf("."));
             }
-
+            this.logger.info("order_info_event_status: {}", status);
             if ("1".equals(status) || "3".equals(status)){
                 String amountKey = "dy_gb_m_amount_" + orderId;
                 String redisAmount = SpringRedisUtil.getStringValue(amountKey);
