@@ -395,22 +395,34 @@ public class BtsReportServiceImpl implements BtsReportService {
     }
 
     private String divLongFloat(String top, String bottom) {
-        if (Float.valueOf(bottom) > 0) {
-            return formatDivResult(Long.valueOf(top) / Float.valueOf(bottom)) ;
+        try {
+            if (Float.valueOf(bottom) > 0) {
+                return formatDivResult(Long.valueOf(top) / Float.valueOf(bottom)) ;
+            }
+        } catch (Exception e) {
+            //
         }
         return "0";
     }
 
     private String divFloatLong(String top, String bottom) {
-        if (Float.valueOf(bottom) > 0) {
-            return formatDivResult(Float.valueOf(top) / Float.valueOf(bottom));
+        try {
+            if (Float.valueOf(bottom) > 0) {
+                return formatDivResult(Float.valueOf(top) / Float.valueOf(bottom));
+            }
+        } catch (Exception e) {
+            //
         }
         return "0";
     }
 
     private String divFloatFloatPer(String top, String bottom) {
-        if (Float.valueOf(bottom) > 0) {
-            return formatDivResult((Float.valueOf(top) / Float.valueOf(bottom)) * 100);
+        try {
+            if (Float.valueOf(bottom) > 0) {
+                return formatDivResult((Float.valueOf(top) / Float.valueOf(bottom)) * 100);
+            }
+        } catch (Exception e) {
+            //
         }
         return "0";
     }
@@ -423,15 +435,23 @@ public class BtsReportServiceImpl implements BtsReportService {
     }
 
     private String divFloatLongPer(String top, String bottom) {
-        if (Float.valueOf(bottom) > 0) {
-            return formatDivResult((Float.valueOf(top) / Float.valueOf(bottom)) * 100);
+        try {
+            if (Float.valueOf(bottom) > 0) {
+                return formatDivResult((Float.valueOf(top) / Float.valueOf(bottom)) * 100);
+            }
+        } catch (Exception e) {
+            //e.printStackTrace();
         }
         return "0";
     }
 
     private String divPer(String top, String bottom) {
-        if (Float.valueOf(bottom) > 0) {
-            return formatDivResult((Long.valueOf(top) / Float.valueOf(bottom)) * 100);
+        try {
+            if (Float.valueOf(bottom) > 0) {
+                return formatDivResult((Long.valueOf(top) / Float.valueOf(bottom)) * 100);
+            }
+        } catch (Exception e) {
+            //e.printStackTrace();
         }
         return "0";
     }
