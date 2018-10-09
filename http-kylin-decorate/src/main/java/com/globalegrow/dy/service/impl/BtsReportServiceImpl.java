@@ -457,8 +457,11 @@ public class BtsReportServiceImpl implements BtsReportService {
     }
 
     private String formatDivResult(Object dresult) {
-        DecimalFormat decimalFormat = new DecimalFormat("0.000");
-        return decimalFormat.format(dresult);
+        if (dresult != null) {
+            DecimalFormat decimalFormat = new DecimalFormat("0.000");
+            return decimalFormat.format(dresult);
+        }
+        return "0";
     }
 
 }
