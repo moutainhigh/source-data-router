@@ -60,20 +60,19 @@ public class BtsReportServiceImpl implements BtsReportService {
     };
 
     /**
-     *
      * @param btsReportParameterDto
      * @return
      */
     // /*, sync = true*//*condition = "#btsReportKylinConfig.getData().size() > 0",#result != null && */
     @Override
-    @Cacheable(cacheNames = "bts_report_data_cache", key = "#btsReportParameterDto.getCacheKey()" ,unless = "#result.data.size() == 0"  )
+    @Cacheable(cacheNames = "bts_report_data_cache", key = "#btsReportParameterDto.getCacheKey()", unless = "#result.data.size() == 0")
     public ReportPageDto btsReport(BtsReportParameterDto btsReportParameterDto) {
         BtsReportKylinConfig btsReportKylinConfig = this.btsReportConfigService.configMixedQuery(btsReportParameterDto);
         if (btsReportKylinConfig != null) {
             return this.reportPageDto(btsReportKylinConfig, btsReportParameterDto);
         }
         this.logger.error("bts kylin 配置为空");
-      return new ReportPageDto();
+        return new ReportPageDto();
     }
 
     @Override
@@ -284,6 +283,7 @@ public class BtsReportServiceImpl implements BtsReportService {
 
     /**
      * EMP 邮件营销报表
+     *
      * @param btsReportParameterDto
      * @param btsReportKylinConfig
      */
@@ -314,84 +314,88 @@ public class BtsReportServiceImpl implements BtsReportService {
 
         List<Map<String, String>> data = (List<Map<String, String>>) result.get("data");
         List<Object> outReportData = new ArrayList<>();
-        if (data != null && data.size() > 0) {
-            for (Map<String, String> reportData : data) {
-                Map<String, String> rowData = new HashMap<>();
-                reportData.entrySet().forEach(e -> {
-                    if ("plan_id".equals(e.getKey())) {
-                        rowData.put("BTS_PLANID", e.getValue());
-                    } else if ("version_id".equals(e.getKey())) {
-                        rowData.put("BTS_VERSIONID", e.getValue());
-                    } else if ("day".equals(e.getKey())) {
-                        rowData.put("DAY_START", e.getValue());
-                    } else {
-                        rowData.put("send_ok_count".equals(e.getKey()) ? "SPECIMEN" : "SUM_" + e.getKey().toUpperCase(), e.getValue());
-                    }
+        try {
+            if (data != null && data.size() > 0) {
+                for (Map<String, String> reportData : data) {
+                    Map<String, String> rowData = new HashMap<>();
+                    reportData.entrySet().forEach(e -> {
+                        if ("plan_id".equals(e.getKey())) {
+                            rowData.put("BTS_PLANID", e.getValue());
+                        } else if ("version_id".equals(e.getKey())) {
+                            rowData.put("BTS_VERSIONID", e.getValue());
+                        } else if ("day".equals(e.getKey())) {
+                            rowData.put("DAY_START", e.getValue());
+                        } else {
+                            rowData.put("send_ok_count".equals(e.getKey()) ? "SPECIMEN" : "SUM_" + e.getKey().toUpperCase(), e.getValue());
+                        }
 
-                });
-                // 转换率处理
-                // 送达率
-                rowData.put("SUM_DELIVER_RATE", divPer(rowData.get("SPECIMEN"), rowData.get("SUM_TOTAL_COUNT")));
-                // 打开率
-                rowData.put("SUM_OPEN_RATE", divPer(rowData.get("SUM_OPEN_COUNT"), rowData.get("SPECIMEN")));
-                // 点击转化率
-                rowData.put("SUM_TRANS_RATE", divPer(rowData.get("SUM_CLICK_COUNT"), rowData.get("SUM_OPEN_COUNT")));
-                // 下单转化率
-                rowData.put("SUM_ORDER_TRANS_RATE", divPer(rowData.get("SUM_ORDER_USER"), rowData.get("SUM_CLICK_COUNT")));
-                // 下单率
-                rowData.put("SUM_ORDER_RATE", divPer(rowData.get("SUM_ORDER_USER"), rowData.get("SPECIMEN")));
-                // 生单客均价
-                rowData.put("SUM_ORDER_USER_AVG", divLongFloat(rowData.get("SUM_ORDER_USER"), rowData.get("SUM_ORDER_MONEY")));
-                // 付款订单率
-                rowData.put("SUM_PAYED_ORDER_RATE", divPer(rowData.get("SUM_PAYED_ORDER_NUMS"), rowData.get("SUM_ORDER_NUMS")));
-                // 付款金额率
-                rowData.put("SUM_PAY_AMOUNT_RATE", divFloatFloatPer(rowData.get("SUM_PAYED_ORDER_MONEY"), rowData.get("SUM_ORDER_MONEY")));
-                // 付款客均价
-                rowData.put("SUM_ORDER_USER_AVG_PRICE", divFloatLong(rowData.get("SUM_PAYED_ORDER_MONEY"), rowData.get("SUM_PAYED_USER")));
-                outReportData.add(rowData);
+                    });
+                    // 转换率处理
+                    // 送达率
+                    rowData.put("SUM_DELIVER_RATE", divPer(rowData.get("SPECIMEN"), rowData.get("SUM_TOTAL_COUNT")));
+                    // 打开率
+                    rowData.put("SUM_OPEN_RATE", divPer(rowData.get("SUM_OPEN_COUNT"), rowData.get("SPECIMEN")));
+                    // 点击转化率
+                    rowData.put("SUM_TRANS_RATE", divPer(rowData.get("SUM_CLICK_COUNT"), rowData.get("SUM_OPEN_COUNT")));
+                    // 下单转化率
+                    rowData.put("SUM_ORDER_TRANS_RATE", divPer(rowData.get("SUM_ORDER_USER"), rowData.get("SUM_CLICK_COUNT")));
+                    // 下单率
+                    rowData.put("SUM_ORDER_RATE", divPer(rowData.get("SUM_ORDER_USER"), rowData.get("SPECIMEN")));
+                    // 生单客均价
+                    rowData.put("SUM_ORDER_USER_AVG", divLongFloat(rowData.get("SUM_ORDER_USER"), rowData.get("SUM_ORDER_MONEY")));
+                    // 付款订单率
+                    rowData.put("SUM_PAYED_ORDER_RATE", divPer(rowData.get("SUM_PAYED_ORDER_NUMS"), rowData.get("SUM_ORDER_NUMS")));
+                    // 付款金额率
+                    rowData.put("SUM_PAY_AMOUNT_RATE", divFloatFloatPer(rowData.get("SUM_PAYED_ORDER_MONEY"), rowData.get("SUM_ORDER_MONEY")));
+                    // 付款客均价
+                    rowData.put("SUM_ORDER_USER_AVG_PRICE", divFloatLong(rowData.get("SUM_PAYED_ORDER_MONEY"), rowData.get("SUM_PAYED_USER")));
+                    outReportData.add(rowData);
+                }
             }
-        }
-        // 均值处理&总值处理
-        if ("query".equals(btsReportParameterDto.getType())) {
-            List<Object> avgReport = new ArrayList<>();
-            outReportData.stream().forEach(ro -> {
-                Map<String, String> m = (Map<String, String>) ro;
-                Map<String, String> avgRow = new HashMap<>();
-                m.entrySet().forEach(e -> {
-                    if (e != null && e.getKey() != null && e.getValue() != null) {
+            // 均值处理&总值处理
+            if ("query".equals(btsReportParameterDto.getType())) {
+                List<Object> avgReport = new ArrayList<>();
+                outReportData.stream().forEach(ro -> {
+                    Map<String, String> m = (Map<String, String>) ro;
+                    Map<String, String> avgRow = new HashMap<>();
+                    m.entrySet().forEach(e -> {
+
                         if ("SPECIMEN".equals(e.getKey()) || e.getKey().contains("BTS") || "DAY_START".equals(e.getKey())) {
                             avgRow.put(e.getKey(), e.getValue());
                         } else if (e.getKey().endsWith("_RATE")) {
                             avgRow.put(e.getKey().replace("SUM_", "AVG_"), e.getValue());
-                        }else {
-                            avgRow.put(e.getKey().replace("SUM_", "AVG_"), formatDivResult(Float.valueOf(e.getValue())/ Float.valueOf(m.get("SPECIMEN"))));
+                        } else {
+                            avgRow.put(e.getKey().replace("SUM_", "AVG_"), formatDivResult(Float.valueOf(e.getValue()) / Float.valueOf(m.get("SPECIMEN"))));
                         }
                         avgReport.add(avgRow);
-                    }
 
+                    });
                 });
-            });
-            // System.out.println(GsonUtil.toJson(avgReport));
-            return avgReport;
-        } else if ("all".equals(btsReportParameterDto.getType())) {
-            List<Object> allReport = new ArrayList<>();
-            outReportData.stream().forEach(ro -> {
-                Map<String, String> m = (Map<String, String>) ro;
-                Map<String, String> avgRow = new HashMap<>();
-                avgRow.putAll(m);
-                m.entrySet().forEach(e -> {
-                    if ("SPECIMEN".equals(e.getKey())  || e.getKey().contains("BTS") || "DAY_START".equals(e.getKey())) {
-                        avgRow.put(e.getKey(), e.getValue());
-                    } else if (e.getKey().endsWith("_RATE")) {
-                        avgRow.put(e.getKey().replace("SUM_", "AVG_"), e.getValue());
-                    }else {
-                        avgRow.put(e.getKey().replace("SUM_", "AVG_"), formatDivResult(Float.valueOf(e.getValue())/ Float.valueOf(m.get("SPECIMEN"))));
-                    }
-                    allReport.add(avgRow);
+                // System.out.println(GsonUtil.toJson(avgReport));
+                return avgReport;
+            } else if ("all".equals(btsReportParameterDto.getType())) {
+                List<Object> allReport = new ArrayList<>();
+                outReportData.stream().forEach(ro -> {
+                    Map<String, String> m = (Map<String, String>) ro;
+                    Map<String, String> avgRow = new HashMap<>();
+                    avgRow.putAll(m);
+                    m.entrySet().forEach(e -> {
+                        if ("SPECIMEN".equals(e.getKey()) || e.getKey().contains("BTS") || "DAY_START".equals(e.getKey())) {
+                            avgRow.put(e.getKey(), e.getValue());
+                        } else if (e.getKey().endsWith("_RATE")) {
+                            avgRow.put(e.getKey().replace("SUM_", "AVG_"), e.getValue());
+                        } else {
+                            avgRow.put(e.getKey().replace("SUM_", "AVG_"), formatDivResult(Float.valueOf(e.getValue()) / Float.valueOf(m.get("SPECIMEN"))));
+                        }
+                        allReport.add(avgRow);
+                    });
                 });
-            });
-            // System.out.println(GsonUtil.toJson(allReport));
-            return allReport;
+                // System.out.println(GsonUtil.toJson(allReport));
+                return allReport;
+            }
+
+        } catch (Exception e) {
+            logger.error("解析 EMP 返回数据异常:{}", o, e);
         }
         //System.out.println(GsonUtil.toJson(outReportData));
         return outReportData;
@@ -400,7 +404,7 @@ public class BtsReportServiceImpl implements BtsReportService {
     private String divLongFloat(String top, String bottom) {
         try {
             if (Float.valueOf(bottom) > 0) {
-                return formatDivResult(Long.valueOf(top) / Float.valueOf(bottom)) ;
+                return formatDivResult(Long.valueOf(top) / Float.valueOf(bottom));
             }
         } catch (Exception e) {
             //
