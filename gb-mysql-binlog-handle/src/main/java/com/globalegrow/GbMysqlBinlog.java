@@ -182,7 +182,7 @@ public class GbMysqlBinlog {
                 }
 
                 pictureCounter.setSpecimen(goodsAddCartInfo.getCookie());
-                pictureCounter.setSkuOrder(1);
+                pictureCounter.setSkuOrder(goodsAddCartInfo.getPam());
                 Map reportMap = DyBeanUtils.objToMap(pictureCounter);
                 reportMap.putAll(goodsAddCartInfo.getBts());
                 reportMap.put(NginxLogConvertUtil.TIMESTAMP_KEY, System.currentTimeMillis());
