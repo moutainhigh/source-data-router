@@ -358,14 +358,17 @@ public class BtsReportServiceImpl implements BtsReportService {
                 Map<String, String> m = (Map<String, String>) ro;
                 Map<String, String> avgRow = new HashMap<>();
                 m.entrySet().forEach(e -> {
-                    if ("SPECIMEN".equals(e.getKey()) || e.getKey().contains("BTS") || "DAY_START".equals(e.getKey())) {
-                        avgRow.put(e.getKey(), e.getValue());
-                    } else if (e.getKey().endsWith("_RATE")) {
-                        avgRow.put(e.getKey().replace("SUM_", "AVG_"), e.getValue());
-                    }else {
-                        avgRow.put(e.getKey().replace("SUM_", "AVG_"), formatDivResult(Float.valueOf(e.getValue())/ Float.valueOf(m.get("SPECIMEN"))));
+                    if (e != null && e.getKey() != null && e.getValue() != null) {
+                        if ("SPECIMEN".equals(e.getKey()) || e.getKey().contains("BTS") || "DAY_START".equals(e.getKey())) {
+                            avgRow.put(e.getKey(), e.getValue());
+                        } else if (e.getKey().endsWith("_RATE")) {
+                            avgRow.put(e.getKey().replace("SUM_", "AVG_"), e.getValue());
+                        }else {
+                            avgRow.put(e.getKey().replace("SUM_", "AVG_"), formatDivResult(Float.valueOf(e.getValue())/ Float.valueOf(m.get("SPECIMEN"))));
+                        }
+                        avgReport.add(avgRow);
                     }
-                    avgReport.add(avgRow);
+
                 });
             });
             // System.out.println(GsonUtil.toJson(avgReport));
