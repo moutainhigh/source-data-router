@@ -55,7 +55,7 @@ public class RestTemplateConfig {
         //设置整个连接池最大连接数 根据自己的场景决定
         connectionManager.setMaxTotal(1000);
         //路由是对maxTotal的细分
-        connectionManager.setDefaultMaxPerRoute(300);
+        connectionManager.setDefaultMaxPerRoute(30);
         RequestConfig requestConfig = RequestConfig.custom()
                 .setSocketTimeout(20000) //服务器返回数据(response)的时间，超过该时间抛出read timeout
                 .setConnectTimeout(20000)//连接上服务器(握手成功)的时间，超出该时间抛出connect timeout
