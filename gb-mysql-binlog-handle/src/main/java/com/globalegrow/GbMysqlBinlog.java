@@ -155,6 +155,8 @@ public class GbMysqlBinlog {
             this.logger.info("redis cache info, redis key: {} data: {}",redisKey, redisCache);
             if (StringUtils.isNotEmpty(redisCache)) {
                 GoodsAddCartInfo goodsAddCartInfo = GsonUtil.readValue(redisCache, GoodsAddCartInfo.class);
+                // 缓存付款 sku 数
+                goodsAddCartInfo.setPam(goodsAddCartInfo.getPam() + 1);
                 String orderId = String.valueOf(tableData.get("order_sn"));
                 // 缓存订单商品金额
                 String amountKey = "dy_gb_m_amount_" + orderId;
@@ -249,6 +251,7 @@ public class GbMysqlBinlog {
 
                     pictureCounter.setSpecimen(goodsAddCartInfo1.getCookie());
                     pictureCounter.setAmount(goodsAddCartInfo1.getSalesAmount());
+                    pictureCounter.setPaidOrder(goodsAddCartInfo1.getPam());
                     Map reportMap = DyBeanUtils.objToMap(pictureCounter);
                     reportMap.putAll(goodsAddCartInfo1.getBts());
                     reportMap.put(NginxLogConvertUtil.TIMESTAMP_KEY, System.currentTimeMillis());
