@@ -202,9 +202,10 @@ public class ZafulDopamineOrderCounter {
                             quota.setOrder_amount(orderGoodInfo.getAmount());
                         }
                         if ("1".equals(orderStatus) || "8".equals(orderStatus)) {
-                            quota.setPaid_order(1);
+                            quota.setPaid_order(Integer.valueOf(redisOrderInfo.getOrderInfo().getOrderId()));
                             quota.setPaid_uv(skuCartInfo.getDeviceId());
                             quota.setAmount(orderGoodInfo.getAmount());
+                            quota.setSales_amount(orderGoodInfo.getGoodsNum());
                         }
 
                     }else {
@@ -257,7 +258,7 @@ public class ZafulDopamineOrderCounter {
             orderId = orderId.substring(0, orderId.lastIndexOf("."));
         }
         orderGoodInfo.setOrderId(orderId);
-        orderGoodInfo.setGoodsNum(Integer.valueOf(String.valueOf(tableData.get(OrderGoodInfo.GOODS_NUM))));
+        orderGoodInfo.setGoodsNum(NUmberUtils.jsonValueToInt((String.valueOf(tableData.get(OrderGoodInfo.GOODS_NUM)))));
         orderGoodInfo.setSku(String.valueOf(tableData.get(OrderGoodInfo.SKU)));
         orderGoodInfo.setPrice(Float.valueOf(String.valueOf(tableData.get(OrderGoodInfo.PRICE))));
         Float f = Float.valueOf(String.valueOf(tableData.get("goods_pay_amount"))) * 100;
