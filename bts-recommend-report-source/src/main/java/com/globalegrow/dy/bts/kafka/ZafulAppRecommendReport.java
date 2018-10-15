@@ -152,13 +152,6 @@ public class ZafulAppRecommendReport extends CommonBtsAppLogHandle{
     }
 
     private String queryUserId(String deviceId) {
-        this.logger.debug("查询 userid");
-        Object obj = this.hbaseMapper.selectRowKeyFamilyColumn(this.hbaseTableName, deviceId,
-                "userid", this.columnFamily);
-        if (obj != null) {
-            return String.valueOf(obj);
-        }
-        this.logger.info("加购事件未找到 userid, cookie: {}", deviceId);
-        return null;
+        return ZafulRecommendCartHandle.getUserIdByDeviceId(deviceId, this.logger, this.hbaseMapper, this.hbaseTableName, this.columnFamily);
     }
 }
