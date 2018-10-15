@@ -83,16 +83,14 @@ public class ZafulRecommendCartHandle {
 
                         List<Map<String, String>> btsList = this.getBtsInfoFromHbase(deviceId);
                         if (btsList != null && btsList.size() > 0) {
-                            for (Map<String, String> hbts : btsList) {
-                                SkuCartInfo skuCartInfo = new SkuCartInfo();
-                                skuCartInfo.setSku(sku);
-                                skuCartInfo.setBts(hbts);
-                                skuCartInfo.setUserId(userId);
-                                skuCartInfo.setDeviceId(deviceId);
-                                skuCartInfo.setRecommend(isRecommend);
-                                String redisKey = "dy_zaful_app_dopamine_" + userId + "_" + sku;
-                                SpringRedisUtil.put(redisKey, GsonUtil.toJson(skuCartInfo), 604800);
-                            }
+                            SkuCartInfo skuCartInfo = new SkuCartInfo();
+                            skuCartInfo.setSku(sku);
+                            skuCartInfo.setBts(btsList.get(0));
+                            skuCartInfo.setUserId(userId);
+                            skuCartInfo.setDeviceId(deviceId);
+                            skuCartInfo.setRecommend(isRecommend);
+                            String redisKey = "dy_zaful_app_dopamine_" + userId + "_" + sku;
+                            SpringRedisUtil.put(redisKey, GsonUtil.toJson(skuCartInfo), 604800);
                         }
 
                     } else if (bts != null) {
