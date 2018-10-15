@@ -74,7 +74,7 @@ public class ZafulRecommendCartHandle {
                     String recommendType = String.valueOf(eventValueMap.get("af_inner_mediasource"));
                     if (StringUtils.isNotEmpty(recommendType) && !"null".equals(recommendType)) {
                         isRecommend = true;
-                    }else {
+                    } else {
                         isRecommend = false;
                     }
                     Map<String, String> bts = appLogBtsInfo(eventValueMap);
@@ -95,7 +95,7 @@ public class ZafulRecommendCartHandle {
                             }
                         }
 
-                    }else if (bts != null) {
+                    } else if (bts != null) {
                         SkuCartInfo skuCartInfo = new SkuCartInfo();
                         skuCartInfo.setSku(sku);
                         skuCartInfo.setBts(bts);
@@ -124,7 +124,10 @@ public class ZafulRecommendCartHandle {
                 List<Map<String, String>> list = new ArrayList<>();
                 for (Result result : rs) {
                     String value = Bytes.toString(result.getValue(Bytes.toBytes("bts_info"), Bytes.toBytes("info")));
-                    list.add(GsonUtil.readValue(value, Map.class));
+                    if (StringUtils.isNotEmpty(value) && !"null".equals(value)) {
+                        list.add(GsonUtil.readValue(value, Map.class));
+                    }
+
                 }
                 return list;
             }
