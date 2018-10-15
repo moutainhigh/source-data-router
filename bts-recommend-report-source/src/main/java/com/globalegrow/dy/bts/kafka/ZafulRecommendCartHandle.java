@@ -82,6 +82,7 @@ public class ZafulRecommendCartHandle {
                         this.logger.debug("从 hbase 中查询 bts 实验信息");
 
                         List<Map<String, String>> btsList = this.getBtsInfoFromHbase(deviceId);
+                        this.logger.info("从 hbase 查询 bts 信息:{}", btsList);
                         if (btsList != null && btsList.size() > 0) {
                             SkuCartInfo skuCartInfo = new SkuCartInfo();
                             skuCartInfo.setSku(sku);
