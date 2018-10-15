@@ -12,7 +12,11 @@ public class NUmberUtils {
         if (jsonValue instanceof Float) {
             return ((Float) jsonValue).longValue();
         }
-        return Long.valueOf(String.valueOf(jsonValue));
+        String orderId = String.valueOf(jsonValue);
+        if (orderId.contains(".")) {
+            orderId = orderId.substring(0, orderId.lastIndexOf("."));
+        }
+        return Long.valueOf(orderId);
     }
 
 
@@ -26,7 +30,11 @@ public class NUmberUtils {
         if (jsonValue instanceof Float) {
             return ((Float) jsonValue).intValue();
         }
-        return Integer.valueOf(String.valueOf(jsonValue));
+        String orderId = String.valueOf(jsonValue);
+        if (orderId.contains(".")) {
+            orderId = orderId.substring(0, orderId.lastIndexOf("."));
+        }
+        return Integer.valueOf(orderId);
     }
 
 }
