@@ -193,9 +193,6 @@ public class ZafulDopamineOrderCounter {
                     BtsAppDopamineReportQuota quota = new BtsAppDopamineReportQuota();
                     quota.setBts(bts);
                     String orderStatus = redisOrderInfo.getOrderInfo().getOrderStatus();
-                    if (orderStatus.contains(".")) {
-                        orderStatus = orderStatus.substring(0, orderStatus.lastIndexOf("."));
-                    }
                     if (skuCartInfo.getRecommend()) {
                         quota.setOrder(Integer.valueOf(redisOrderInfo.getOrderInfo().getOrderId()));
                         quota.setOrder_uv(skuCartInfo.getDeviceId());
@@ -279,8 +276,12 @@ public class ZafulDopamineOrderCounter {
         if (orderId.contains(".")) {
             orderId = orderId.substring(0, orderId.lastIndexOf("."));
         }
+        String orderStatus = String.valueOf(tableData.get(OrderInfo.ORDER_STATUS));
+        if (orderStatus.contains(".")) {
+            orderStatus = orderStatus.substring(0, orderStatus.lastIndexOf("."));
+        }
         orderInfo.setOrderId(orderId);
-        orderInfo.setOrderStatus(String.valueOf(tableData.get(OrderInfo.ORDER_STATUS)));
+        orderInfo.setOrderStatus(orderStatus);
         return orderInfo;
     }
 
