@@ -149,7 +149,7 @@ public class ZafulRecommendCartHandle {
             bts.put("bucketid", bucketId);
             return bts;
         }
-        this.logger.error("bts 实验 id 为空");
+        this.logger.warn("bts 实验 id 为空");
         return null;
     }
 
