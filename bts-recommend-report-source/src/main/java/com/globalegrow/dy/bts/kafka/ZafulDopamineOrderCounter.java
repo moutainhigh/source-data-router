@@ -193,6 +193,9 @@ public class ZafulDopamineOrderCounter {
                     BtsAppDopamineReportQuota quota = new BtsAppDopamineReportQuota();
                     quota.setBts(bts);
                     String orderStatus = redisOrderInfo.getOrderInfo().getOrderStatus();
+                    if (orderStatus.contains(".")) {
+                        orderStatus = orderStatus.substring(0, orderStatus.lastIndexOf("."));
+                    }
                     if (skuCartInfo.getRecommend()) {
                         quota.setOrder(Integer.valueOf(redisOrderInfo.getOrderInfo().getOrderId()));
                         quota.setOrder_uv(skuCartInfo.getDeviceId());
