@@ -45,10 +45,13 @@ public class ZafulDopamineOrderCounter {
 
     private Connection connection;
 
+    Table table;
+
     @PostConstruct
     public void init() throws IOException {
         kafkaTemplate = new KafkaTemplate<>(producerFactory());
         connection = ConnectionFactory.createConnection(this.configuration);
+        table = connection.getTable(TableName.valueOf("dy_cookie_bts_info_rel"));
     }
 
     public Map<String, Object> producerConfigs() {
@@ -231,7 +234,7 @@ public class ZafulDopamineOrderCounter {
     }
 
     private List<Map<String, String>> getBtsInfoFromHbase(String deviceId) {
-        try (Table table = connection.getTable(TableName.valueOf("dy_cookie_bts_info_rel"));) {
+        try  {
             Scan s = new Scan();
             s.setFilter(new PrefixFilter(deviceId.getBytes()));
             ResultScanner rs = table.getScanner(s);
