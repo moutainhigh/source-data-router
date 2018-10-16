@@ -76,7 +76,13 @@ public class NginxLogConvertUtil {
                     if (key.startsWith("_ubc.gif?")) {
                         map.put(key.replace("_ubc.gif?", ""), URLDecoder.decode(p[1], "utf-8"));
                     }else {
-                        map.put(p[0], valueHex(URLDecoder.decode(p[1], "utf-8")));
+                        String value = p[1];
+                        if (value.startsWith("{")) {
+                            map.put(p[0], valueHex(p[1].replaceAll("%20", " ").replaceAll("%22", "\"")));
+                        }else {
+                            map.put(p[0], valueHex(URLDecoder.decode(p[1], "utf-8")));
+                        }
+
                     }
                 } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
@@ -86,6 +92,11 @@ public class NginxLogConvertUtil {
         return map;
     }
 
+    /**
+     * {%22name%22:%22Ahorre%20hasta%20un%2060%%20de%20descuento%20|%20Los%20suministros%20de%20salud%20y%20belleza%22,%22type%22:%22gbsite_custom%22}
+     * @param o
+     * @return
+     */
     public static Object valueHex(Object o) {
         String s = String.valueOf(o);
         if (StringUtils.isNotEmpty(s) && (s.contains("\\x22") || s.contains("\\\\x22"))) {
