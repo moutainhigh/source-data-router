@@ -1,6 +1,7 @@
 spring:
   profiles:
-    active: @profiles.active@
+    #active: @profiles.active@
+    active: dev
 logging:
 #  config: classpath:logback-spring.xml
   path: logs
@@ -46,11 +47,20 @@ spring:
   redis:
     timeout: 86400
     password: 6e1KWyC29w
+    #sentinel:
+      #master: sentinel-172.31.42.160-6383
+      #nodes: 172.31.34.55:6384,172.31.42.160:6384,172.31.54.133:6383
     sentinel:
-      master: sentinel-172.31.42.160-6383
-      nodes: 172.31.34.55:6384,172.31.42.160:6384,172.31.54.133:6383
+      master: mymaster
+      nodes: 10.60.49.130:26380,10.60.49.130:26381,10.60.49.130:26382
+
   cache:
     cache-names:
+  elasticsearch:
+    jest:
+      uris: http://18.213.71.71:9200,http://18.213.41.233:9200,http://52.204.111.230:9200
+      read-timeout: 20000
+      connection-timeout: 20000
 
 mybatis:
   mapperLocations: classpath*:com/globalegrow/dy/mapper/*.xml
