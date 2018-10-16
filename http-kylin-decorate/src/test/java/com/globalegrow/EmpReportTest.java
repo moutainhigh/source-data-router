@@ -35,9 +35,9 @@ public class EmpReportTest {
 
     @Before
     public void before() {
-        btsReportKylinConfig.setKylinQueryAdress("http://ems.appinthestore.com.ems_auto_marketing.php5.egomsl.com/marketing/api-bts-email-info/get-email-order-info?module_name=marketing_email");
-        btsReportParameterDto.setPlanId(1L);
-        btsReportParameterDto.setType("query");
+        btsReportKylinConfig.setKylinQueryAdress("http://ems.appinthestore.com/marketing/api-bts-email-info/get-email-order-info?module_name=marketing_email");
+        btsReportParameterDto.setPlanId(87L);
+        btsReportParameterDto.setType("all");
         List<String> groupBy = new ArrayList<>();
         groupBy.add("bts_planid");
         groupBy.add("bts_versionid");
@@ -46,7 +46,7 @@ public class EmpReportTest {
         Map<String, Map<String, String>> betweenFields = new HashMap<>();
         Map<String, String> dayBetween = new HashMap<>();
         dayBetween.put("min", "2018-09-01");
-        dayBetween.put("max", "2018-09-30");
+        dayBetween.put("max", "2018-10-30");
         betweenFields.put("day_start", dayBetween);
         btsReportParameterDto.setBetweenFields(betweenFields);
     }

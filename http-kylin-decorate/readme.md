@@ -36,7 +36,7 @@ curl "http://localhost:38093/report-config/bts-field?planId=45&productLineCode=Z
 		"plan_id": 1, // 实验id
 		"version_id": 1, // 版本id
 		"day": "2018-09-24" // 日期
-	}, {
+	}, {  
 		"send_ok_count": 10000,
 		"open_count": 2000,
 		"click_count": 500,
