@@ -225,6 +225,7 @@ public class ZafulDopamineOrderCounter {
 
                     Map reportMap = DyBeanUtils.objToMap(quota);
                     reportMap.put(NginxLogConvertUtil.TIMESTAMP_KEY, System.currentTimeMillis());
+                    this.logger.info("订单信息发送到 kafka");
                     this.kafkaTemplate.send("dy_bts_dopamine_report", GsonUtil.toJson(reportMap));
                 });
             }
