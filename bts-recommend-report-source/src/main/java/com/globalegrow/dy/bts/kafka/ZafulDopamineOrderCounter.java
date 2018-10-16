@@ -271,7 +271,11 @@ public class ZafulDopamineOrderCounter {
     private OrderInfo orderInfo(Map<String, Object> dataMap) {
         Map<String, Object> tableData = this.getEventData(dataMap);
         OrderInfo orderInfo = new OrderInfo();
-        orderInfo.setUserId(String.valueOf(tableData.get(OrderInfo.USER_ID)));
+        String userId = String.valueOf(tableData.get(OrderInfo.USER_ID));
+        if (userId.contains(".")) {
+            userId = userId.substring(0, userId.lastIndexOf("."));
+        }
+        orderInfo.setUserId(userId);
         String orderId = String.valueOf(tableData.get(OrderGoodInfo.ORDER_ID));
         if (orderId.contains(".")) {
             orderId = orderId.substring(0, orderId.lastIndexOf("."));
