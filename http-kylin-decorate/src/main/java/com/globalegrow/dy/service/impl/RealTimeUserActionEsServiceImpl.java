@@ -8,7 +8,6 @@ import com.globalegrow.dy.service.RealTimeUserActionService;
 import io.searchbox.client.JestClient;
 import io.searchbox.client.JestResult;
 import io.searchbox.core.Search;
-import io.searchbox.params.Parameters;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.elasticsearch.index.query.BoolQueryBuilder;
@@ -18,15 +17,13 @@ import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
-
-import static java.util.stream.Collectors.toList;
 
 @Service
 public class RealTimeUserActionEsServiceImpl implements RealTimeUserActionService {
@@ -38,10 +35,12 @@ public class RealTimeUserActionEsServiceImpl implements RealTimeUserActionServic
     /**
      * 索引前缀，当天数据只查询当天索引 dy-app-data-temp-
      */
+    @Value("${app.es.index-prefix}")
     private String indexPrefix;
     /**
      * 索引别名，从全部数据中搜索
      */
+    @Value("${app.es.index-aliases}")
     private String indexAliases;
 
     /**
@@ -95,9 +94,9 @@ public class RealTimeUserActionEsServiceImpl implements RealTimeUserActionServic
                 currentDate.equals(DateFormatUtils.ISO_8601_EXTENDED_DATE_FORMAT.format(userActionParameterDto.getEndDate()))) {
             // 只查询当天的索引数据
             builder
-                    .addIndex(indexPrefix + currentDate);
+                    .addIndex(this.indexPrefix + currentDate);
         } else {
-            builder.addIndex(indexAliases);
+            builder.addIndex(this.indexAliases);
         }
         searchSourceBuilder.postFilter(queryBuilder);
         Search search = builder

@@ -65,6 +65,11 @@ mybatis:
 server:
   port: 38093
 
+app:
+  es:
+    index-prefix: dy-app-data-temp-
+    index-aliases: search-temp-logs
+
 ---
 logging:
   #  config: classpath:logback-spring.xml
@@ -118,7 +123,10 @@ mybatis:
 
 server:
   port: 38093
-
+app:
+  es:
+    index-prefix: dy-app-data-temp-
+    index-aliases: search-temp-logs
 ---
 logging:
   #  config: classpath:logback-spring.xml
@@ -170,3 +178,7 @@ mybatis:
 
 server:
   port: 38093
+app:
+  es:
+    index-prefix: dy-app-data-temp-
+    index-aliases: search-temp-logs
