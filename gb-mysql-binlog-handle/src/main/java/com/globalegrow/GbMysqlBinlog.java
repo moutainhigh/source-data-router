@@ -268,6 +268,7 @@ public class GbMysqlBinlog {
                     BtsGbRecommendReport btsGbRecommendReport = new BtsGbRecommendReport();
                     btsGbRecommendReport.setBts(goodsAddCartInfo1.getBts());
                     btsGbRecommendReport.setAmount(goodsAddCartInfo1.getSalesAmount());
+                    btsGbRecommendReport.setSkuOrderPaid(1);
                     Map reportMap = DyBeanUtils.objToMap(btsGbRecommendReport);
                     reportMap.put(NginxLogConvertUtil.TIMESTAMP_KEY, System.currentTimeMillis());
 
