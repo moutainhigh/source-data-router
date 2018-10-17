@@ -198,6 +198,12 @@ public class GbMysqlBinlog {
                 // dy_bts_gb_gd_rec_report
                 BtsGbRecommendReport btsGbRecommendReport = new BtsGbRecommendReport();
                 btsGbRecommendReport.setBts(goodsAddCartInfo.getBts());
+                String goodNum = String.valueOf(tableData.get("qty"));
+                if (goodNum.indexOf(".") > 0) {
+                    goodNum = goodNum.substring(0, goodNum.indexOf("."));
+                }
+                Float f = ((Float.valueOf(String.valueOf(tableData.get("price"))) * Integer.valueOf(goodNum)) * 100);
+                pictureCounter.setAmount(f.intValue());
                 btsGbRecommendReport.setSkuOrder(1);
                 Map reportMap = DyBeanUtils.objToMap(btsGbRecommendReport);
                 reportMap.put(NginxLogConvertUtil.TIMESTAMP_KEY, System.currentTimeMillis());
@@ -209,11 +215,8 @@ public class GbMysqlBinlog {
                 String amountKey = "dy_gb_recommend_amount_" + orderId;
 
                 String redisAmount = SpringRedisUtil.getStringValue(amountKey);
-                String goodNum = String.valueOf(tableData.get("qty"));
-                if (goodNum.indexOf(".") > 0) {
-                    goodNum = goodNum.substring(0, goodNum.indexOf("."));
-                }
-                Float f = ((Float.valueOf(String.valueOf(tableData.get("price"))) * Integer.valueOf(goodNum)) * 100);
+
+                // Float f = ((Float.valueOf(String.valueOf(tableData.get("price"))) * Integer.valueOf(goodNum)) * 100);
                 if (StringUtils.isEmpty(redisAmount)) {
                     goodsAddCartInfo.setSalesAmount(f.intValue());
                     SpringRedisUtil.put(amountKey, GsonUtil.toJson(goodsAddCartInfo), 1209600);
@@ -250,7 +253,6 @@ public class GbMysqlBinlog {
                     PictureCounter pictureCounter = new PictureCounter();
 
                     pictureCounter.setSpecimen(goodsAddCartInfo1.getCookie());
-                    pictureCounter.setAmount(goodsAddCartInfo1.getSalesAmount());
                     pictureCounter.setPaidOrder(goodsAddCartInfo1.getPam());
                     Map reportMap = DyBeanUtils.objToMap(pictureCounter);
                     reportMap.putAll(goodsAddCartInfo1.getBts());
