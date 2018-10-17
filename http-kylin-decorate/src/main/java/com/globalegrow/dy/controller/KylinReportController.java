@@ -41,6 +41,9 @@ public class KylinReportController {
             if (ReportServerType.EMP.name().equals(btsReportKylinConfig.getServerType())) {
                 return this.btsReportService.btsReport(btsReportKylinConfig, btsReportParameterDto);
             }
+            if (btsReportParameterDto.getGroupByFields().contains("hour_start")) {
+                return this.btsReportService.btsReport(btsReportKylinConfig, btsReportParameterDto);
+            }
         }
         List<String> groupString = btsReportParameterDto.getGroupByFields();
         boolean groupByVersion = groupString.contains("bts_versionid");
