@@ -127,13 +127,14 @@ public class GbGoodDetailRecommendReportListener extends GbBtsInfo {
                     List<Map<String, String>> ubcs = GsonUtil.readValue(glbUbcta, List.class);
                     if (ubcs != null && ubcs.size() > 0) {
                         this.logger.debug("曝光商品数");
-                        String policy = btsInfo.get("mdlc");
+                        /*String policy = btsInfo.get("mdlc");
                         if (StringUtils.isNotEmpty(policy)) {
                             List<Map<String, String>> ubcsBts =  ubcs.stream().filter(e -> policy.equals(e.get("mrlc"))).collect(Collectors.toList());
                             btsGbRecommendReport.setSkuExposure(ubcsBts.size());
                         }else {
                             this.logger.warn("埋点中推荐位状态为空！");
-                        }
+                        }*/
+                        btsGbRecommendReport.setSkuExposure(ubcs.size());
                     }
                     return this.reportDataToMap(btsGbRecommendReport);
                 }
