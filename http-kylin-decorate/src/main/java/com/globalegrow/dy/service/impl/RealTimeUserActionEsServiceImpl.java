@@ -116,7 +116,7 @@ public class RealTimeUserActionEsServiceImpl implements RealTimeUserActionServic
                 List<UserActionEsDto> data = a.getValue();
                 if (data != null && data.size() > 0) {
                     userActionDto.setUserId(data.get(0).getUser_id());
-                    data.stream().collect(Collectors.groupingBy(UserActionEsDto :: getDevice_id))
+                    data.stream().collect(Collectors.groupingBy(UserActionEsDto :: getEvent_name))
                             .entrySet().stream().forEach(e -> {
                         try {
                             AppEventEnums.valueOf(e.getKey()).handleEventResult(userActionDto, e.getValue());
