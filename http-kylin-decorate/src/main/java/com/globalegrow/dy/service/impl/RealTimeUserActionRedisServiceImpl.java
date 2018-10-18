@@ -37,6 +37,7 @@ public class RealTimeUserActionRedisServiceImpl implements RealTimeUserActionSer
             List<UserActionDto> list = new ArrayList<>();
             String key = "dy_real_time_" + userActionParameterDto.getCookieId() + "_" + DateFormatUtils.format(System.currentTimeMillis(), "yyyy-MM-dd");
             Set<String> stringSet = SpringRedisUtil.SMEMBERS(key);
+            this.logger.debug("从 redis 查询到数据 key: {}, data: {}", key, stringSet);
             stringSet.stream().map(s -> {
                 try {
                     return JacksonUtil.readValue(s, UserActionEsDto.class);
