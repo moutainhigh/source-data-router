@@ -111,7 +111,7 @@ public class RealTimeUserActionEsServiceImpl implements RealTimeUserActionServic
             searchSourceBuilder.postFilter(queryBuilder);
             Search search = builder
                     .addType("log")
-                    .setParameter(Parameters.SIZE, 10)// 每次传多少条数据
+                    .setParameter(Parameters.SIZE, userActionParameterDto.getSize())// 每次传多少条数据
                     .setParameter(Parameters.SCROLL,"5m")// 开启游标5分钟
                     .build();
             result = jestClient.execute(search);
