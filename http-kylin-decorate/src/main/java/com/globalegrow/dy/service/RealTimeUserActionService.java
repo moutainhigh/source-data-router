@@ -2,6 +2,7 @@ package com.globalegrow.dy.service;
 
 import com.globalegrow.dy.dto.UserActionDto;
 import com.globalegrow.dy.dto.UserActionParameterDto;
+import com.globalegrow.dy.dto.UserActionResponseDto;
 
 import java.io.IOException;
 import java.util.List;
@@ -13,6 +14,6 @@ public interface RealTimeUserActionService {
      * @param userActionParameterDto
      * @return
      */
-    List<UserActionDto> userActionData(UserActionParameterDto userActionParameterDto) throws IOException;
+    UserActionResponseDto userActionData(UserActionParameterDto userActionParameterDto) throws IOException;
 
 }

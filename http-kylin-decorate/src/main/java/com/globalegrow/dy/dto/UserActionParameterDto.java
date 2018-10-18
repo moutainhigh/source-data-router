@@ -22,8 +22,34 @@ public class UserActionParameterDto {
 
     private List<String> divice = new ArrayList<>();
 
+    /**
+     * 分页ID
+     */
+    private String scrollId;
+
+    /**
+     * 每页数量
+     */
+    private Integer size = 10;
+
     public String getType() {
         return type;
+    }
+
+    public String getScrollId() {
+        return scrollId;
+    }
+
+    public void setScrollId(String scrollId) {
+        this.scrollId = scrollId;
+    }
+
+    public Integer getSize() {
+        return size;
+    }
+
+    public void setSize(Integer size) {
+        this.size = size;
     }
 
     public void setType(String type) {

@@ -33,9 +33,7 @@ public class UserActionController {
      */
     @RequestMapping(value = "userActionResponseDto",produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     public UserActionResponseDto userAction(@Validated @RequestBody UserActionParameterDto parameterDto) throws IOException {
-        UserActionResponseDto userActionResponseDto = new UserActionResponseDto();
-        userActionResponseDto.setData(this.realTimeUserActionEsServiceImpl.userActionData(parameterDto));
-        return userActionResponseDto;
+        return this.realTimeUserActionEsServiceImpl.userActionData(parameterDto);
     }
 
     //
@@ -48,9 +46,7 @@ public class UserActionController {
      */
     @RequestMapping(value = "getUserInfo",produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     public UserActionResponseDto userActionInfo(@Validated @RequestBody UserActionParameterDto parameterDto) throws IOException {
-        UserActionResponseDto userActionResponseDto = new UserActionResponseDto();
-        userActionResponseDto.setData(this.realTimeUserActionEsServiceImpl.userActionData(parameterDto));
-        return userActionResponseDto;
+        return this.realTimeUserActionEsServiceImpl.userActionData(parameterDto);
     }
 
     /**
@@ -61,8 +57,6 @@ public class UserActionController {
      */
     @RequestMapping(value = "getUserInfoRedis",produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     public UserActionResponseDto userActionInfoRedis(@Validated @RequestBody UserActionParameterDto parameterDto) throws IOException {
-        UserActionResponseDto userActionResponseDto = new UserActionResponseDto();
-        userActionResponseDto.setData(this.realTimeUserActionRedisServiceImpl.userActionData(parameterDto));
-        return userActionResponseDto;
+        return this.realTimeUserActionRedisServiceImpl.userActionData(parameterDto);
     }
 }

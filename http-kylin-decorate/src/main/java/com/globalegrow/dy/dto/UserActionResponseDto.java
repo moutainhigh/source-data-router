@@ -10,6 +10,19 @@ public class UserActionResponseDto {
 
     private List<UserActionDto> data;
 
+    public String getScrollId() {
+        return scrollId;
+    }
+
+    public void setScrollId(String scrollId) {
+        this.scrollId = scrollId;
+    }
+
+    /**
+     * 分页ID
+     */
+    private String scrollId;
+
     public boolean isSuccess() {
         return success;
     }

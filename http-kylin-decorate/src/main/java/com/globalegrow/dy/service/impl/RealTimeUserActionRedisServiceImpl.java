@@ -3,6 +3,7 @@ package com.globalegrow.dy.service.impl;
 import com.globalegrow.dy.dto.UserActionDto;
 import com.globalegrow.dy.dto.UserActionEsDto;
 import com.globalegrow.dy.dto.UserActionParameterDto;
+import com.globalegrow.dy.dto.UserActionResponseDto;
 import com.globalegrow.dy.enums.AppEventEnums;
 import com.globalegrow.dy.service.RealTimeUserActionService;
 import com.globalegrow.util.JacksonUtil;
@@ -32,7 +33,9 @@ public class RealTimeUserActionRedisServiceImpl implements RealTimeUserActionSer
      * @return
      */
     @Override
-    public List<UserActionDto> userActionData(UserActionParameterDto userActionParameterDto) throws IOException {
+    public UserActionResponseDto userActionData(UserActionParameterDto userActionParameterDto) throws IOException {
+        UserActionResponseDto userActionResponseDto = new UserActionResponseDto();
+        this.logger.debug("user_action_parameter: {}", userActionParameterDto);
         if (StringUtils.isNotEmpty(userActionParameterDto.getCookieId())) {
             List<UserActionDto> list = new ArrayList<>();
             String key = "dy_real_time_" + userActionParameterDto.getCookieId() + "_" + DateFormatUtils.format(System.currentTimeMillis(), "yyyy-MM-dd");
@@ -49,9 +52,10 @@ public class RealTimeUserActionRedisServiceImpl implements RealTimeUserActionSer
                     .entrySet().parallelStream().forEach(a -> {
                 handleUserActionData(list, a, logger);
             });
-            return list;
+            userActionResponseDto.setData(list);
         }
-        return Collections.emptyList();
+
+        return userActionResponseDto;
     }
 
     static void handleUserActionData(List<UserActionDto> list, Map.Entry<String, List<UserActionEsDto>> a, Logger logger) {
