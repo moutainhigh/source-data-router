@@ -75,8 +75,8 @@ public class RealtimeRecommendationProductServiceImpl implements RealtimeRecomme
             }
             searchSourceBuilder.postFilter(queryBuilder);
             Search search = new Search.Builder(searchSourceBuilder.toString())
-                    .addIndex("recommendation-statistics")
-                    .addType("productDateStatistics")
+                    .addIndex("recommendation")
+                    .addType("statistics")
                     .setParameter(Parameters.SIZE,size)// 每次传多少条数据
                     .setParameter(Parameters.SCROLL,"5m")// 开启游标5分钟
                     .build();
