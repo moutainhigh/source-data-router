@@ -52,6 +52,10 @@ public class SpringRedisUtil {
         return tMap;
     }
 
+    public static Set<String> SMEMBERS(String key) {
+        return redistemplate.opsForSet().members(key);
+    }
+
     /**
      * 根据前缀获取 key
      * @param prefix
