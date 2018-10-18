@@ -111,21 +111,7 @@ public class RealTimeUserActionEsServiceImpl implements RealTimeUserActionServic
             //Map<String, List<UserActionEsDto>> groupDto =
             result.getSourceAsObjectList(UserActionEsDto.class).parallelStream().collect(Collectors.groupingBy(UserActionEsDto :: getDevice_id))
            .entrySet().parallelStream().forEach(a -> {
-                UserActionDto userActionDto = new UserActionDto();
-                userActionDto.setCookieId(a.getKey());
-                List<UserActionEsDto> data = a.getValue();
-                if (data != null && data.size() > 0) {
-                    userActionDto.setUserId(data.get(0).getUser_id());
-                    data.stream().collect(Collectors.groupingBy(UserActionEsDto :: getEvent_name))
-                            .entrySet().stream().forEach(e -> {
-                        try {
-                            AppEventEnums.valueOf(e.getKey()).handleEventResult(userActionDto, e.getValue());
-                        } catch (IllegalArgumentException e1) {
-                            logger.error("event not supported {}", e.getKey(), e);
-                        }
-                    });
-                }
-                list.add(userActionDto);
+                RealTimeUserActionRedisServiceImpl.handleUserActionData(list, a, logger);
             });
         }
         return list;
