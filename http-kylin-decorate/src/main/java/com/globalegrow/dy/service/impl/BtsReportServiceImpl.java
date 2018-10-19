@@ -110,9 +110,9 @@ public class BtsReportServiceImpl implements BtsReportService {
                 int i = 0;
                 btsReportParameterDto.getOrderFields().entrySet().forEach(entry -> {
                     if (i == 0) {
-                        orderBy.append(" " + entry.getKey() + " " + entry.getValue());
+                        orderBy.append(" " + this.compatibilityBtsFields(entry.getKey(), btsReportKylinConfig) + " " + entry.getValue());
                     } else {
-                        orderBy.append(", " + entry.getKey() + " " + entry.getValue());
+                        orderBy.append(", " + this.compatibilityBtsFields(entry.getKey(), btsReportKylinConfig) + " " + entry.getValue());
                     }
                 });
 
