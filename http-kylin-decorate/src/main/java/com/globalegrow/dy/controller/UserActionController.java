@@ -3,6 +3,7 @@ package com.globalegrow.dy.controller;
 import com.globalegrow.dy.dto.UserActionParameterDto;
 import com.globalegrow.dy.dto.UserActionResponseDto;
 import com.globalegrow.dy.service.RealTimeUserActionService;
+import com.globalegrow.util.SpringRedisUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.validation.annotation.Validated;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
+import java.util.Set;
 
 @RestController
 @RequestMapping("user")
@@ -24,6 +26,21 @@ public class UserActionController {
     @Autowired
     @Qualifier("realTimeUserActionRedisServiceImpl")
     private RealTimeUserActionService realTimeUserActionRedisServiceImpl;
+
+ /*   @RequestMapping("redis-test")
+    public Set<String> getData(String key) {
+        return SpringRedisUtil.SMEMBERS(key);
+    }
+
+    @RequestMapping("redis-test-1")
+    public String getData1(String key) {
+        return SpringRedisUtil.getStringValue(key);
+    }
+
+    @RequestMapping("redis-test-2")
+    public Set<String> getData2(String key) {
+        return SpringRedisUtil.getAllKeyByPrefix(key);
+    }*/
 
     /**
      * 上线后删除

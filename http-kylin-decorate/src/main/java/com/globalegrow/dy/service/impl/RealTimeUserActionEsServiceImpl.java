@@ -54,6 +54,7 @@ public class RealTimeUserActionEsServiceImpl implements RealTimeUserActionServic
      */
     @Override
     public UserActionResponseDto userActionData(UserActionParameterDto userActionParameterDto) throws IOException {
+        long start = System.currentTimeMillis();
         UserActionResponseDto userActionResponseDto = new UserActionResponseDto();
         logger.debug("传入参数:{}", userActionParameterDto);
         List<UserActionDto> list = new ArrayList<>();
@@ -117,7 +118,7 @@ public class RealTimeUserActionEsServiceImpl implements RealTimeUserActionServic
             result = jestClient.execute(search);
 
         }
-
+        logger.info("query from es cost: {} ms", System.currentTimeMillis() - start);
         if (result != null) {
             String scrollId = result.getJsonObject().get("_scroll_id").getAsString();
             userActionResponseDto.setScrollId(scrollId);
@@ -130,6 +131,7 @@ public class RealTimeUserActionEsServiceImpl implements RealTimeUserActionServic
             });
         }
         userActionResponseDto.setData(list);
+
         return userActionResponseDto;
     }
 }
