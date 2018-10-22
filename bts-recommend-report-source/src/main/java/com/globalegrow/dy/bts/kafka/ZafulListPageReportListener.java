@@ -21,7 +21,7 @@ import java.util.concurrent.CountDownLatch;
 /**
  * zaful 列表页报表处理逻辑
  */
-@Component
+//@Component
 public class ZafulListPageReportListener extends BtsListener {
 
     public static final String COLUMN_FAMILY="cookie_userid";

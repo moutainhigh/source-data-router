@@ -19,7 +19,7 @@ import java.util.concurrent.CountDownLatch;
 /**
  * app 推荐位报表，不取推荐位字段，只取 bts 实验信息
  */
-@Component
+//@Component
 public class ZafulAppRecommendReport extends CommonBtsAppLogHandle{
 
     @Value("${app.kafka.log-zaful-out-topic}")
