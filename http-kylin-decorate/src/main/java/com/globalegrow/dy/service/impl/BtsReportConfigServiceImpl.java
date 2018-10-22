@@ -79,7 +79,11 @@ public class BtsReportConfigServiceImpl implements BtsReportConfigService {
      */
     @Override
     public BtsReportKylinConfig configMixedQuery(BtsReportParameterDto btsReportParameterDto) {
-        if (StringUtils.isNotEmpty(btsReportParameterDto.getPlanCode())) {
+        BtsReportKylinConfig btsReportKylinConfig = this.getBtsReportKylinConfig(btsReportParameterDto.getPlanId(), btsReportParameterDto.getProductLineCode(), btsReportParameterDto.getType());
+        if (btsReportKylinConfig != null) {
+            return btsReportKylinConfig;
+        }
+        if (btsReportKylinConfig == null && StringUtils.isNotEmpty(btsReportParameterDto.getPlanCode())) {
             this.logger.info("根据类型查询报表 kylin 配置");
             BtsReportKylinConfigExample example = new BtsReportKylinConfigExample();
             example.createCriteria().andBtsPlanCodeEqualTo(btsReportParameterDto.getPlanCode()).andBtsProductLineCodeEqualTo(btsReportParameterDto.getProductLineCode()).andQueryTypeEqualTo(btsReportParameterDto.getType());
@@ -88,7 +92,7 @@ public class BtsReportConfigServiceImpl implements BtsReportConfigService {
                 return btsReportKylinConfigs.get(0);
             }
         }
-        return this.getBtsReportKylinConfig(btsReportParameterDto.getPlanId(), btsReportParameterDto.getProductLineCode(), btsReportParameterDto.getType());
+        return null;
     }
 
     /**

@@ -10,6 +10,19 @@ public class UserActionResponseDto {
 
     private List<UserActionDto> data;
 
+    /**
+     * 每页数量
+     */
+    private Integer size = 10;
+
+    public Integer getSize() {
+        return size;
+    }
+
+    public void setSize(Integer size) {
+        this.size = size;
+    }
+
     public String getScrollId() {
         return scrollId;
     }

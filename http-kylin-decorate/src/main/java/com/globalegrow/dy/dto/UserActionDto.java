@@ -1,10 +1,12 @@
 package com.globalegrow.dy.dto;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+
 import java.util.List;
 
 public class UserActionDto {
 
-    private Double gmv = 0d;
+    //private Double gmv = 0d;
 
     private String userId;
 
@@ -23,6 +25,16 @@ public class UserActionDto {
     private List<UserActionData> skuHit;
     // 商品搜索
     private List<UserActionData> skuSearchWord;
+    // 订单支付成功
+    private List<UserActionData> skuOrderPay;
+
+    public List<UserActionData> getSkuOrderPay() {
+        return skuOrderPay;
+    }
+
+    public void setSkuOrderPay(List<UserActionData> skuOrderPay) {
+        this.skuOrderPay = skuOrderPay;
+    }
 
     public List<UserActionData> getSkuExposure() {
         return skuExposure;
@@ -38,14 +50,6 @@ public class UserActionDto {
 
     public void setSite(String site) {
         this.site = site;
-    }
-
-    public Double getGmv() {
-        return gmv;
-    }
-
-    public void setGmv(Double gmv) {
-        this.gmv = gmv;
     }
 
     public String getUserId() {
@@ -106,17 +110,17 @@ public class UserActionDto {
 
     @Override
     public String toString() {
-        return "UserActionDto{" +
-                "gmv=" + gmv +
-                ", userId='" + userId + '\'' +
-                ", cookieId='" + cookieId + '\'' +
-                ", site='" + site + '\'' +
-                ", orders=" + orders +
-                ", skuExposure=" + skuExposure +
-                ", skuMarked=" + skuMarked +
-                ", skuCart=" + skuCart +
-                ", skuHit=" + skuHit +
-                ", skuSearchWord=" + skuSearchWord +
-                '}';
+        return new ToStringBuilder(this)
+                .append("userId", userId)
+                .append("cookieId", cookieId)
+                .append("site", site)
+                .append("orders", orders)
+                .append("skuExposure", skuExposure)
+                .append("skuMarked", skuMarked)
+                .append("skuCart", skuCart)
+                .append("skuHit", skuHit)
+                .append("skuSearchWord", skuSearchWord)
+                .append("skuOrderPay", skuOrderPay)
+                .toString();
     }
 }
