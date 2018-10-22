@@ -2,6 +2,7 @@ package com.globalegrow.dy.dto;
 
 import org.hibernate.validator.constraints.NotBlank;
 
+import javax.validation.constraints.Max;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,6 +35,7 @@ public class UserActionParameterDto {
     /**
      * 每页数量
      */
+    @Max(10000)
     private Integer size = 10;
 
     public String getType() {
