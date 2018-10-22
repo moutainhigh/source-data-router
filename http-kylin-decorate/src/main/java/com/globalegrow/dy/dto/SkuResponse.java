@@ -39,7 +39,7 @@ public class SkuResponse {
      */
     private Integer createOrderCnt;
     /**
-     * 购买订单总数
+     * 支付订单总数
      */
     private Integer purchaseOrderCnt;
     /**
