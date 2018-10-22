@@ -15,7 +15,7 @@ public class SkuResponse {
      */
     private String sku;
     /**
-     * 消费总额
+     * 消费总额(创建订单总额)
      */
     private Double gmv;
     /**
@@ -43,9 +43,9 @@ public class SkuResponse {
      */
     private Integer purchaseOrderCnt;
     /**
-     * 订单总数
+     * 支付订单总额
      */
-    private Integer orderCnt;
+    private Integer purchaseOrderAmount;
 
     public String getSku() {
         return sku;
@@ -111,11 +111,11 @@ public class SkuResponse {
         this.purchaseOrderCnt = purchaseOrderCnt;
     }
 
-    public Integer getOrderCnt() {
-        return orderCnt;
+    public Integer getPurchaseOrderAmount() {
+        return purchaseOrderAmount;
     }
 
-    public void setOrderCnt(Integer orderCnt) {
-        this.orderCnt = orderCnt;
+    public void setPurchaseOrderAmount(Integer purchaseOrderAmount) {
+        this.purchaseOrderAmount = purchaseOrderAmount;
     }
 }
