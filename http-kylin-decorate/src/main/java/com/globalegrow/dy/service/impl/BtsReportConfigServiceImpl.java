@@ -121,7 +121,7 @@ public class BtsReportConfigServiceImpl implements BtsReportConfigService {
                 return fieldConfigDtos;
             }
         }
-        return null;
+        return Collections.emptyList();
     }
 
     /**
