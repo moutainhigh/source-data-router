@@ -152,9 +152,9 @@ spring:
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
     driver-class-name: com.mysql.jdbc.Driver
-    url: jdbc:mysql://bts_all_prd_mysql_m.gw-internel.com:3306/dy_report?useSSL=false&useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true
-    username: bts_m_user
-    password: cjQ6lt2vir
+    url: jdbc:mysql://172.31.62.7:3306/dy_report?useSSL=false&useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true
+    username: root
+    password: 1qRPaINi5lbY3n6r
     druid:
       initial-size: 2
       max-active: 5
