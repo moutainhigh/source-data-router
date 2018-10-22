@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
+import java.text.ParseException;
 import java.util.Set;
 
 @RestController
@@ -50,7 +51,7 @@ public class UserActionController {
      * @throws IOException
      */
     @RequestMapping(value = "userActionResponseDto",produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
-    public UserActionResponseDto userAction(@Validated @RequestBody UserActionParameterDto parameterDto) throws IOException {
+    public UserActionResponseDto userAction(@Validated @RequestBody UserActionParameterDto parameterDto) throws IOException, ParseException {
         return this.realTimeUserActionEsServiceImpl.userActionData(parameterDto);
     }
 
@@ -63,7 +64,7 @@ public class UserActionController {
      * @throws IOException
      */
     @RequestMapping(value = "getUserInfo",produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
-    public UserActionResponseDto userActionInfo(@Validated @RequestBody UserActionParameterDto parameterDto) throws IOException {
+    public UserActionResponseDto userActionInfo(@Validated @RequestBody UserActionParameterDto parameterDto) throws IOException, ParseException {
         if (parameterDto.getStartDate().equals(parameterDto.getEndDate()) && parameterDto.getStartDate().equals(DateFormatUtils.ISO_8601_EXTENDED_DATE_FORMAT.format(System.currentTimeMillis()))) {
             return this.realTimeUserActionRedisServiceImpl.userActionData(parameterDto);
         }
@@ -77,7 +78,7 @@ public class UserActionController {
      * @throws IOException
      */
     @RequestMapping(value = "getUserInfoRedis",produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
-    public UserActionResponseDto userActionInfoRedis(@Validated @RequestBody UserActionParameterDto parameterDto) throws IOException {
+    public UserActionResponseDto userActionInfoRedis(@Validated @RequestBody UserActionParameterDto parameterDto) throws IOException, ParseException {
         return this.realTimeUserActionRedisServiceImpl.userActionData(parameterDto);
     }
 }
