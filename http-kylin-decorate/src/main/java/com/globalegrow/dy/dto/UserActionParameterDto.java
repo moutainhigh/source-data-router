@@ -1,5 +1,7 @@
 package com.globalegrow.dy.dto;
 
+import org.hibernate.validator.constraints.NotBlank;
+
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,10 +15,12 @@ public class UserActionParameterDto {
     private String type;
 
     @NotNull
-    private Long startDate;
+    @NotBlank
+    private String startDate;
 
     @NotNull
-    private Long endDate;
+    @NotBlank
+    private String endDate;
 
     private List<String> site = new ArrayList<>();
 
@@ -72,19 +76,19 @@ public class UserActionParameterDto {
         this.cookieId = cookieId;
     }
 
-    public Long getStartDate() {
+    public String getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(Long startDate) {
+    public void setStartDate(String startDate) {
         this.startDate = startDate;
     }
 
-    public Long getEndDate() {
+    public String getEndDate() {
         return endDate;
     }
 
-    public void setEndDate(Long endDate) {
+    public void setEndDate(String endDate) {
         this.endDate = endDate;
     }
 

@@ -4,6 +4,7 @@ import com.globalegrow.dy.dto.UserActionParameterDto;
 import com.globalegrow.dy.dto.UserActionResponseDto;
 import com.globalegrow.dy.service.RealTimeUserActionService;
 import com.globalegrow.util.SpringRedisUtil;
+import org.apache.commons.lang3.time.DateFormatUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.validation.annotation.Validated;
@@ -63,6 +64,9 @@ public class UserActionController {
      */
     @RequestMapping(value = "getUserInfo",produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     public UserActionResponseDto userActionInfo(@Validated @RequestBody UserActionParameterDto parameterDto) throws IOException {
+        if (parameterDto.getStartDate().equals(parameterDto.getEndDate()) && parameterDto.getStartDate().equals(DateFormatUtils.ISO_8601_EXTENDED_DATE_FORMAT.format(System.currentTimeMillis()))) {
+            return this.realTimeUserActionRedisServiceImpl.userActionData(parameterDto);
+        }
         return this.realTimeUserActionEsServiceImpl.userActionData(parameterDto);
     }
 

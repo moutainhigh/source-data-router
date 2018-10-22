@@ -24,6 +24,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -53,7 +54,7 @@ public class RealTimeUserActionEsServiceImpl implements RealTimeUserActionServic
      * @return
      */
     @Override
-    public UserActionResponseDto userActionData(UserActionParameterDto userActionParameterDto) throws IOException {
+    public UserActionResponseDto userActionData(UserActionParameterDto userActionParameterDto) throws IOException, ParseException {
         long start = System.currentTimeMillis();
         UserActionResponseDto userActionResponseDto = new UserActionResponseDto();
         logger.debug("传入参数:{}", userActionParameterDto);
@@ -65,7 +66,7 @@ public class RealTimeUserActionEsServiceImpl implements RealTimeUserActionServic
         }else {
             BoolQueryBuilder queryBuilder = QueryBuilders.boolQuery();
             SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
-            String currentDate = DateFormatUtils.ISO_8601_EXTENDED_DATE_FORMAT.format(System.currentTimeMillis());
+            // String currentDate = DateFormatUtils.ISO_8601_EXTENDED_DATE_FORMAT.format(System.currentTimeMillis());
             // 查询单个用户行为数据
             if (StringUtils.isNotEmpty(userActionParameterDto.getCookieId())) {
                 QueryBuilder qb = QueryBuilders.termsQuery("device_id.keyword", userActionParameterDto.getCookieId());
@@ -76,7 +77,8 @@ public class RealTimeUserActionEsServiceImpl implements RealTimeUserActionServic
                 queryBuilder.must(qb);
             }
             // 时间限制
-            QueryBuilder qbTime = QueryBuilders.rangeQuery("timestamp").from(userActionParameterDto.getStartDate()).to(userActionParameterDto.getEndDate());
+            QueryBuilder qbTime = QueryBuilders.rangeQuery("timestamp").from(DateFormatUtils.ISO_8601_EXTENDED_DATE_FORMAT.parse(userActionParameterDto.getStartDate()).getTime())
+                    .to(DateFormatUtils.ISO_8601_EXTENDED_DATE_FORMAT.parse(userActionParameterDto.getEndDate()).getTime());
             queryBuilder.must(qbTime);
             // 站点条件过滤
             if (userActionParameterDto.getSite() != null && userActionParameterDto.getSite().size() > 0) {
@@ -101,14 +103,14 @@ public class RealTimeUserActionEsServiceImpl implements RealTimeUserActionServic
             searchSourceBuilder.postFilter(queryBuilder);
             this.logger.debug("elasticsearch 搜索条件: {}", searchSourceBuilder.toString());
             Search.Builder builder = new Search.Builder(searchSourceBuilder.toString());
-            if (currentDate.equals(DateFormatUtils.ISO_8601_EXTENDED_DATE_FORMAT.format(userActionParameterDto.getStartDate())) &&
+            /*if (currentDate.equals(DateFormatUtils.ISO_8601_EXTENDED_DATE_FORMAT.format(userActionParameterDto.getStartDate())) &&
                     currentDate.equals(DateFormatUtils.ISO_8601_EXTENDED_DATE_FORMAT.format(userActionParameterDto.getEndDate()))) {
                 // 只查询当天的索引数据
                 builder
                         .addIndex(this.indexPrefix + currentDate);
-            } else {
+            } else {*/
                 builder.addIndex(this.indexAliases);
-            }
+            //}
             searchSourceBuilder.postFilter(queryBuilder);
             Search search = builder
                     .addType("log")
