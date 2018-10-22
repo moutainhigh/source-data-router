@@ -4,7 +4,9 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -15,7 +17,24 @@ public class NginxLogConvertUtil {
     public static  final String PARAMETERS_PATTERN = "_ubc.gif\\??(.*)HTTP";
     public static final String TIMESTAMP_PATTERN = "\\^A\\^\\d{10}";
 
+    public static final String BAD_JSON_PATTERN = ":([\\w]+_?)";
+
     public static final String TIMESTAMP_KEY = "timestamp";
+
+    public static String handleBadJson(String sourceValue) {
+        String badJson = sourceValue;
+        Pattern p = Pattern.compile(BAD_JSON_PATTERN);
+        Matcher m = p.matcher(badJson);
+        List<String> key = new ArrayList<>();
+        while (m.find()) {
+            String badName = m.group();
+            key.add(badName);
+        }
+        for (String badName : key) {
+            badJson = badJson.replaceAll(badName, "\"" + badName.replaceAll(":","") + "\":");
+        }
+        return badJson;
+    }
 
     /**
      * 将原始埋点数据转换为 map
@@ -100,7 +119,7 @@ public class NginxLogConvertUtil {
     public static Object valueHex(Object o) {
         String s = String.valueOf(o);
         if (StringUtils.isNotEmpty(s) && (s.contains("\\x22") || s.contains("\\\\x22"))) {
-            return s.replaceAll("\\\\x22", "\"").replaceAll("\\x22", "\"");
+            return handleBadJson(s.replaceAll("\\\\x22", "\"").replaceAll("\\x22", "\""));
         }
         return o;
     }
