@@ -72,15 +72,15 @@ public class ZafulRecommendCartHandle {
                 }
 
                 if (userId != null) {
-
+                    Map<String, String> bts = appLogBtsInfo(eventValueMap);
                     Boolean isRecommend;
                     String recommendType = String.valueOf(eventValueMap.get("af_inner_mediasource"));
-                    if (StringUtils.isNotEmpty(recommendType) && !"null".equals(recommendType)) {
+                    if (StringUtils.isNotEmpty(recommendType) && !"null".equals(recommendType) && recommendType.contains("recommend") && bts != null) {
                         isRecommend = true;
                     } else {
                         isRecommend = false;
                     }
-                    Map<String, String> bts = appLogBtsInfo(eventValueMap);
+
                     if (bts == null) {
                         this.logger.debug("从 hbase 中查询 bts 实验信息");
 
