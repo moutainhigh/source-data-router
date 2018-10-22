@@ -204,12 +204,19 @@ public class ZafulDopamineOrderCounter {
                             quota.setOrder_sku(orderGoodInfo.getGoodsNum());
                             quota.setOrder_uv(skuCartInfo.getDeviceId());
                             quota.setOrder_amount(orderGoodInfo.getAmount());
+
+
+                            quota.setWhole_order_uv(skuCartInfo.getDeviceId());
+                            quota.setWhole_order_amount(orderGoodInfo.getAmount());
                         }
                         if ("1".equals(orderStatus) || "8".equals(orderStatus)) {
                             quota.setPaid_order(Integer.valueOf(redisOrderInfo.getOrderInfo().getOrderId()));
                             quota.setPaid_uv(skuCartInfo.getDeviceId());
                             quota.setAmount(orderGoodInfo.getAmount());
                             quota.setSales_amount(orderGoodInfo.getGoodsNum());
+
+                            quota.setWhole_amount(orderGoodInfo.getAmount());
+                            quota.setWhole_paid_uv(skuCartInfo.getDeviceId());
                         }
 
                     }else {
