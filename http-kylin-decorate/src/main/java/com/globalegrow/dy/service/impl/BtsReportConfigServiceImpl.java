@@ -103,6 +103,10 @@ public class BtsReportConfigServiceImpl implements BtsReportConfigService {
      */
     @Override
     public List<BtsReportFieldConfigDto> btsReportFieldConfigMixedQuery(FieldConfigParameterDto btsReportParameterDto) {
+        List<BtsReportFieldConfigDto> list = this.btsReportFieldConfig(btsReportParameterDto.getPlanId(), btsReportParameterDto.getProductLineCode());
+        if (list != null && list.size() > 0) {
+            return list;
+        }
         if (StringUtils.isNotEmpty(btsReportParameterDto.getPlanCode())) {
             BtsReportFieldConfigExample example = new BtsReportFieldConfigExample();
             example.createCriteria().andBtsProductLineCodeEqualTo(btsReportParameterDto.getProductLineCode()).andBtsPlanCodeEqualTo(btsReportParameterDto.getPlanCode());
@@ -117,7 +121,7 @@ public class BtsReportConfigServiceImpl implements BtsReportConfigService {
                 return fieldConfigDtos;
             }
         }
-        return this.btsReportFieldConfig(btsReportParameterDto.getPlanId(), btsReportParameterDto.getProductLineCode());
+        return null;
     }
 
     /**
