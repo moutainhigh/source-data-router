@@ -1,5 +1,6 @@
 package com.globalegrow.util;
 
+import java.net.URLDecoder;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -20,7 +21,12 @@ public class AppLogConvertUtil {
     public static Map<String, Object> getAppLogParameters(String log) {
         if (log.contains("/_app.gif")) {
             Pattern p = Pattern.compile(PARAMETERS_PATTERN);
-            Matcher m = p.matcher(log);
+            Matcher m = null;
+            try {
+                m = p.matcher(URLDecoder.decode(log, "utf-8"));
+            } catch (Exception e) {
+                m = p.matcher(log);
+            }
             String requestStr = "";
 
             while (m.find()) {

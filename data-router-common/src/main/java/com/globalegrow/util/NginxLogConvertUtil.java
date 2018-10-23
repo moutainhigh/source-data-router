@@ -14,7 +14,7 @@ import java.util.regex.Pattern;
 public class NginxLogConvertUtil {
 
 
-    public static  final String PARAMETERS_PATTERN = "_ubc.gif\\??(.*)HTTP";
+    public static final String PARAMETERS_PATTERN = "_ubc.gif\\??(.*)HTTP";
     public static final String TIMESTAMP_PATTERN = "\\^A\\^\\d{10}";
 
     public static final String BAD_JSON_PATTERN = ":([\\w]+_?)";
@@ -31,13 +31,14 @@ public class NginxLogConvertUtil {
             key.add(badName);
         }
         for (String badName : key) {
-            badJson = badJson.replaceAll(badName, "\"" + badName.replaceAll(":","") + "\":");
+            badJson = badJson.replaceAll(badName, "\"" + badName.replaceAll(":", "") + "\":");
         }
         return badJson;
     }
 
     /**
      * 将原始埋点数据转换为 map
+     *
      * @param log
      * @return
      */
@@ -61,7 +62,12 @@ public class NginxLogConvertUtil {
 
     public static Long getTimestamp(String log) {
         Pattern p = Pattern.compile(TIMESTAMP_PATTERN);
-        Matcher m = p.matcher(log);
+        Matcher m = null;
+        try {
+            m = p.matcher(URLDecoder.decode(log, "utf-8"));
+        } catch (Exception e) {
+            m = p.matcher(log);
+        }
         String requestStr = "";
 
         while (m.find()) {
@@ -94,11 +100,19 @@ public class NginxLogConvertUtil {
                     String key = p[0];
                     if (key.startsWith("_ubc.gif?")) {
                         map.put(key.replace("_ubc.gif?", ""), URLDecoder.decode(p[1], "utf-8"));
-                    }else {
+                    } else if (key.startsWith("_app.gif?")) {
+                        map.put(key.replace("_app.gif?", "").toLowerCase(), URLDecoder.decode(p[1], "utf-8"));
+                    } else {
                         String value = p[1];
                         if (value.startsWith("{")) {
-                            map.put(p[0], valueHex(p[1].replaceAll("%20", " ").replaceAll("%22", "\"")));
-                        }else {
+                            String eventValue = (String) valueHex(p[1].replaceAll("%20", " ").replaceAll("%22", "\""));
+                            if (!eventValue.endsWith("}") && !eventValue.endsWith("\"")) {
+                                eventValue = eventValue + "\"}";
+                            } else if (!eventValue.endsWith("}") && eventValue.endsWith("\"")) {
+                                eventValue = eventValue + "}";
+                            }
+                            map.put(p[0].toLowerCase(), eventValue);
+                        } else {
                             map.put(p[0], valueHex(URLDecoder.decode(p[1], "utf-8")));
                         }
 
@@ -113,6 +127,7 @@ public class NginxLogConvertUtil {
 
     /**
      * {%22name%22:%22Ahorre%20hasta%20un%2060%%20de%20descuento%20|%20Los%20suministros%20de%20salud%20y%20belleza%22,%22type%22:%22gbsite_custom%22}
+     *
      * @param o
      * @return
      */
