@@ -14,6 +14,7 @@ server:
   undertow:
     io-threads: 8
     worker-threads: 64
+    direct-buffers:
   compression:
     enabled: true
 
@@ -187,6 +188,10 @@ spring:
       nodes[3]: 172.31.44.253:6379
       nodes[4]: 172.31.44.253:6380
       nodes[5]: 172.31.47.78:6383
+    pool:
+      max-active: 64
+      max-idle: 64
+      min-idle: 8
   elasticsearch:
     jest:
       uris: http://172.31.51.179:9200,http://172.31.51.59:9200,http://172.31.51.250:9200
@@ -204,6 +209,7 @@ app:
   es:
     index-prefix: dy-app-data-temp-
     index-aliases: search-temp-logs
+    index-type: log-test
   redis:
     readtime:
       prefix: dy_rt_p_

@@ -47,6 +47,9 @@ public class RealTimeUserActionEsServiceImpl implements RealTimeUserActionServic
     @Value("${app.es.index-aliases}")
     private String indexAliases;
 
+    @Value("${app.es.index-type:log}")
+    private String indexType;
+
     /**
      * 从 es 查询用户行为数据
      *
@@ -73,21 +76,21 @@ public class RealTimeUserActionEsServiceImpl implements RealTimeUserActionServic
                 queryBuilder.must(qb);
             }
             if (StringUtils.isNotEmpty(userActionParameterDto.getUserId())) {
-                QueryBuilder qb = QueryBuilders.termsQuery("user_id", userActionParameterDto.getUserId());
+                QueryBuilder qb = QueryBuilders.termsQuery("user_id.keyword", userActionParameterDto.getUserId());
                 queryBuilder.must(qb);
             }
             // 时间限制
             QueryBuilder qbTime = QueryBuilders.rangeQuery("timestamp").from(DateFormatUtils.ISO_8601_EXTENDED_DATE_FORMAT.parse(userActionParameterDto.getStartDate()).getTime())
-                    .to(DateFormatUtils.ISO_8601_EXTENDED_DATE_FORMAT.parse(userActionParameterDto.getEndDate()).getTime());
+                    .to(DateFormatUtils.ISO_8601_EXTENDED_DATETIME_FORMAT.parse(userActionParameterDto.getEndDate() + "T23:59:59").getTime());
             queryBuilder.must(qbTime);
             // 站点条件过滤
             if (userActionParameterDto.getSite() != null && userActionParameterDto.getSite().size() > 0) {
-                QueryBuilder qb = QueryBuilders.termsQuery("site", userActionParameterDto.getSite());
+                QueryBuilder qb = QueryBuilders.termsQuery("site.keyword", userActionParameterDto.getSite());
                 queryBuilder.must(qb);
             }
             // 终端条件过滤
             if (userActionParameterDto.getDivice() != null && userActionParameterDto.getDivice().size() > 0) {
-                QueryBuilder qb = QueryBuilders.termsQuery("platform", userActionParameterDto.getDivice());
+                QueryBuilder qb = QueryBuilders.termsQuery("platform.keyword", userActionParameterDto.getDivice());
                 queryBuilder.must(qb);
             }
             // 事件类型过滤
@@ -95,7 +98,7 @@ public class RealTimeUserActionEsServiceImpl implements RealTimeUserActionServic
 
                 String eventName = AppEventEnums.getLogEventNameByLocalName(userActionParameterDto.getType());
                 if (StringUtils.isNotEmpty(eventName)) {
-                    QueryBuilder qb = QueryBuilders.termsQuery("event_name", userActionParameterDto.getType());
+                    QueryBuilder qb = QueryBuilders.termsQuery("event_name.keyword", userActionParameterDto.getType());
                     queryBuilder.must(qb);
                 }
 
@@ -103,17 +106,18 @@ public class RealTimeUserActionEsServiceImpl implements RealTimeUserActionServic
             searchSourceBuilder.postFilter(queryBuilder);
             this.logger.debug("elasticsearch 搜索条件: {}", searchSourceBuilder.toString());
             Search.Builder builder = new Search.Builder(searchSourceBuilder.toString());
-            /*if (currentDate.equals(DateFormatUtils.ISO_8601_EXTENDED_DATE_FORMAT.format(userActionParameterDto.getStartDate())) &&
-                    currentDate.equals(DateFormatUtils.ISO_8601_EXTENDED_DATE_FORMAT.format(userActionParameterDto.getEndDate()))) {
+            String currentDate = DateFormatUtils.ISO_8601_EXTENDED_DATE_FORMAT.format(System.currentTimeMillis());
+            if (currentDate.equals(userActionParameterDto.getStartDate()) &&
+                    currentDate.equals(userActionParameterDto.getEndDate())) {
                 // 只查询当天的索引数据
                 builder
-                        .addIndex(this.indexPrefix + currentDate);
-            } else {*/
+                        .addIndex(this.indexPrefix + "-" + currentDate);
+            } else {
                 builder.addIndex(this.indexAliases);
-            //}
+            }
             searchSourceBuilder.postFilter(queryBuilder);
             Search search = builder
-                    .addType("log")
+                    .addType(indexType)
                     .setParameter(Parameters.SIZE, userActionParameterDto.getSize())// 每次传多少条数据
                     .setParameter(Parameters.SCROLL,"5m")// 开启游标5分钟
                     .build();
@@ -121,7 +125,9 @@ public class RealTimeUserActionEsServiceImpl implements RealTimeUserActionServic
 
         }
         logger.info("query from es cost: {} ms", System.currentTimeMillis() - start);
+
         if (result != null) {
+            logger.debug("es data: {}", result.getSourceAsString());
             String scrollId = result.getJsonObject().get("_scroll_id").getAsString();
             userActionResponseDto.setScrollId(scrollId);
             //List<UserActionEsDto> esDtos = result.getSourceAsObjectList(UserActionEsDto.class);
@@ -132,6 +138,7 @@ public class RealTimeUserActionEsServiceImpl implements RealTimeUserActionServic
                 RealTimeUserActionRedisServiceImpl.handleUserActionData(list, a, logger);
             });
         }
+        userActionResponseDto.setSize(userActionParameterDto.getSize());
         userActionResponseDto.setData(list);
 
         return userActionResponseDto;
