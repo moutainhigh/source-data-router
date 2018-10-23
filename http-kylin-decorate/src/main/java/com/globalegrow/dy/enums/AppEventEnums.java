@@ -92,6 +92,16 @@ public enum AppEventEnums {
         public void handleEventResult(UserActionDto userActionDto, List<UserActionEsDto> data) {
             userActionDto.setSkuSearchWord(data.stream().map(d -> new UserActionData(d.getEvent_value(), d.getTimestamp())).collect(Collectors.toList()));
         }
+    },af_purchase{
+        @Override
+        public String map() {
+            return "skuOrderPay";
+        }
+
+        @Override
+        public void handleEventResult(UserActionDto userActionDto, List<UserActionEsDto> data) {
+            userActionDto.setSkuOrderPay(data.stream().map(d -> new UserActionData(d.getEvent_value(), d.getTimestamp())).collect(Collectors.toList()));
+        }
     }
     ;
 
