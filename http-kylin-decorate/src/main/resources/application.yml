@@ -75,6 +75,9 @@ app:
   es:
     index-prefix: dy-app-data-temp-
     index-aliases: search-temp-logs
+  redis:
+    readtime:
+      prefix: dy_rt_p_
 
 ---
 logging:
@@ -137,6 +140,9 @@ app:
   es:
     index-prefix: dy-app-data-temp-
     index-aliases: search-temp-logs
+  redis:
+    readtime:
+      prefix: dy_rt_p_
 ---
 logging:
   #  config: classpath:logback-spring.xml
@@ -198,3 +204,6 @@ app:
   es:
     index-prefix: dy-app-data-temp-
     index-aliases: search-temp-logs
+  redis:
+    readtime:
+      prefix: dy_rt_p_

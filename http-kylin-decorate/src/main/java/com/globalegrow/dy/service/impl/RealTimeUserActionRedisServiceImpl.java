@@ -12,6 +12,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -26,6 +27,9 @@ import java.util.stream.Collectors;
 public class RealTimeUserActionRedisServiceImpl implements RealTimeUserActionService {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
+
+    @Value("${app.redis.readtime.prefix:dy_real_time_}")
+    private String redisKeyPrefix;
     /**
      * 查询用户行为数据
      *
@@ -38,7 +42,7 @@ public class RealTimeUserActionRedisServiceImpl implements RealTimeUserActionSer
         this.logger.debug("user_action_parameter: {}", userActionParameterDto);
         if (StringUtils.isNotEmpty(userActionParameterDto.getCookieId())) {
             List<UserActionDto> list = new ArrayList<>();
-            String key = "dy_real_time_" + userActionParameterDto.getCookieId() + "_" + DateFormatUtils.format(System.currentTimeMillis(), "yyyy-MM-dd");
+            String key = redisKeyPrefix + userActionParameterDto.getCookieId() + "_" + DateFormatUtils.format(System.currentTimeMillis(), "yyyy-MM-dd");
             Set<String> stringSet = SpringRedisUtil.SMEMBERS(key);
             this.logger.debug("从 redis 查询到数据 key: {}, data: {}", key, stringSet);
             stringSet.stream().map(s -> {
