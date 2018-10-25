@@ -141,8 +141,8 @@ public class RealTimeUserActionEsServiceImpl implements RealTimeUserActionServic
             //List<UserActionEsDto> esDtos = result.getSourceAsObjectList(UserActionEsDto.class);
             // .collect(Collectors.groupingBy(p -> p.age, Collectors.mapping((Person p) -> p, toList())));
             //Map<String, List<UserActionEsDto>> groupDto =
-            result.getSourceAsObjectList(UserActionEsDto.class).parallelStream().collect(Collectors.groupingBy(UserActionEsDto::getDevice_id))
-                    .entrySet().parallelStream().forEach(a -> {
+            result.getSourceAsObjectList(UserActionEsDto.class).stream().collect(Collectors.groupingBy(UserActionEsDto::getDevice_id))
+                    .entrySet().stream().forEach(a -> {
                 RealTimeUserActionRedisServiceImpl.handleUserActionData(list, a, logger);
             });
         }
