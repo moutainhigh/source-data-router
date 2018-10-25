@@ -6,16 +6,30 @@ import com.globalegrow.util.NginxLogConvertUtil;
 import com.globalegrow.util.SpringRedisUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
+import org.redisson.Redisson;
+import org.redisson.api.BatchOptions;
+import org.redisson.api.RBatch;
+import org.redisson.api.RedissonClient;
+import org.redisson.config.ClusterServersConfig;
+import org.redisson.config.Config;
+import org.redisson.config.SentinelServersConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.dao.DataAccessException;
+import org.springframework.data.redis.connection.RedisConnection;
+import org.springframework.data.redis.connection.StringRedisConnection;
+import org.springframework.data.redis.core.RedisCallback;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.annotation.TopicPartition;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import java.util.*;
 import java.util.concurrent.LinkedBlockingDeque;
 import java.util.stream.Collectors;
@@ -97,6 +111,33 @@ public class KafkaAppLogCustomer {
         this.sendDataToRedis(linkedBlockingDeque9);
     }
 
+    private RedissonClient redisson;
+
+    @Value("${redis.type}")
+    private String redisType;
+    @Value("${redis.master}")
+    private String master;
+    @Value("${redis.nodes}")
+    private String nodes;
+    @Value("${redis.password}")
+    private String redisPassword;
+   @PostConstruct
+   public void before() {
+       Config config = new Config();
+       if ("cluster".equals(redisType)) {
+           ClusterServersConfig clusterServersConfig = config.useClusterServers();
+           clusterServersConfig.addNodeAddress(nodes.split(","));
+           clusterServersConfig.setPassword(redisPassword);
+       } else if ("sentinel".equals(redisType)) {
+           SentinelServersConfig sentinelServersConfig = config.useSentinelServers();
+           sentinelServersConfig.setMasterName(master);
+           sentinelServersConfig.addSentinelAddress(nodes.split(","));
+           sentinelServersConfig.setPassword(redisPassword);
+       }
+
+       redisson = Redisson.create(config);
+   }
+
     private void sendDataToRedis(LinkedBlockingDeque<QueenModel> linkedBlockingDeque) {
         if (linkedBlockingDeque.size() > 0) {
             List<QueenModel> list = new ArrayList<>();
@@ -104,12 +145,24 @@ public class KafkaAppLogCustomer {
             if (list.size() > 0) {
                 //list.stream()
                 /*Map<String, List<QueenModel>> mapList =*/
-                list.stream().collect(Collectors.groupingBy(QueenModel::getKey)).entrySet().parallelStream().forEach(e -> {
+                /*list.stream().collect(Collectors.groupingBy(QueenModel::getKey)).entrySet().parallelStream().forEach(e -> {
                     String redisKey = e.getKey();
                     List<QueenModel> models = e.getValue();
                     List<String> list1 = models.stream().map(model -> model.getValue()).collect(Collectors.toList());
                     SpringRedisUtil.putSet(redisKey, list1.toArray(new String[list1.size()]));
+                });*/
+
+                Map<String, List<QueenModel>> grouped = list.stream().collect(Collectors.groupingBy(QueenModel::getKey));
+                RBatch batch = redisson.createBatch(BatchOptions.defaults());
+                grouped.entrySet().forEach(e -> {
+                    String redisKey = e.getKey();
+                    List<QueenModel> models = e.getValue();
+                    List<String> list1 = models.stream().map(model -> model.getValue()).collect(Collectors.toList());
+                    batch.getSet(redisKey).addAllAsync(list1);
                 });
+
+                batch.executeAsync();
+
             }
         }
     }
