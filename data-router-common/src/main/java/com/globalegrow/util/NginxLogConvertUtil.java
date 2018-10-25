@@ -105,7 +105,7 @@ public class NginxLogConvertUtil {
                     } else {
                         String value = p[1];
                         if (value.startsWith("{")) {
-                            String eventValue = (String) valueHex(p[1].replaceAll("%20", " ").replaceAll("%22", "\""));
+                            String eventValue = (String) valueHex(p[1].replaceAll("%20", " ").replaceAll("%22", "\"").replaceAll("%2C",","));
                             if (!eventValue.endsWith("}") && !eventValue.endsWith("\"")) {
                                 eventValue = eventValue + "\"}";
                             } else if (!eventValue.endsWith("}") && eventValue.endsWith("\"")) {

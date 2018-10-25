@@ -45,7 +45,7 @@ spring:
       auto-offset-reset: latest
       value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-      group-id: mysql-bin-log-zaful
+      group-id: mysql-bin-log-gb
     listener:
       concurrency: 5
   redis:
@@ -69,4 +69,4 @@ app:
     expire-seconds: 86400
 
 server:
-  port: 38083
+  port: 38086

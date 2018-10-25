@@ -84,7 +84,7 @@ public class ZafulDopamineOrderCounter {
         String mysqlBinLog = record.value();
         this.logger.debug("mysql event: {}", mysqlBinLog);
         try {
-            Map<String, Object> dataMap = GsonUtil.readValue(mysqlBinLog, Map.class);
+            Map<String, Object> dataMap = JacksonUtil.readValue(mysqlBinLog, Map.class);
 
             String eventType = String.valueOf(dataMap.get("type"));
             String table = String.valueOf(dataMap.get("table"));

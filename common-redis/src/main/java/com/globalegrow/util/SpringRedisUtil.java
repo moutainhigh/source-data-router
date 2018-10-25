@@ -56,6 +56,10 @@ public class SpringRedisUtil {
         return redistemplate.opsForSet().members(key);
     }
 
+    public static void putSet(String key, String... values) {
+        redistemplate.opsForSet().add(key, values);
+    }
+
     /**
      * 根据前缀获取 key
      * @param prefix

@@ -1,0 +1,65 @@
+spring:
+  profiles:
+    active: @profiles.active@
+logging:
+#  config: classpath:logback-spring.xml
+  path: logs
+  file: kylin-report.log
+  level:
+    root: debug
+    org.springframework: ERROR
+    sun.rmi: ERROR
+    org.apache.http: ERROR
+server:
+  undertow:
+    io-threads: 8
+    worker-threads: 64
+  compression:
+    enabled: true
+  connection-timeout: 1000
+---
+logging:
+  #  config: classpath:logback-spring.xml
+  path: logs
+  file: kylin-report.log
+  level:
+    root: debug
+    org.springframework: ERROR
+    sun.rmi: ERROR
+    org.apache.http: ERROR
+spring:
+  profiles: dev
+  redis:
+    timeout: 86400
+    password: 6e1KWyC29w
+    sentinel:
+      master: mymaster
+      nodes: 172.31.59.13:26380,172.31.57.199:26380,172.31.52.145:26380
+  elasticsearch:
+    jest:
+      uris: http://18.213.71.71:9200,http://18.213.41.233:9200,http://52.204.111.230:9200
+      read-timeout: 20000
+      connection-timeout: 20000
+  kafka:
+    consumer:
+      auto-offset-reset: latest
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      group-id: dy-realtime-app-redis
+      max-poll-records: 10000
+    producer:
+      client-id: dy-realtime-app
+    bootstrap-servers: 172.31.59.13:9092,172.31.57.199:9092,172.31.52.145:9092
+    listener:
+      concurrency: 20
+
+server:
+  port: 38193
+log-source: glbg-test
+app:
+  es:
+    index-prefix: dy-app-data-temp-
+    index-aliases: search-temp-logs
+  redis:
+    readtime:
+      prefix: dy_rt_p_

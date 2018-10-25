@@ -203,7 +203,7 @@ public class GbMysqlBinlog {
                     goodNum = goodNum.substring(0, goodNum.indexOf("."));
                 }
                 Float f = ((Float.valueOf(String.valueOf(tableData.get("price"))) * Integer.valueOf(goodNum)) * 100);
-                pictureCounter.setAmount(f.intValue());
+                btsGbRecommendReport.setAmount(f.intValue());
                 btsGbRecommendReport.setSkuOrder(1);
                 Map reportMap = DyBeanUtils.objToMap(btsGbRecommendReport);
                 reportMap.put(NginxLogConvertUtil.TIMESTAMP_KEY, System.currentTimeMillis());
@@ -269,8 +269,8 @@ public class GbMysqlBinlog {
                     com.globalegrow.bts.model.GoodsAddCartInfo goodsAddCartInfo1 = GsonUtil.readValue(redisRecommendAmount, com.globalegrow.bts.model.GoodsAddCartInfo.class);
                     BtsGbRecommendReport btsGbRecommendReport = new BtsGbRecommendReport();
                     btsGbRecommendReport.setBts(goodsAddCartInfo1.getBts());
-                    btsGbRecommendReport.setAmount(goodsAddCartInfo1.getSalesAmount());
-                    btsGbRecommendReport.setSkuOrderPaid(1);
+                    //btsGbRecommendReport.setAmount(goodsAddCartInfo1.getSalesAmount());
+                    btsGbRecommendReport.setSkuOrderPaid(goodsAddCartInfo1.getPam());
                     Map reportMap = DyBeanUtils.objToMap(btsGbRecommendReport);
                     reportMap.put(NginxLogConvertUtil.TIMESTAMP_KEY, System.currentTimeMillis());
 
