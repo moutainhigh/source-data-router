@@ -141,6 +141,7 @@ public class KafkaAppLogCustomer {
     private void sendDataToRedis(LinkedBlockingDeque<QueenModel> linkedBlockingDeque) {
         if (linkedBlockingDeque.size() > 0) {
             List<QueenModel> list = new ArrayList<>();
+            logger.debug("max_size:{}", maxBatchSize);
             linkedBlockingDeque.drainTo(list, maxBatchSize);
             if (list.size() > 0) {
                 //list.stream()
@@ -153,11 +154,13 @@ public class KafkaAppLogCustomer {
                 });*/
 
                 Map<String, List<QueenModel>> grouped = list.stream().collect(Collectors.groupingBy(QueenModel::getKey));
+                logger.debug("list_model:{}, {}", list, list.size());
                 RBatch batch = redisson.createBatch(BatchOptions.defaults());
                 grouped.entrySet().forEach(e -> {
                     String redisKey = e.getKey();
                     List<QueenModel> models = e.getValue();
                     List<String> list1 = models.stream().map(model -> model.getValue()).collect(Collectors.toList());
+                    logger.debug("list_size: {}, key,: {}, value: {}", list1.size(), redisKey, list1);
                     batch.getSet(redisKey).addAllAsync(list1);
                 });
 

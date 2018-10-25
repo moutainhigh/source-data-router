@@ -29,7 +29,7 @@ public class DataLocalBuffer {
 
     @Async
     public void handleMsgAsync(String logString, LinkedBlockingDeque<QueenModel> linkedBlockingDeque) throws Exception {
-        this.logWriteToRedis(logString).stream().forEach(m ->linkedBlockingDeque.offer(m));
+        this.logWriteToRedis(logString).stream().forEach(m -> linkedBlockingDeque.offer(m));
     }
 
     public List<QueenModel> logWriteToRedis(String logString) throws Exception {
@@ -48,34 +48,40 @@ public class DataLocalBuffer {
                     logger.error("解析 json 数据出错: {}", eventValue, e);
                 }
                 if (StringUtils.isNotEmpty(eventName) && eventValueMap != null) {
-                    String deviceId = String.valueOf(value.get("appsflyer_device_id"));
-                    String userId = String.valueOf(value.get("customer_user_id"));
-                    String platform = String.valueOf(value.get("platform"));
-                    String appName = String.valueOf(value.get("app_name"));
                     Long timestamp = (Long) value.get(NginxLogConvertUtil.TIMESTAMP_KEY);
-                    try {
-                        String valueNeeded = AppEventEnums.valueOf(eventName).getEventValueFromEventValue(eventValueMap);
-                        if (StringUtils.isNotEmpty(valueNeeded) && eventValueMap != null && eventValueMap.size() > 0) {
-                            List<QueenModel> list = new ArrayList<>();
-                            for (String s : valueNeeded.split(",")) {
-                                Map<String, Object> eventDataRow = new HashMap<>();
-                                eventDataRow.put("event_name", eventName);
-                                eventDataRow.put("event_value", s);
-                                eventDataRow.put("user_id", userId);
-                                eventDataRow.put("device_id", deviceId);
-                                eventDataRow.put("platform", platform);
-                                eventDataRow.put("site", SiteUtil.getAppSite(appName));
-                                eventDataRow.put(NginxLogConvertUtil.TIMESTAMP_KEY, timestamp);
-                                String key = redisKeyPrefix + deviceId + "_" + DateFormatUtils.format(timestamp, "yyyy-MM-dd");
-                                QueenModel queenModel = new QueenModel(key, JacksonUtil.toJSon(eventDataRow));
-                                list.add(queenModel);
-                                //linkedBlockingDeque.put(queenModel);
+                    String date = DateFormatUtils.format(timestamp, "yyyy-MM-dd");
+                    if (DateFormatUtils.format(System.currentTimeMillis(), "yyyy-MM-dd").equals(date)) {
+                        String deviceId = String.valueOf(value.get("appsflyer_device_id"));
+                        String userId = String.valueOf(value.get("customer_user_id"));
+                        String platform = String.valueOf(value.get("platform"));
+                        String appName = String.valueOf(value.get("app_name"));
+
+                        try {
+                            String valueNeeded = AppEventEnums.valueOf(eventName).getEventValueFromEventValue(eventValueMap);
+                            logger.debug("value_ineeded: {}", valueNeeded);
+                            if (StringUtils.isNotEmpty(valueNeeded) && eventValueMap != null && eventValueMap.size() > 0) {
+                                List<QueenModel> list = new ArrayList<>();
+                                for (String s : valueNeeded.split(",")) {
+                                    Map<String, Object> eventDataRow = new HashMap<>();
+                                    eventDataRow.put("event_name", eventName);
+                                    eventDataRow.put("event_value", s);
+                                    eventDataRow.put("user_id", userId);
+                                    eventDataRow.put("device_id", deviceId);
+                                    eventDataRow.put("platform", platform);
+                                    eventDataRow.put("site", SiteUtil.getAppSite(appName));
+                                    eventDataRow.put(NginxLogConvertUtil.TIMESTAMP_KEY, timestamp);
+                                    String key = redisKeyPrefix + deviceId + "_" + date;
+                                    QueenModel queenModel = new QueenModel(key, JacksonUtil.toJSon(eventDataRow));
+                                    list.add(queenModel);
+                                    //linkedBlockingDeque.put(queenModel);
+                                }
                                 return list;
                             }
+                        } catch (IllegalArgumentException e) {
+                            //logger.error("event {} not support yet!", eventName, e);
                         }
-                    } catch (IllegalArgumentException e) {
-                        //logger.error("event {} not support yet!", eventName, e);
                     }
+
                 }
             }
         }
