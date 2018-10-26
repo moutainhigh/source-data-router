@@ -9,6 +9,8 @@ import java.util.List;
 
 public class UserActionParameterDto {
 
+    private Boolean queryHistory = false;
+
     private String userId;
 
     private String cookieId;
@@ -26,6 +28,14 @@ public class UserActionParameterDto {
     private List<String> site = new ArrayList<>();
 
     private List<String> divice = new ArrayList<>();
+
+    public Boolean getQueryHistory() {
+        return queryHistory;
+    }
+
+    public void setQueryHistory(Boolean queryHistory) {
+        this.queryHistory = queryHistory;
+    }
 
     /**
      * 分页ID

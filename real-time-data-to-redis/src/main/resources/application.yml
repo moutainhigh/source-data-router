@@ -57,11 +57,52 @@ redis:
   master: sentinel-172.31.26.237-6379
   nodes: redis://172.31.26.152:6380,redis://172.31.26.237:6380,redis://172.31.26.162:6383
   password: 6e1KWyC29w
+
 ---
 logging:
   #  config: classpath:logback-spring.xml
   path: logs
-  file: kylin-report.log
+  file: data-redis.log
+  level:
+    root: info
+    org.springframework: ERROR
+    sun.rmi: ERROR
+    org.apache.http: ERROR
+spring:
+  profiles: prod-test
+  kafka:
+    consumer:
+      auto-offset-reset: latest
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      group-id: dy-realtime-app-redis
+      max-poll-records: 10000
+    producer:
+      client-id: dy-realtime-app
+    bootstrap-servers: 172.31.59.13:9092,172.31.57.199:9092,172.31.52.145:9092
+    listener:
+      concurrency: 20
+
+server:
+  port: 38194
+log-source: glbg-test
+app:
+  es:
+    index-prefix: dy-app-data-temp-
+    index-aliases: search-temp-logs
+  redis:
+    readtime:
+      prefix: dy_rt_p_
+
+redis:
+  type: cluster
+  nodes: redis://172.31.47.78:6382,redis://172.31.47.222:6380,redis://172.31.47.222:6381,redis://172.31.44.253:6379,redis://172.31.44.253:6380,redis://172.31.47.78:6383
+  password: 6e1KWyC29w
+---
+logging:
+  #  config: classpath:logback-spring.xml
+  path: logs
+  file: data-redis.log
   level:
     root: info
     org.springframework: ERROR
@@ -92,7 +133,10 @@ app:
   redis:
     readtime:
       prefix: dy_rt_p_
-
+enable:
+  customer:
+    statistics: true
+    
 redis:
   type: cluster
   nodes: redis://172.31.47.78:6382,redis://172.31.47.222:6380,redis://172.31.47.222:6381,redis://172.31.44.253:6379,redis://172.31.44.253:6380,redis://172.31.47.78:6383
