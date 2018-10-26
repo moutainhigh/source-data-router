@@ -108,4 +108,14 @@ public class UserActionController {
         responseDto.setMessage(e.getMessage());
         return responseDto;
     }
+
+    @RequestMapping(value = "mockTest")
+    public UserActionResponseDto userActionInfoMock(@Validated @RequestBody UserActionParameterDto parameterDto) {
+        return this.realTimeUserActionRedisServiceImpl.mock(parameterDto);
+    }
+
+    @RequestMapping("mock")
+    public String mock() {
+        return "success";
+    }
 }

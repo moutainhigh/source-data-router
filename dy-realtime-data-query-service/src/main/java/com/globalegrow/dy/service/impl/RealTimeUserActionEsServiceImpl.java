@@ -151,4 +151,9 @@ public class RealTimeUserActionEsServiceImpl implements RealTimeUserActionServic
 
         return userActionResponseDto;
     }
+
+    @Override
+    public UserActionResponseDto mock(UserActionParameterDto userActionParameterDto) {
+        return new UserActionResponseDto();
+    }
 }

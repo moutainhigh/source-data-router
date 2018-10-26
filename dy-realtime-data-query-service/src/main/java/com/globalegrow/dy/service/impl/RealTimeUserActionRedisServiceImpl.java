@@ -24,6 +24,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestClientException;
+import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
@@ -59,6 +61,7 @@ public class RealTimeUserActionRedisServiceImpl implements RealTimeUserActionSer
     private String nodes;
     @Value("${redis.password}")
     private String redisPassword;
+
     @PostConstruct
     public void before() {
         Config config = new Config();
@@ -77,8 +80,6 @@ public class RealTimeUserActionRedisServiceImpl implements RealTimeUserActionSer
     }
 
 
-
-
     /**
      * 查询用户行为数据
      *
@@ -86,7 +87,8 @@ public class RealTimeUserActionRedisServiceImpl implements RealTimeUserActionSer
      * @return
      */
     @Override
-    @HystrixCommand(fallbackMethod = "queryFromEs")
+    @HystrixCommand(fallbackMethod = "queryFromEs",commandProperties = { @HystrixProperty(name = "fallback.isolation.semaphore.maxConcurrentRequests",value = "1000"),
+            @HystrixProperty(name = "hystrix.command.default.execution.isolation.semaphore.maxConcurrentRequests",value = "1000")})
     public UserActionResponseDto userActionData(UserActionParameterDto userActionParameterDto) throws IOException {
         long start = System.currentTimeMillis();
         UserActionResponseDto userActionResponseDto = new UserActionResponseDto();
@@ -101,17 +103,17 @@ public class RealTimeUserActionRedisServiceImpl implements RealTimeUserActionSer
             stringSet.stream().map(s -> {
                 try {
                     if (s.startsWith("\"")) {
-                        s= s.replaceFirst("\"", "");
+                        s = s.replaceFirst("\"", "");
                     }
                     if (s.endsWith("\"")) {
-                        s=s.substring(0, s.lastIndexOf("\""));
+                        s = s.substring(0, s.lastIndexOf("\""));
                     }
                     return JacksonUtil.readValue(s.replaceAll("\\\\", ""), UserActionEsDto.class);
                 } catch (Exception e) {
                     logger.error("json 转换 error", e);
                     return null;
                 }
-            }).filter(d -> d!=null).collect(Collectors.toList()).stream().collect(Collectors.groupingBy(UserActionEsDto :: getDevice_id))
+            }).filter(d -> d != null).collect(Collectors.toList()).stream().collect(Collectors.groupingBy(UserActionEsDto::getDevice_id))
                     .entrySet().stream().forEach(a -> {
                 handleUserActionData(list, a, logger);
             });
@@ -120,6 +122,17 @@ public class RealTimeUserActionRedisServiceImpl implements RealTimeUserActionSer
         }
 
         return userActionResponseDto;
+    }
+
+    @Override
+    @HystrixCommand(fallbackMethod = "queryFromEs",commandProperties = { @HystrixProperty(name = "fallback.isolation.semaphore.maxConcurrentRequests",value = "1000"),
+            @HystrixProperty(name = "hystrix.command.default.execution.isolation.semaphore.maxConcurrentRequests",value = "1000")})
+    public UserActionResponseDto mock(UserActionParameterDto userActionParameterDto) {
+
+        RestTemplate template = new RestTemplate();
+        template.getForObject("http://localhost:38093/user/mock", String.class);
+
+        return new UserActionResponseDto();
     }
 
     public UserActionResponseDto queryFromEs(UserActionParameterDto userActionParameterDto) throws IOException, ParseException {
@@ -133,7 +146,7 @@ public class RealTimeUserActionRedisServiceImpl implements RealTimeUserActionSer
         List<UserActionEsDto> data = a.getValue();
         if (data != null && data.size() > 0) {
             userActionDto.setUserId(data.get(0).getUser_id());
-            data.stream().collect(Collectors.groupingBy(UserActionEsDto :: getEvent_name))
+            data.stream().collect(Collectors.groupingBy(UserActionEsDto::getEvent_name))
                     .entrySet().stream().forEach(e -> {
                 try {
                     AppEventEnums.valueOf(e.getKey()).handleEventResult(userActionDto, e.getValue());
