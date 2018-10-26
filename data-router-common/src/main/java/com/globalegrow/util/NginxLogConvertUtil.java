@@ -113,7 +113,12 @@ public class NginxLogConvertUtil {
                             }
                             map.put(p[0].toLowerCase(), eventValue);
                         } else {
-                            map.put(p[0], valueHex(URLDecoder.decode(p[1], "utf-8")));
+                            try {
+                                map.put(p[0].toLowerCase(), valueHex(URLDecoder.decode(p[1], "utf-8")));
+                            } catch (Exception e) {
+                                map.put(p[0].toLowerCase(), valueHex(p[1]));
+                                //e.printStackTrace();
+                            }
                         }
 
                     }

@@ -29,17 +29,6 @@ logging:
     org.apache.http: ERROR
 spring:
   profiles: dev
-  redis:
-    timeout: 86400
-    password: 6e1KWyC29w
-    sentinel:
-      master: mymaster
-      nodes: 172.31.59.13:26380,172.31.57.199:26380,172.31.52.145:26380
-  elasticsearch:
-    jest:
-      uris: http://18.213.71.71:9200,http://18.213.41.233:9200,http://52.204.111.230:9200
-      read-timeout: 20000
-      connection-timeout: 20000
   kafka:
     consumer:
       auto-offset-reset: latest
@@ -74,27 +63,12 @@ logging:
   path: logs
   file: kylin-report.log
   level:
-    root: debug
+    root: info
     org.springframework: ERROR
     sun.rmi: ERROR
     org.apache.http: ERROR
 spring:
   profiles: prod
-  redis:
-    timeout: 86400
-    password: 6e1KWyC29w
-    cluster:
-      nodes[0]: 172.31.47.78:6382
-      nodes[1]: 172.31.47.222:6380
-      nodes[2]: 172.31.47.222:6381
-      nodes[3]: 172.31.44.253:6379
-      nodes[4]: 172.31.44.253:6380
-      nodes[5]: 172.31.47.78:6383
-  elasticsearch:
-    jest:
-      uris: http://18.213.71.71:9200,http://18.213.41.233:9200,http://52.204.111.230:9200
-      read-timeout: 20000
-      connection-timeout: 20000
   kafka:
     consumer:
       auto-offset-reset: latest
@@ -104,13 +78,13 @@ spring:
       max-poll-records: 10000
     producer:
       client-id: dy-realtime-app
-    bootstrap-servers: 172.31.59.13:9092,172.31.57.199:9092,172.31.52.145:9092
+    bootstrap-servers: 172.31.35.194:9092,172.31.50.250:9092,172.31.63.112:9092
     listener:
       concurrency: 20
 
 server:
-  port: 38193
-log-source: glbg-test
+  port: 38194
+log-source: glbg-analitic
 app:
   es:
     index-prefix: dy-app-data-temp-
@@ -118,3 +92,8 @@ app:
   redis:
     readtime:
       prefix: dy_rt_p_
+
+redis:
+  type: cluster
+  nodes: redis://172.31.47.78:6382,redis://172.31.47.222:6380,redis://172.31.47.222:6381,redis://172.31.44.253:6379,redis://172.31.44.253:6380,redis://172.31.47.78:6383
+  password: 6e1KWyC29w

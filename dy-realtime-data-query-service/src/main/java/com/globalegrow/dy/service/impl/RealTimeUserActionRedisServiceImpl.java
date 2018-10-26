@@ -53,7 +53,7 @@ public class RealTimeUserActionRedisServiceImpl implements RealTimeUserActionSer
 
     @Value("${redis.type}")
     private String redisType;
-    @Value("${redis.master}")
+    @Value("${redis.master:none}")
     private String master;
     @Value("${redis.nodes}")
     private String nodes;
