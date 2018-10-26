@@ -17,6 +17,9 @@ import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
+import org.elasticsearch.search.sort.FieldSortBuilder;
+import org.elasticsearch.search.sort.SortBuilder;
+import org.elasticsearch.search.sort.SortOrder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,10 +64,13 @@ public class RealTimeUserActionEsServiceImpl implements RealTimeUserActionServic
      */
     @Override
     public UserActionResponseDto userActionData(UserActionParameterDto userActionParameterDto) throws IOException, ParseException {
-        long start = System.currentTimeMillis();
         UserActionResponseDto userActionResponseDto = new UserActionResponseDto();
-        logger.debug("传入参数:{}", userActionParameterDto);
         List<UserActionDto> list = new ArrayList<>();
+
+        long start = System.currentTimeMillis();
+
+        logger.debug("传入参数:{}", userActionParameterDto);
+
         JestResult result;
         if (StringUtils.isNotEmpty(userActionParameterDto.getScrollId())) {
             SearchScroll scroll = new SearchScroll.Builder(userActionParameterDto.getScrollId(), this.scroll).build();
@@ -106,16 +112,11 @@ public class RealTimeUserActionEsServiceImpl implements RealTimeUserActionServic
                 }
 
             }
+            SortBuilder sortBuilder = new FieldSortBuilder("timestamp");
+            sortBuilder.order(SortOrder.DESC);
             searchSourceBuilder.postFilter(queryBuilder);
             this.logger.debug("elasticsearch 搜索条件: {}", searchSourceBuilder.toString());
             Search.Builder builder = new Search.Builder(searchSourceBuilder.toString());
-            /*String currentDate = DateFormatUtils.ISO_8601_EXTENDED_DATE_FORMAT.format(System.currentTimeMillis());
-            if (currentDate.equals(userActionParameterDto.getStartDate()) &&
-                    currentDate.equals(userActionParameterDto.getEndDate())) {
-                // 只查询当天的索引数据
-                builder
-                        .addIndex(this.indexPrefix + "-" + currentDate);
-            } else*/
             if (userActionParameterDto.getStartDate().equals(userActionParameterDto.getEndDate())) {
                 // 只查询一天数据
                 builder
@@ -130,22 +131,23 @@ public class RealTimeUserActionEsServiceImpl implements RealTimeUserActionServic
                     .setParameter(Parameters.SCROLL, this.scroll)// 开启游标5分钟
                     .build();
             result = jestClient.execute(search);
+            logger.info("query from es cost: {}", System.currentTimeMillis() - start);
+            if (result != null) {
+                logger.debug("es data: {}", result.getSourceAsString());
+                String scrollId = result.getJsonObject().get("_scroll_id").getAsString();
+                userActionResponseDto.setScrollId(scrollId);
+                //List<UserActionEsDto> esDtos = result.getSourceAsObjectList(UserActionEsDto.class);
+                // .collect(Collectors.groupingBy(p -> p.age, Collectors.mapping((Person p) -> p, toList())));
+                //Map<String, List<UserActionEsDto>> groupDto =
+                result.getSourceAsObjectList(UserActionEsDto.class).stream().collect(Collectors.groupingBy(UserActionEsDto::getDevice_id))
+                        .entrySet().stream().forEach(a -> {
+                    RealTimeUserActionRedisServiceImpl.handleUserActionData(list, a, logger);
+                });
+            }
 
         }
-        logger.info("query from es cost: {} ms", System.currentTimeMillis() - start);
 
-        if (result != null) {
-            logger.debug("es data: {}", result.getSourceAsString());
-            String scrollId = result.getJsonObject().get("_scroll_id").getAsString();
-            userActionResponseDto.setScrollId(scrollId);
-            //List<UserActionEsDto> esDtos = result.getSourceAsObjectList(UserActionEsDto.class);
-            // .collect(Collectors.groupingBy(p -> p.age, Collectors.mapping((Person p) -> p, toList())));
-            //Map<String, List<UserActionEsDto>> groupDto =
-            result.getSourceAsObjectList(UserActionEsDto.class).stream().collect(Collectors.groupingBy(UserActionEsDto::getDevice_id))
-                    .entrySet().stream().forEach(a -> {
-                RealTimeUserActionRedisServiceImpl.handleUserActionData(list, a, logger);
-            });
-        }
+
         userActionResponseDto.setSize(userActionParameterDto.getSize());
         userActionResponseDto.setData(list);
 
