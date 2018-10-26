@@ -197,10 +197,11 @@ public class ZafulDopamineOrderCounter {
                     quota.setBts(bts);
                     String orderStatus = redisOrderInfo.getOrderInfo().getOrderStatus();
                     if (skuCartInfo.getRecommend()) {
-                        quota.setOrder(Integer.valueOf(redisOrderInfo.getOrderInfo().getOrderId()));
+
                         quota.setOrder_uv(skuCartInfo.getDeviceId());
                         if ("0".equals(orderStatus)) {
 
+                            quota.setOrder(Integer.valueOf(redisOrderInfo.getOrderInfo().getOrderId()));
                             quota.setOrder_sku(orderGoodInfo.getGoodsNum());
                             quota.setOrder_uv(skuCartInfo.getDeviceId());
                             quota.setOrder_amount(orderGoodInfo.getAmount());
