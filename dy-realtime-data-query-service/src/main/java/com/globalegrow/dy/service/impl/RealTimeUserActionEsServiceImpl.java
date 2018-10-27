@@ -6,6 +6,7 @@ import com.globalegrow.dy.dto.UserActionParameterDto;
 import com.globalegrow.dy.dto.UserActionResponseDto;
 import com.globalegrow.dy.enums.AppEventEnums;
 import com.globalegrow.dy.service.RealTimeUserActionService;
+import com.google.gson.JsonObject;
 import io.searchbox.client.JestClient;
 import io.searchbox.client.JestResult;
 import io.searchbox.core.Search;
@@ -73,19 +74,21 @@ public class RealTimeUserActionEsServiceImpl implements RealTimeUserActionServic
 
         JestResult result;
         if (StringUtils.isNotEmpty(userActionParameterDto.getScrollId())) {
+            this.logger.debug("首次查询");
             SearchScroll scroll = new SearchScroll.Builder(userActionParameterDto.getScrollId(), this.scroll).build();
             result = jestClient.execute(scroll);
         } else {
+            this.logger.debug("第二次查询");
             BoolQueryBuilder queryBuilder = QueryBuilders.boolQuery();
             SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
             // String currentDate = DateFormatUtils.ISO_8601_EXTENDED_DATE_FORMAT.format(System.currentTimeMillis());
             // 查询单个用户行为数据
             if (StringUtils.isNotEmpty(userActionParameterDto.getCookieId())) {
-                QueryBuilder qb = QueryBuilders.termsQuery("device_id.keyword", userActionParameterDto.getCookieId());
+                QueryBuilder qb = QueryBuilders.termQuery("device_id.keyword", userActionParameterDto.getCookieId());
                 queryBuilder.must(qb);
             }
             if (StringUtils.isNotEmpty(userActionParameterDto.getUserId())) {
-                QueryBuilder qb = QueryBuilders.termsQuery("user_id.keyword", userActionParameterDto.getUserId());
+                QueryBuilder qb = QueryBuilders.termQuery("user_id.keyword", userActionParameterDto.getUserId());
                 queryBuilder.must(qb);
             }
             if (StringUtils.isNotEmpty(userActionParameterDto.getStartDate()) && StringUtils.isNotEmpty(userActionParameterDto.getEndDate())) {
@@ -115,39 +118,57 @@ public class RealTimeUserActionEsServiceImpl implements RealTimeUserActionServic
                 }
 
             }
+
             SortBuilder sortBuilder = new FieldSortBuilder("timestamp");
             sortBuilder.order(SortOrder.DESC);
-            searchSourceBuilder.postFilter(queryBuilder);
-            this.logger.debug("elasticsearch 搜索条件: {}", searchSourceBuilder.toString());
-            Search.Builder builder = new Search.Builder(searchSourceBuilder.toString());
+            //searchSourceBuilder.postFilter(queryBuilder);
+
+
+            searchSourceBuilder.from(0);
+            searchSourceBuilder.size(userActionParameterDto.getSize());
             /*if (userActionParameterDto.getStartDate().equals(userActionParameterDto.getEndDate())) {
                 // 只查询一天数据
                 builder
                         .addIndex(this.indexPrefix + "-" + userActionParameterDto.getStartDate());
             } else {*/
-                builder.addIndex(this.indexAliases);
+
            // }
-            searchSourceBuilder.postFilter(queryBuilder);
+            //searchSourceBuilder.postFilter(queryBuilder);
+            searchSourceBuilder.query(queryBuilder);
+            Search.Builder builder = new Search.Builder(searchSourceBuilder.toString());
+            this.logger.debug("elasticsearch 搜索条件: {}", searchSourceBuilder.toString());
+            builder.addIndex(this.indexAliases);
             Search search = builder
                     .addType(indexType)
-                    .setParameter(Parameters.SIZE, userActionParameterDto.getSize())// 每次传多少条数据
-                    .setParameter(Parameters.SCROLL, this.scroll)// 开启游标5分钟
+                   /* .setParameter(Parameters.SIZE, userActionParameterDto.getSize())// 每次传多少条数据
+                    .setParameter(Parameters.FROM, 0)*/
+                    //.setParameter(Parameters.SCROLL, this.scroll)// 开启游标5分钟
                     .build();
+
             result = jestClient.execute(search);
             logger.info("query from es cost: {}", System.currentTimeMillis() - start);
-            if (result != null) {
-                logger.debug("es data: {}", result.getSourceAsString());
-                String scrollId = result.getJsonObject().get("_scroll_id").getAsString();
-                userActionResponseDto.setScrollId(scrollId);
-                //List<UserActionEsDto> esDtos = result.getSourceAsObjectList(UserActionEsDto.class);
-                // .collect(Collectors.groupingBy(p -> p.age, Collectors.mapping((Person p) -> p, toList())));
-                //Map<String, List<UserActionEsDto>> groupDto =
-                result.getSourceAsObjectList(UserActionEsDto.class).stream().collect(Collectors.groupingBy(UserActionEsDto::getDevice_id))
-                        .entrySet().stream().forEach(a -> {
-                    RealTimeUserActionRedisServiceImpl.handleUserActionData(list, a, logger);
-                });
-            }
 
+
+        }
+
+        if (result != null) {
+            logger.debug("es data: {}", result.getSourceAsString());
+            /*JsonObject jsonObject = result.getJsonObject();
+            if (jsonObject != null) {
+                String id = jsonObject.get("_scroll_id").getAsString();
+                if (StringUtils.isNotEmpty(id)) {
+                    userActionResponseDto.setScrollId(id);
+                }
+            }*/
+
+
+            //List<UserActionEsDto> esDtos = result.getSourceAsObjectList(UserActionEsDto.class);
+            // .collect(Collectors.groupingBy(p -> p.age, Collectors.mapping((Person p) -> p, toList())));
+            //Map<String, List<UserActionEsDto>> groupDto =
+            result.getSourceAsObjectList(UserActionEsDto.class).stream().collect(Collectors.groupingBy(UserActionEsDto::getDevice_id))
+                    .entrySet().stream().forEach(a -> {
+                RealTimeUserActionRedisServiceImpl.handleUserActionData(list, a, logger);
+            });
         }
 
 
