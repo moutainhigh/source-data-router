@@ -88,10 +88,13 @@ public class RealTimeUserActionEsServiceImpl implements RealTimeUserActionServic
                 QueryBuilder qb = QueryBuilders.termsQuery("user_id.keyword", userActionParameterDto.getUserId());
                 queryBuilder.must(qb);
             }
-            // 时间限制
-            QueryBuilder qbTime = QueryBuilders.rangeQuery("timestamp").from(DateFormatUtils.ISO_8601_EXTENDED_DATE_FORMAT.parse(userActionParameterDto.getStartDate()).getTime())
-                    .to(DateFormatUtils.ISO_8601_EXTENDED_DATETIME_FORMAT.parse(userActionParameterDto.getEndDate() + "T23:59:59").getTime());
-            queryBuilder.must(qbTime);
+            if (StringUtils.isNotEmpty(userActionParameterDto.getStartDate()) && StringUtils.isNotEmpty(userActionParameterDto.getEndDate())) {
+                // 时间限制
+                QueryBuilder qbTime = QueryBuilders.rangeQuery("timestamp").from(DateFormatUtils.ISO_8601_EXTENDED_DATE_FORMAT.parse(userActionParameterDto.getStartDate()).getTime())
+                        .to(DateFormatUtils.ISO_8601_EXTENDED_DATETIME_FORMAT.parse(userActionParameterDto.getEndDate() + "T23:59:59").getTime());
+                queryBuilder.must(qbTime);
+            }
+
             // 站点条件过滤
             if (userActionParameterDto.getSite() != null && userActionParameterDto.getSite().size() > 0) {
                 QueryBuilder qb = QueryBuilders.termsQuery("site.keyword", userActionParameterDto.getSite());

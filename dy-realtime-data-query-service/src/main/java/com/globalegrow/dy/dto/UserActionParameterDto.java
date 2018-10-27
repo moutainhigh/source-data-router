@@ -17,12 +17,12 @@ public class UserActionParameterDto {
 
     private String type;
 
-    @NotNull
-    @NotBlank
+    /*@NotNull
+    @NotBlank*/
     private String startDate;
 
-    @NotNull
-    @NotBlank
+    /*@NotNull
+    @NotBlank*/
     private String endDate;
 
     private List<String> site = new ArrayList<>();
