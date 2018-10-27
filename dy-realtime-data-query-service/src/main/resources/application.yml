@@ -32,9 +32,9 @@ server:
 
 app:
   es:
-    index-prefix: dy-app-test
+    index-prefix: dy-test-sequence
     index-aliases: search-logs-test
-    index-type: log-test
+    index-type: log
   redis:
     readtime:
       prefix: dy_rt_p_
@@ -60,9 +60,9 @@ server:
 
 app:
   es:
-    index-prefix: dy-app-test
-    index-aliases: search-logs-test
-    index-type: log-test
+    index-prefix: dy-app-data-sequence
+    index-aliases: search-logs
+    index-type: log
   redis:
     readtime:
       prefix: dy_rt_p_

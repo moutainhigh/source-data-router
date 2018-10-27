@@ -117,13 +117,13 @@ public class RealTimeUserActionEsServiceImpl implements RealTimeUserActionServic
             searchSourceBuilder.postFilter(queryBuilder);
             this.logger.debug("elasticsearch 搜索条件: {}", searchSourceBuilder.toString());
             Search.Builder builder = new Search.Builder(searchSourceBuilder.toString());
-            if (userActionParameterDto.getStartDate().equals(userActionParameterDto.getEndDate())) {
+            /*if (userActionParameterDto.getStartDate().equals(userActionParameterDto.getEndDate())) {
                 // 只查询一天数据
                 builder
                         .addIndex(this.indexPrefix + "-" + userActionParameterDto.getStartDate());
-            } else {
+            } else {*/
                 builder.addIndex(this.indexAliases);
-            }
+           // }
             searchSourceBuilder.postFilter(queryBuilder);
             Search search = builder
                     .addType(indexType)

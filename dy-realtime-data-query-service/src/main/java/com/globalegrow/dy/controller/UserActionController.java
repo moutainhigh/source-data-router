@@ -66,10 +66,10 @@ public class UserActionController {
      */
     @RequestMapping(value = "getUserInfo",produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     public UserActionResponseDto userActionInfo(@Validated @RequestBody UserActionParameterDto parameterDto) throws IOException, ParseException {
-        if (parameterDto.getStartDate().equals(parameterDto.getEndDate()) && parameterDto.getStartDate().equals(DateFormatUtils.ISO_8601_EXTENDED_DATE_FORMAT.format(System.currentTimeMillis()))
+        /*if (parameterDto.getStartDate().equals(parameterDto.getEndDate()) && parameterDto.getStartDate().equals(DateFormatUtils.ISO_8601_EXTENDED_DATE_FORMAT.format(System.currentTimeMillis()))
          && StringUtils.isNotEmpty(parameterDto.getCookieId()) && parameterDto.getQueryHistory()) {
             return this.realTimeUserActionRedisServiceImpl.userActionData(parameterDto);
-        }
+        }*/
         return this.realTimeUserActionEsServiceImpl.userActionData(parameterDto);
     }
 
