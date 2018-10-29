@@ -133,9 +133,11 @@ public class ZafulDopamineOrderCounter {
             redisOrderInfo.getGoodInfoMap().put(orderGoodInfo.getSku(), orderGoodInfo);
             SpringRedisUtil.put(this.orderPrefix + orderGoodInfo.getOrderId(), GsonUtil.toJson(redisOrderInfo), 604800);
             String redisKey = "dy_zaful_app_dopamine_" + redisOrderInfo.getOrderInfo().getUserId() + "_" + orderGoodInfo.getSku();
+            String redisKeyAppPush = "dy_zaful_app_push_" + redisOrderInfo.getOrderInfo().getUserId() + "_" + orderGoodInfo.getSku();
             String cache = SpringRedisUtil.getStringValue(redisKey);
-            handleReportQuota(redisOrderInfo, orderGoodInfo, cache);
-
+            String appPushCache = SpringRedisUtil.getStringValue(redisKeyAppPush);
+            handleReportQuota(redisOrderInfo, orderGoodInfo, cache, "dy_bts_dopamine_report");
+            handleReportQuota(redisOrderInfo, orderGoodInfo, appPushCache, "dy_bts_app_push_report");
         } else {
             this.logger.info("goods info 无订单信息，根据订单商品新建空订单信息: ", orderGoodInfo.getOrderId(), this.getEventData(dataMap).get("addtime"));
             RedisOrderInfo redisOrderInfo = new RedisOrderInfo();
@@ -169,10 +171,11 @@ public class ZafulDopamineOrderCounter {
                     redisOrderInfo.getGoodInfoMap().put(orderGoodInfo.getSku(), orderGoodInfo);
                     SpringRedisUtil.put(this.orderPrefix + orderGoodInfo.getOrderId(), GsonUtil.toJson(redisOrderInfo), 604800);
                     String redisKey = "dy_zaful_app_dopamine_" + redisOrderInfo.getOrderInfo().getUserId() + "_" + orderGoodInfo.getSku();
+                    String redisKeyAppPush = "dy_zaful_app_push_" + redisOrderInfo.getOrderInfo().getUserId() + "_" + orderGoodInfo.getSku();
                     String cache = SpringRedisUtil.getStringValue(redisKey);
-                    handleReportQuota(redisOrderInfo, orderGoodInfo, cache);
-
-
+                    String appPushCache = SpringRedisUtil.getStringValue(redisKeyAppPush);
+                    handleReportQuota(redisOrderInfo, orderGoodInfo, cache, "dy_bts_dopamine_report");
+                    handleReportQuota(redisOrderInfo, orderGoodInfo, appPushCache, "dy_bts_app_push_report");
                 }
             }
 
@@ -186,7 +189,7 @@ public class ZafulDopamineOrderCounter {
 
     }
 
-    private void handleReportQuota(RedisOrderInfo redisOrderInfo, OrderGoodInfo orderGoodInfo, String cache) {
+    private void handleReportQuota(RedisOrderInfo redisOrderInfo, OrderGoodInfo orderGoodInfo, String cache, String topic) {
         if (StringUtils.isNotEmpty(cache)) {
             SkuCartInfo skuCartInfo = GsonUtil.readValue(cache, SkuCartInfo.class);
             // 处理下单数、下单用户数、已支付订单数、GMV、整体指标
@@ -230,11 +233,27 @@ public class ZafulDopamineOrderCounter {
                             quota.setWhole_paid_uv(skuCartInfo.getDeviceId());
                         }
                     }
-
                     Map reportMap = DyBeanUtils.objToMap(quota);
                     reportMap.put(NginxLogConvertUtil.TIMESTAMP_KEY, System.currentTimeMillis());
-                    this.logger.info("订单信息发送到 kafka");
-                    this.kafkaTemplate.send("dy_bts_dopamine_report", GsonUtil.toJson(reportMap));
+                    if ("dy_bts_app_push_report".equals(topic)) {
+                        Map appPushMap = new HashMap();
+                        appPushMap.putAll(reportMap);
+                        appPushMap.put("view_push_page",0);
+                        appPushMap.put("view_push_uv", "");
+                        try {
+                            this.kafkaTemplate.send(topic, JacksonUtil.toJSon(appPushMap));
+                        } catch (Exception e) {
+                            logger.error("kafka send or json convert error: {}", appPushMap, e);
+                        }
+                    }else {
+                        this.logger.info("订单信息发送到 kafka");
+                        try {
+                            this.kafkaTemplate.send(topic, JacksonUtil.toJSon(reportMap));
+                        } catch (Exception e) {
+                            logger.error("kafka send or json convert error: {}", reportMap, e);
+                        }
+                    }
+
                 });
             }
 

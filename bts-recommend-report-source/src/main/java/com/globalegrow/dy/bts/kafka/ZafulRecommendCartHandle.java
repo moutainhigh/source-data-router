@@ -94,7 +94,9 @@ public class ZafulRecommendCartHandle {
                             skuCartInfo.setDeviceId(deviceId);
                             skuCartInfo.setRecommend(isRecommend);
                             String redisKey = "dy_zaful_app_dopamine_" + userId + "_" + sku;
+                            String redisKeyAppPush = "dy_zaful_app_push_" + userId + "_" + sku;
                             SpringRedisUtil.put(redisKey, GsonUtil.toJson(skuCartInfo), 604800);
+                            SpringRedisUtil.put(redisKeyAppPush, GsonUtil.toJson(skuCartInfo), 604800);
                         }
 
                     } else if (bts != null) {
@@ -105,7 +107,9 @@ public class ZafulRecommendCartHandle {
                         skuCartInfo.setDeviceId(deviceId);
                         skuCartInfo.setRecommend(isRecommend);
                         String redisKey = "dy_zaful_app_dopamine_" + userId + "_" + sku;
+                        String redisKeyAppPush = "dy_zaful_app_push_" + userId + "_" + sku;
                         SpringRedisUtil.put(redisKey, GsonUtil.toJson(skuCartInfo), 604800);
+                        SpringRedisUtil.put(redisKeyAppPush, GsonUtil.toJson(skuCartInfo), 604800);
                     }
 
 
