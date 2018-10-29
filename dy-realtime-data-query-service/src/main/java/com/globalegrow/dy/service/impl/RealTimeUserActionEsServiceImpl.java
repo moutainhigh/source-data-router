@@ -4,6 +4,8 @@ import com.globalegrow.dy.dto.*;
 import com.globalegrow.dy.enums.AppEventEnums;
 import com.globalegrow.dy.service.RealTimeUserActionService;
 import com.google.gson.JsonObject;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
 import io.searchbox.client.JestClient;
 import io.searchbox.client.JestResult;
 import io.searchbox.core.Search;
@@ -100,8 +102,8 @@ public class RealTimeUserActionEsServiceImpl implements RealTimeUserActionServic
                 queryBuilder.must(qbs);
             }
             // 终端条件过滤
-            if (userActionParameterDto.getDivice() != null && userActionParameterDto.getDivice().size() > 0) {
-                QueryBuilder qbd = QueryBuilders.termsQuery("platform.keyword", userActionParameterDto.getDivice());
+            if (userActionParameterDto.getPlatform() != null && userActionParameterDto.getPlatform().size() > 0) {
+                QueryBuilder qbd = QueryBuilders.termsQuery("platform.keyword", userActionParameterDto.getPlatform());
                 queryBuilder.must(qbd);
             }
 

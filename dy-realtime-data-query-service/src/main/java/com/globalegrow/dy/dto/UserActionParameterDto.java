@@ -22,7 +22,7 @@ public class UserActionParameterDto {
 
     private List<String> site = new ArrayList<>();
 
-    private List<String> divice = new ArrayList<>();
+    private List<String> platform = new ArrayList<>();
 
 
     /**
@@ -81,12 +81,12 @@ public class UserActionParameterDto {
         this.site = site;
     }
 
-    public List<String> getDivice() {
-        return divice;
+    public List<String> getPlatform() {
+        return platform;
     }
 
-    public void setDivice(List<String> divice) {
-        this.divice = divice;
+    public void setPlatform(List<String> platform) {
+        this.platform = platform;
     }
 
     @Override
@@ -97,7 +97,7 @@ public class UserActionParameterDto {
                 ", startDate=" + startDate +
                 ", endDate=" + endDate +
                 ", site=" + site +
-                ", divice=" + divice +
+                ", divice=" + platform +
                 '}';
     }
 }
