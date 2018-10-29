@@ -12,7 +12,7 @@ public enum AppEventEnums {
     /**
      * 曝光事件
      */
-    af_impression{
+    af_impression {
         @Override
         public String map() {
             return "skuExposure";
@@ -26,7 +26,7 @@ public enum AppEventEnums {
     /**
      * 点击事件
      */
-    af_view_product{
+    af_view_product {
         @Override
         public String map() {
             return "skuHit";
@@ -40,7 +40,7 @@ public enum AppEventEnums {
     /**
      * 加购事件
      */
-    af_add_to_bag{
+    af_add_to_bag {
         @Override
         public String map() {
             return "skuCart";
@@ -54,7 +54,7 @@ public enum AppEventEnums {
     /**
      * 收藏
      */
-    af_add_to_wishlist{
+    af_add_to_wishlist {
         @Override
         public String map() {
             return "skuMarked";
@@ -68,7 +68,7 @@ public enum AppEventEnums {
     /**
      * 创建订单-下单
      */
-    af_create_order_success{
+    af_create_order_success {
         @Override
         public String map() {
             return "orders";
@@ -82,7 +82,7 @@ public enum AppEventEnums {
     /**
      * 搜索事件，只取normal search
      */
-    af_search{
+    af_search {
         @Override
         public String map() {
             return "skuSearchWord";
@@ -92,7 +92,11 @@ public enum AppEventEnums {
         public void handleEventResult(UserActionDto userActionDto, List<UserActionEsDto> data) {
             userActionDto.setSkuSearchWord(data.stream().map(d -> new UserActionData(d.getEvent_value(), d.getTimestamp())).collect(Collectors.toList()));
         }
-    },af_purchase{
+    },
+    /**
+     * 订单支付成功
+     */
+    af_purchase {
         @Override
         public String map() {
             return "skuOrderPay";
@@ -102,12 +106,17 @@ public enum AppEventEnums {
         public void handleEventResult(UserActionDto userActionDto, List<UserActionEsDto> data) {
             userActionDto.setSkuOrderPay(data.stream().map(d -> new UserActionData(d.getEvent_value(), d.getTimestamp())).collect(Collectors.toList()));
         }
-    }
-    ;
+    };
 
-   public abstract String map();
-   public abstract void handleEventResult(UserActionDto userActionDto, List<UserActionEsDto> data);
+    public abstract String map();
 
+    public abstract void handleEventResult(UserActionDto userActionDto, List<UserActionEsDto> data);
+
+    /**
+     * 根据传入事件名转换为 es 存储事件名
+     * @param localName
+     * @return
+     */
     public static String getLogEventNameByLocalName(String localName) {
         for (AppEventEnums value : AppEventEnums.values()) {
             if (value.map().equals(localName)) {
@@ -116,5 +125,6 @@ public enum AppEventEnums {
         }
         return "";
     }
+
 
 }

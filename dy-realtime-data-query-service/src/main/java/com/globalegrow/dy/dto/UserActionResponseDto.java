@@ -1,6 +1,7 @@
 package com.globalegrow.dy.dto;
 
 import java.util.List;
+import java.util.Map;
 
 public class UserActionResponseDto {
 
@@ -8,8 +9,7 @@ public class UserActionResponseDto {
 
     private String message;
 
-    private List<UserActionDto> data;
-
+    private Map<String, List<UserActionData>> data;
     /**
      * 每页数量
      */
@@ -52,11 +52,11 @@ public class UserActionResponseDto {
         this.message = message;
     }
 
-    public List<UserActionDto> getData() {
+    public Map<String, List<UserActionData>> getData() {
         return data;
     }
 
-    public void setData(List<UserActionDto> data) {
+    public void setData(Map<String, List<UserActionData>> data) {
         this.data = data;
     }
 

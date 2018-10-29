@@ -24,7 +24,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.PostConstruct;
@@ -39,7 +38,8 @@ import java.util.stream.Collectors;
  * 用户行为接口，redis 实现
  * 只根据用户 device id 查询用户当天的行为数据
  */
-@Service
+//@Service
+@Deprecated
 public class RealTimeUserActionRedisServiceImpl implements RealTimeUserActionService {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
@@ -93,7 +93,7 @@ public class RealTimeUserActionRedisServiceImpl implements RealTimeUserActionSer
         long start = System.currentTimeMillis();
         UserActionResponseDto userActionResponseDto = new UserActionResponseDto();
         this.logger.debug("user_action_parameter: {}", userActionParameterDto);
-        if (StringUtils.isNotEmpty(userActionParameterDto.getCookieId())) {
+       /* if (StringUtils.isNotEmpty(userActionParameterDto.getCookieId())) {
             List<UserActionDto> list = new ArrayList<>();
             String key = redisKeyPrefix + userActionParameterDto.getCookieId() + "_" + DateFormatUtils.format(System.currentTimeMillis(), "yyyy-MM-dd");
             RSet<String> stringSet = redisson.getSet(key, StringCodec.INSTANCE);
@@ -119,7 +119,7 @@ public class RealTimeUserActionRedisServiceImpl implements RealTimeUserActionSer
             });
             this.logger.info("cost_handle string convert cost: {}", System.currentTimeMillis() - handleStart);
             userActionResponseDto.setData(list);
-        }
+        }*/
 
         return userActionResponseDto;
     }

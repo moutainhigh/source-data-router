@@ -9,55 +9,35 @@ import java.util.List;
 
 public class UserActionParameterDto {
 
-    private Boolean queryHistory = false;
-
-    private String userId;
-
+    @NotNull
     private String cookieId;
 
-    private String type;
+    private List<String> type;
 
-    /*@NotNull
-    @NotBlank*/
-    private String startDate;
+    @NotNull
+    private Long startDate;
 
-    /*@NotNull
-    @NotBlank*/
-    private String endDate;
+    @NotNull
+    private Long endDate;
 
     private List<String> site = new ArrayList<>();
 
     private List<String> divice = new ArrayList<>();
 
-    public Boolean getQueryHistory() {
-        return queryHistory;
-    }
-
-    public void setQueryHistory(Boolean queryHistory) {
-        this.queryHistory = queryHistory;
-    }
-
-    /**
-     * 分页ID
-     */
-    private String scrollId;
 
     /**
      * 每页数量
      */
-    @Max(10000)
-    private Integer size = 10;
+    @Max(1000)
+    @NotNull
+    private Integer size = 1000;
 
-    public String getType() {
+    public List<String> getType() {
         return type;
     }
 
-    public String getScrollId() {
-        return scrollId;
-    }
-
-    public void setScrollId(String scrollId) {
-        this.scrollId = scrollId;
+    public void setType(List<String> type) {
+        this.type = type;
     }
 
     public Integer getSize() {
@@ -68,17 +48,6 @@ public class UserActionParameterDto {
         this.size = size;
     }
 
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public String getUserId() {
-        return userId;
-    }
-
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
 
     public String getCookieId() {
         return cookieId;
@@ -88,19 +57,19 @@ public class UserActionParameterDto {
         this.cookieId = cookieId;
     }
 
-    public String getStartDate() {
+    public Long getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(String startDate) {
+    public void setStartDate(Long startDate) {
         this.startDate = startDate;
     }
 
-    public String getEndDate() {
+    public Long getEndDate() {
         return endDate;
     }
 
-    public void setEndDate(String endDate) {
+    public void setEndDate(Long endDate) {
         this.endDate = endDate;
     }
 
@@ -123,7 +92,6 @@ public class UserActionParameterDto {
     @Override
     public String toString() {
         return "UserActionParameterDto{" +
-                "userId='" + userId + '\'' +
                 ", cookieId='" + cookieId + '\'' +
                 ", type='" + type + '\'' +
                 ", startDate=" + startDate +

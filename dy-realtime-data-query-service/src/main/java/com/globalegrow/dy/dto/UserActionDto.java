@@ -4,6 +4,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import java.util.List;
 
+@Deprecated
 public class UserActionDto {
 
     //private Double gmv = 0d;
