@@ -46,11 +46,11 @@ public class UserActionController {
      * @throws IOException
      */
     @RequestMapping(value = "getUserInfo",produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
-    @HystrixCommand(fallbackMethod = "fallbackMethod",commandProperties = {
+    /*@HystrixCommand(fallbackMethod = "fallbackMethod",commandProperties = {
             @HystrixProperty(name = "execution.isolation.strategy",value = "SEMAPHORE"),
             @HystrixProperty(name = "fallback.isolation.semaphore.maxConcurrentRequests",value = "5000"),
             @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds",value = "4000"),
-            @HystrixProperty(name = "execution.isolation.semaphore.maxConcurrentRequests",value = "5000")})
+            @HystrixProperty(name = "execution.isolation.semaphore.maxConcurrentRequests",value = "5000")})*/
     public UserActionResponseDto userActionInfo(@Validated @RequestBody UserActionParameterDto parameterDto) throws IOException, ParseException {
         return this.realTimeUserActionEsServiceImpl.userActionData(parameterDto);
     }
