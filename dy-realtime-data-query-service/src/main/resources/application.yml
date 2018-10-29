@@ -28,7 +28,7 @@ spring:
       password: a@ss&2@1aaAQ
 
 server:
-  port: 38393
+  port: 38193
 
 app:
   es:
