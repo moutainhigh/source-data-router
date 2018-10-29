@@ -6,6 +6,7 @@ import com.globalegrow.common.CommonBtsLogHandle;
 import com.globalegrow.common.hbase.CommonHbaseMapper;
 import com.globalegrow.enums.CartRedisKeysPrefix;
 import com.globalegrow.util.GsonUtil;
+import com.globalegrow.util.JacksonUtil;
 import com.globalegrow.util.SpringRedisUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -91,7 +92,7 @@ public class GbGoodDetailRecommendReportListener extends GbBtsInfo {
      * @return
      */
     @Override
-    protected Map<String, Object> reportData(Map<String, Object> logMap) {
+    protected Map<String, Object> reportData(Map<String, Object> logMap) throws Exception {
         Map<String, String> btsInfo = this.btsInfo(logMap);
         if (btsInfo != null) {
             String glbX = String.valueOf(logMap.get("glb_x"));
@@ -155,7 +156,7 @@ public class GbGoodDetailRecommendReportListener extends GbBtsInfo {
                         }
                         if (glbSkuInfo.contains("[{")) {
                             this.logger.debug("buy together");
-                            List<Map<String, Object>> skus = GsonUtil.readValue(glbSkuInfo, List.class);
+                            List<Map<String, Object>> skus = JacksonUtil.readValue(glbSkuInfo, List.class);
                             if (skus != null && skus.size() > 0) {
                                 btsGbRecommendReport.setSkuAddCart(skus.size());
                                 if (StringUtils.isNotEmpty(glbU)) {
@@ -169,7 +170,7 @@ public class GbGoodDetailRecommendReportListener extends GbBtsInfo {
                             }
                         } else {
                             this.logger.debug("单个商品加购");
-                            Map<String, Object> sku = GsonUtil.readValue(glbSkuInfo, Map.class);
+                            Map<String, Object> sku = JacksonUtil.readValue(glbSkuInfo, Map.class);
                             if (sku != null && sku.size() > 0) {
                                 btsGbRecommendReport.setSkuAddCart(1);
                                 if (StringUtils.isNotEmpty(glbU)) {

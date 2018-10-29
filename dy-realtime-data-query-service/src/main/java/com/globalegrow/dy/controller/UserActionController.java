@@ -5,8 +5,6 @@ import com.globalegrow.dy.dto.UserActionResponseDto;
 import com.globalegrow.dy.service.RealTimeUserActionService;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.time.DateFormatUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,8 +48,8 @@ public class UserActionController {
     @RequestMapping(value = "getUserInfo",produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     @HystrixCommand(fallbackMethod = "fallbackMethod",commandProperties = {
             @HystrixProperty(name = "fallback.isolation.semaphore.maxConcurrentRequests",value = "2000"),
-            @HystrixProperty(name = "hystrix.command.HystrixCommandKey.execution.isolation.thread.timeoutInMilliseconds",value = "4000"),
-            @HystrixProperty(name = "hystrix.command.default.execution.isolation.semaphore.maxConcurrentRequests",value = "2000")})
+            @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds",value = "4000"),
+            @HystrixProperty(name = "execution.isolation.semaphore.maxConcurrentRequests",value = "2000")})
     public UserActionResponseDto userActionInfo(@Validated @RequestBody UserActionParameterDto parameterDto) throws IOException, ParseException {
         return this.realTimeUserActionEsServiceImpl.userActionData(parameterDto);
     }
