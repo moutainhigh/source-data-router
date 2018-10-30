@@ -142,8 +142,8 @@ public class RealTimeUserActionEsServiceImpl implements RealTimeUserActionServic
             if (result != null) {
                 long handleStart = System.currentTimeMillis();
                 logger.debug("es data result size: {}", result.getSourceAsObjectList(UserActionEsDto.class).size());
-                result.getSourceAsObjectList(UserActionEsDto.class).stream().collect(Collectors.groupingBy(UserActionEsDto::getEvent_name)).entrySet().stream().forEach(e -> {
-                    data.put(e.getKey(), e.getValue().stream().map(esd -> new UserActionData(esd.getEvent_value(), esd.getTimestamp())).collect(Collectors.toList()));
+                result.getSourceAsObjectList(UserActionEsDto.class).parallelStream().collect(Collectors.groupingBy(UserActionEsDto::getEvent_name)).entrySet().stream().forEach(e -> {
+                    data.put(e.getKey(), e.getValue().parallelStream().map(esd -> new UserActionData(esd.getEvent_value(), esd.getTimestamp())).collect(Collectors.toList()));
                 });
                 logger.debug("handle result costs: {}", System.currentTimeMillis() - handleStart);
             }

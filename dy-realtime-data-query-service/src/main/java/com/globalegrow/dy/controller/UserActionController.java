@@ -3,6 +3,8 @@ package com.globalegrow.dy.controller;
 import com.globalegrow.dy.dto.UserActionParameterDto;
 import com.globalegrow.dy.dto.UserActionResponseDto;
 import com.globalegrow.dy.service.RealTimeUserActionService;
+import com.netflix.hystrix.HystrixCommandProperties;
+import com.netflix.hystrix.HystrixThreadPoolKey;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
 import org.slf4j.Logger;
@@ -40,8 +42,10 @@ public class UserActionController {
     /*@HystrixCommand(fallbackMethod = "fallbackMethod",commandProperties = {
             @HystrixProperty(name = "execution.isolation.strategy",value = "SEMAPHORE"),
             @HystrixProperty(name = "fallback.isolation.semaphore.maxConcurrentRequests",value = "5000"),
-            @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds",value = "4000"),
-            @HystrixProperty(name = "execution.isolation.semaphore.maxConcurrentRequests",value = "5000")})*/
+            @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds",value = "4000")})*/
+    @HystrixCommand(fallbackMethod = "fallbackMethod",commandProperties = {
+            //@HystrixProperty(name = "execution.isolation.strategy",value = "THREAD"),
+            @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds",value = "4000")})
     public UserActionResponseDto userActionInfo(@Validated @RequestBody UserActionParameterDto parameterDto) throws IOException, ParseException {
         long start = System.currentTimeMillis();
         UserActionResponseDto responseDto = this.realTimeUserActionEsServiceImpl.userActionData(parameterDto);
