@@ -73,7 +73,7 @@ public class RealTimeUserActionEsServiceImpl implements RealTimeUserActionServic
         if (inputType.size() < 1) {
             inputType.addAll(Arrays.stream(AppEventEnums.values()).map(AppEventEnums :: name).collect(Collectors.toList()));
         }
-        inputType/*.parallelStream()*/.forEach(eventName -> {
+        inputType.parallelStream().forEach(eventName -> {
             long start = System.currentTimeMillis();
 
             logger.debug("传入参数:{}", userActionParameterDto);
