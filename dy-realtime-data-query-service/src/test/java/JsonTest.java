@@ -3,7 +3,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.globalegrow.dy.dto.UserActionEsDto;
 import com.globalegrow.dy.utils.JacksonUtil;
 import com.globalegrow.util.GsonUtil;
+import com.google.gson.Gson;
+import io.searchbox.client.config.HttpClientConfig;
+import org.apache.http.HttpHost;
 import org.junit.Test;
+import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
 
 public class JsonTest {
     public static ObjectMapper objectMapper = new ObjectMapper();
@@ -20,6 +25,14 @@ public class JsonTest {
             s=s.substring(0, s.lastIndexOf("\""));
         }
         System.out.println(objectMapper.readValue(s, UserActionEsDto.class));
+    }
+
+    protected HttpClientConfig createHttpClientConfig() {
+        HttpClientConfig.Builder builder = new HttpClientConfig.Builder(
+                "");
+        builder.maxTotalConnection(500);
+        builder.defaultMaxTotalConnectionPerRoute(250);
+        return builder.build();
     }
 
 }

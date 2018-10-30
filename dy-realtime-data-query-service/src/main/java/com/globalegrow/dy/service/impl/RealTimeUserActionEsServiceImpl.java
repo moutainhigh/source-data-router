@@ -27,6 +27,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.*;
@@ -55,6 +56,11 @@ public class RealTimeUserActionEsServiceImpl implements RealTimeUserActionServic
 
     @Value("${app.es.scroll:1s}")
     private String scroll;
+
+    @PostConstruct
+    public void before(){
+
+    }
 
     /**
      * 从 es 查询用户行为数据
