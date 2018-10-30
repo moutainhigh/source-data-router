@@ -3,8 +3,6 @@ package com.globalegrow.dy.controller;
 import com.globalegrow.dy.dto.UserActionParameterDto;
 import com.globalegrow.dy.dto.UserActionResponseDto;
 import com.globalegrow.dy.service.RealTimeUserActionService;
-import com.netflix.hystrix.HystrixCommandProperties;
-import com.netflix.hystrix.HystrixThreadPoolKey;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
 import org.slf4j.Logger;
