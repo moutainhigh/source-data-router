@@ -26,16 +26,7 @@ public class UserActionController {
     @Qualifier("realTimeUserActionEsServiceImpl")
     private RealTimeUserActionService realTimeUserActionEsServiceImpl;
 
-    /**
-     * 上线后删除
-     * @param parameterDto
-     * @return
-     * @throws IOException
-     */
-    @RequestMapping(value = "userActionResponseDto",produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
-    public UserActionResponseDto userAction(@Validated @RequestBody UserActionParameterDto parameterDto) throws IOException, ParseException {
-        return this.realTimeUserActionEsServiceImpl.userActionData(parameterDto);
-    }
+
 
     //
 
@@ -52,7 +43,10 @@ public class UserActionController {
             @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds",value = "4000"),
             @HystrixProperty(name = "execution.isolation.semaphore.maxConcurrentRequests",value = "5000")})*/
     public UserActionResponseDto userActionInfo(@Validated @RequestBody UserActionParameterDto parameterDto) throws IOException, ParseException {
-        return this.realTimeUserActionEsServiceImpl.userActionData(parameterDto);
+        long start = System.currentTimeMillis();
+        UserActionResponseDto responseDto = this.realTimeUserActionEsServiceImpl.userActionData(parameterDto);
+        this.logger.info("query es and result handle costs: {}", System.currentTimeMillis() - start);
+        return responseDto;
     }
 
     public UserActionResponseDto fallbackMethod(UserActionParameterDto userActionParameterDto) {
