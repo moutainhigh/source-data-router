@@ -24,6 +24,7 @@ import org.elasticsearch.search.sort.SortOrder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -39,6 +40,7 @@ public class RealTimeUserActionEsServiceImpl implements RealTimeUserActionServic
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
+    @Qualifier("myJestClient")
     private JestClient jestClient;
     /**
      * 索引前缀，当天数据只查询当天索引 dy-app-data-temp-
