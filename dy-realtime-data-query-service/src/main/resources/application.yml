@@ -6,16 +6,16 @@ logging:
   path: logs
   file: kylin-report.log
   level:
-    root: error
+    root: info
     org.springframework: ERROR
     sun.rmi: ERROR
     org.apache.http: ERROR
-server:
-  undertow:
-    io-threads: 128
-    worker-threads: 1024
-  compression:
-    enabled: true
+#server:
+#  undertow:
+#    io-threads: 128
+#    worker-threads: 1024
+#  compression:
+#    enabled: true
 ---
 spring:
   profiles: dev
@@ -24,8 +24,8 @@ spring:
       uris[0]: http://172.31.51.179:9200
       uris[1]: http://172.31.51.59:9200
       uris[2]: http://172.31.51.250:9200
-      read-timeout: 20000
-      connection-timeout: 20000
+      read-timeout: 5000
+      connection-timeout: 5000
       username: esearch-ai-aws
       password: a@ss&2@1aaAQ
 
@@ -55,8 +55,8 @@ spring:
       uris[0]: http://172.31.51.179:9200
       uris[1]: http://172.31.51.59:9200
       uris[2]: http://172.31.51.250:9200
-      read-timeout: 20000
-      connection-timeout: 20000
+      read-timeout: 5000
+      connection-timeout: 5000
       username: esearch-ai-aws
       password: a@ss&2@1aaAQ
 server:
