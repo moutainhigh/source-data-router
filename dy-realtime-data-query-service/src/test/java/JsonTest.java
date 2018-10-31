@@ -10,6 +10,8 @@ import org.junit.Test;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
+import java.io.UnsupportedEncodingException;
+
 public class JsonTest {
     public static ObjectMapper objectMapper = new ObjectMapper();
 
@@ -33,6 +35,12 @@ public class JsonTest {
         builder.maxTotalConnection(500);
         builder.defaultMaxTotalConnectionPerRoute(250);
         return builder.build();
+    }
+
+    @Test
+    public void test2() throws UnsupportedEncodingException {
+        String s = new String("{\"af_content_id\":\"282870904,221327810,282828203,281489502,237481404,280738409,279319303,281933301,281928804,233750902,283581202,282228504,233979204,220356108,280549620,281937902,281179903,232984403,282724002,281493001\",\"af_inner_mediasource\":\"category_jackets-coats\\\\\\\\u00253Ddeeplink\\,\\extras\\:{\\fb_app_id\\:1396335280417835}}\"}".getBytes(), "utf-8");
+        System.out.println(s);
     }
 
 }
