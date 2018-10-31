@@ -10,12 +10,12 @@ logging:
     org.springframework: ERROR
     sun.rmi: ERROR
     org.apache.http: ERROR
-#server:
-#  undertow:
-#    io-threads: 128
-#    worker-threads: 1024
-#  compression:
-#    enabled: true
+server:
+  undertow:
+    io-threads: 128
+    worker-threads: 1024
+  compression:
+    enabled: false
 ---
 spring:
   profiles: dev
