@@ -1,5 +1,6 @@
 package com.globalegrow.dy.config;
 
+import com.netflix.hystrix.HystrixThreadPoolProperties;
 import com.netflix.hystrix.contrib.javanica.aop.aspectj.HystrixCommandAspect;
 import com.netflix.hystrix.contrib.metrics.eventstream.HystrixMetricsStreamServlet;
 import org.apache.http.client.HttpClient;
@@ -20,6 +21,7 @@ import org.springframework.web.client.RestTemplate;
 
 @Configuration
 public class RestTemplateConfig {
+
 
     @Bean
     public HystrixCommandAspect hystrixAspect() {
