@@ -1,6 +1,6 @@
 spring:
   profiles:
-    active: dev
+    active: prod
 logging:
   #  config: classpath:logback-spring.xml
   path: logs
@@ -64,8 +64,8 @@ server:
 
 app:
   es:
-    index-prefix: dy-app-data-sequence
-    index-aliases: search-logs
+    index-prefix: dy-realtime-user-event-sequence
+    index-aliases: search-app-logs
     index-type: log
   redis:
     readtime:
