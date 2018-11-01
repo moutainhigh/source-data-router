@@ -122,7 +122,7 @@ public class RealTimeUserActionEsServiceImpl implements RealTimeUserActionServic
             searchSourceBuilder.from(0);
             searchSourceBuilder.size(userActionParameterDto.getSize());
 
-            searchSourceBuilder.query(queryBuilder);
+            searchSourceBuilder.postFilter(queryBuilder);
             searchSourceBuilder.sort(sortBuilder);
             Search.Builder builder = new Search.Builder(searchSourceBuilder.toString());
             this.logger.debug("elasticsearch 搜索条件: {}", searchSourceBuilder.toString());
