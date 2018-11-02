@@ -116,6 +116,7 @@ public class RealTimeUserActionEsServiceImpl implements RealTimeUserActionServic
             }
 
 
+
             SortBuilder sortBuilder = new FieldSortBuilder("timestamp");
             sortBuilder.order(SortOrder.DESC);
 

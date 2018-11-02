@@ -114,7 +114,7 @@ public class HistoryDataInstall {
                                             eventDataRow.put("site", site);
                                             eventDataRow.put(NginxLogConvertUtil.TIMESTAMP_KEY, timestamp);
                                             //out.collect(eventDataRow);
-                                            Index index = new Index.Builder(eventDataRow).id(System.nanoTime() + "").index("dy-realtime-user-event-sequence").type("log").setParameter(Parameters.ROUTING, deviceId).build();
+                                            Index index = new Index.Builder(eventDataRow).index("dy-realtime-user-event-sequence").type("log").setParameter(Parameters.ROUTING, deviceId).build();
                                             jestClient.execute(index);
                                             /*jestClient.executeAsync(index, new JestResultHandler<DocumentResult>() {
                                                 @Override
