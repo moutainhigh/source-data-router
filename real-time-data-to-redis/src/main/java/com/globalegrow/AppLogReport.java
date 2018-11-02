@@ -1,8 +1,5 @@
 package com.globalegrow;
 
-import java.lang.reflect.MalformedParameterizedTypeException;
-import java.util.Map;
-
 public class AppLogReport {
 
     private String planId = "_skip";
