@@ -58,6 +58,7 @@ public class UserActionController {
     }
 
     public UserActionResponseDto fallbackMethod(UserActionParameterDto userActionParameterDto) {
+        logger.warn("服务超时或繁忙");
         UserActionResponseDto actionResponseDto = new UserActionResponseDto();
         actionResponseDto.setMessage("服务降级");
         actionResponseDto.setSuccess(false);

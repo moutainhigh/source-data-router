@@ -4,12 +4,14 @@ spring:
 logging:
   #  config: classpath:logback-spring.xml
   path: logs
-  file: kylin-report.log
+  file: logs/kylin-report.log
   level:
     root: info
     org.springframework: ERROR
     sun.rmi: ERROR
     org.apache.http: ERROR
+  pattern:
+    file: [%d{yyyy-MM-dd HH:mm:ss.SSS}] [%thread] [%-5level] %logger{50} - %msg%n
 server:
   undertow:
     io-threads: 128
