@@ -1,18 +1,37 @@
 package com.globalegrow;
 
-//@Component
-public class KafkaAppLogCustomer {
+import com.globalegrow.util.NginxLogConvertUtil;
+import io.searchbox.client.JestClient;
+import io.searchbox.core.Index;
+import org.apache.commons.lang3.time.DateFormatUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.kafka.annotation.TopicPartition;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Component;
 
-    /*private LinkedBlockingDeque<QueenModel> linkedBlockingDeque = new LinkedBlockingDeque<>();
-    private LinkedBlockingDeque<QueenModel> linkedBlockingDeque1 = new LinkedBlockingDeque<>();
-    private LinkedBlockingDeque<QueenModel> linkedBlockingDeque2 = new LinkedBlockingDeque<>();
-    private LinkedBlockingDeque<QueenModel> linkedBlockingDeque3 = new LinkedBlockingDeque<>();
-    private LinkedBlockingDeque<QueenModel> linkedBlockingDeque4 = new LinkedBlockingDeque<>();
-    private LinkedBlockingDeque<QueenModel> linkedBlockingDeque5 = new LinkedBlockingDeque<>();
-    private LinkedBlockingDeque<QueenModel> linkedBlockingDeque6 = new LinkedBlockingDeque<>();
-    private LinkedBlockingDeque<QueenModel> linkedBlockingDeque7 = new LinkedBlockingDeque<>();
-    private LinkedBlockingDeque<QueenModel> linkedBlockingDeque8 = new LinkedBlockingDeque<>();
-    private LinkedBlockingDeque<QueenModel> linkedBlockingDeque9 = new LinkedBlockingDeque<>();
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.LinkedBlockingDeque;
+
+@Component
+public class AppDataToElasticsearch {
+
+    private LinkedBlockingDeque<Map> linkedBlockingDeque = new LinkedBlockingDeque<>();
+    private LinkedBlockingDeque<Map> linkedBlockingDeque1 = new LinkedBlockingDeque<>();
+    private LinkedBlockingDeque<Map> linkedBlockingDeque2 = new LinkedBlockingDeque<>();
+    private LinkedBlockingDeque<Map> linkedBlockingDeque3 = new LinkedBlockingDeque<>();
+    private LinkedBlockingDeque<Map> linkedBlockingDeque4 = new LinkedBlockingDeque<>();
+    private LinkedBlockingDeque<Map> linkedBlockingDeque5 = new LinkedBlockingDeque<>();
+    private LinkedBlockingDeque<Map> linkedBlockingDeque6 = new LinkedBlockingDeque<>();
+    private LinkedBlockingDeque<Map> linkedBlockingDeque7 = new LinkedBlockingDeque<>();
+    private LinkedBlockingDeque<Map> linkedBlockingDeque8 = new LinkedBlockingDeque<>();
+    private LinkedBlockingDeque<Map> linkedBlockingDeque9 = new LinkedBlockingDeque<>();
 
     private int customerThreadCounter = 0;
     private int customerThreadCounter1 = 0;
@@ -25,13 +44,16 @@ public class KafkaAppLogCustomer {
     private int customerThreadCounter8 = 0;
     private int customerThreadCounter9 = 0;
 
+    @Autowired
+    private JestClient jestClient;
+
     @Value("${enable.customer.statistics:false}")
     private Boolean enableCounter = false;
 
     @Value("${app.redis.readtime.prefix:dy_real_time_}")
     private String redisKeyPrefix;
 
-    @Value("${max-batch-size:10000}")
+    @Value("${max-batch-size:1000}")
     private Integer maxBatchSize;
 
     @Autowired
@@ -89,60 +111,21 @@ public class KafkaAppLogCustomer {
         this.sendDataToRedis(linkedBlockingDeque9, 9, System.currentTimeMillis());
     }
 
-    private RedissonClient redisson;
-
-    @Value("${redis.type}")
-    private String redisType;
-    @Value("${redis.master:none}")
-    private String master;
-    @Value("${redis.nodes}")
-    private String nodes;
-    @Value("${redis.password}")
-    private String redisPassword;
-   @PostConstruct
-   public void before() {
-       Config config = new Config();
-       if ("cluster".equals(redisType)) {
-           ClusterServersConfig clusterServersConfig = config.useClusterServers();
-           clusterServersConfig.addNodeAddress(nodes.split(","));
-           clusterServersConfig.setPassword(redisPassword);
-       } else if ("sentinel".equals(redisType)) {
-           SentinelServersConfig sentinelServersConfig = config.useSentinelServers();
-           sentinelServersConfig.setMasterName(master);
-           sentinelServersConfig.addSentinelAddress(nodes.split(","));
-           sentinelServersConfig.setPassword(redisPassword);
-       }
-
-       redisson = Redisson.create(config);
-   }
-
-    private void sendDataToRedis(LinkedBlockingDeque<QueenModel> linkedBlockingDeque, int thread, long startTime) {
+    private void sendDataToRedis(LinkedBlockingDeque<Map> linkedBlockingDeque, int thread, long startTime) {
         if (linkedBlockingDeque.size() > 0) {
-            List<QueenModel> list = new ArrayList<>();
+            List<Map> list = new ArrayList<>();
             logger.debug("max_size:{}", maxBatchSize);
             linkedBlockingDeque.drainTo(list, maxBatchSize);
             if (list.size() > 0) {
-                //list.stream()
-                *//*Map<String, List<QueenModel>> mapList =*//*
-                *//*list.stream().collect(Collectors.groupingBy(QueenModel::getKey)).entrySet().parallelStream().forEach(e -> {
-                    String redisKey = e.getKey();
-                    List<QueenModel> models = e.getValue();
-                    List<String> list1 = models.stream().map(model -> model.getValue()).collect(Collectors.toList());
-                    SpringRedisUtil.putSet(redisKey, list1.toArray(new String[list1.size()]));
-                });*//*
-
-                Map<String, List<QueenModel>> grouped = list.stream().collect(Collectors.groupingBy(QueenModel::getKey));
                 logger.debug("list_model:{}, {}", list, list.size());
-                RBatch batch = redisson.createBatch(BatchOptions.defaults());
-                grouped.entrySet().forEach(e -> {
-                    String redisKey = e.getKey();
-                    List<QueenModel> models = e.getValue();
-                    List<String> list1 = models.stream().map(model -> model.getValue()).collect(Collectors.toList());
-                    logger.debug("list_size: {}, key,: {}, value: {}", list1.size(), redisKey, list1);
-                    batch.getSet(redisKey).addAllAsync(list1);
+                list.parallelStream().forEach(m -> {
+                    Index index = new Index.Builder(m).index("bts-app-dopamine-" + DateFormatUtils.format((Long) m.get(NginxLogConvertUtil.TIMESTAMP_KEY), "yyyy-MM-dd")).type("log").build();
+                    try {
+                        jestClient.execute(index);
+                    } catch (IOException e) {
+                        logger.error("数据发送到 es 失败{}", m, e);
+                    }
                 });
-
-                batch.executeAsync();
                 if (enableCounter) {
                     logger.info("线程 {} 每秒发送到 redis 消息数：{}", thread, list.size());
                 }
@@ -152,7 +135,7 @@ public class KafkaAppLogCustomer {
 
     @KafkaListener(topicPartitions = {@TopicPartition(topic = "${log-source}", partitions = {"0"})})
     public void listen0(String logString) throws Exception {
-       long startTime = System.currentTimeMillis();
+        long startTime = System.currentTimeMillis();
         this.dataLocalBuffer.handleMsgAsync(logString, linkedBlockingDeque);
         if (this.enableCounter) {
             customerThreadCounter++;
@@ -252,10 +235,9 @@ public class KafkaAppLogCustomer {
 
     private void customerCounter(int thread, int counter, long startTime, long endTime) {
         if ((endTime - startTime) > 1000) {
-
             logger.debug("线程 {} 每秒消费消息数：{}", thread, counter);
             counter = 0;
         }
-    }*/
+    }
 
 }

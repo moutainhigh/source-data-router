@@ -28,16 +28,31 @@ public class DataLocalBuffer {
     protected static final Logger logger = LoggerFactory.getLogger(KafkaAppLogCustomer.class);
 
     @Async
-    public void handleMsgAsync(String logString, LinkedBlockingDeque<QueenModel> linkedBlockingDeque) throws Exception {
+    public void handleMsgAsync(String logString, LinkedBlockingDeque<Map> linkedBlockingDeque) throws Exception {
         this.logWriteToRedis(logString).stream().forEach(m -> linkedBlockingDeque.offer(m));
     }
 
-    public List<QueenModel> logWriteToRedis(String logString) throws Exception {
+    public List<Map> logWriteToRedis(String logString) throws Exception {
         if (logString.contains("/_app.gif?")) {
-            Map value = AppLogConvertUtil.getAppLogParameters(logString);
+            AppLogReport appLogReport = new AppLogReport();
+            appLogReport.setLogSource(logString);
+            Map value = null;
+            try {
+                value = AppLogConvertUtil.getAppLogParameters(logString);
+                appLogReport.setLogSourceMap(JacksonUtil.toJSon(value));
+            } catch (Exception e) {
+                appLogReport.setIsSuccessHandle(false);
+                logger.error("解析源数据出错", e);
+            }
             if (value != null) {
                 String eventName = String.valueOf(value.get("event_name"));
                 String eventValue = String.valueOf(value.get("event_value"));
+                String deviceId = String.valueOf(value.get("appsflyer_device_id"));
+                String userId = String.valueOf(value.get("customer_user_id"));
+                String platform = String.valueOf(value.get("platform"));
+                String appName = String.valueOf(value.get("app_name"));
+                appLogReport.setDeviceId(deviceId);
+
                 Map<String, Object> eventValueMap = null;
                 try {
                     if (eventValue.startsWith("{:")) {
@@ -45,47 +60,79 @@ public class DataLocalBuffer {
                     }
                     eventValueMap = JacksonUtil.readValue(eventValue, Map.class);
                 } catch (Exception e) {
+                    appLogReport.setIsSuccessHandleEvent(false);
                     logger.error("解析 json 数据出错: {}", eventValue, e);
                 }
                 if (StringUtils.isNotEmpty(eventName) && eventValueMap != null) {
-                    Long timestamp = (Long) value.get(NginxLogConvertUtil.TIMESTAMP_KEY);
-                    String date = DateFormatUtils.format(timestamp, "yyyy-MM-dd");
-                    if (DateFormatUtils.format(System.currentTimeMillis(), "yyyy-MM-dd").equals(date)) {
-                        String deviceId = String.valueOf(value.get("appsflyer_device_id"));
-                        String userId = String.valueOf(value.get("customer_user_id"));
-                        String platform = String.valueOf(value.get("platform"));
-                        String appName = String.valueOf(value.get("app_name"));
 
-                        try {
-                            String valueNeeded = AppEventEnums.valueOf(eventName).getEventValueFromEventValue(eventValueMap);
-                            logger.debug("value_ineeded: {}", valueNeeded);
-                            if (StringUtils.isNotEmpty(valueNeeded) && eventValueMap != null && eventValueMap.size() > 0) {
-                                List<QueenModel> list = new ArrayList<>();
-                                for (String s : valueNeeded.split(",")) {
-                                    Map<String, Object> eventDataRow = new HashMap<>();
-                                    eventDataRow.put("event_name", eventName);
-                                    eventDataRow.put("event_value", s);
-                                    eventDataRow.put("user_id", userId);
-                                    eventDataRow.put("device_id", deviceId);
-                                    eventDataRow.put("platform", platform);
-                                    eventDataRow.put("site", SiteUtil.getAppSite(appName));
-                                    eventDataRow.put(NginxLogConvertUtil.TIMESTAMP_KEY, timestamp);
-                                    String key = redisKeyPrefix + deviceId + "_" + date;
-                                    QueenModel queenModel = new QueenModel(key, JacksonUtil.toJSon(eventDataRow));
-                                    list.add(queenModel);
-                                    //linkedBlockingDeque.put(queenModel);
-                                }
-                                return list;
+                    String af_inner_mediasource = String.valueOf(eventValueMap.get("af_inner_mediasource"));
+                    if ("recommend_homepage".equals(af_inner_mediasource)) {
+                        appLogReport.setRecommendType(af_inner_mediasource);
+                        Map<String, String> bts = appLogBtsInfo(eventValueMap);
+                        if (bts != null) {
+                            appLogReport.setPlanId(bts.get("planid"));
+                            appLogReport.setVersionId(bts.get("versionid"));
+                            appLogReport.setBucketId(bts.get("bucketid"));
+                        }
+                        // 曝光数./
+                        if ("af_impression".equals(eventName)) {
+
+                            String contentIds = String.valueOf(eventValueMap.get("af_content_id"));
+                            if (StringUtils.isNotEmpty(contentIds) && !"null".equals(contentIds)) {
+                                appLogReport.setExpCount(contentIds.split(",").length);
                             }
-                        } catch (IllegalArgumentException e) {
-                            //logger.error("event {} not support yet!", eventName, e);
+
+                        }
+
+                        if ("af_view_product".equals(eventName)) {
+                            if ("0".equals(String.valueOf(eventValueMap.get("af_changed_size_or_color")))) {
+                                appLogReport.setClickCount(1);
+                            }
+                        }
+
+                        if ("af_add_to_bag".equals(eventName)) {
+                            String goodNum = String.valueOf(eventValueMap.get("af_quantity"));
+                            if (StringUtils.isNotEmpty(goodNum) && !"null".equals(goodNum)) {
+                                appLogReport.setAddCartCount(Integer.valueOf(goodNum));
+                            }
+                        }
+
+                        if ("af_add_to_wishlist".equals(eventName)) {
+                            appLogReport.setCollectCount(1);
                         }
                     }
 
                 }
             }
+            List<Map> maps = new ArrayList<>();
+            Map map = DyBeanUtils.objToMap(appLogReport);
+            if (value == null) {
+                map.put(NginxLogConvertUtil.TIMESTAMP_KEY, System.currentTimeMillis());
+            }else {
+                map.put(NginxLogConvertUtil.TIMESTAMP_KEY, (Long) value.get(NginxLogConvertUtil.TIMESTAMP_KEY));
+            }
+            maps.add(map);
+            return maps;
         }
         return Collections.emptyList();
+    }
+
+
+    protected static Map<String, String> appLogBtsInfo(Map<String, Object> eventValue) {
+        //String eventValue = String.valueOf(logMap.get("event_value"));
+        String planId = String.valueOf(eventValue.get("af_plan_id"));
+        String versionId = String.valueOf(eventValue.get("af_version_id"));
+        String bucketId = String.valueOf(eventValue.get("af_bucket_id"));
+        if (StringUtils.isNotEmpty(planId) && StringUtils.isNotEmpty(versionId) && StringUtils.isNotEmpty(bucketId)
+                && !"null".equals(planId) && !"null".equals(versionId) && !"null".equals(bucketId)) {
+            Map<String, String> bts = new HashMap<>();
+            bts.put("planid", planId);
+            bts.put("versionid", versionId);
+            bts.put("bucketid", bucketId);
+            return bts;
+        }
+        //logger.error("bts 实验 id 为空");
+        return null;
     }
 
 }
