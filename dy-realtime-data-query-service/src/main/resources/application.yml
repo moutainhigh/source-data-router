@@ -4,7 +4,7 @@ spring:
 logging:
   #  config: classpath:logback-spring.xml
   path: logs
-  file: logs/kylin-report.log
+  file: logs/dy-realtime-data-query-service.log
   level:
     root: info
     org.springframework: ERROR
