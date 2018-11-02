@@ -19,10 +19,17 @@ public class GbRecommendReportData implements ReportDataLocalBuffer{
 
     @Override
     public List<Map> logWriteToRedis(String logString) throws Exception {
-        if (logString.contains("/_ubc.gif?")) {
+        //logger.debug("gb 报表：{}, {}", logString.contains("/_ubc.gif?"), logString);
+        if (logString != null && logString.contains("/_ubc.gif?")) {
             AppLogReport appLogReport = new AppLogReport();
             appLogReport.setLogSource(logString);
-            Map<String, Object> logMap = NginxLogConvertUtil.getNginxLogParameters(logString);
+            Map<String, Object> logMap = null;
+            try {
+                logMap = NginxLogConvertUtil.getNginxLogParameters(logString);
+            } catch (Exception e) {
+                logger.error("事件解析出错, :{}", logString, e);
+                appLogReport.setIsSuccessHandle(false);
+            }
             appLogReport.setLogSourceMap(JacksonUtil.toJSon(logMap));
 
             if (logMap != null) {
@@ -30,9 +37,9 @@ public class GbRecommendReportData implements ReportDataLocalBuffer{
                 Map<String, String> bts = this.btsInfo(logMap);
                 if (bts != null) {
 
-                    appLogReport.setPlanId(bts.get("planid"));
-                    appLogReport.setVersionId(bts.get("versionid"));
-                    appLogReport.setBucketId(bts.get("bucketid"));
+                    appLogReport.setPlanId(String.valueOf(bts.get("planid")));
+                    appLogReport.setVersionId(String.valueOf(bts.get("versionid")));
+                    appLogReport.setBucketId(String.valueOf(bts.get("bucketid")));
 
                     String glbX = String.valueOf(logMap.get("glb_x"));
                     String glbOd = String.valueOf(logMap.get("glb_od"));
@@ -49,6 +56,7 @@ public class GbRecommendReportData implements ReportDataLocalBuffer{
                     boolean isGoodDetail = "c".equals(glbB);
 
                     if (isGoodDetail) {
+                        logger.debug("good_detail_event");
                         // 商详页 pv 数
                         boolean isExposureEvent = "ie".equals(glbT);
                         boolean isClickEvent = "ic".endsWith(glbT);
@@ -115,9 +123,6 @@ public class GbRecommendReportData implements ReportDataLocalBuffer{
                     }
                 }
 
-
-
-
             }else {
                 appLogReport.setIsSuccessHandle(false);
             }
@@ -144,16 +149,16 @@ public class GbRecommendReportData implements ReportDataLocalBuffer{
             if (list.size() > 0) {
                 Map<String, String> bts = list.get(0);
                 Map<String, String> fieldInfo = new HashMap<>();
-                fieldInfo.put("planid", bts.get("planid"));
-                fieldInfo.put("versionid", bts.get("versionid"));
-                fieldInfo.put("bucketid", bts.get("bucketid"));
-                fieldInfo.put("policy", bts.get("policy"));
-                fieldInfo.put("plancode", bts.get("plancode"));
+                fieldInfo.put("planid", String.valueOf(bts.get("planid")));
+                fieldInfo.put("versionid", String.valueOf(bts.get("versionid")));
+                fieldInfo.put("bucketid", String.valueOf(bts.get("bucketid")));
+                fieldInfo.put("policy", String.valueOf(bts.get("policy")));
+                fieldInfo.put("plancode", String.valueOf(bts.get("plancode")));
                 fieldInfo.put("mdlc", bts.get("mdlc"));
                 return fieldInfo;
             }
         }
-        return btsInfo(logMap);
+        return btsInfoDefault(logMap);
     }
 
     public Map<String, String> btsInfoDefault(Map<String, Object> logMap) {

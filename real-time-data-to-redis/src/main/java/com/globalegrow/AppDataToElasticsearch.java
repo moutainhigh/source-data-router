@@ -53,8 +53,7 @@ public class AppDataToElasticsearch {
     @Value("${app.redis.readtime.prefix:dy_real_time_}")
     private String redisKeyPrefix;
 
-    @Value("${max-batch-size:1000}")
-    private Integer maxBatchSize;
+    private Integer maxBatchSize = 10000;
 
     @Autowired
     private DataLocalBuffer dataLocalBuffer;

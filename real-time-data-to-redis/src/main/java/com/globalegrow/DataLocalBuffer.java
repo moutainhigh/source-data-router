@@ -16,7 +16,7 @@ import java.util.*;
 import java.util.concurrent.LinkedBlockingDeque;
 
 @Component
-@EnableAsync
+//@EnableAsync
 public class DataLocalBuffer {
 
     @Value("${app.redis.readtime.prefix:dy_real_time_}")
@@ -27,7 +27,7 @@ public class DataLocalBuffer {
 
     protected static final Logger logger = LoggerFactory.getLogger(KafkaAppLogCustomer.class);
 
-    @Async
+    //@Async
     public void handleMsgAsync(String logString, LinkedBlockingDeque<Map> linkedBlockingDeque) throws Exception {
         this.logWriteToRedis(logString).stream().forEach(m -> linkedBlockingDeque.offer(m));
     }
