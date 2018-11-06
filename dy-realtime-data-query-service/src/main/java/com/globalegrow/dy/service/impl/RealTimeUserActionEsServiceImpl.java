@@ -127,7 +127,7 @@ public class RealTimeUserActionEsServiceImpl implements RealTimeUserActionServic
             this.logger.debug("elasticsearch 搜索条件: {}", searchSourceBuilder.toString());
             builder.addIndex(this.indexAliases);
             Search search = builder
-                    .addType(indexType)
+                    .addType(indexType).setParameter(Parameters.ROUTING, userActionParameterDto.getCookieId())
                     .build();
 
             try {
