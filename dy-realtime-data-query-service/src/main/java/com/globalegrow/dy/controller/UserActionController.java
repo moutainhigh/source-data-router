@@ -47,9 +47,9 @@ public class UserActionController {
             @HystrixProperty(name = "execution.isolation.strategy",value = "SEMAPHORE"),
             @HystrixProperty(name = "fallback.isolation.semaphore.maxConcurrentRequests",value = "5000"),
             @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds",value = "4000")})*/
-    @HystrixCommand(fallbackMethod = "fallbackMethod",commandProperties = {
+    /*@HystrixCommand(fallbackMethod = "fallbackMethod",commandProperties = {
             @HystrixProperty(name = "execution.isolation.strategy",value = "THREAD"),
-            @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds",value = "3000")})
+            @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds",value = "3000")})*/
     public UserActionResponseDto userActionInfo(@Validated @RequestBody UserActionParameterDto parameterDto) throws IOException, ParseException {
         long start = System.currentTimeMillis();
         UserActionResponseDto responseDto = this.realTimeUserActionEsServiceImpl.userActionData(parameterDto);
@@ -60,7 +60,7 @@ public class UserActionController {
     public UserActionResponseDto fallbackMethod(UserActionParameterDto userActionParameterDto) {
         logger.warn("服务超时或繁忙");
         UserActionResponseDto actionResponseDto = new UserActionResponseDto();
-        actionResponseDto.setMessage("服务降级");
+        actionResponseDto.setMessage("服务超时或繁忙");
         actionResponseDto.setSuccess(false);
         return actionResponseDto;
     }
