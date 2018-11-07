@@ -93,26 +93,26 @@ public class RealTimeUserActionEsServiceImpl implements RealTimeUserActionServic
             SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
             // 查询单个用户行为数据
             QueryBuilder qb = QueryBuilders.termQuery("device_id.keyword", userActionParameterDto.getCookieId());
-            queryBuilder.must(qb);
+            queryBuilder.filter(qb);
 
             // 时间限制
             QueryBuilder qbTime = QueryBuilders.rangeQuery("timestamp").from(userActionParameterDto.getStartDate())
                     .to(userActionParameterDto.getEndDate());
-            queryBuilder.must(qbTime);
+            queryBuilder.filter(qbTime);
 
             // 事件类型过滤
             QueryBuilder qbevent = QueryBuilders.termQuery("event_name.keyword", eventName);
-            queryBuilder.must(qbevent);
+            queryBuilder.filter(qbevent);
 
             // 站点条件过滤
             if (userActionParameterDto.getSite() != null && userActionParameterDto.getSite().size() > 0) {
                 QueryBuilder qbs = QueryBuilders.termsQuery("site.keyword", userActionParameterDto.getSite());
-                queryBuilder.must(qbs);
+                queryBuilder.filter(qbs);
             }
             // 终端条件过滤
             if (userActionParameterDto.getPlatform() != null && userActionParameterDto.getPlatform().size() > 0) {
                 QueryBuilder qbd = QueryBuilders.termsQuery("platform.keyword", userActionParameterDto.getPlatform());
-                queryBuilder.must(qbd);
+                queryBuilder.filter(qbd);
             }
 
             SortBuilder sortBuilder = new FieldSortBuilder("timestamp");
@@ -127,7 +127,7 @@ public class RealTimeUserActionEsServiceImpl implements RealTimeUserActionServic
             this.logger.debug("elasticsearch 搜索条件: {}", searchSourceBuilder.toString());
             builder.addIndex(this.indexAliases);
             Search search = builder
-                    .addType(indexType).setParameter(Parameters.ROUTING, userActionParameterDto.getCookieId())
+                    .addType(indexType)//.setParameter(Parameters.ROUTING, userActionParameterDto.getCookieId())
                     .build();
 
             try {
