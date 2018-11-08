@@ -94,7 +94,7 @@ public class RealTimeUserActionEsServiceImpl implements RealTimeUserActionServic
             BoolQueryBuilder queryBuilder = QueryBuilders.boolQuery();
             SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
             // 查询单个用户行为数据
-            QueryBuilder qb = QueryBuilders.termQuery("device_id.keyword", userActionParameterDto.getCookieId());
+            QueryBuilder qb = QueryBuilders.termQuery("device_id", userActionParameterDto.getCookieId());
             queryBuilder.filter(qb);
 
             // 时间限制
@@ -105,17 +105,17 @@ public class RealTimeUserActionEsServiceImpl implements RealTimeUserActionServic
             }
 
             // 事件类型过滤
-            QueryBuilder qbevent = QueryBuilders.termQuery("event_name.keyword", eventName);
+            QueryBuilder qbevent = QueryBuilders.termQuery("event_name", eventName);
             queryBuilder.filter(qbevent);
 
             // 站点条件过滤
             if (userActionParameterDto.getSite() != null && userActionParameterDto.getSite().size() > 0) {
-                QueryBuilder qbs = QueryBuilders.termsQuery("site.keyword", userActionParameterDto.getSite());
+                QueryBuilder qbs = QueryBuilders.termsQuery("site", userActionParameterDto.getSite());
                 queryBuilder.filter(qbs);
             }
             // 终端条件过滤
             if (userActionParameterDto.getPlatform() != null && userActionParameterDto.getPlatform().size() > 0) {
-                QueryBuilder qbd = QueryBuilders.termsQuery("platform.keyword", userActionParameterDto.getPlatform());
+                QueryBuilder qbd = QueryBuilders.termsQuery("platform", userActionParameterDto.getPlatform());
                 queryBuilder.filter(qbd);
             }
 
