@@ -13,6 +13,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.LineIterator;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.StringEscapeUtils;
+import org.elasticsearch.action.bulk.BulkRequest;
 import org.elasticsearch.client.transport.TransportClient;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.transport.client.PreBuiltTransportClient;
@@ -113,6 +114,7 @@ public class HistoryDataInstall {
                                             eventDataRow.put("platform", platform);
                                             eventDataRow.put("site", site);
                                             eventDataRow.put(NginxLogConvertUtil.TIMESTAMP_KEY, timestamp);
+                                            BulkRequest bulkRequest = new BulkRequest();
                                             //out.collect(eventDataRow);
                                             Index index = new Index.Builder(eventDataRow).index("dy-realtime-user-event-sequence").type("log").setParameter(Parameters.ROUTING, deviceId).build();
                                             jestClient.execute(index);

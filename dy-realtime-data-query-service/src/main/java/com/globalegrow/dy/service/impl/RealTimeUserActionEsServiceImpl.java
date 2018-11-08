@@ -15,6 +15,7 @@ import io.searchbox.params.Parameters;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.elasticsearch.index.query.BoolQueryBuilder;
+import org.elasticsearch.index.query.FilteredQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
@@ -89,30 +90,33 @@ public class RealTimeUserActionEsServiceImpl implements RealTimeUserActionServic
             JestResult result = null;
 
             this.logger.debug("第二次查询");
+
             BoolQueryBuilder queryBuilder = QueryBuilders.boolQuery();
             SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
             // 查询单个用户行为数据
             QueryBuilder qb = QueryBuilders.termQuery("device_id.keyword", userActionParameterDto.getCookieId());
-            queryBuilder.must(qb);
+            queryBuilder.filter(qb);
 
             // 时间限制
-            QueryBuilder qbTime = QueryBuilders.rangeQuery("timestamp").from(userActionParameterDto.getStartDate())
-                    .to(userActionParameterDto.getEndDate());
-            queryBuilder.must(qbTime);
+            if (userActionParameterDto.getStartDate() != null && userActionParameterDto.getEndDate() != null) {
+                QueryBuilder qbTime = QueryBuilders.rangeQuery("timestamp").gte(userActionParameterDto.getStartDate())
+                        .lte(userActionParameterDto.getEndDate()).includeLower(false).includeUpper(false).boost(2.0F);
+                queryBuilder.filter(qbTime);
+            }
 
             // 事件类型过滤
             QueryBuilder qbevent = QueryBuilders.termQuery("event_name.keyword", eventName);
-            queryBuilder.must(qbevent);
+            queryBuilder.filter(qbevent);
 
             // 站点条件过滤
             if (userActionParameterDto.getSite() != null && userActionParameterDto.getSite().size() > 0) {
                 QueryBuilder qbs = QueryBuilders.termsQuery("site.keyword", userActionParameterDto.getSite());
-                queryBuilder.must(qbs);
+                queryBuilder.filter(qbs);
             }
             // 终端条件过滤
             if (userActionParameterDto.getPlatform() != null && userActionParameterDto.getPlatform().size() > 0) {
                 QueryBuilder qbd = QueryBuilders.termsQuery("platform.keyword", userActionParameterDto.getPlatform());
-                queryBuilder.must(qbd);
+                queryBuilder.filter(qbd);
             }
 
             SortBuilder sortBuilder = new FieldSortBuilder("timestamp");
@@ -127,7 +131,7 @@ public class RealTimeUserActionEsServiceImpl implements RealTimeUserActionServic
             this.logger.debug("elasticsearch 搜索条件: {}", searchSourceBuilder.toString());
             builder.addIndex(this.indexAliases);
             Search search = builder
-                    .addType(indexType)//.setParameter(Parameters.ROUTING, userActionParameterDto.getCookieId())
+                    .addType(indexType).setParameter(Parameters.ROUTING, userActionParameterDto.getCookieId())
                     .build();
 
             try {

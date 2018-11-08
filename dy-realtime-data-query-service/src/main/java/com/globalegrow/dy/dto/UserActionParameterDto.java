@@ -15,10 +15,10 @@ public class UserActionParameterDto {
 
     private List<String> type;
 
-    @NotNull
+    //@NotNull
     private Long startDate;
 
-    @NotNull
+    //@NotNull
     private Long endDate;
 
     private List<String> site = new ArrayList<>();
