@@ -45,7 +45,7 @@ public class HistoryDataInstall {
     private final ExecutorService executor = Executors.newCachedThreadPool();
 
     @Autowired
-    @Qualifier("myJestClient")
+    //@Qualifier("myJestClient")
     private JestClient jestClient;
 
     @GetMapping

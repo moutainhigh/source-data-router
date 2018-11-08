@@ -95,7 +95,7 @@ public class RealTimeUserActionEsServiceImpl implements RealTimeUserActionServic
             SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
             // 查询单个用户行为数据
             QueryBuilder qb = QueryBuilders.termQuery("device_id", userActionParameterDto.getCookieId());
-            queryBuilder.filter(qb);
+            queryBuilder.must(qb);
 
             // 时间限制
             if (userActionParameterDto.getStartDate() != null && userActionParameterDto.getEndDate() != null) {
@@ -106,17 +106,17 @@ public class RealTimeUserActionEsServiceImpl implements RealTimeUserActionServic
 
             // 事件类型过滤
             QueryBuilder qbevent = QueryBuilders.termQuery("event_name", eventName);
-            queryBuilder.filter(qbevent);
+            queryBuilder.must(qbevent);
 
             // 站点条件过滤
             if (userActionParameterDto.getSite() != null && userActionParameterDto.getSite().size() > 0) {
                 QueryBuilder qbs = QueryBuilders.termsQuery("site", userActionParameterDto.getSite());
-                queryBuilder.filter(qbs);
+                queryBuilder.must(qbs);
             }
             // 终端条件过滤
             if (userActionParameterDto.getPlatform() != null && userActionParameterDto.getPlatform().size() > 0) {
                 QueryBuilder qbd = QueryBuilders.termsQuery("platform", userActionParameterDto.getPlatform());
-                queryBuilder.filter(qbd);
+                queryBuilder.must(qbd);
             }
 
             SortBuilder sortBuilder = new FieldSortBuilder("timestamp");
