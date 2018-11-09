@@ -1,6 +1,6 @@
 spring:
   profiles:
-    active: prod
+    active: prod-event
 logging:
   #  config: classpath:logback-spring.xml
   path: logs
@@ -77,3 +77,24 @@ redis:
   type: cluster
   nodes: redis://172.31.47.78:6382,redis://172.31.47.222:6380,redis://172.31.47.222:6381,redis://172.31.44.253:6379,redis://172.31.44.253:6380,redis://172.31.47.78:6383
   password: 6e1KWyC29w
+
+---
+spring:
+  profiles: prod-event
+  elasticsearch:
+    jest:
+      uris[0]: http://172.31.51.179:9200
+      uris[1]: http://172.31.51.59:9200
+      uris[2]: http://172.31.51.250:9200
+      read-timeout: 20000
+      connection-timeout: 20000
+      username: esearch-ai-aws
+      password: a@ss&2@1aaAQ
+server:
+  port: 38193
+
+app:
+  es:
+    index-prefix: dy-zaapp-event-
+    index-aliases: search-app-logs
+    index-type: search-event-logs
