@@ -97,4 +97,4 @@ app:
   es:
     index-prefix: dy-zaapp-event-
     index-aliases: search-app-logs
-    index-type: search-event-logs
+    index-type: log
