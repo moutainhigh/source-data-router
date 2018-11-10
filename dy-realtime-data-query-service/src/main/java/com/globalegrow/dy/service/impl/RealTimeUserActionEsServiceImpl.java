@@ -41,7 +41,7 @@ public class RealTimeUserActionEsServiceImpl implements RealTimeUserActionServic
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
-    //@Qualifier("myJestClient")
+    @Qualifier("myJestClient")
     private JestClient jestClient;
     /**
      * 索引前缀，当天数据只查询当天索引 dy-app-data-temp-
