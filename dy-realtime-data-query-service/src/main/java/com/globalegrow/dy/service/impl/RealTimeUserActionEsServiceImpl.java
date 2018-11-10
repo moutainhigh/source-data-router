@@ -132,7 +132,7 @@ public class RealTimeUserActionEsServiceImpl implements RealTimeUserActionServic
             //builder.addIndex(this.indexPrefix + eventName);
             builder.addIndex(this.indexAliases);
             Search search = builder
-                    .addType(indexType).setParameter(Parameters.ROUTING, userActionParameterDto.getCookieId())
+                    .addType(indexType)//.setParameter(Parameters.ROUTING, userActionParameterDto.getCookieId())
                     .build();
 
             try {
