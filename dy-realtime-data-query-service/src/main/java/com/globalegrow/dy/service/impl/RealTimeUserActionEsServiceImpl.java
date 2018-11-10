@@ -130,9 +130,10 @@ public class RealTimeUserActionEsServiceImpl implements RealTimeUserActionServic
             Search.Builder builder = new Search.Builder(searchSourceBuilder.toString());
             this.logger.debug("elasticsearch 搜索条件: {}", searchSourceBuilder.toString());
             //builder.addIndex(this.indexPrefix + eventName);
-            builder.addIndex(this.indexAliases);
+            //builder.addIndex(this.indexAliases);
+            builder.addIndex(this.indexPrefix);
             Search search = builder
-                    .addType(indexType)//.setParameter(Parameters.ROUTING, userActionParameterDto.getCookieId())
+                    .addType(eventName).setParameter(Parameters.ROUTING, userActionParameterDto.getCookieId() + "_" + eventName)
                     .build();
 
             try {

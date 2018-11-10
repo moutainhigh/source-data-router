@@ -1,11 +1,18 @@
 import org.junit.Test;
 
+import java.util.List;
 import java.util.concurrent.CompletionService;
 import java.util.concurrent.ExecutorCompletionService;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class TaskTest {
+
+
+    @Test
+    public void listTest() {
+        //List
+    }
 
     private final ExecutorService executor = Executors.newCachedThreadPool();
 
