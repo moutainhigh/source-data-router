@@ -1,0 +1,79 @@
+spring:
+  profiles:
+    active: prod
+logging:
+  #  config: classpath:logback-spring.xml
+  path: logs
+  file: logs/dy-realtime-data-query-service.log
+  level:
+    root: info
+    org.springframework: ERROR
+    sun.rmi: ERROR
+    org.apache.http: ERROR
+  pattern:
+    file: '[%d{yyyy-MM-dd HH:mm:ss.SSS}] [%thread] [%-5level] %logger{50} - %msg%n'
+server:
+  undertow:
+    io-threads: 128
+    worker-threads: 1024
+  compression:
+    enabled: false
+---
+spring:
+  profiles: dev
+  elasticsearch:
+    jest:
+      uris[0]: http://172.31.51.179:9200
+      uris[1]: http://172.31.51.59:9200
+      uris[2]: http://172.31.51.250:9200
+      read-timeout: 5000
+      connection-timeout: 5000
+      username: esearch-ai-aws
+      password: a@ss&2@1aaAQ
+
+server:
+  port: 38193
+
+app:
+  es:
+    index-prefix: dy-test-sequence
+    index-aliases: search-logs-test
+    index-type: log
+  redis:
+    readtime:
+      prefix: dy_rt_p_
+
+redis:
+  type: sentinel
+  master: sentinel-172.31.26.237-6379
+  nodes: redis://172.31.26.152:6380,redis://172.31.26.237:6380,redis://172.31.26.162:6383
+  password: 6e1KWyC29w
+
+---
+spring:
+  profiles: prod
+  elasticsearch:
+    jest:
+      uris[0]: http://172.31.51.179:9200
+      uris[1]: http://172.31.51.59:9200
+      uris[2]: http://172.31.51.250:9200
+      read-timeout: 20000
+      connection-timeout: 20000
+      username: esearch-ai-aws
+      password: a@ss&2@1aaAQ
+server:
+  port: 38193
+
+app:
+  es:
+    index-prefix: dy-realtime-user-event-sequence
+    index-aliases: search-app-logs
+    index-type: log
+  redis:
+    readtime:
+      prefix: dy_rt_p_
+
+redis:
+  type: cluster
+  nodes: redis://172.31.47.78:6382,redis://172.31.47.222:6380,redis://172.31.47.222:6381,redis://172.31.44.253:6379,redis://172.31.44.253:6380,redis://172.31.47.78:6383
+  password: 6e1KWyC29w

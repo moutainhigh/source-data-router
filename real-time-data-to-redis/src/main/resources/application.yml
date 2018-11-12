@@ -11,10 +11,13 @@ spring:
   profiles: prod
   elasticsearch:
     jest:
-      uris[0]: http://172.31.19.189:9200
-      uris[1]: http://172.31.47.22:9200
+      uris[0]: http://172.31.51.179:9200
+      uris[1]: http://172.31.51.59:9200
+      uris[2]: http://172.31.51.250:9200
       read-timeout: 5000
       connection-timeout: 5000
+      username: esearch-ai-aws
+      password: a@ss&2@1aaAQ
   kafka:
     consumer:
       auto-offset-reset: latest
@@ -22,6 +25,8 @@ spring:
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       group-id: dy-realtime-app-elastic
       max-poll-records: 10000
+      enable-auto-commit: true
+      auto-commit-interval: 1000
     producer:
       client-id: dy-realtime-app
     bootstrap-servers: 172.31.35.194:9092,172.31.50.250:9092,172.31.63.112:9092

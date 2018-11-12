@@ -21,7 +21,7 @@ import org.springframework.util.StringUtils;
 
 import java.util.List;
 
-//@Configuration
+@Configuration
 @ConditionalOnClass(JestClient.class)
 @EnableConfigurationProperties(JestProperties.class)
 @AutoConfigureAfter(GsonAutoConfiguration.class)

@@ -1,9 +1,15 @@
 package com.globalegrow.util;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.net.URLDecoder;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import static com.globalegrow.util.NginxLogConvertUtil.getTimestamp;
+import static com.globalegrow.util.NginxLogConvertUtil.getUrlParams;
+
 
 public class AppLogConvertUtil {
 
@@ -32,12 +38,26 @@ public class AppLogConvertUtil {
             while (m.find()) {
                 requestStr = m.group();
             }
-            // String decodedUrl = URLDecoder.decode(requestStr, "utf-8");
-            Map<String, Object> map = NginxLogConvertUtil.getUrlParams(requestStr);
-            if (map.size() > 0) {
-                map.put(TIMESTAMP_KEY, NginxLogConvertUtil.getTimestamp(log));
-                return map;
+            Map<String, Object> result = getStringObjectMap(log, requestStr, TIMESTAMP_KEY);
+            if (result != null) return result;
+
+        }
+        return null;
+    }
+
+    static Map<String, Object> getStringObjectMap(String log, String requestStr, String timestampKey) {
+        if (StringUtils.isNotEmpty(requestStr)) {
+            if (requestStr.endsWith(" HTTP")) {
+                requestStr = requestStr.substring(0, requestStr.lastIndexOf(" HTTP"));
             }
+
+            Map<String, Object> result = getUrlParams(requestStr.replaceAll("%20&%20", " %26 "));
+            if (result.size() > 0) {
+                result.put(timestampKey, getTimestamp(log));
+                return result;
+            }
+
+            return result;
         }
         return null;
     }

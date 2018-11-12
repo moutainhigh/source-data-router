@@ -2,24 +2,32 @@ package com.globalegrow;
 
 import com.globalegrow.util.NginxLogConvertUtil;
 import io.searchbox.client.JestClient;
-import io.searchbox.core.Index;
 import org.apache.commons.lang3.time.DateFormatUtils;
+import org.elasticsearch.action.bulk.BulkRequest;
+import org.elasticsearch.action.index.IndexRequest;
+import org.elasticsearch.client.transport.TransportClient;
+import org.elasticsearch.common.settings.Settings;
+import org.elasticsearch.common.transport.TransportAddress;
+import org.elasticsearch.transport.client.PreBuiltTransportClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.annotation.TopicPartition;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import java.io.IOException;
+import javax.annotation.PostConstruct;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.LinkedBlockingDeque;
 
-@Component
+//@Component
 public class AppDataToElasticsearch {
 
     private LinkedBlockingDeque<Map> linkedBlockingDeque = new LinkedBlockingDeque<>();
@@ -33,18 +41,8 @@ public class AppDataToElasticsearch {
     private LinkedBlockingDeque<Map> linkedBlockingDeque8 = new LinkedBlockingDeque<>();
     private LinkedBlockingDeque<Map> linkedBlockingDeque9 = new LinkedBlockingDeque<>();
 
-    private int customerThreadCounter = 0;
-    private int customerThreadCounter1 = 0;
-    private int customerThreadCounter2 = 0;
-    private int customerThreadCounter3 = 0;
-    private int customerThreadCounter4 = 0;
-    private int customerThreadCounter5 = 0;
-    private int customerThreadCounter6 = 0;
-    private int customerThreadCounter7 = 0;
-    private int customerThreadCounter8 = 0;
-    private int customerThreadCounter9 = 0;
-
     @Autowired
+    @Qualifier("myJestClient")
     private JestClient jestClient;
 
     @Value("${enable.customer.statistics:false}")
@@ -53,12 +51,22 @@ public class AppDataToElasticsearch {
     @Value("${app.redis.readtime.prefix:dy_real_time_}")
     private String redisKeyPrefix;
 
-    private Integer maxBatchSize = 10000;
+    private Integer maxBatchSize = 1000;
 
     @Autowired
     private DataLocalBuffer dataLocalBuffer;
 
-    protected static final Logger logger = LoggerFactory.getLogger(KafkaAppLogCustomer.class);
+    private TransportClient client;
+
+    @PostConstruct
+    private void before() throws UnknownHostException {
+        Settings settings = Settings.builder().put("cluster.name","test-wang").build();
+        client = new PreBuiltTransportClient(settings)
+                .addTransportAddress(new TransportAddress(InetAddress.getByName("172.31.19.189"), 9300))
+                .addTransportAddress(new TransportAddress(InetAddress.getByName("172.31.47.22"), 9300));
+    }
+
+    protected static final Logger logger = LoggerFactory.getLogger(AppDataToElasticsearch.class);
 
     @Scheduled(fixedDelay = 1000)
     public void sendToRedis() {
@@ -117,118 +125,132 @@ public class AppDataToElasticsearch {
             linkedBlockingDeque.drainTo(list, maxBatchSize);
             if (list.size() > 0) {
                 logger.debug("list_model:{}, {}", list, list.size());
+                BulkRequest request = new BulkRequest();
+
+
+
                 list.parallelStream().forEach(m -> {
-                    Index index = new Index.Builder(m).index("bts-app-dopamine-" + DateFormatUtils.format((Long) m.get(NginxLogConvertUtil.TIMESTAMP_KEY), "yyyy-MM-dd")).type("log").build();
+
+                    request.add(new IndexRequest("bts-app-dopamine-" + DateFormatUtils.format((Long) m.get(NginxLogConvertUtil.TIMESTAMP_KEY), "yyyy-MM-dd"), "log")
+                            .source(m));
+                    /*Index index = new Index.Builder(m).index("bts-app-dopamine-" + DateFormatUtils.format((Long) m.get(NginxLogConvertUtil.TIMESTAMP_KEY), "yyyy-MM-dd")).type("log").build();
+
                     try {
                         jestClient.execute(index);
                     } catch (IOException e) {
-                        logger.error("数据发送到 es 失败{}", m, e);
-                    }
+                        e.printStackTrace();
+                    }*/
+
                 });
-                if (enableCounter) {
-                    logger.info("线程 {} 每秒发送到 redis 消息数：{}", thread, list.size());
-                }
+
+                client.bulk(request);
             }
         }
     }
 
-    @KafkaListener(topicPartitions = {@TopicPartition(topic = "${log-source}", partitions = {"0"})})
-    public void listen0(String logString) throws Exception {
-        long startTime = System.currentTimeMillis();
-        this.dataLocalBuffer.handleMsgAsync(logString, linkedBlockingDeque);
-        if (this.enableCounter) {
-            customerThreadCounter++;
-            this.customerCounter(0, customerThreadCounter, startTime, System.currentTimeMillis());
+    @KafkaListener(id = "app0",topicPartitions = {@TopicPartition(topic = "${log-source}", partitions = {"0"})}, groupId = "app-burry-data")
+    public void listen0(String logString)  {
+        try {
+
+            this.dataLocalBuffer.handleMsgAsync(logString, linkedBlockingDeque);
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
-    @KafkaListener(topicPartitions = {@TopicPartition(topic = "${log-source}", partitions = {"1"})})
-    public void listen1(String logString) throws Exception {
-        long startTime = System.currentTimeMillis();
-        this.dataLocalBuffer.handleMsgAsync(logString, linkedBlockingDeque1);
-        if (this.enableCounter) {
-            customerThreadCounter1++;
-            this.customerCounter(1, customerThreadCounter1, startTime, System.currentTimeMillis());
+    @KafkaListener(id = "app1",topicPartitions = {@TopicPartition(topic = "${log-source}", partitions = {"1"})}, groupId = "app-burry-data")
+    public void listen1(String logString)  {
+        try {
+
+            this.dataLocalBuffer.handleMsgAsync(logString, linkedBlockingDeque1);
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
-    @KafkaListener(topicPartitions = {@TopicPartition(topic = "${log-source}", partitions = {"2"})})
-    public void listen2(String logString) throws Exception {
-        long startTime = System.currentTimeMillis();
-        this.dataLocalBuffer.handleMsgAsync(logString, linkedBlockingDeque2);
-        if (this.enableCounter) {
-            customerThreadCounter2++;
-            this.customerCounter(2, customerThreadCounter2, startTime, System.currentTimeMillis());
+    @KafkaListener(id = "app2",topicPartitions = {@TopicPartition(topic = "${log-source}", partitions = {"2"})}, groupId = "app-burry-data")
+    public void listen2(String logString)  {
+        try {
+
+            this.dataLocalBuffer.handleMsgAsync(logString, linkedBlockingDeque2);
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
-    @KafkaListener(topicPartitions = {@TopicPartition(topic = "${log-source}", partitions = {"3"})})
-    public void listen3(String logString) throws Exception {
-        long startTime = System.currentTimeMillis();
-        this.dataLocalBuffer.handleMsgAsync(logString, linkedBlockingDeque3);
-        if (this.enableCounter) {
-            customerThreadCounter3++;
-            this.customerCounter(3, customerThreadCounter3, startTime, System.currentTimeMillis());
+    @KafkaListener(id = "app3",topicPartitions = {@TopicPartition(topic = "${log-source}", partitions = {"3"})}, groupId = "app-burry-data")
+    public void listen3(String logString)  {
+        try {
+
+            this.dataLocalBuffer.handleMsgAsync(logString, linkedBlockingDeque3);
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
-    @KafkaListener(topicPartitions = {@TopicPartition(topic = "${log-source}", partitions = {"4"})})
-    public void listen4(String logString) throws Exception {
-        long startTime = System.currentTimeMillis();
-        this.dataLocalBuffer.handleMsgAsync(logString, linkedBlockingDeque4);
-        if (this.enableCounter) {
-            customerThreadCounter4++;
-            this.customerCounter(4, customerThreadCounter4, startTime, System.currentTimeMillis());
+    @KafkaListener(id = "app4",topicPartitions = {@TopicPartition(topic = "${log-source}", partitions = {"4"})}, groupId = "app-burry-data")
+    public void listen4(String logString)  {
+        try {
+
+            this.dataLocalBuffer.handleMsgAsync(logString, linkedBlockingDeque4);
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
-    @KafkaListener(topicPartitions = {@TopicPartition(topic = "${log-source}", partitions = {"5"})})
-    public void listen5(String logString) throws Exception {
-        long startTime = System.currentTimeMillis();
-        this.dataLocalBuffer.handleMsgAsync(logString, linkedBlockingDeque5);
-        if (this.enableCounter) {
-            customerThreadCounter5++;
-            this.customerCounter(5, customerThreadCounter5, startTime, System.currentTimeMillis());
+    @KafkaListener(id = "app5",topicPartitions = {@TopicPartition(topic = "${log-source}", partitions = {"5"})}, groupId = "app-burry-data")
+    public void listen5(String logString)  {
+        try {
+
+            this.dataLocalBuffer.handleMsgAsync(logString, linkedBlockingDeque5);
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
-    @KafkaListener(topicPartitions = {@TopicPartition(topic = "${log-source}", partitions = {"6"})})
-    public void listen6(String logString) throws Exception {
-        long startTime = System.currentTimeMillis();
-        this.dataLocalBuffer.handleMsgAsync(logString, linkedBlockingDeque6);
-        if (this.enableCounter) {
-            customerThreadCounter6++;
-            this.customerCounter(6, customerThreadCounter6, startTime, System.currentTimeMillis());
+    @KafkaListener(id = "app6",topicPartitions = {@TopicPartition(topic = "${log-source}", partitions = {"6"})}, groupId = "app-burry-data")
+    public void listen6(String logString)  {
+        try {
+
+            this.dataLocalBuffer.handleMsgAsync(logString, linkedBlockingDeque6);
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
-    @KafkaListener(topicPartitions = {@TopicPartition(topic = "${log-source}", partitions = {"7"})})
-    public void listen7(String logString) throws Exception {
-        long startTime = System.currentTimeMillis();
-        this.dataLocalBuffer.handleMsgAsync(logString, linkedBlockingDeque7);
-        if (this.enableCounter) {
-            customerThreadCounter7++;
-            this.customerCounter(7, customerThreadCounter7, startTime, System.currentTimeMillis());
+    @KafkaListener(id = "app7",topicPartitions = {@TopicPartition(topic = "${log-source}", partitions = {"7"})}, groupId = "app-burry-data")
+    public void listen7(String logString)  {
+        try {
+
+            this.dataLocalBuffer.handleMsgAsync(logString, linkedBlockingDeque7);
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
-    @KafkaListener(topicPartitions = {@TopicPartition(topic = "${log-source}", partitions = {"8"})})
-    public void listen8(String logString) throws Exception {
-        long startTime = System.currentTimeMillis();
-        this.dataLocalBuffer.handleMsgAsync(logString, linkedBlockingDeque8);
-        if (this.enableCounter) {
-            customerThreadCounter8++;
-            this.customerCounter(8, customerThreadCounter8, startTime, System.currentTimeMillis());
+    @KafkaListener(id = "app8",topicPartitions = {@TopicPartition(topic = "${log-source}", partitions = {"8"})}, groupId = "app-burry-data")
+    public void listen8(String logString)  {
+        try {
+            this.dataLocalBuffer.handleMsgAsync(logString, linkedBlockingDeque8);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
-    @KafkaListener(topicPartitions = {@TopicPartition(topic = "${log-source}", partitions = {"9"})})
-    public void listen9(String logString) throws Exception {
-        long startTime = System.currentTimeMillis();
-        this.dataLocalBuffer.handleMsgAsync(logString, linkedBlockingDeque9);
-        if (this.enableCounter) {
-            customerThreadCounter9++;
-            this.customerCounter(9, customerThreadCounter9, startTime, System.currentTimeMillis());
+    @KafkaListener(id = "app9",topicPartitions = {@TopicPartition(topic = "${log-source}", partitions = {"9"})}, groupId = "app-burry-data")
+    public void listen9(String logString)  {
+        try {
+            this.dataLocalBuffer.handleMsgAsync(logString, linkedBlockingDeque9);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
