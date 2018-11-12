@@ -15,6 +15,10 @@ public class OrderInfo {
     private long amount_pay = 0;
 
     private String order_status;
+    /**
+     * 是否已处理过订单
+     */
+    private Boolean hasSent = false;
 
     public int getGoods_num() {
         return goods_num;
@@ -70,5 +74,13 @@ public class OrderInfo {
 
     public void setOrder_status(String order_status) {
         this.order_status = order_status;
+    }
+
+    public Boolean getHasSent() {
+        return hasSent;
+    }
+
+    public void setHasSent(Boolean hasSent) {
+        this.hasSent = hasSent;
     }
 }

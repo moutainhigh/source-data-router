@@ -9,5 +9,5 @@ curl http://localhost:38195/report?configPath=/usr/local/services/bts-common-rep
    3、在处理商品时，标记已处理的商品 <br>
    4、排除订单商品的更新事件 <br>
 2、每次有事件到达，都循环一次缓存 list 根据 userid 和 sku 去 redis 缓存中查找，前缀通过接口动态新增，查询到埋点数据，则生成订单数据，将订单数据放入埋点中，发送到订单 topic；
-   订单 topic 名字为：dy_log_cart_order_info; <br>
-3、
+   每次发送完成后，删除该 key，更新状态，重新设置 list，订单 topic 名字为：dy_log_cart_order_info; <br>
+3、订单计算 job，配置项，zaful 统一指标，

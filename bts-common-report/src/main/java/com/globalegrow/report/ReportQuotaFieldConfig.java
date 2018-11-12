@@ -21,6 +21,7 @@ public class ReportQuotaFieldConfig {
     private String valueEnum;
     /**
      * 用于处理加购事件，为 true 时加购缓存至 redis，前缀为报表名称
+     * 需要配置 cache rule，获取 sku 与 user id
      */
     private Boolean cacheData = false;
 
