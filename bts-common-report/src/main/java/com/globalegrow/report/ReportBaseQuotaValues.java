@@ -128,7 +128,7 @@ public enum ReportBaseQuotaValues {
     }
 
     /**
-     * 过滤条件
+     * 过滤条件，不满足过滤条件返回 null，满足条件返回 not_null
      *
      * @param jsonLogFilter
      * @param ctx

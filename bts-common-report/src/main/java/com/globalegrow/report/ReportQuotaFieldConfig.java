@@ -19,6 +19,10 @@ public class ReportQuotaFieldConfig {
     private List<JsonLogFilter> jsonLogFilters = new ArrayList<>();
 
     private String valueEnum;
+    /**
+     * 用于处理加购事件，为 true 时加购缓存至 redis，前缀为报表名称
+     */
+    private Boolean cacheData = false;
 
     public String getExtractValueJsonPath() {
         return extractValueJsonPath;
@@ -26,6 +30,14 @@ public class ReportQuotaFieldConfig {
 
     public void setExtractValueJsonPath(String extractValueJsonPath) {
         this.extractValueJsonPath = extractValueJsonPath;
+    }
+
+    public Boolean getCacheData() {
+        return cacheData;
+    }
+
+    public void setCacheData(Boolean cacheData) {
+        this.cacheData = cacheData;
     }
 
     public List<JsonLogFilter> getJsonLogFilters() {
