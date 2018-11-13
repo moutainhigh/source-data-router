@@ -25,6 +25,16 @@ public class ReportQuotaFieldConfig {
      */
     private Boolean cacheData = false;
 
+    private Long expireSeconds = 1209600L;
+
+    public Long getExpireSeconds() {
+        return expireSeconds;
+    }
+
+    public void setExpireSeconds(Long expireSeconds) {
+        this.expireSeconds = expireSeconds;
+    }
+
     public String getExtractValueJsonPath() {
         return extractValueJsonPath;
     }
