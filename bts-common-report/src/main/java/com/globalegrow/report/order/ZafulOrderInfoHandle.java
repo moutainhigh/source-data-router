@@ -9,6 +9,7 @@ import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
@@ -31,6 +32,7 @@ public class ZafulOrderInfoHandle {
     private static final String ZAFUL_REPORT_ORDER_INFO_REDIS_PREFIX = "DY_REPORT_ORDER_";
 
     @Autowired
+    @Qualifier("executorServiceMap")
     private Map<String, ExecutorService> executorServiceMap;
 
     @Autowired
@@ -135,16 +137,19 @@ public class ZafulOrderInfoHandle {
             // 订单商品，有新增时发送一次，每次有订单状态更新时全部重新发送一次
             reportOrderInfos.stream().filter(reportOrderInfo -> !reportOrderInfo.getOrder_data()).collect(Collectors.toList()).stream().forEach(reportOrderInfo -> {
                 reportOrderInfo.setOrder_status(orderStatus);
-
+                logger.info("根据当前运行报表查询 redis 中的加购埋点数据:{}", this.executorServiceMap.keySet());
                 //循环所有报表 根据 用户 sku 查找埋点
                 executorServiceMap.keySet().stream().filter(key -> key.contains("ZAFUL")).forEach(key -> {
                     String cartKey = key + "_" + userId + "_" + reportOrderInfo.getSku();
                     String cartLog = SpringRedisUtil.getStringValue(cartKey);
+                    this.logger.info("根据当前运行报表查询到 redis key:{} 数据:{}", cartKey, cartLog);
                     if (StringUtils.isNotEmpty(cartLog)) {
                         try {
                             Map<String, Object> logMap = JacksonUtil.readValue(cartLog, Map.class);
                             logMap.put(ReportEnums.db_order_info.name(), reportOrderInfo);
-                            this.kafkaTemplate.send("dy_log_cart_order_info", JacksonUtil.toJSon(logMap));
+                            String orderData = JacksonUtil.toJSon(logMap);
+                            this.logger.info("根据当前运行报表查询到, 订单数据： {}", orderData);
+                            this.kafkaTemplate.send("dy_log_cart_order_info",orderData );
                         } catch (Exception e) {
                             //e.printStackTrace();
                         }
