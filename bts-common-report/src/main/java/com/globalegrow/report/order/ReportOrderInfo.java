@@ -23,16 +23,16 @@ public class ReportOrderInfo {
     /**
      * 是否已处理过订单
      */
-    private Boolean hasSent = false;
+    private Boolean has_sent = false;
 
-    private Boolean orderData = false;
+    private Boolean order_data = false;
 
-    public Boolean getOrderData() {
-        return orderData;
+    public Boolean getOrder_data() {
+        return order_data;
     }
 
-    public void setOrderData(Boolean orderData) {
-        this.orderData = orderData;
+    public void setOrder_data(Boolean order_data) {
+        this.order_data = order_data;
     }
 
     public String getSku() {
@@ -99,12 +99,12 @@ public class ReportOrderInfo {
         this.order_status = order_status;
     }
 
-    public Boolean getHasSent() {
-        return hasSent;
+    public Boolean getHas_sent() {
+        return has_sent;
     }
 
-    public void setHasSent(Boolean hasSent) {
-        this.hasSent = hasSent;
+    public void setHas_sent(Boolean has_sent) {
+        this.has_sent = has_sent;
     }
 
     @Override
@@ -117,7 +117,7 @@ public class ReportOrderInfo {
                 .append("gmv", gmv)
                 .append("amount_num_price", amount_num_price)
                 .append("order_status", order_status)
-                .append("hasSent", hasSent)
+                .append("has_sent", has_sent)
                 .toString();
     }
 }

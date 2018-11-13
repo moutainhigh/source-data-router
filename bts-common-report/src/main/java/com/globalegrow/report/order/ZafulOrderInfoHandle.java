@@ -1,7 +1,6 @@
 package com.globalegrow.report.order;
 
 
-import com.globalegrow.report.ReportExecutorService;
 import com.globalegrow.report.enums.ReportEnums;
 import com.globalegrow.util.JacksonUtil;
 import com.globalegrow.util.SpringRedisUtil;
@@ -54,7 +53,7 @@ public class ZafulOrderInfoHandle {
                 OrderInfo orderInfo = this.orderInfo(tableData);
                 List<ReportOrderInfo> reportOrderInfos = this.getByOrder(orderInfo);
 
-                long goodsNum = reportOrderInfos.stream().filter(reportOrderInfo -> !reportOrderInfo.getOrderData()).count();
+                long goodsNum = reportOrderInfos.stream().filter(reportOrderInfo -> !reportOrderInfo.getOrder_data()).count();
 
                 if (goodsNum > 0) {
 
@@ -76,7 +75,7 @@ public class ZafulOrderInfoHandle {
                     List<ReportOrderInfo> reportOrderInfos = this.getByOrderGoods(goodInfo);
 
                     // 判断是否有订单数据
-                    long orderSize = reportOrderInfos.stream().filter(reportOrderInfo -> reportOrderInfo.getOrderData()).count();
+                    long orderSize = reportOrderInfos.stream().filter(reportOrderInfo -> reportOrderInfo.getOrder_data()).count();
 
                     if (orderSize > 0) {
 
@@ -123,18 +122,18 @@ public class ZafulOrderInfoHandle {
 
         List<ReportOrderInfo> updateToRedis = new ArrayList<>();
         // 补全订单状态、用户id等数据
-        List<ReportOrderInfo> orders = reportOrderInfos.stream().filter(reportOrderInfo -> reportOrderInfo.getOrderData() && !reportOrderInfo.getHasSent()).collect(Collectors.toList());
+        List<ReportOrderInfo> orders = reportOrderInfos.stream().filter(reportOrderInfo -> reportOrderInfo.getOrder_data() && !reportOrderInfo.getHas_sent()).collect(Collectors.toList());
         updateToRedis.addAll(orders);
         if (orders.size() > 0) {
             ReportOrderInfo orderInfo = orders.get(0);
             String userId = orderInfo.getUser_id();
             String orderStatus = orderInfo.getOrder_status();
 
-            List<ReportOrderInfo> goodsInfo = reportOrderInfos.stream().filter(reportOrderInfo -> !reportOrderInfo.getHasSent() && !reportOrderInfo.getOrderData()).collect(Collectors.toList());
+            List<ReportOrderInfo> goodsInfo = reportOrderInfos.stream().filter(reportOrderInfo -> !reportOrderInfo.getHas_sent() && !reportOrderInfo.getOrder_data()).collect(Collectors.toList());
 
 
             // 订单商品，有新增时发送一次，每次有订单状态更新时全部重新发送一次
-            reportOrderInfos.stream().filter(reportOrderInfo -> !reportOrderInfo.getOrderData()).collect(Collectors.toList()).stream().forEach(reportOrderInfo -> {
+            reportOrderInfos.stream().filter(reportOrderInfo -> !reportOrderInfo.getOrder_data()).collect(Collectors.toList()).stream().forEach(reportOrderInfo -> {
                 reportOrderInfo.setOrder_status(orderStatus);
 
                 //循环所有报表 根据 用户 sku 查找埋点
@@ -160,7 +159,7 @@ public class ZafulOrderInfoHandle {
 
         }
 
-        updateToRedis.forEach(reportOrderInfo -> reportOrderInfo.setHasSent(true));
+        updateToRedis.forEach(reportOrderInfo -> reportOrderInfo.setHas_sent(true));
 
         this.cacheOrderDataToRedis(updateToRedis, orderId);
 
@@ -173,7 +172,7 @@ public class ZafulOrderInfoHandle {
         reportOrderInfo.setOrder_id(orderInfo.getOrderId());
         reportOrderInfo.setOrder_status(orderInfo.getOrderStatus());
         reportOrderInfo.setUser_id(orderInfo.getUserId());
-        reportOrderInfo.setOrderData(true);
+        reportOrderInfo.setOrder_data(true);
         reportOrderInfos.add(reportOrderInfo);
 
         Set<String> strings = this.orderCache(orderInfo.getOrderId());
@@ -233,8 +232,14 @@ public class ZafulOrderInfoHandle {
         orderGoodInfo.setGoodsNum(Integer.valueOf(String.valueOf(tableData.get(OrderGoodInfo.GOODS_NUM))));
         orderGoodInfo.setSku(String.valueOf(tableData.get(OrderGoodInfo.SKU)));
         orderGoodInfo.setPrice(Float.valueOf(String.valueOf(tableData.get(OrderGoodInfo.PRICE))));
-        Float f = (Float.valueOf(String.valueOf(tableData.get(""))) * 100);
-        orderGoodInfo.setGmv(f.intValue());
+
+        if (tableData.get("goods_pay_amount") == null || "0".equals(String.valueOf(tableData.get("goods_pay_amount")))) {
+            orderGoodInfo.setGmv(orderGoodInfo.getAmount());
+        }else {
+            Float f = (Float.valueOf(String.valueOf(tableData.get("goods_pay_amount"))) * 100);
+            orderGoodInfo.setGmv(f.intValue());
+        }
+
         return orderGoodInfo;
     }
 

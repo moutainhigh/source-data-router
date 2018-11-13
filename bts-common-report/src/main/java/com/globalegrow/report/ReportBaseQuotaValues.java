@@ -6,6 +6,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -146,7 +147,7 @@ public enum ReportBaseQuotaValues {
                     // null 条件为空报异常表明满足过滤条件
                     return "not_null";
                 }
-            }
+            }else
 
             // not null
             if ("not_null".equals(jsonLogFilter.getFilterRule())) {
@@ -154,20 +155,43 @@ public enum ReportBaseQuotaValues {
                 if ((ctx.read(jsonLogFilter.getJsonPath()) == null) || StringUtils.isEmpty(ctx.read(jsonLogFilter.getJsonPath(), String.class))) {
                     return null;
                 }
-            }
+            }else
             if ("equals".equals(jsonLogFilter.getFilterRule())) {
                 // equals
                 if (!jsonLogFilter.getValueFilter().equals(ctx.read(jsonLogFilter.getJsonPath(), String.class))) {
                     return null;
                 }
 
-            }
-            if ("contains".equals(jsonLogFilter.getFilterRule())) {
+            }else
+            if ("contains".contains(jsonLogFilter.getFilterRule())) {
                 // contains
                 if (!(jsonLogFilter.getValueFilter().contains(ctx.read(jsonLogFilter.getJsonPath(), String.class)))) {
                     return null;
                 }
-            }
+            }else
+            // 布尔值
+            if ("true".equals(jsonLogFilter.getFilterRule())) {
+                // contains
+                if (!(ctx.read(jsonLogFilter.getJsonPath(), Boolean.class))) {
+                    return null;
+                }
+            }else
+            if ("false".equals(jsonLogFilter.getFilterRule())) {
+                // contains
+                if ((ctx.read(jsonLogFilter.getJsonPath(), Boolean.class))) {
+                    return null;
+                }
+            }else
+            // or
+                if ("or".equals(jsonLogFilter.getFilterRule())) {
+                    List<String> strings = Arrays.asList(jsonLogFilter.getValueFilter().split(","));
+                    String value = ctx.read(jsonLogFilter.getJsonPath(), String.class);
+                    if (strings.stream().filter(s -> s.equals(value)).count() <= 0) {
+                        return null;
+                    }
+                }
+
+
 
 
         } catch (PathNotFoundException e) {

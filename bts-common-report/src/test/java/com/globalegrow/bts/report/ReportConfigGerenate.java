@@ -68,7 +68,7 @@ public class ReportConfigGerenate {
         reportKafkaConfig.setBootstrapServers("172.31.35.194:9092,172.31.50.250:9092,172.31.63.112:9092");
         reportKafkaConfig.setDataSourceTopic("glbg-analitic-json-pc");
         reportKafkaConfig.setBootstrapGroupId("dy_bts_search_rec_report");
-        reportKafkaConfig.setReportStrapServers("172.31.22.179:9092");
+        reportKafkaConfig.setReportStrapServers("172.31.35.194:9092,172.31.50.250:9092,172.31.63.112:9092");
         reportKafkaConfig.setReportDataTopic("dy_bts_search_rec_report");
 
         rule.setReportFromKafka(reportKafkaConfig);
@@ -235,6 +235,7 @@ public class ReportConfigGerenate {
         cartNum.setExtractValueJsonPath("$.glb_skuinfo.pam");
         cartNum.setValueEnum("quotaIntValueExtractFromLog");
         cartNum.setJsonLogFilters(cartFilter);
+        cartNum.setCacheData(true);
 
         reportQuotaFieldConfigs.add(cartNum);
 

@@ -43,9 +43,19 @@ public class SearchRecommendReportQuotaModel {
 
     private int good_paid_num = 0;
 
+    private String pay_uv = "_skip";
+
     private int sales_amount = 0;
 
     private Long timestamp = 0L;
+
+    public String getPay_uv() {
+        return pay_uv;
+    }
+
+    public void setPay_uv(String pay_uv) {
+        this.pay_uv = pay_uv;
+    }
 
     public Map<String, String> getBts() {
         return bts;
