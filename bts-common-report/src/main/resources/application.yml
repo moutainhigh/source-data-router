@@ -11,6 +11,7 @@ logging:
     sun.rmi: ERROR
     org.apache.http: ERROR
     com.jayway: ERROR
+    org.springframework.kafka: ERROR
   pattern:
     file: '[%d{yyyy-MM-dd HH:mm:ss.SSS}] [%thread] [%-5level] %logger{50} - %msg%n'
 server:

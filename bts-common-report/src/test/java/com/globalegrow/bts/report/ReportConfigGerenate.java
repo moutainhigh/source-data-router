@@ -37,6 +37,13 @@ public class ReportConfigGerenate {
         System.out.println();
     }
 
+    @Test
+    public void reportJson() throws Exception {
+        SearchRecommendReportQuotaModel searchRecommendReportQuotaModel = new SearchRecommendReportQuotaModel();
+        searchRecommendReportQuotaModel.setTimestamp(System.currentTimeMillis());
+        System.out.println(JacksonUtil.toJSon(searchRecommendReportQuotaModel));
+    }
+
 
     @Test
     public void generate() throws Exception {
@@ -66,7 +73,7 @@ public class ReportConfigGerenate {
 
         ReportKafkaConfig reportKafkaConfig = new ReportKafkaConfig();
         reportKafkaConfig.setBootstrapServers("172.31.35.194:9092,172.31.50.250:9092,172.31.63.112:9092");
-        reportKafkaConfig.setDataSourceTopic("glbg-analitic-json-pc");
+        reportKafkaConfig.setDataSourceTopic("glbg-analitic");
         reportKafkaConfig.setBootstrapGroupId("dy_bts_search_rec_report");
         reportKafkaConfig.setReportStrapServers("172.31.35.194:9092,172.31.50.250:9092,172.31.63.112:9092");
         reportKafkaConfig.setReportDataTopic("dy_bts_search_rec_report");

@@ -2,6 +2,7 @@ dy_bts_search_rec_report zaful 搜索算法报表<br>
 bin/kafka-console-consumer.sh --bootstrap-server 172.31.22.179:9092 --topic dy_bts_search_rec_report <br>
 bin/kafka-topics.sh --zookeeper 172.31.61.192:2181,172.31.59.31:2181,172.31.62.153:2181,172.31.36.227:2181,172.31.40.73:2181 --create --topic dy_bts_search_rec_report --partitions 1 --replication-factor 1<br>
 curl http://localhost:38195/report?configPath=/usr/local/services/bts-common-report-1.0-SNAPSHOT/bin/bts_zaful_search_rec_report.json <br>
+curl http://localhost:38195/order?configPath=/usr/local/services/bts-common-report-1.0-SNAPSHOT/bin/bts_zaful_search_rec_report_order.json <br>
 ## 订单处理逻辑设计
 1、消费 binlog，获取订单表、订单商品表数据，以站点名 + 订单 id 为 key 放入 redis，数据结构为 list，过滤掉订单状态大于 8 的订单，订单商品表 log 事件到达时，<br>
    1、订单状态为 0 ，计算下单商品数、GMV；<br>

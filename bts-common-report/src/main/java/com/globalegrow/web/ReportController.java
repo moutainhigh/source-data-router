@@ -7,6 +7,7 @@ import com.globalegrow.report.ReportHandleRunnable;
 import com.globalegrow.util.JacksonUtil;
 import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -25,6 +26,7 @@ public class ReportController {
     private LogDataCache logDataCache;
 
     @Autowired
+    @Qualifier("executorServiceMap")
     private Map<String, ExecutorService> executorServiceMap;
 
     @GetMapping
@@ -56,6 +58,7 @@ public class ReportController {
         if (old != null) {
             old.shutdown();
         }
+        this.executorServiceMap.remove(reportName);
         return "success";
     }
 

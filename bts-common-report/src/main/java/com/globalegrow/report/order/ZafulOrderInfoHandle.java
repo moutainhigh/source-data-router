@@ -40,7 +40,7 @@ public class ZafulOrderInfoHandle {
     @KafkaListener(topics = {"dy_zaful_mysql_binlog"})
     public void listen(ConsumerRecord<String, String> record) {
         String mysqlBinLog = record.value();
-        this.logger.debug("mysql event: {}", mysqlBinLog);
+        //this.logger.debug("mysql event: {}", mysqlBinLog);
         try {
             Map<String, Object> dataMap = JacksonUtil.readValue(mysqlBinLog, Map.class);
             String eventType = String.valueOf(dataMap.get("type"));
@@ -67,7 +67,7 @@ public class ZafulOrderInfoHandle {
 
             } else if ("eload_order_goods".equals(table.toLowerCase())) {
 
-                this.logger.debug("订单商品事件，只做报错操作");
+                this.logger.debug("订单商品事件");
 
                 if ("insert".equals(eventType)) {
                     Map<String, Object> tableData = this.getEventData(dataMap);
@@ -225,15 +225,16 @@ public class ZafulOrderInfoHandle {
     }
 
 
-    private OrderGoodInfo orderGoodInfo(Map<String, Object> dataMap) {
-        Map<String, Object> tableData = this.getEventData(dataMap);
+    private OrderGoodInfo orderGoodInfo(Map<String, Object> tableData) {
+        //Map<String, Object> tableData = this.getEventData(dataMap);
         OrderGoodInfo orderGoodInfo = new OrderGoodInfo();
         orderGoodInfo.setOrderId(Integer.valueOf(String.valueOf(tableData.get(OrderGoodInfo.ORDER_ID))));
         orderGoodInfo.setGoodsNum(Integer.valueOf(String.valueOf(tableData.get(OrderGoodInfo.GOODS_NUM))));
         orderGoodInfo.setSku(String.valueOf(tableData.get(OrderGoodInfo.SKU)));
         orderGoodInfo.setPrice(Float.valueOf(String.valueOf(tableData.get(OrderGoodInfo.PRICE))));
 
-        if (tableData.get("goods_pay_amount") == null || "0".equals(String.valueOf(tableData.get("goods_pay_amount")))) {
+        if (tableData.get("goods_pay_amount") == null || "0".equals(String.valueOf(tableData.get("goods_pay_amount"))) ||
+        "0.00".equals(String.valueOf(tableData.get("goods_pay_amount")))) {
             orderGoodInfo.setGmv(orderGoodInfo.getAmount());
         }else {
             Float f = (Float.valueOf(String.valueOf(tableData.get("goods_pay_amount"))) * 100);
@@ -243,8 +244,8 @@ public class ZafulOrderInfoHandle {
         return orderGoodInfo;
     }
 
-    private OrderInfo orderInfo(Map<String, Object> dataMap) {
-        Map<String, Object> tableData = this.getEventData(dataMap);
+    private OrderInfo orderInfo(Map<String, Object> tableData) {
+        //Map<String, Object> tableData = this.getEventData(dataMap);
         OrderInfo orderInfo = new OrderInfo();
         orderInfo.setUserId(String.valueOf(tableData.get(OrderInfo.USER_ID)));
         orderInfo.setOrderId(Integer.valueOf(String.valueOf(tableData.get(OrderInfo.ORDER_ID))));
