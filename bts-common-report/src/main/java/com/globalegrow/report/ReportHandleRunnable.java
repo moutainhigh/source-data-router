@@ -21,6 +21,8 @@ public class ReportHandleRunnable implements Runnable {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
+    private LogDataCache logDataCache;
+
     private ReportBuildRule reportBuildRule;
 
     private KafkaConsumer<String, String> consumer;
@@ -36,8 +38,29 @@ public class ReportHandleRunnable implements Runnable {
     public static final String BAD_JSON_PATTERN2 = "\"([\\d]+_?)\":.([\\d]+_?)";
     public static final String BAD_JSON_PATTERN3 = "\"([\\d]+_?)\":([\\d]+_?).([\\d]+_?)";
 
-    public ReportHandleRunnable(ReportBuildRule reportBuildRule) {
+    /*public ReportHandleRunnable(ReportBuildRule reportBuildRule) {
         this.reportBuildRule = reportBuildRule;
+        ReportKafkaConfig reportKafkaConfig = this.reportBuildRule.getReportFromKafka();
+        Properties customerProperties = new Properties();
+        customerProperties.put("bootstrap.servers", reportKafkaConfig.getBootstrapServers());
+        customerProperties.put("group.id", reportKafkaConfig.getBootstrapGroupId());
+        customerProperties.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
+        customerProperties.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
+        this.consumer = new KafkaConsumer<>(customerProperties);
+        this.consumer.subscribe(Collections.singletonList(reportKafkaConfig.getDataSourceTopic()));
+
+        Properties producerProperties = new Properties();
+        producerProperties.put("bootstrap.servers", reportKafkaConfig.getReportStrapServers());
+        producerProperties.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer");
+        producerProperties.put("value.serializer", "org.apache.kafka.common.serialization.StringSerializer");
+        this.kafkaProducer = new KafkaProducer<>(producerProperties);
+        this.reportDataTopic = reportKafkaConfig.getReportDataTopic();
+    }*/
+
+    public ReportHandleRunnable(LogDataCache logDataCache, ReportBuildRule reportBuildRule) {
+        this.logDataCache = logDataCache;
+        this.reportBuildRule = reportBuildRule;
+
         ReportKafkaConfig reportKafkaConfig = this.reportBuildRule.getReportFromKafka();
         Properties customerProperties = new Properties();
         customerProperties.put("bootstrap.servers", reportKafkaConfig.getBootstrapServers());
@@ -83,7 +106,9 @@ public class ReportHandleRunnable implements Runnable {
                             continue customerEach;
                         }
 
-                        String value = this.finalJsonLog(source);
+                        Map<String, Object> finalJsonMap = this.finalJsonMap(source);
+
+                        String value = JacksonUtil.toJSon(finalJsonMap);
 
                         ReadContext ctx = null;
                         if (countReport) {
@@ -147,6 +172,7 @@ public class ReportHandleRunnable implements Runnable {
                                     // 加购事件缓存至 redis，key 为 userId + sku，数据结构，string，前缀为报表名称
                                     if (quotaFieldConfig.getCacheData()) {
                                         this.logger.debug("{} 报表指标 {} 将缓存", this.reportBuildRule.getReportName(), quotaFieldConfig.getQuotaFieldName());
+                                        this.logDataCache.cacheData(this.reportBuildRule.getReportName(), finalJsonMap, quotaFieldConfig.getExpireSeconds());
 
                                     }
 
@@ -189,7 +215,8 @@ public class ReportHandleRunnable implements Runnable {
         }
     }
 
-    private String finalJsonLog(String source) throws Exception {
+
+    private Map<String, Object> finalJsonMap(String source) {
         Map<String, Object> sourceMap = NginxLogConvertUtil.getNginxLogParameters(source);;
         Map<String,Object> finalMap = new HashMap<>();
         sourceMap.entrySet().stream().forEach(e -> {
@@ -214,8 +241,11 @@ public class ReportHandleRunnable implements Runnable {
                 finalMap.put(e.getKey(), value);
             }
         });
+        return finalMap;
+    }
 
-        return JacksonUtil.toJSon(finalMap);
+    private String finalJsonLog(String source) throws Exception {
+        return JacksonUtil.toJSon(this.finalJsonMap(source));
     }
 
 }

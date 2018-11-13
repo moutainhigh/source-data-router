@@ -1,5 +1,6 @@
 package com.globalegrow.web;
 
+import com.globalegrow.report.LogDataCache;
 import com.globalegrow.report.ReportBuildRule;
 import com.globalegrow.report.ReportExecutorService;
 import com.globalegrow.report.ReportHandleRunnable;
@@ -21,6 +22,9 @@ import java.util.concurrent.Executors;
 public class ReportController {
 
     @Autowired
+    private LogDataCache logDataCache;
+
+    @Autowired
     private Map<String, ExecutorService> executorServiceMap;
 
     @GetMapping
@@ -33,7 +37,7 @@ public class ReportController {
             old.shutdown();
         }
         ExecutorService executorService = Executors.newFixedThreadPool(1);
-        executorService.execute(new ReportHandleRunnable(reportBuildRule));
+        executorService.execute(new ReportHandleRunnable(this.logDataCache, reportBuildRule));
         executorServiceMap.put(reportBuildRule.getReportName(), executorService);
         /*
          Thread oldReport = this.reportThreads.get(reportBuildRule.getReportName());
