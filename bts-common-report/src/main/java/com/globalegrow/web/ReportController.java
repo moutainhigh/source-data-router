@@ -23,9 +23,6 @@ public class ReportController {
     @Autowired
     private Map<String, ExecutorService> executorServiceMap;
 
-    @Autowired
-    private Map<String, ReportExecutorService> reportExecutorServiceMap;
-
     @GetMapping
     public String addReport(String configPath) throws Exception {
         String config = FileUtils.readFileToString(new File(configPath), "utf-8");

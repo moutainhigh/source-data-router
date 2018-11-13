@@ -47,7 +47,7 @@ public class ReportConfigGerenate {
 
         JsonLogFilter btsFilter = new JsonLogFilter();
         btsFilter.setJsonPath("$.glb_bts");
-        btsFilter.setValueFilter("not_null");
+        btsFilter.setFilterRule("not_null");
         //globaleFilters.add(btsFilter);
 
         JsonLogFilter siteFilter = new JsonLogFilter();
@@ -109,7 +109,7 @@ public class ReportConfigGerenate {
 
         JsonLogFilter ubc = new JsonLogFilter();
         ubc.setJsonPath("$.glb_ubcta");
-        ubc.setValueFilter("null");
+        ubc.setFilterRule("null");
         specimenFilter.add(ubc);
 
         JsonLogFilter glbFilterRecommend = new JsonLogFilter();
@@ -198,7 +198,7 @@ public class ReportConfigGerenate {
 
         JsonLogFilter sckwNotNull = new JsonLogFilter();
         sckwNotNull.setJsonPath("$.glb_ubcta.sckw");
-        sckwNotNull.setValueFilter("not_null");
+        sckwNotNull.setFilterRule("not_null");
         goodClickFilter.add(sckwNotNull);
 
         gcPv.setJsonLogFilters(goodClickFilter);

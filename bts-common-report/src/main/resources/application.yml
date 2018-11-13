@@ -22,6 +22,13 @@ server:
 ---
 spring:
   profiles: dev
+  kafka:
+    bootstrap-servers: 172.31.35.194:9092,172.31.50.250:9092,172.31.63.112:9092
+    consumer:
+      auto-offset-reset: latest
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      group-id: mysql-bin-log-zaful-common-report
   redis:
     timeout: 86400
     password: 6e1KWyC29w
@@ -39,6 +46,13 @@ server:
 ---
 spring:
   profiles: prod
+  kafka:
+    bootstrap-servers: 172.31.35.194:9092,172.31.50.250:9092,172.31.63.112:9092
+    consumer:
+      auto-offset-reset: latest
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      group-id: mysql-bin-log-zaful-common-report
   redis:
     timeout: 86400
     password: 6e1KWyC29w

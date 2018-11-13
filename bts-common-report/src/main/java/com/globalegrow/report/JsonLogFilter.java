@@ -8,6 +8,8 @@ public class JsonLogFilter {
 
     private String valueFilter;
 
+    private String filterRule = "equals";
+
     public String getJsonPath() {
         return jsonPath;
     }
@@ -22,6 +24,14 @@ public class JsonLogFilter {
 
     public void setValueFilter(String valueFilter) {
         this.valueFilter = valueFilter;
+    }
+
+    public String getFilterRule() {
+        return filterRule;
+    }
+
+    public void setFilterRule(String filterRule) {
+        this.filterRule = filterRule;
     }
 
     @Override

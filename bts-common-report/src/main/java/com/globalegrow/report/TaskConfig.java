@@ -25,12 +25,12 @@ public class TaskConfig {
     }*/
 
     @Bean
-    public Map<String, ExecutorService> executorServiceMap() {
+    public Map<String, ExecutorService> orderTaskExecutorServiceMap() {
         return new ConcurrentHashMap<>();
     }
 
     @Bean
-    public Map<String, ReportExecutorService> reportExecutorServiceMap() {
+    public Map<String, ExecutorService> executorServiceMap() {
         return new ConcurrentHashMap<>();
     }
 

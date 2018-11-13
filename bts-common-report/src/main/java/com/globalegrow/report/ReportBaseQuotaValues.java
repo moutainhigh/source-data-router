@@ -137,7 +137,7 @@ public enum ReportBaseQuotaValues {
     public static Object handleQuotaFilter(JsonLogFilter jsonLogFilter, ReadContext ctx) {
         // json 值为空时返回 true
         try {
-            if ("null".equals(jsonLogFilter.getValueFilter())) {
+            if ("null".equals(jsonLogFilter.getFilterRule())) {
                 try {
                     if (!(ctx.read(jsonLogFilter.getJsonPath()) == null) || StringUtils.isNotEmpty(ctx.read(jsonLogFilter.getJsonPath(), String.class))) {
                         return null;
@@ -149,20 +149,26 @@ public enum ReportBaseQuotaValues {
             }
 
             // not null
-            if ("not_null".equals(jsonLogFilter.getValueFilter())) {
+            if ("not_null".equals(jsonLogFilter.getFilterRule())) {
 
                 if ((ctx.read(jsonLogFilter.getJsonPath()) == null) || StringUtils.isEmpty(ctx.read(jsonLogFilter.getJsonPath(), String.class))) {
                     return null;
                 }
             }
-            // equals
-            if (!jsonLogFilter.getValueFilter().equals(ctx.read(jsonLogFilter.getJsonPath(), String.class))) {
-                return null;
+            if ("equals".equals(jsonLogFilter.getFilterRule())) {
+                // equals
+                if (!jsonLogFilter.getValueFilter().equals(ctx.read(jsonLogFilter.getJsonPath(), String.class))) {
+                    return null;
+                }
+
             }
-            // contains
-            if (!(jsonLogFilter.getValueFilter().contains(ctx.read(jsonLogFilter.getJsonPath(), String.class)))) {
-                return null;
+            if ("contains".equals(jsonLogFilter.getFilterRule())) {
+                // contains
+                if (!(jsonLogFilter.getValueFilter().contains(ctx.read(jsonLogFilter.getJsonPath(), String.class)))) {
+                    return null;
+                }
             }
+
 
         } catch (PathNotFoundException e) {
             logger.debug("未找到 json filter 配置项 {}", jsonLogFilter);

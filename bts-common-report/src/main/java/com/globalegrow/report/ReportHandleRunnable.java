@@ -105,11 +105,12 @@ public class ReportHandleRunnable implements Runnable {
                                     if (filterValue == null) {
                                         continue customerEach;
                                     }
-                                    if ("not_null".equals(filter.getValueFilter())) {
+                                    if ("not_null".equals(filter.getFilterRule())) {
 
                                         if ((ctx.read(filter.getJsonPath()) == null) || StringUtils.isEmpty(ctx.read(filter.getJsonPath(), String.class))) {
                                             continue customerEach;
                                         }
+
                                     }
                                     if (!String.valueOf(filterValue).equals(filter.getValueFilter())) {
                                         continue customerEach;
@@ -127,7 +128,7 @@ public class ReportHandleRunnable implements Runnable {
                         Map<String, Object> reportDefaultValues = new HashMap<>();
                         reportDefaultValues.putAll(this.reportBuildRule.getReportDefaultValues());
                         List<ReportQuotaFieldConfig> list = this.reportBuildRule.getReportQuotaFieldConfigs();
-
+                        int hasValueQuotaCount = 0;
                         for (ReportQuotaFieldConfig quotaFieldConfig : list) {
 
                             try {
@@ -135,7 +136,7 @@ public class ReportHandleRunnable implements Runnable {
                                 Object quotaValue = baseQuotaValues.getReportValueFromSourceLog(quotaFieldConfig, ctx, value);
 
                                 if (quotaValue != null) {
-
+                                    hasValueQuotaCount++;
                                     Map<String, Object> quota = new HashMap<>();
 
                                     this.logger.debug("{} 处理报表指标 {}，指标值 {}", this.reportBuildRule.getReportName(), quotaFieldConfig.getQuotaFieldName(), quotaValue);
@@ -156,18 +157,25 @@ public class ReportHandleRunnable implements Runnable {
 
                         }
 
-                        String reportJsonData = JacksonUtil.toJSon(reportDefaultValues);
+                        if (hasValueQuotaCount > 0) {
 
-                        this.logger.debug("{} 报表指标处理完毕, 将指标发送到 kafka ,json data: {}", this.reportBuildRule.getReportName(), reportJsonData);
+                            String reportJsonData = JacksonUtil.toJSon(reportDefaultValues);
 
-                        ProducerRecord<String, String> producerRecord = new ProducerRecord<>(this.reportDataTopic, reportJsonData);
+                            this.logger.debug("{} 报表指标处理完毕, 将指标发送到 kafka ,json data: {}", this.reportBuildRule.getReportName(), reportJsonData);
 
-                        this.logger.debug("{} 开始发送报表处理后数据到目标 topic : {}", this.reportBuildRule.getReportName(), this.reportDataTopic);
+                            ProducerRecord<String, String> producerRecord = new ProducerRecord<>(this.reportDataTopic, reportJsonData);
 
-                        this.kafkaProducer.send(producerRecord);
+                            this.logger.debug("{} 开始发送报表处理后数据到目标 topic : {}", this.reportBuildRule.getReportName(), this.reportDataTopic);
 
-                        this.logger.debug("{} 报表数据发送完成", this.reportBuildRule.getReportName());
+                            this.kafkaProducer.send(producerRecord);
 
+                            this.logger.debug("{} 报表数据发送完成", this.reportBuildRule.getReportName());
+
+                        }else{
+
+                            this.logger.debug("埋点数据 {} 未找到需计算的指标", value);
+
+                        }
 
                     }
                 } catch (Exception e) {
