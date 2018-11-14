@@ -46,13 +46,18 @@ public class ReportConfigGenerateOrder {
 
         List<JsonLogFilter> cartFilter = new ArrayList<>();
         JsonLogFilter glbFilterRecommend = new JsonLogFilter();
-        glbFilterRecommend.setJsonPath("$.glb_filter.sort");
+        glbFilterRecommend.setJsonPath("$.glb_ubcta.sort");
         glbFilterRecommend.setValueFilter("recommend");
         cartFilter.add(glbFilterRecommend);
 
         JsonLogFilter plf = new JsonLogFilter();
         plf.setJsonPath("$.glb_plf");
         plf.setValueFilter("pc");
+
+        JsonLogFilter fmdMp = new JsonLogFilter();
+        fmdMp.setJsonPath("$.glb_ubcta.fmd");
+        fmdMp.setValueFilter("mp");
+        cartFilter.add(fmdMp);
 
         cartFilter.add(plf);
 
@@ -86,7 +91,7 @@ public class ReportConfigGenerateOrder {
         ReportKafkaConfig reportKafkaConfig = new ReportKafkaConfig();
         reportKafkaConfig.setBootstrapServers("172.31.35.194:9092,172.31.50.250:9092,172.31.63.112:9092");
         reportKafkaConfig.setDataSourceTopic("dy_log_cart_order_info");
-        reportKafkaConfig.setBootstrapGroupId("dy_bts_zaful_search_rec");
+        reportKafkaConfig.setBootstrapGroupId("dy_bts_zaful_search_rec_order");
         reportKafkaConfig.setReportStrapServers("172.31.35.194:9092,172.31.50.250:9092,172.31.63.112:9092");
         reportKafkaConfig.setReportDataTopic("dy_bts_search_rec_report");
 

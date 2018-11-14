@@ -2,7 +2,7 @@ package com.globalegrow.web;
 
 import com.globalegrow.report.LogDataCache;
 import com.globalegrow.report.ReportBuildRule;
-import com.globalegrow.report.ReportHandleRunnable;
+import com.globalegrow.report.ReportHandleRunnableSourceJson;
 import com.globalegrow.util.JacksonUtil;
 import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,7 +41,7 @@ public class ReportOrderController {
             old.shutdown();
         }
         ExecutorService executorService = Executors.newFixedThreadPool(1);
-        executorService.execute(new ReportHandleRunnable(this.logDataCache, reportBuildRule));
+        executorService.execute(new ReportHandleRunnableSourceJson(this.logDataCache, reportBuildRule));
         orderTaskExecutorServiceMap.put(reportBuildRule.getReportName(), executorService);
         /*
          Thread oldReport = this.reportThreads.get(reportBuildRule.getReportName());

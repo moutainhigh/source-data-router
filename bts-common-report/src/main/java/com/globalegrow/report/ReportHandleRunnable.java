@@ -14,8 +14,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class ReportHandleRunnable implements Runnable {
 
@@ -63,6 +61,11 @@ public class ReportHandleRunnable implements Runnable {
 
         ReportKafkaConfig reportKafkaConfig = this.reportBuildRule.getReportFromKafka();
         Properties customerProperties = new Properties();
+
+        if (reportKafkaConfig.getFromStartOffset()) {
+            customerProperties.put("auto.offset.reset", "earliest");
+        }
+
         customerProperties.put("bootstrap.servers", reportKafkaConfig.getBootstrapServers());
         customerProperties.put("group.id", reportKafkaConfig.getBootstrapGroupId());
         customerProperties.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
@@ -216,7 +219,7 @@ public class ReportHandleRunnable implements Runnable {
     }
 
 
-    private Map<String, Object> finalJsonMap(String source) {
+    public Map<String, Object> finalJsonMap(String source) throws Exception {
         Map<String, Object> sourceMap = NginxLogConvertUtil.getNginxLogParameters(source);;
         Map<String,Object> finalMap = new HashMap<>();
         sourceMap.entrySet().stream().forEach(e -> {
@@ -244,8 +247,10 @@ public class ReportHandleRunnable implements Runnable {
         return finalMap;
     }
 
-    private String finalJsonLog(String source) throws Exception {
+/*
+    public String finalJsonLog(String source) throws Exception {
         return JacksonUtil.toJSon(this.finalJsonMap(source));
     }
+*/
 
 }

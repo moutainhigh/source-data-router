@@ -139,7 +139,7 @@ public class ReportConfigGerenate {
 
         // 搜索页 PV
         ReportQuotaFieldConfig searchPagePv = new ReportQuotaFieldConfig();
-        searchPagePv.setQuotaFieldName("search_rec_uv");
+        searchPagePv.setQuotaFieldName("search_rec_pv");
         searchPagePv.setDefaultValue(0);
         searchPagePv.setExtractValueJsonPath("$.glb_od");
         searchPagePv.setValueEnum("countOneWithFilter");
@@ -158,9 +158,13 @@ public class ReportConfigGerenate {
         expFilter.add(tie);
         expFilter.add(glbs);
         expFilter.add(glbFilterRecommend);
+
         JsonLogFilter mpFilter = new JsonLogFilter();
-        mpFilter.setJsonPath("$.glb_filter.glb_pm");
+        mpFilter.setJsonPath("$.glb_pm");
         mpFilter.setValueFilter("mp");
+
+        expFilter.add(mpFilter);
+
         goodExpUv.setJsonLogFilters(expFilter);
 
         reportQuotaFieldConfigs.add(goodExpUv);
@@ -201,6 +205,7 @@ public class ReportConfigGerenate {
         JsonLogFilter sku = new JsonLogFilter();
         sku.setJsonPath("$.glb_x");
         sku.setValueFilter("sku,addtobag");
+        sku.setFilterRule("contains");
         goodClickFilter.add(sku);
 
         JsonLogFilter sckwNotNull = new JsonLogFilter();
@@ -222,10 +227,21 @@ public class ReportConfigGerenate {
         cartUv.setValueEnum("quotaStringValueExtractFromLog");
 
         List<JsonLogFilter> cartFilter = new ArrayList<>();
-        cartFilter.add(glbFilterRecommend);
+        //cartFilter.add(glbFilterRecommend);
         cartFilter.add(plf);
         cartFilter.add(sckwNotNull);
         cartFilter.add(ic);
+        //cartFilter.add(mpFilter);
+
+        JsonLogFilter fmdMp = new JsonLogFilter();
+        fmdMp.setJsonPath("$.glb_ubcta.fmd");
+        fmdMp.setValueFilter("mp");
+        cartFilter.add(fmdMp);
+
+        JsonLogFilter ubcSort = new JsonLogFilter();
+        ubcSort.setJsonPath("$.glb_ubcta.sort");
+        ubcSort.setValueFilter("recommend");
+        cartFilter.add(ubcSort);
 
         JsonLogFilter cartJsonFilter = new JsonLogFilter();
         cartJsonFilter.setJsonPath("$.glb_x");

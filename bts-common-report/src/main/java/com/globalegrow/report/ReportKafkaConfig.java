@@ -2,7 +2,7 @@ package com.globalegrow.report;
 
 public class ReportKafkaConfig {
 
-    private boolean fromStartOffset = false;
+    private Boolean fromStartOffset = false;
 
     private String bootstrapServers;
 
@@ -22,7 +22,7 @@ public class ReportKafkaConfig {
         this.bootstrapGroupId = bootstrapGroupId;
     }
 
-    public boolean isFromStartOffset() {
+    public boolean getFromStartOffset() {
         return fromStartOffset;
     }
 

@@ -137,6 +137,7 @@ public class ZafulOrderInfoHandle {
             // 订单商品，有新增时发送一次，每次有订单状态更新时全部重新发送一次
             reportOrderInfos.stream().filter(reportOrderInfo -> !reportOrderInfo.getOrder_data()).collect(Collectors.toList()).stream().forEach(reportOrderInfo -> {
                 reportOrderInfo.setOrder_status(orderStatus);
+                reportOrderInfo.setUser_id(userId);
                 logger.info("根据当前运行报表查询 redis 中的加购埋点数据:{}", this.executorServiceMap.keySet());
                 //循环所有报表 根据 用户 sku 查找埋点
                 executorServiceMap.keySet().stream().filter(key -> key.contains("ZAFUL")).forEach(key -> {
@@ -243,7 +244,12 @@ public class ZafulOrderInfoHandle {
             orderGoodInfo.setGmv(orderGoodInfo.getAmount());
         }else {
             Float f = (Float.valueOf(String.valueOf(tableData.get("goods_pay_amount"))) * 100);
-            orderGoodInfo.setGmv(f.intValue());
+            if (f.intValue() <= 0) {
+                orderGoodInfo.setGmv(orderGoodInfo.getAmount());
+            }else {
+                orderGoodInfo.setGmv(f.intValue());
+            }
+
         }
 
         return orderGoodInfo;
