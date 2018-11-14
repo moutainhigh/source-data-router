@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
@@ -29,6 +30,9 @@ public class GbOrderInfoHandle {
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     private static final String GB_REPORT_ORDER_INFO_REDIS_PREFIX = "DY_RO_GB_";
+
+    @Value("${app.order.gb.seconds:1209600}")
+    private Long orderCacheSeconds;
 
     @Autowired
     @Qualifier("executorServiceMap")
@@ -101,11 +105,11 @@ public class GbOrderInfoHandle {
      * @param orderId
      */
     private void cacheOrderDataToRedis(List<ReportOrderInfo> reportOrderInfos, String orderId) {
-        cacheOrderToRedis(reportOrderInfos, orderId, GB_REPORT_ORDER_INFO_REDIS_PREFIX, this.logger);
+        cacheOrderAndOrderGoodsToRedis(reportOrderInfos, orderId, GB_REPORT_ORDER_INFO_REDIS_PREFIX, this.logger, this.orderCacheSeconds);
 
     }
 
-    static void cacheOrderToRedis(List<ReportOrderInfo> reportOrderInfos, String orderId, String gbReportOrderInfoRedisPrefix, Logger logger) {
+    static void cacheOrderAndOrderGoodsToRedis(List<ReportOrderInfo> reportOrderInfos, String orderId, String gbReportOrderInfoRedisPrefix, Logger logger, Long cacheSeconds) {
         if (reportOrderInfos.size() >= 0) {
             try {
                 List<String> list = reportOrderInfos.stream().map(reportOrderInfo -> {
@@ -116,7 +120,7 @@ public class GbOrderInfoHandle {
                     }
                 }).collect(Collectors.toList());
 
-                SpringRedisUtil.putSet(gbReportOrderInfoRedisPrefix + orderId, list.toArray(new String[list.size()]));
+                SpringRedisUtil.putSet(gbReportOrderInfoRedisPrefix + orderId, cacheSeconds, list.toArray(new String[list.size()]));
             } catch (Exception e) {
                 logger.error("订单信息缓存至 redis 失败: {}", reportOrderInfos, e);
             }
@@ -149,7 +153,7 @@ public class GbOrderInfoHandle {
                 //reportOrderInfo.setUser_id(userId);
                 logger.info("根据当前运行报表查询 redis 中的加购埋点数据:{}", this.executorServiceMap.keySet());
                 //循环所有报表 根据 用户 sku 查找埋点
-                executorServiceMap.keySet().stream().filter(key -> key.contains("GB")).forEach(key -> {
+                executorServiceMap.keySet().stream().filter(key -> key.contains("GB_ORDER")).forEach(key -> {
                     String cartKey = key + "_" + userId + "_" + reportOrderInfo.getSku();
                     String cartLog = SpringRedisUtil.getStringValue(cartKey);
                     this.logger.info("根据当前运行报表查询到 redis key:{} 数据:{}", cartKey, cartLog);

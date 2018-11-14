@@ -13,8 +13,8 @@ curl http://localhost:38195/order?configPath=/usr/local/services/bts-common-repo
    2、订单状态为1、8 时，计算销售额（分两个字段计算，1：加购数量*单价 goods_price*goods_number 2：计算 goods_pay_amount 字段 ）<br>
    3、在处理商品时，标记已处理的商品 <br>
    4、排除订单商品的更新事件 <br>
-2、每次有事件到达，都循环一次缓存 list 根据 userid 和 sku 去 redis 缓存中查找，前缀通过接口动态新增，查询到埋点数据，则生成订单数据，将订单数据放入埋点中，发送到订单 topic；
+2、每次有事件到达，都循环一次缓存 list 根据 userid 和 sku 去 redis 缓存中查找，前缀通过报表名前缀查询，查询到埋点数据，则生成订单数据，将订单数据放入埋点中，发送到订单 topic；
    每次发送完成后，删除该 key，更新状态，重新设置 list，订单 topic 名字为：dy_log_cart_order_info; <br>
 3、订单计算 job，配置项，zaful 统一指标，<br>
-4、报表名称要求，zaful 报表名 必须包含 ZAFUL，GB 报表名称必须包含 GB
+4、报表名称要求，zaful 报表名 必须包含 ZAFUL，GB 报表名称必须包含 GB,必须包含order，zaful有订单的指标必须包含下面：ZAFUL_ORDER，GB：GB_ORDER
 

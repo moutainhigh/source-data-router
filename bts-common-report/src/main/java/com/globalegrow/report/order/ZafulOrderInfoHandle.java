@@ -1,15 +1,14 @@
 package com.globalegrow.report.order;
 
 
-import com.globalegrow.report.enums.ReportEnums;
 import com.globalegrow.util.JacksonUtil;
 import com.globalegrow.util.SpringRedisUtil;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
@@ -37,6 +36,9 @@ public class ZafulOrderInfoHandle {
 
     @Autowired
     private KafkaTemplate<String, String> kafkaTemplate;
+
+    @Value("${app.order.zaful.seconds:1209600}")
+    private Long orderCacheSeconds;
 
 
     @KafkaListener(topics = {"dy_zaful_mysql_binlog"})
@@ -103,7 +105,7 @@ public class ZafulOrderInfoHandle {
      * @param orderId
      */
     private void cacheOrderDataToRedis(List<ReportOrderInfo> reportOrderInfos, String orderId) {
-        GbOrderInfoHandle.cacheOrderToRedis(reportOrderInfos, orderId, ZAFUL_REPORT_ORDER_INFO_REDIS_PREFIX, this.logger);
+        GbOrderInfoHandle.cacheOrderAndOrderGoodsToRedis(reportOrderInfos, orderId, ZAFUL_REPORT_ORDER_INFO_REDIS_PREFIX, this.logger, this.orderCacheSeconds);
 
     }
 
@@ -133,7 +135,7 @@ public class ZafulOrderInfoHandle {
                 reportOrderInfo.setUser_id(userId);
                 logger.info("根据当前运行报表查询 redis 中的加购埋点数据:{}", this.executorServiceMap.keySet());
                 //循环所有报表 根据 用户 sku 查找埋点
-                executorServiceMap.keySet().stream().filter(key -> key.contains("ZAFUL")).forEach(key -> {
+                executorServiceMap.keySet().stream().filter(key -> key.contains("ZAFUL_ORDER")).forEach(key -> {
                     String cartKey = key + "_" + userId + "_" + reportOrderInfo.getSku();
                     String cartLog = SpringRedisUtil.getStringValue(cartKey);
                     this.logger.info("根据当前运行报表查询到 redis key:{} 数据:{}", cartKey, cartLog);
