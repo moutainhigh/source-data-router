@@ -1,6 +1,5 @@
 package com.globalegrow.report.order;
 
-
 import com.globalegrow.report.enums.ReportEnums;
 import com.globalegrow.util.JacksonUtil;
 import com.globalegrow.util.SpringRedisUtil;
@@ -22,14 +21,14 @@ import java.util.concurrent.ExecutorService;
 import java.util.stream.Collectors;
 
 /**
- * zaful bin log 埋点处理
+ * gb binlog 数据处理
  */
 @Component
-public class ZafulOrderInfoHandle {
+public class GbOrderInfoHandle {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
-    private static final String ZAFUL_REPORT_ORDER_INFO_REDIS_PREFIX = "DY_RO_ZAFUL_";
+    private static final String GB_REPORT_ORDER_INFO_REDIS_PREFIX = "DY_RO_GB_";
 
     @Autowired
     @Qualifier("executorServiceMap")
@@ -38,17 +37,15 @@ public class ZafulOrderInfoHandle {
     @Autowired
     private KafkaTemplate<String, String> kafkaTemplate;
 
-
-    @KafkaListener(topics = {"dy_zaful_mysql_binlog"})
+    @KafkaListener(topics = {"dy_gb_mysql_binlog"})
     public void listen(ConsumerRecord<String, String> record) {
         String mysqlBinLog = record.value();
-        //this.logger.debug("mysql event: {}", mysqlBinLog);
         try {
             Map<String, Object> dataMap = JacksonUtil.readValue(mysqlBinLog, Map.class);
             String eventType = String.valueOf(dataMap.get("type"));
             String table = String.valueOf(dataMap.get("table"));
 
-            if ("eload_order_info".equals(table.toLowerCase())) {
+            if (StringUtils.isNumeric(String.valueOf(dataMap.get("table")).replace("order_info_", ""))) {
                 this.logger.debug("订单表事件");
 
                 Map<String, Object> tableData = this.getEventData(dataMap);
@@ -67,7 +64,7 @@ public class ZafulOrderInfoHandle {
                 }
 
 
-            } else if ("eload_order_goods".equals(table.toLowerCase())) {
+            } else if (StringUtils.isNumeric(String.valueOf(dataMap.get("table")).replace("order_goods_", ""))) {
 
                 this.logger.debug("订单商品事件");
 
@@ -97,14 +94,33 @@ public class ZafulOrderInfoHandle {
         }
     }
 
+
     /**
      * 订单数据缓存至 redis
      * @param reportOrderInfos
      * @param orderId
      */
     private void cacheOrderDataToRedis(List<ReportOrderInfo> reportOrderInfos, String orderId) {
-        GbOrderInfoHandle.cacheOrderToRedis(reportOrderInfos, orderId, ZAFUL_REPORT_ORDER_INFO_REDIS_PREFIX, this.logger);
+        cacheOrderToRedis(reportOrderInfos, orderId, GB_REPORT_ORDER_INFO_REDIS_PREFIX, this.logger);
 
+    }
+
+    static void cacheOrderToRedis(List<ReportOrderInfo> reportOrderInfos, String orderId, String gbReportOrderInfoRedisPrefix, Logger logger) {
+        if (reportOrderInfos.size() >= 0) {
+            try {
+                List<String> list = reportOrderInfos.stream().map(reportOrderInfo -> {
+                    try {
+                        return JacksonUtil.toJSon(reportOrderInfo);
+                    } catch (Exception e) {
+                        return "";
+                    }
+                }).collect(Collectors.toList());
+
+                SpringRedisUtil.putSet(gbReportOrderInfoRedisPrefix + orderId, list.toArray(new String[list.size()]));
+            } catch (Exception e) {
+                logger.error("订单信息缓存至 redis 失败: {}", reportOrderInfos, e);
+            }
+        }
     }
 
     /**
@@ -130,14 +146,14 @@ public class ZafulOrderInfoHandle {
             // 订单商品，有新增时发送一次，每次有订单状态更新时全部重新发送一次
             reportOrderInfos.stream().filter(reportOrderInfo -> !reportOrderInfo.getOrder_data()).collect(Collectors.toList()).stream().forEach(reportOrderInfo -> {
                 reportOrderInfo.setOrder_status(orderStatus);
-                reportOrderInfo.setUser_id(userId);
+                //reportOrderInfo.setUser_id(userId);
                 logger.info("根据当前运行报表查询 redis 中的加购埋点数据:{}", this.executorServiceMap.keySet());
                 //循环所有报表 根据 用户 sku 查找埋点
-                executorServiceMap.keySet().stream().filter(key -> key.contains("ZAFUL")).forEach(key -> {
+                executorServiceMap.keySet().stream().filter(key -> key.contains("GB")).forEach(key -> {
                     String cartKey = key + "_" + userId + "_" + reportOrderInfo.getSku();
                     String cartLog = SpringRedisUtil.getStringValue(cartKey);
                     this.logger.info("根据当前运行报表查询到 redis key:{} 数据:{}", cartKey, cartLog);
-                    GbOrderInfoHandle.sendOrderBurryToOrderTopic(reportOrderInfo, cartLog, this.logger, this.kafkaTemplate);
+                    sendOrderBurryToOrderTopic(reportOrderInfo, cartLog, this.logger, this.kafkaTemplate);
 
                 });
 
@@ -152,6 +168,28 @@ public class ZafulOrderInfoHandle {
 
         this.cacheOrderDataToRedis(updateToRedis, orderId);
 
+    }
+
+    /**
+     * 加购与埋点数据关联后发送到 kafka
+     * @param reportOrderInfo
+     * @param cartLog
+     * @param logger
+     * @param kafkaTemplate
+     */
+    static void sendOrderBurryToOrderTopic(ReportOrderInfo reportOrderInfo, String cartLog, Logger logger, KafkaTemplate<String, String> kafkaTemplate) {
+        if (StringUtils.isNotEmpty(cartLog)) {
+            try {
+                Map<String, Object> logMap = JacksonUtil.readValue(cartLog, Map.class);
+                logMap.put(ReportEnums.db_order_info.name(), reportOrderInfo);
+                String orderData = JacksonUtil.toJSon(logMap);
+                logger.info("根据当前运行报表查询到, 订单数据： {}", orderData);
+                kafkaTemplate.send("dy_log_cart_order_info",orderData );
+            } catch (Exception e) {
+                logger.error("发送到 order kafka 失败: {} {}", cartLog, reportOrderInfo, e);
+                //e.printStackTrace();
+            }
+        }
     }
 
     private List<ReportOrderInfo> getByOrder(OrderInfo orderInfo) {
@@ -176,7 +214,7 @@ public class ZafulOrderInfoHandle {
             });
         }
 
-        SpringRedisUtil.del(ZAFUL_REPORT_ORDER_INFO_REDIS_PREFIX + orderInfo.getOrderId());
+        SpringRedisUtil.del(GB_REPORT_ORDER_INFO_REDIS_PREFIX + orderInfo.getOrderId());
         return reportOrderInfos;
     }
 
@@ -204,26 +242,27 @@ public class ZafulOrderInfoHandle {
             });
         }
 
-        SpringRedisUtil.del(ZAFUL_REPORT_ORDER_INFO_REDIS_PREFIX + orderGoodInfo.getOrderId());
+        SpringRedisUtil.del(GB_REPORT_ORDER_INFO_REDIS_PREFIX + orderGoodInfo.getOrderId());
         return reportOrderInfos;
     }
 
 
     private Set<String> orderCache(String orderId) {
-        return SpringRedisUtil.SMEMBERS(ZAFUL_REPORT_ORDER_INFO_REDIS_PREFIX + orderId);
+        return SpringRedisUtil.SMEMBERS(GB_REPORT_ORDER_INFO_REDIS_PREFIX + orderId);
     }
 
 
     private OrderGoodInfo orderGoodInfo(Map<String, Object> tableData) {
         //Map<String, Object> tableData = this.getEventData(dataMap);
         OrderGoodInfo orderGoodInfo = new OrderGoodInfo();
-        orderGoodInfo.setOrderId(String.valueOf(tableData.get(OrderGoodInfo.ORDER_ID)));
-        orderGoodInfo.setGoodsNum(Integer.valueOf(String.valueOf(tableData.get(OrderGoodInfo.GOODS_NUM))));
+        orderGoodInfo.setOrderId(String.valueOf(tableData.get("order_sn")));
+        orderGoodInfo.setUserId(String.valueOf(tableData.get("user_id")));
+        orderGoodInfo.setGoodsNum(Integer.valueOf(String.valueOf(tableData.get("qty"))));
         orderGoodInfo.setSku(String.valueOf(tableData.get(OrderGoodInfo.SKU)));
-        orderGoodInfo.setPrice(Float.valueOf(String.valueOf(tableData.get(OrderGoodInfo.PRICE))));
-
-        if (tableData.get("goods_pay_amount") == null || "0".equals(String.valueOf(tableData.get("goods_pay_amount"))) ||
-        "0.00".equals(String.valueOf(tableData.get("goods_pay_amount")))) {
+        orderGoodInfo.setPrice(Float.valueOf(String.valueOf(tableData.get("price"))));
+        orderGoodInfo.setGmv(orderGoodInfo.getAmount());
+        /*if (tableData.get("goods_pay_amount") == null || "0".equals(String.valueOf(tableData.get("goods_pay_amount"))) ||
+                "0.00".equals(String.valueOf(tableData.get("goods_pay_amount")))) {
             orderGoodInfo.setGmv(orderGoodInfo.getAmount());
         }else {
             Float f = (Float.valueOf(String.valueOf(tableData.get("goods_pay_amount"))) * 100);
@@ -233,7 +272,7 @@ public class ZafulOrderInfoHandle {
                 orderGoodInfo.setGmv(f.intValue());
             }
 
-        }
+        }*/
 
         return orderGoodInfo;
     }
@@ -242,12 +281,13 @@ public class ZafulOrderInfoHandle {
         //Map<String, Object> tableData = this.getEventData(dataMap);
         OrderInfo orderInfo = new OrderInfo();
         orderInfo.setUserId(String.valueOf(tableData.get(OrderInfo.USER_ID)));
-        orderInfo.setOrderId(String.valueOf(tableData.get(OrderInfo.ORDER_ID)));
-        orderInfo.setOrderStatus(String.valueOf(tableData.get(OrderInfo.ORDER_STATUS)));
+        orderInfo.setOrderId(String.valueOf(tableData.get("order_sn")));
+        orderInfo.setOrderStatus(String.valueOf(tableData.get("pay_status")));
         return orderInfo;
     }
 
     private Map<String, Object> getEventData(Map<String, Object> dataMap) {
         return (Map<String, Object>) dataMap.get("data");
     }
+
 }

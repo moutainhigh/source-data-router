@@ -10,7 +10,9 @@ public class OrderGoodInfo implements Serializable {
     public static final String GOODS_NUM = "goods_number";
     private static final long serialVersionUID = 2386895577015735850L;
 
-    private Integer orderId;
+    private String orderId;
+
+    private String userId;
 
     private String sku;
 
@@ -22,15 +24,23 @@ public class OrderGoodInfo implements Serializable {
 
     private Integer gmv;
 
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
     public void setAmount(Integer amount) {
         this.amount = amount;
     }
 
-    public Integer getOrderId() {
+    public String getOrderId() {
         return orderId;
     }
 
-    public void setOrderId(Integer orderId) {
+    public void setOrderId(String orderId) {
         this.orderId = orderId;
     }
 

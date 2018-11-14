@@ -8,7 +8,7 @@ public class ReportOrderInfo {
 
     private int goods_num = 0;
 
-    private Integer order_id;
+    private String order_id;
 
     private String user_id;
 
@@ -59,11 +59,11 @@ public class ReportOrderInfo {
         this.goods_num = goods_num;
     }
 
-    public Integer getOrder_id() {
+    public String getOrder_id() {
         return order_id;
     }
 
-    public void setOrder_id(Integer order_id) {
+    public void setOrder_id(String order_id) {
         this.order_id = order_id;
     }
 
