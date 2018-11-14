@@ -110,7 +110,7 @@ public class GbOrderInfoHandle {
     }
 
     static void cacheOrderAndOrderGoodsToRedis(List<ReportOrderInfo> reportOrderInfos, String orderId, String gbReportOrderInfoRedisPrefix, Logger logger, Long cacheSeconds) {
-        if (reportOrderInfos.size() >= 0) {
+        if (reportOrderInfos.size() > 0) {
             try {
                 List<String> list = reportOrderInfos.stream().map(reportOrderInfo -> {
                     try {
