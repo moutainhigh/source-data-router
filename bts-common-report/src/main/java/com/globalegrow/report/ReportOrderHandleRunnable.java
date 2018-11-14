@@ -1,7 +1,6 @@
 package com.globalegrow.report;
 
 import com.globalegrow.util.JacksonUtil;
-import com.globalegrow.util.NginxLogConvertUtil;
 import com.jayway.jsonpath.JsonPath;
 import com.jayway.jsonpath.ReadContext;
 import org.apache.commons.lang3.StringUtils;
@@ -15,11 +14,9 @@ import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
-public class ReportHandleRunnable implements Runnable {
-
+public class ReportOrderHandleRunnable implements Runnable {
     protected final Logger logger = LoggerFactory.getLogger(getClass());
 
-    protected LogDataCache logDataCache;
 
     protected ReportBuildRule reportBuildRule;
 
@@ -29,40 +26,14 @@ public class ReportHandleRunnable implements Runnable {
 
     protected String reportDataTopic;
 
-    public static final String BAD_JSON_PATTERN = "\"([\\d]+_?)\":";
-
-//    public static final String BAD_QUOTE_PATTERN = "([\"\"]){2,10}";
-//
-//    public static final String BAD_JSON_PATTERN2 = "\"([\\d]+_?)\":.([\\d]+_?)";
-//    public static final String BAD_JSON_PATTERN3 = "\"([\\d]+_?)\":([\\d]+_?).([\\d]+_?)";
-
-    /*public ReportHandleRunnable(ReportBuildRule reportBuildRule) {
-        this.reportBuildRule = reportBuildRule;
-        ReportKafkaConfig reportKafkaConfig = this.reportBuildRule.getReportFromKafka();
-        Properties customerProperties = new Properties();
-        customerProperties.put("bootstrap.servers", reportKafkaConfig.getBootstrapServers());
-        customerProperties.put("group.id", reportKafkaConfig.getBootstrapGroupId());
-        customerProperties.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
-        customerProperties.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
-        this.consumer = new KafkaConsumer<>(customerProperties);
-        this.consumer.subscribe(Collections.singletonList(reportKafkaConfig.getDataSourceTopic()));
-
-        Properties producerProperties = new Properties();
-        producerProperties.put("bootstrap.servers", reportKafkaConfig.getReportStrapServers());
-        producerProperties.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer");
-        producerProperties.put("value.serializer", "org.apache.kafka.common.serialization.StringSerializer");
-        this.kafkaProducer = new KafkaProducer<>(producerProperties);
-        this.reportDataTopic = reportKafkaConfig.getReportDataTopic();
-    }*/
-
-    public ReportHandleRunnable(LogDataCache logDataCache, ReportBuildRule reportBuildRule) {
-        this.logDataCache = logDataCache;
+    public ReportOrderHandleRunnable(ReportBuildRule reportBuildRule) {
         this.reportBuildRule = reportBuildRule;
 
         ReportKafkaConfig reportKafkaConfig = this.reportBuildRule.getReportFromKafka();
         Properties customerProperties = new Properties();
 
         if (reportKafkaConfig.getFromStartOffset()) {
+            this.logger.debug("{} 报表从头消费", this.reportBuildRule.getReportName());
             customerProperties.put("auto.offset.reset", "earliest");
         }
 
@@ -94,7 +65,7 @@ public class ReportHandleRunnable implements Runnable {
      */
     @Override
     public void run() {
-
+        this.logger.debug("{} 订单报表开始构建, 订单主题: {}", this.reportBuildRule.getReportName(),  this.reportDataTopic);
         try {
             while (true) {
                 try {
@@ -103,23 +74,15 @@ public class ReportHandleRunnable implements Runnable {
                     customerEach:
                     for (ConsumerRecord<String, String> consumerRecord : records) {
                         String source = consumerRecord.value();
-
-                        if (!this.canCount(source)) {
-                            continue customerEach;
-                        }
-
-                        Map<String, Object> finalJsonMap = this.finalJsonMap(source);
-
-                        String value = JacksonUtil.toJSon(finalJsonMap);
-
-                        ReadContext ctx  = JsonPath.parse(value);
-
+                        this.logger.debug("{} 报表消息: {}", this.reportBuildRule.getReportName(), source);
+                        ReadContext ctx = JsonPath.parse(source);;
 
                         if (this.reportBuildRule.getGlobaleFilter()) {
                             this.logger.debug("已开启全局过滤, 过滤规则: {}", this.reportBuildRule.getGlobaleJsonFilters());
                             List<JsonLogFilter> globaleFilter = this.reportBuildRule.getGlobaleJsonFilters();
                             for (JsonLogFilter filter : globaleFilter) {
                                 try {
+                                    this.logger.debug("{} 订单指标全局过滤", this.reportBuildRule.getReportName());
                                     Object filterValue = ctx.read(filter.getJsonPath());
                                     if (filterValue == null) {
                                         continue customerEach;
@@ -127,12 +90,13 @@ public class ReportHandleRunnable implements Runnable {
                                     if ("not_null".equals(filter.getFilterRule())) {
 
                                         if ((ctx.read(filter.getJsonPath()) == null) || StringUtils.isEmpty(ctx.read(filter.getJsonPath(), String.class))) {
+                                            this.logger.debug("{} 订单指标全局过滤", this.reportBuildRule.getReportName());
                                             continue customerEach;
                                         }
 
-                                    }
-                                    else if("equals".equals(filter.getFilterRule())){
+                                    }else if("equals".equals(filter.getFilterRule())){
                                         if (!String.valueOf(filterValue).equals(filter.getValueFilter())) {
+
                                             continue customerEach;
                                         }
                                     }
@@ -145,7 +109,7 @@ public class ReportHandleRunnable implements Runnable {
 
                         }
 
-
+                        this.logger.debug("{} 开始计算订单指标", this.reportBuildRule.getReportName());
                         // 报表指标处理
                         Map<String, Object> reportDefaultValues = new HashMap<>();
                         reportDefaultValues.putAll(this.reportBuildRule.getReportDefaultValues());
@@ -155,7 +119,7 @@ public class ReportHandleRunnable implements Runnable {
 
                             try {
                                 ReportBaseQuotaValues baseQuotaValues = ReportBaseQuotaValues.valueOf(quotaFieldConfig.getValueEnum());
-                                Object quotaValue = baseQuotaValues.getReportValueFromSourceLog(quotaFieldConfig, ctx, value);
+                                Object quotaValue = baseQuotaValues.getReportValueFromSourceLog(quotaFieldConfig, ctx, source);
 
                                 if (quotaValue != null) {
                                     hasValueQuotaCount++;
@@ -166,12 +130,6 @@ public class ReportHandleRunnable implements Runnable {
                                     quota.put(quotaFieldConfig.getQuotaFieldName(), quotaValue);
 
                                     reportDefaultValues.putAll(quota);
-                                    // 加购事件缓存至 redis，key 为 userId + sku，数据结构，string，前缀为报表名称
-                                    if (quotaFieldConfig.getCacheData() && finalJsonMap != null) {
-                                        this.logger.debug("{} 报表指标 {} 将缓存", this.reportBuildRule.getReportName(), quotaFieldConfig.getQuotaFieldName());
-                                        this.logDataCache.cacheData(this.reportBuildRule.getReportName(), finalJsonMap, quotaFieldConfig.getExpireSeconds());
-
-                                    }
 
                                 }
                             } catch (Exception e) {
@@ -196,7 +154,7 @@ public class ReportHandleRunnable implements Runnable {
 
                         } else {
 
-                            this.logger.debug("埋点数据 {} 未找到需计算的指标", value);
+                            this.logger.debug("埋点数据 {} 未找到需计算的指标", source);
 
                         }
 
@@ -211,45 +169,5 @@ public class ReportHandleRunnable implements Runnable {
             ;
         }
     }
-
-    public Boolean canCount(String source) {
-        return source.contains("_ubc.gif");
-    }
-
-
-    public Map<String, Object> finalJsonMap(String source) throws Exception {
-        Map<String, Object> sourceMap = NginxLogConvertUtil.getNginxLogParameters(source);
-        ;
-        Map<String, Object> finalMap = new HashMap<>();
-        sourceMap.entrySet().stream().forEach(e -> {
-            String value = String.valueOf(e.getValue());
-            if (value.startsWith("{")) {
-                try {
-                    if (!value.contains(":")) {
-                        logger.warn("{} 报表异常埋点数据 {}", this.reportBuildRule.getReportName(), value);
-                    } else {
-                        finalMap.put(e.getKey(), JacksonUtil.readValue(value, Map.class));
-                    }
-                } catch (Exception e1) {
-                    logger.error("{} 报表埋点字段 map 转换失败source: {} map: {}", this.reportBuildRule.getReportName(), source, value, e);
-                }
-            } else if (value.startsWith("[") && !value.startsWith("[ETA]") && value.endsWith("]")) {
-                try {
-                    finalMap.put(e.getKey(), JacksonUtil.readValue(value, List.class));
-                } catch (Exception e1) {
-                    logger.error("{} 报表埋点字段 list 转换失败： {}", this.reportBuildRule.getReportName(), value, e);
-                }
-            } else {
-                finalMap.put(e.getKey(), value);
-            }
-        });
-        return finalMap;
-    }
-
-/*
-    public String finalJsonLog(String source) throws Exception {
-        return JacksonUtil.toJSon(this.finalJsonMap(source));
-    }
-*/
 
 }

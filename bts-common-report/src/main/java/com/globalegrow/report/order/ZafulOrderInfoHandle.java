@@ -103,15 +103,18 @@ public class ZafulOrderInfoHandle {
      * @param orderId
      */
     private void cacheOrderDataToRedis(List<ReportOrderInfo> reportOrderInfos, Integer orderId) {
-        List<String> list = reportOrderInfos.stream().map(reportOrderInfo -> {
-            try {
-                return JacksonUtil.toJSon(reportOrderInfo);
-            } catch (Exception e) {
-                return "";
-            }
-        }).collect(Collectors.toList());
+        if (reportOrderInfos.size() >= 0) {
+            List<String> list = reportOrderInfos.stream().map(reportOrderInfo -> {
+                try {
+                    return JacksonUtil.toJSon(reportOrderInfo);
+                } catch (Exception e) {
+                    return "";
+                }
+            }).collect(Collectors.toList());
 
-        SpringRedisUtil.putSet(ZAFUL_REPORT_ORDER_INFO_REDIS_PREFIX + orderId, list.toArray(new String[list.size()]));
+            SpringRedisUtil.putSet(ZAFUL_REPORT_ORDER_INFO_REDIS_PREFIX + orderId, list.toArray(new String[list.size()]));
+        }
+
     }
 
     /**

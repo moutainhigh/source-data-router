@@ -94,6 +94,7 @@ public class ReportConfigGenerateOrder {
         reportKafkaConfig.setBootstrapGroupId("dy_bts_zaful_search_rec_order");
         reportKafkaConfig.setReportStrapServers("172.31.35.194:9092,172.31.50.250:9092,172.31.63.112:9092");
         reportKafkaConfig.setReportDataTopic("dy_bts_search_rec_report");
+        reportKafkaConfig.setFromStartOffset(true);
 
         rule.setReportFromKafka(reportKafkaConfig);
 
