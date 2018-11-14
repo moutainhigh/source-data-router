@@ -60,6 +60,11 @@ public class SpringRedisUtil {
         redistemplate.opsForSet().add(key, values);
     }
 
+    public static void putSet(String key, Long expireSeconds, String... values) {
+        redistemplate.opsForSet().add(key, values);
+        redistemplate.expire(key, expireSeconds, TimeUnit.SECONDS);
+    }
+
     /**
      * 根据前缀获取 key
      * @param prefix
