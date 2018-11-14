@@ -31,6 +31,8 @@ public class GbOrderInfoHandle {
 
     private static final String GB_REPORT_ORDER_INFO_REDIS_PREFIX = "DY_RO_GB_";
 
+    private static final String GB_ORDER = "GB_ORDER";
+
     @Value("${app.order.gb.seconds:1209600}")
     private Long orderCacheSeconds;
 
@@ -153,7 +155,7 @@ public class GbOrderInfoHandle {
                 //reportOrderInfo.setUser_id(userId);
                 logger.info("根据当前运行报表查询 redis 中的加购埋点数据:{}", this.executorServiceMap.keySet());
                 //循环所有报表 根据 用户 sku 查找埋点
-                executorServiceMap.keySet().stream().filter(key -> key.contains("GB_ORDER")).forEach(key -> {
+                executorServiceMap.keySet().stream().filter(key -> key.contains(GB_ORDER)).forEach(key -> {
                     String cartKey = key + "_" + userId + "_" + reportOrderInfo.getSku();
                     String cartLog = SpringRedisUtil.getStringValue(cartKey);
                     this.logger.info("根据当前运行报表查询到 redis key:{} 数据:{}", cartKey, cartLog);

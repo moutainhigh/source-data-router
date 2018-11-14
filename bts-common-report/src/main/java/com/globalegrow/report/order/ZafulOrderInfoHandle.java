@@ -30,6 +30,8 @@ public class ZafulOrderInfoHandle {
 
     private static final String ZAFUL_REPORT_ORDER_INFO_REDIS_PREFIX = "DY_RO_ZAFUL_";
 
+    private static final String ZAFUL_ORDER = "ZAFUL_ORDER";
+
     @Autowired
     @Qualifier("executorServiceMap")
     private Map<String, ExecutorService> executorServiceMap;
@@ -135,7 +137,7 @@ public class ZafulOrderInfoHandle {
                 reportOrderInfo.setUser_id(userId);
                 logger.info("根据当前运行报表查询 redis 中的加购埋点数据:{}", this.executorServiceMap.keySet());
                 //循环所有报表 根据 用户 sku 查找埋点
-                executorServiceMap.keySet().stream().filter(key -> key.contains("ZAFUL_ORDER")).forEach(key -> {
+                executorServiceMap.keySet().stream().filter(key -> key.contains(ZAFUL_ORDER)).forEach(key -> {
                     String cartKey = key + "_" + userId + "_" + reportOrderInfo.getSku();
                     String cartLog = SpringRedisUtil.getStringValue(cartKey);
                     this.logger.info("根据当前运行报表查询到 redis key:{} 数据:{}", cartKey, cartLog);
