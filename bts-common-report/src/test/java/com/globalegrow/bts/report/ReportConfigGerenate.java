@@ -64,7 +64,7 @@ public class ReportConfigGerenate {
 
         rule.setGlobaleJsonFilters(globaleFilters);
 
-        rule.setReportName("BTS_ZAFUL_SEARCH_REC");
+        rule.setReportName("BTS_ZAFUL_ORDER_SEARCH_REC");
         rule.setDescription("zaful 搜索算法 ab 测试报表取数指标配置");
         SearchRecommendReportQuotaModel searchRecommendReportQuotaModel = new SearchRecommendReportQuotaModel();
 
