@@ -1,6 +1,6 @@
 spring:
   profiles:
-    active: prod-one-thousand
+    active: kexing
 logging:
   #  config: classpath:logback-spring.xml
   path: logs
@@ -111,6 +111,27 @@ spring:
       connection-timeout: 20000
       username: esearch-ai-aws
       password: a@ss&2@1aaAQ
+server:
+  port: 38193
+
+app:
+  es:
+    index-prefix: dy-user-event-limit-one-thousand
+    index-aliases: search-app-logs
+    index-type: log
+
+---
+spring:
+  profiles: kexing
+  elasticsearch:
+    jest:
+      uris[0]: http://10.4.4.87:9202
+      uris[1]: http://10.4.4.88:9202
+      uris[2]: http://10.4.4.89:9202
+      read-timeout: 20000
+      connection-timeout: 20000
+#      username: esearch-ai-aws
+#      password: a@ss&2@1aaAQ
 server:
   port: 38193
 
