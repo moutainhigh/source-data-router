@@ -153,12 +153,12 @@ public class GbOrderInfoHandle {
             reportOrderInfos.stream().filter(reportOrderInfo -> !reportOrderInfo.getOrder_data()).collect(Collectors.toList()).stream().forEach(reportOrderInfo -> {
                 reportOrderInfo.setOrder_status(orderStatus);
                 //reportOrderInfo.setUser_id(userId);
-                logger.info("根据当前运行报表查询 redis 中的加购埋点数据:{}", this.executorServiceMap.keySet());
+                logger.debug("根据当前运行报表查询 redis 中的加购埋点数据:{}", this.executorServiceMap.keySet());
                 //循环所有报表 根据 用户 sku 查找埋点
                 executorServiceMap.keySet().stream().filter(key -> key.contains(GB_ORDER)).forEach(key -> {
                     String cartKey = key + "_" + userId + "_" + reportOrderInfo.getSku();
                     String cartLog = SpringRedisUtil.getStringValue(cartKey);
-                    this.logger.info("根据当前运行报表查询到 redis key:{} 数据:{}", cartKey, cartLog);
+                    this.logger.debug("根据当前运行报表查询到 redis key:{} 数据:{}", cartKey, cartLog);
                     sendOrderBurryToOrderTopic(reportOrderInfo, cartLog, this.logger, this.kafkaTemplate);
 
                 });
@@ -189,7 +189,7 @@ public class GbOrderInfoHandle {
                 Map<String, Object> logMap = JacksonUtil.readValue(cartLog, Map.class);
                 logMap.put(ReportEnums.db_order_info.name(), reportOrderInfo);
                 String orderData = JacksonUtil.toJSon(logMap);
-                logger.info("根据当前运行报表查询到, 订单数据： {}", orderData);
+                logger.debug("根据当前运行报表查询到, 订单数据： {}", orderData);
                 kafkaTemplate.send("dy_log_cart_order_info",orderData );
             } catch (Exception e) {
                 logger.error("发送到 order kafka 失败: {} {}", cartLog, reportOrderInfo, e);
