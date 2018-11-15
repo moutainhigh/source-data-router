@@ -232,7 +232,9 @@ public class ReportHandleRunnable implements Runnable {
             if (value.startsWith("{")) {
                 try {
                     if (!value.contains(":")) {
-                        logger.warn("{} 报表异常埋点数据 {}", this.reportBuildRule.getReportName(), value);
+                        logger.warn("{} 报表异常埋点数据 key: {} {}, source: {}", this.reportBuildRule.getReportName(),
+                                e.getKey(),
+                                value, source);
                     } else {
                         finalMap.put(e.getKey(), JacksonUtil.readValue(value, Map.class));
                     }
