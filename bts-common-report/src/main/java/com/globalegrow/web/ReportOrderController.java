@@ -7,9 +7,7 @@ import com.globalegrow.util.JacksonUtil;
 import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.File;
 import java.util.Map;
@@ -31,6 +29,20 @@ public class ReportOrderController {
     @Qualifier("orderTaskExecutorServiceMap")
     private Map<String, ExecutorService> orderTaskExecutorServiceMap;
 
+    @RequestMapping(produces = "application/json;charset=UTF-8", method = RequestMethod.POST, value = "json")
+    public Object addReportByJson(@RequestBody ReportBuildRule reportBuildRule) {
+
+        ExecutorService old = this.orderTaskExecutorServiceMap.get(reportBuildRule.getReportName());
+        if (old != null) {
+            old.shutdown();
+        }
+        ExecutorService executorService = Executors.newFixedThreadPool(1);
+        executorService.execute(new ReportOrderHandleRunnable(reportBuildRule));
+        orderTaskExecutorServiceMap.put(reportBuildRule.getReportName(), executorService);
+
+        return reportBuildRule;
+    }
+
     @GetMapping
     public String addReport(String configPath) throws Exception {
         String config = FileUtils.readFileToString(new File(configPath), "utf-8");
@@ -43,6 +55,8 @@ public class ReportOrderController {
         ExecutorService executorService = Executors.newFixedThreadPool(1);
         executorService.execute(new ReportOrderHandleRunnable(reportBuildRule));
         orderTaskExecutorServiceMap.put(reportBuildRule.getReportName(), executorService);
+
+
         return config;
     }
 

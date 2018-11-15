@@ -8,9 +8,7 @@ import com.globalegrow.util.JacksonUtil;
 import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.File;
 import java.util.Map;
@@ -28,6 +26,20 @@ public class ReportController {
     @Autowired
     @Qualifier("executorServiceMap")
     private Map<String, ExecutorService> executorServiceMap;
+
+    @RequestMapping(produces = "application/json;charset=UTF-8", method = RequestMethod.POST, value = "json")
+    public Object addReportByJson(@RequestBody ReportBuildRule reportBuildRule) {
+
+        ExecutorService old = this.executorServiceMap.get(reportBuildRule.getReportName());
+        if (old != null) {
+            old.shutdown();
+        }
+        ExecutorService executorService = Executors.newFixedThreadPool(1);
+        executorService.execute(new ReportHandleRunnable(this.logDataCache, reportBuildRule));
+        executorServiceMap.put(reportBuildRule.getReportName(), executorService);
+
+        return reportBuildRule;
+    }
 
     @GetMapping
     public String addReport(String configPath) throws Exception {
@@ -51,6 +63,8 @@ public class ReportController {
         reportThreads.put(reportBuildRule.getReportName(), thread);*/
         return config;
     }
+
+
 
     @GetMapping("remove")
     public String removeReportTask(String reportName) {
