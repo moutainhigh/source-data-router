@@ -140,7 +140,7 @@ public class ReportHandleRunnable implements Runnable {
 
                                 } catch (Exception e) {
                                     if (e instanceof PathNotFoundException) {
-                                        logger.warn("{} 全局条件过滤处理异常,过滤条件字段不存: {}, data: {}",
+                                        logger.debug("{} 全局条件过滤处理异常,过滤条件字段不存: {}, data: {}",
                                                 this.reportBuildRule.getReportName(), filter, source);
                                         continue customerEach;
                                     }
