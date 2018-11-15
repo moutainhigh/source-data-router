@@ -209,7 +209,7 @@ public enum ReportBaseQuotaValues {
 
 
         } catch (PathNotFoundException e) {
-            logger.debug("未找到 json filter 配置项 {}", jsonLogFilter);
+            logger.warn("未找到 json filter 配置项 {}", jsonLogFilter);
             return null;
         }
         return "not_null";

@@ -2,6 +2,7 @@ package com.globalegrow.report;
 
 import com.globalegrow.util.JacksonUtil;
 import com.jayway.jsonpath.JsonPath;
+import com.jayway.jsonpath.PathNotFoundException;
 import com.jayway.jsonpath.ReadContext;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
@@ -102,6 +103,11 @@ public class ReportOrderHandleRunnable implements Runnable {
                                     }
 
                                 } catch (Exception e) {
+                                    if (e instanceof PathNotFoundException) {
+                                        logger.warn("{} 全局条件过滤处理异常,过滤条件字段不存: {}, data: {}",
+                                                this.reportBuildRule.getReportName(), filter, source);
+                                        continue customerEach;
+                                    }
                                     logger.error("{} 全局条件过滤处理异常: {}, data: {}", this.reportBuildRule.getReportName(), filter, source, e);
                                     continue customerEach;
                                 }
