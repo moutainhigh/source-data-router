@@ -36,7 +36,7 @@ public class ReportConfigGenerateOrder {
         JsonLogFilter btsFilter = new JsonLogFilter();
         btsFilter.setJsonPath("$.glb_bts");
         btsFilter.setFilterRule("not_null");
-        //globaleFilters.add(btsFilter);
+        globaleFilters.add(btsFilter);
 
         JsonLogFilter siteFilter = new JsonLogFilter();
         siteFilter.setJsonPath("$.glb_d");

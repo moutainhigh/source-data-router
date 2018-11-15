@@ -26,52 +26,91 @@ public class LogDataRedisCache implements LogDataCache {
     @Autowired
     private JestClient jestClient;
 
+    public static final String APP_REPORT_END_FLAG = "_APP";
+
     /**
      * 将埋点数据进行缓存主要为加购数据缓存,目前只支持加购信息缓存
      * glb_skuinfo: {"sku":"299715908","price":"20.99","pam":"1","pc":"139","zt":0}
+     *
      * @param reportName
      * @param jsonMap
      */
     @Override
     public void cacheData(String reportName, Map<String, Object> jsonMap, Long expireSeconds) {
-        String userId = String.valueOf(jsonMap.get("glb_u"));
-        Map<String, Object> skuInfo = (Map<String, Object>) jsonMap.get("glb_skuinfo");
-        if (skuInfo != null) {
-            String sku = String.valueOf(skuInfo.get("sku"));
-            if (StringUtils.isNotEmpty(sku) && !"null".equals(sku)) {
-                if (jsonMap.get("glb_u") == null || "0".equals(jsonMap.get("glb_u"))) {
+        if (reportName.endsWith(APP_REPORT_END_FLAG)) {
 
-                    String id = String.valueOf(jsonMap.get("glb_od")) + "_" + String.valueOf(jsonMap.get("glb_d")) + "_" + String.valueOf(jsonMap.get("glb_dc"));
-                    this.logger.debug("根据 cookie 站点等信息查询用户 id 信息: {}", id);
-                    Get get = new Get.Builder("cookie-userid-rel", MD5CipherUtil.generatePassword(id)).type("userid").build();
-                    try {
-                        DocumentResult result = this.jestClient.execute(get);
-                        if (result != null) {
-                            Map<String, String> cookieUserIdMap = result.getSourceAsObject(Map.class);
-                            this.logger.debug("根据 cookie 站点等信息查询用户 id 结果:{} ,{}", id, cookieUserIdMap);
-                            userId = cookieUserIdMap.get("userid");
+            this.logger.debug("app 端的用户加购数据缓存");
 
-                        }
-                    } catch (IOException e) {
-                        logger.error("查询用户id error", e);
+            String userId = String.valueOf(jsonMap.get("customer_user_id"));
+            Map<String, Object> eventValue = (Map<String, Object>) jsonMap.get("event_value");
+
+            if (eventValue != null) {
+                String sku = String.valueOf(eventValue.get("af_content_id"));
+                if (StringUtils.isNotEmpty(sku) && !"null".equals(sku)) {
+
+                    if (StringUtils.isEmpty(userId) || "0".equals(userId)) {
+
+                        String id = String.valueOf(jsonMap.get("appsflyer_device_id")) + "_" + String.valueOf(jsonMap.get("app_name")) + "_" + String.valueOf(jsonMap.get("platform"));
+                        this.logger.debug("根据 cookie 站点等信息查询用户 id 信息: {}", id);
+                        Get get = new Get.Builder("cookie-userid-rel", MD5CipherUtil.generatePassword(id)).type("userid").build();
+                        userId = getUserIdFromEs(userId, id, get);
+
+
                     }
-                }
 
-                if (StringUtils.isNotEmpty(userId) && !"null".equals(userId)) {
-                    this.logger.debug("用户加购埋点数据缓存至 redis，以计算用户订单相关维度数据。");
-                    String redisKey = reportName + "_" + userId + "_" + sku;
-                    try {
-                        SpringRedisUtil.put(redisKey, JacksonUtil.toJSon(jsonMap), 1209600);
-                    } catch (Exception e) {
-                        this.logger.error("埋点数据缓存失败key : {},value: {}", redisKey, jsonMap);
-                    }
+                    this.addCartLogCacheToRedis(reportName, jsonMap, userId, sku);
+
                 }
 
             }
 
+        } else {
+            String userId = String.valueOf(jsonMap.get("glb_u"));
+            Map<String, Object> skuInfo = (Map<String, Object>) jsonMap.get("glb_skuinfo");
+            if (skuInfo != null) {
+                String sku = String.valueOf(skuInfo.get("sku"));
+                if (StringUtils.isNotEmpty(sku) && !"null".equals(sku)) {
+                    if (jsonMap.get("glb_u") == null || "0".equals(jsonMap.get("glb_u"))) {
+
+                        String id = String.valueOf(jsonMap.get("glb_od")) + "_" + String.valueOf(jsonMap.get("glb_d")) + "_" + String.valueOf(jsonMap.get("glb_dc"));
+                        this.logger.debug("根据 cookie 站点等信息查询用户 id 信息: {}", id);
+                        Get get = new Get.Builder("cookie-userid-rel", MD5CipherUtil.generatePassword(id)).type("userid").build();
+                        userId = getUserIdFromEs(userId, id, get);
+                    }
+
+                    this.addCartLogCacheToRedis(reportName, jsonMap, userId, sku);
+
+                }
+
+            }
         }
 
+    }
 
+    private void addCartLogCacheToRedis(String reportName, Map<String, Object> jsonMap, String userId, String sku) {
+        if (StringUtils.isNotEmpty(userId) && !"null".equals(userId)) {
+            this.logger.debug("用户加购埋点数据缓存至 redis，以计算用户订单相关维度数据。");
+            String redisKey = reportName + "_" + userId + "_" + sku;
+            try {
+                SpringRedisUtil.put(redisKey, JacksonUtil.toJSon(jsonMap), 1209600);
+            } catch (Exception e) {
+                this.logger.error("埋点数据缓存失败key : {},value: {}", redisKey, jsonMap);
+            }
+        }
+    }
 
+    private String getUserIdFromEs(String userId, String id, Get get) {
+        try {
+            DocumentResult result = this.jestClient.execute(get);
+            if (result != null) {
+                Map<String, String> cookieUserIdMap = result.getSourceAsObject(Map.class);
+                this.logger.debug("根据 cookie 站点等信息查询用户 id 结果:{} ,{}", id, cookieUserIdMap);
+                userId = cookieUserIdMap.get("userid");
+
+            }
+        } catch (IOException e) {
+            logger.error("查询用户id error", e);
+        }
+        return userId;
     }
 }
