@@ -17,4 +17,8 @@ curl http://localhost:38195/order?configPath=/usr/local/services/bts-common-repo
    每次发送完成后，删除该 key，更新状态，重新设置 list，订单 topic 名字为：dy_log_cart_order_info; <br>
 3、订单计算 job，配置项，zaful 统一指标，<br>
 4、报表名称要求，zaful 报表名 必须包含 ZAFUL，GB 报表名称必须包含 GB,必须包含order，zaful有订单的指标必须包含下面：ZAFUL_ORDER，GB：GB_ORDER
-
+## 部署信息
+服务器IP：172.31.33.169 <br>
+实际目录/data/apps/bts-common-report <br>
+软连接目录/usr/local/services/bts-common-report <br>
+项目应用部署到/usr/local/services/ 项目名称bts-common-report <br>
