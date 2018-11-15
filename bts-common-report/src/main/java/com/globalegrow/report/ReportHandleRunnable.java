@@ -231,7 +231,7 @@ public class ReportHandleRunnable implements Runnable {
             String value = String.valueOf(e.getValue());
             if (value.startsWith("{")) {
                 try {
-                    if (!value.contains(":")) {
+                    if (!value.contains(":") && !"{}".equals(value)) {
                         logger.warn("{} 报表异常埋点数据 key: {} {}, source: {}", this.reportBuildRule.getReportName(),
                                 e.getKey(),
                                 value, source);
