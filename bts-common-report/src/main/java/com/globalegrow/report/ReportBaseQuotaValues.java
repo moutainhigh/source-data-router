@@ -77,6 +77,20 @@ public enum ReportBaseQuotaValues {
         }
     },
     /**
+     * 计算逗号用字符串分隔的数量，一般为 app 端的曝光数
+     */
+    countStringWithComma{
+        @Override
+        public Object getReportValueFromSourceLog(ReportQuotaFieldConfig reportQuotaFieldConfig, ReadContext ctx, String sourceJson) {
+            Object value = filter(reportQuotaFieldConfig, ctx, sourceJson);
+            if (value != null) {
+                String s = ctx.read(reportQuotaFieldConfig.getExtractValueJsonPath(), String.class);
+                return s.split(",").length;
+            }
+            return null;
+        }
+    },
+    /**
      * 直接从 log 中获取 map 值，如 bts 指标值
      */
     extractMapValueFromLog {
