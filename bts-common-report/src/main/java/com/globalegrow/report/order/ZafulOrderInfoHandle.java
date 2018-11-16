@@ -43,7 +43,7 @@ public class ZafulOrderInfoHandle {
     private Long orderCacheSeconds;
 
 
-    @KafkaListener(topics = {"dy_zaful_mysql_binlog"}, groupId = "dy_bts_zaful_report_order")
+    @KafkaListener(topics = {"dy_zaful_mysql_binlog"}, groupId = "${dy_bts_zaful_report_order}")
     public void listen(ConsumerRecord<String, String> record) {
         String mysqlBinLog = record.value();
         //this.logger.debug("mysql event: {}", mysqlBinLog);

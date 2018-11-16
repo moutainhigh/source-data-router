@@ -43,7 +43,7 @@ public class GbOrderInfoHandle {
     @Autowired
     private KafkaTemplate<String, String> kafkaTemplate;
 
-    @KafkaListener(topics = {"dy_gb_mysql_binlog"}, groupId = "dy_bts_gb_report_order")
+    @KafkaListener(topics = {"dy_gb_mysql_binlog"}, groupId = "${dy_bts_gb_report_order}")
     public void listen(ConsumerRecord<String, String> record) {
         String mysqlBinLog = record.value();
         try {
