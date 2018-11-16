@@ -14,7 +14,6 @@ import static com.globalegrow.util.NginxLogConvertUtil.getUrlParams;
 public class AppLogConvertUtil {
 
     public static final String PARAMETERS_PATTERN = "_app.gif\\??(.*)HTTP";
-    //public static final String TIMESTAMP_PATTERN = "\\^A\\^\\d{10}";
 
     public static final String TIMESTAMP_KEY = "timestamp";
 
