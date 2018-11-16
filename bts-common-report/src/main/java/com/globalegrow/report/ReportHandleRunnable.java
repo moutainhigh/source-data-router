@@ -127,7 +127,7 @@ public class ReportHandleRunnable implements Runnable {
                                     }
                                     if ("not_null".equals(filter.getFilterRule())) {
 
-                                        if ((ctx.read(filter.getJsonPath()) == null) || StringUtils.isEmpty(ctx.read(filter.getJsonPath(), String.class))) {
+                                        if ((ctx.read(filter.getJsonPath()) == null) || StringUtils.isEmpty(String.valueOf(ctx.read(filter.getJsonPath(), Object.class)))) {
                                             continue customerEach;
                                         }
 

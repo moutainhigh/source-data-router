@@ -90,7 +90,7 @@ public class ReportOrderHandleRunnable implements Runnable {
                                     }
                                     if ("not_null".equals(filter.getFilterRule())) {
 
-                                        if ((ctx.read(filter.getJsonPath()) == null) || StringUtils.isEmpty(ctx.read(filter.getJsonPath(), String.class))) {
+                                        if ((ctx.read(filter.getJsonPath()) == null) || StringUtils.isEmpty(String.valueOf(ctx.read(filter.getJsonPath(), Object.class)))) {
                                             this.logger.debug("{} 订单指标全局过滤", this.reportBuildRule.getReportName());
                                             continue customerEach;
                                         }

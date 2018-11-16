@@ -154,7 +154,7 @@ public enum ReportBaseQuotaValues {
         try {
             if ("null".equals(jsonLogFilter.getFilterRule())) {
                 try {
-                    if (!(ctx.read(jsonLogFilter.getJsonPath()) == null) || StringUtils.isNotEmpty(ctx.read(jsonLogFilter.getJsonPath(), String.class))) {
+                    if (!(ctx.read(jsonLogFilter.getJsonPath()) == null) || StringUtils.isNotEmpty(String.valueOf(ctx.read(jsonLogFilter.getJsonPath(), Object.class)))) {
                         return null;
                     }
                 } catch (PathNotFoundException e) {
@@ -166,7 +166,7 @@ public enum ReportBaseQuotaValues {
             // not null
             if ("not_null".equals(jsonLogFilter.getFilterRule())) {
 
-                if ((ctx.read(jsonLogFilter.getJsonPath()) == null) || StringUtils.isEmpty(ctx.read(jsonLogFilter.getJsonPath(), String.class))) {
+                if ((ctx.read(jsonLogFilter.getJsonPath()) == null) || StringUtils.isEmpty(String.valueOf(ctx.read(jsonLogFilter.getJsonPath(), Object.class)))) {
                     return null;
                 }
             }else

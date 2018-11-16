@@ -21,6 +21,13 @@ public class JsonTest {
 
     public static final String BAD_JSON_PATTERN = "\"([\\d]+_?)\":";
 
+
+    @Test
+    public void testNUllMap() throws Exception {
+        String s = "{}";
+        JacksonUtil.readValue(s, Map.class);
+    }
+
     @Test
     public void testJsonMap() throws Exception {
         String s = "{\"fmd\":\"mp\",\"sk\":\"\",\"sc\":\"All Categories \",\"sckw\":\"277225301\",\"k\":\"1433363\"}";
