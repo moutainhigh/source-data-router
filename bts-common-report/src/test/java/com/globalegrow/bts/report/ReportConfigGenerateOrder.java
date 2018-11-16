@@ -200,6 +200,14 @@ public class ReportConfigGenerateOrder {
 
         reportQuotaFieldConfigs.add(amount);
 
+        ReportQuotaFieldConfig btsQuota = new ReportQuotaFieldConfig();
+        btsQuota.setQuotaFieldName("bts");
+        btsQuota.setDefaultValue(bts);
+        btsQuota.setExtractValueJsonPath("$.glb_bts");
+        btsQuota.setValueEnum("extractMapValueFromLog");
+
+        reportQuotaFieldConfigs.add(btsQuota);
+
 
         // 时间戳字段
         ReportQuotaFieldConfig timestamp = new ReportQuotaFieldConfig();
