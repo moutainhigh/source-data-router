@@ -30,7 +30,7 @@ spring:
       auto-offset-reset: latest
       value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-      group-id: mysql-bin-log-zaful-common-report
+      group-id: mysql-bin-log-zaful-common-report-dev
   redis:
     timeout: 86400
     password: 6e1KWyC29w

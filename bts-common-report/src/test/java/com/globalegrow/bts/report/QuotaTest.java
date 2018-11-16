@@ -4,6 +4,7 @@ import com.globalegrow.util.JacksonUtil;
 import com.globalegrow.util.NginxLogConvertUtil;
 import com.jayway.jsonpath.JsonPath;
 import com.jayway.jsonpath.ReadContext;
+import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
 
 import java.util.HashMap;
@@ -25,7 +26,7 @@ public class QuotaTest {
 
         ReadContext ctx  = JsonPath.parse(s);
 
-        System.out.println(String.valueOf(ctx.read("$.glb_bts", Object.class)));
+        System.out.println(StringUtils.isNotEmpty(String.valueOf(ctx.read("$.glb_bts", Object.class))));
 
     }
 
