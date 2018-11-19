@@ -175,7 +175,11 @@ public class ReportHandleRunnable implements Runnable {
                                     // 加购事件缓存至 redis，key 为 userId + sku，数据结构，string，前缀为报表名称
                                     if (quotaFieldConfig.getCacheData() && finalJsonMap != null) {
                                         this.logger.debug("{} 报表指标 {} 将缓存", this.reportBuildRule.getReportName(), quotaFieldConfig.getQuotaFieldName());
-                                        this.logDataCache.cacheData(this.reportBuildRule.getReportName(), finalJsonMap, quotaFieldConfig.getExpireSeconds());
+                                        try {
+                                            this.logDataCache.cacheData(this.reportBuildRule.getReportName(), finalJsonMap, quotaFieldConfig.getExpireSeconds());
+                                        } catch (Exception e) {
+                                            logger.warn("报表数据缓存异常", e);
+                                        }
 
                                     }
 
