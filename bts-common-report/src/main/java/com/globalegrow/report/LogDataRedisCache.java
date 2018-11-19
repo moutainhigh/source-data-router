@@ -105,10 +105,11 @@ public class LogDataRedisCache implements LogDataCache {
             if (result != null) {
                 Map<String, String> cookieUserIdMap = result.getSourceAsObject(Map.class);
                 this.logger.debug("根据 cookie 站点等信息查询用户 id 结果:{} ,{}", id, cookieUserIdMap);
-                userId = cookieUserIdMap.get("userid");
-
+                if (cookieUserIdMap != null) {
+                    userId = cookieUserIdMap.get("userid");
+                }
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             logger.error("查询用户id error", e);
         }
         return userId;
