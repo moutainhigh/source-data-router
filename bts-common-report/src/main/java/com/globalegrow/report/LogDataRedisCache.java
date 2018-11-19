@@ -37,52 +37,56 @@ public class LogDataRedisCache implements LogDataCache {
      */
     @Override
     public void cacheData(String reportName, Map<String, Object> jsonMap, Long expireSeconds) {
-        if (reportName.endsWith(APP_REPORT_END_FLAG)) {
+        try {
+            if (reportName.endsWith(APP_REPORT_END_FLAG)) {
 
-            this.logger.debug("app 端的用户加购数据缓存");
+                this.logger.debug("app 端的用户加购数据缓存");
 
-            String userId = String.valueOf(jsonMap.get("customer_user_id"));
-            Map<String, Object> eventValue = (Map<String, Object>) jsonMap.get("event_value");
+                String userId = String.valueOf(jsonMap.get("customer_user_id"));
+                Map<String, Object> eventValue = (Map<String, Object>) jsonMap.get("event_value");
 
-            if (eventValue != null) {
-                String sku = String.valueOf(eventValue.get("af_content_id"));
-                if (StringUtils.isNotEmpty(sku) && !"null".equals(sku)) {
+                if (eventValue != null) {
+                    String sku = String.valueOf(eventValue.get("af_content_id"));
+                    if (StringUtils.isNotEmpty(sku) && !"null".equals(sku)) {
 
-                    if (StringUtils.isEmpty(userId) || "0".equals(userId)) {
+                        if (StringUtils.isEmpty(userId) || "0".equals(userId)) {
 
-                        String id = String.valueOf(jsonMap.get("appsflyer_device_id")) + "_" + String.valueOf(jsonMap.get("app_name")) + "_" + String.valueOf(jsonMap.get("platform"));
-                        this.logger.debug("根据 cookie 站点等信息查询用户 id 信息: {}", id);
-                        Get get = new Get.Builder("cookie-userid-rel", MD5CipherUtil.generatePassword(id)).type("userid").build();
-                        userId = getUserIdFromEs(userId, id, get);
+                            String id = String.valueOf(jsonMap.get("appsflyer_device_id")) + "_" + String.valueOf(jsonMap.get("app_name")) + "_" + String.valueOf(jsonMap.get("platform"));
+                            this.logger.debug("根据 cookie 站点等信息查询用户 id 信息: {}", id);
+                            Get get = new Get.Builder("cookie-userid-rel", MD5CipherUtil.generatePassword(id)).type("userid").build();
+                            userId = getUserIdFromEs(userId, id, get);
 
+
+                        }
+
+                        this.addCartLogCacheToRedis(reportName, jsonMap, userId, sku);
 
                     }
 
-                    this.addCartLogCacheToRedis(reportName, jsonMap, userId, sku);
-
                 }
 
-            }
+            } else {
+                String userId = String.valueOf(jsonMap.get("glb_u"));
+                Map<String, Object> skuInfo = (Map<String, Object>) jsonMap.get("glb_skuinfo");
+                if (skuInfo != null) {
+                    String sku = String.valueOf(skuInfo.get("sku"));
+                    if (StringUtils.isNotEmpty(sku) && !"null".equals(sku)) {
+                        if (jsonMap.get("glb_u") == null || "0".equals(jsonMap.get("glb_u"))) {
 
-        } else {
-            String userId = String.valueOf(jsonMap.get("glb_u"));
-            Map<String, Object> skuInfo = (Map<String, Object>) jsonMap.get("glb_skuinfo");
-            if (skuInfo != null) {
-                String sku = String.valueOf(skuInfo.get("sku"));
-                if (StringUtils.isNotEmpty(sku) && !"null".equals(sku)) {
-                    if (jsonMap.get("glb_u") == null || "0".equals(jsonMap.get("glb_u"))) {
+                            String id = String.valueOf(jsonMap.get("glb_od")) + "_" + String.valueOf(jsonMap.get("glb_d")) + "_" + String.valueOf(jsonMap.get("glb_dc"));
+                            this.logger.debug("根据 cookie 站点等信息查询用户 id 信息: {}", id);
+                            Get get = new Get.Builder("cookie-userid-rel", MD5CipherUtil.generatePassword(id)).type("userid").build();
+                            userId = getUserIdFromEs(userId, id, get);
+                        }
 
-                        String id = String.valueOf(jsonMap.get("glb_od")) + "_" + String.valueOf(jsonMap.get("glb_d")) + "_" + String.valueOf(jsonMap.get("glb_dc"));
-                        this.logger.debug("根据 cookie 站点等信息查询用户 id 信息: {}", id);
-                        Get get = new Get.Builder("cookie-userid-rel", MD5CipherUtil.generatePassword(id)).type("userid").build();
-                        userId = getUserIdFromEs(userId, id, get);
+                        this.addCartLogCacheToRedis(reportName, jsonMap, userId, sku);
+
                     }
 
-                    this.addCartLogCacheToRedis(reportName, jsonMap, userId, sku);
-
                 }
-
             }
+        } catch (Exception e) {
+            logger.error("加购数据缓存出错", e);
         }
 
     }
