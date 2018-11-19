@@ -50,7 +50,7 @@ public class AppLogConvertUtil {
                 requestStr = requestStr.substring(0, requestStr.lastIndexOf(" HTTP"));
             }
 
-            Map<String, Object> result = getUrlParams(requestStr.replaceAll("%20&%20", " %26 "));
+            Map<String, Object> result = getUrlParams(requestStr.replaceAll("%20&%20", " %26 ").replaceAll(" & ", " %26 "));
             if (result.size() > 0) {
                 result.put(timestampKey, getTimestamp(log));
                 return result;
