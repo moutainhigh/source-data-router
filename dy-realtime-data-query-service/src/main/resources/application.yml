@@ -1,6 +1,6 @@
 spring:
   profiles:
-    active: kexing
+    active: prod
 logging:
   #  config: classpath:logback-spring.xml
   path: logs
