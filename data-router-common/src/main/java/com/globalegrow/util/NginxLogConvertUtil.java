@@ -24,6 +24,9 @@ public class NginxLogConvertUtil {
     // 用于处理 json 中存在未转义的 & 字符
     public static final String URL_PARAMETERS_JSON_PATTREN = "(.*?)=\\{(.*?)}&";
 
+    public static final String BAD_SCKW_PATTERN_STRING = "%22sckw%22:%22[\\w\\W&]+?%22";
+    public static final Pattern BAD_SCKW_PATTERN = Pattern.compile(BAD_SCKW_PATTERN_STRING);
+
     private static final Logger logger = LoggerFactory.getLogger(NginxLogConvertUtil.class);
 
     public static final Pattern p = Pattern.compile(PARAMETERS_PATTERN);
@@ -72,6 +75,22 @@ public class NginxLogConvertUtil {
 
         while (m.find()) {
             requestStr = m.group();
+        }
+
+        Matcher sckwMatcher = BAD_SCKW_PATTERN.matcher(requestStr);
+
+        String sckwStr = "";
+
+        while (sckwMatcher.find()) {
+
+            sckwStr = sckwMatcher.group();
+
+        }
+
+        if (StringUtils.isNotEmpty(sckwStr) && sckwStr.contains("&")) {
+
+            requestStr = requestStr.replaceAll(sckwStr, sckwStr.replaceAll("&", "%26"));
+
         }
 
         Map<String, Object> result = AppLogConvertUtil.getStringObjectMap(log, requestStr, TIMESTAMP_KEY);

@@ -1,11 +1,10 @@
 package com.globalegrow.text;
 
-import com.globalegrow.util.AppLogConvertUtil;
-import com.globalegrow.util.GsonUtil;
-import com.globalegrow.util.JacksonUtil;
-import com.globalegrow.util.NginxLogConvertUtil;
+import com.globalegrow.util.*;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.text.StringEscapeUtils;
 import org.junit.Test;
+import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
@@ -21,10 +20,49 @@ public class NginxLogTest {
     String pattern = "(.*?)=(.*?)&";
     String pattrenParameters = "_ubc.gif\\??(.*)HTTP";
     String patternTime = "\\^A\\^\\d{10}";
+    String badUrlPattern = "%22sckw%22:%22[\\w\\W&]+?%22";
+
+
+
     // String log = " 172.31.30.56^A^-^A^[26/Sep/2018:15:41:17 +0000]^A^\"GET /_ubc.gif?glb_t=ic&glb_tm=1537976480589&glb_oi=7c5b04ad51588b5588dd4a49bea4467c&glb_d=10002&glb_b=b&glb_s=b01&glb_p=11267&glb_plf=pc&glb_dc=1301&glb_pm=mp&glb_x=sku&glb_ubcta={\\x22rank\\x22:\\x221\\x22,\\x22sckw\\x22:\\x22%2024%%20\\x22}&glb_skuinfo={\\x22sku\\x22:\\x22138430401\\x22,\\x22pam\\x22:0,\\x22pc\\x22:\\x2211267\\x22,\\x22k\\x22:\\x221433363\\x22}&glb_filter={\\x22view\\x22:\\x2236\\x22,\\x22sort\\x22:\\x22recommend\\x22,\\x22page\\x22:\\x221\\x22}&glb_w=82713&glb_olk=10731928&glb_od=100021523291665079bc6hpre1710446&glb_osr_referrer=originalurl&glb_osr_landing=https%3A%2F%2Fwww.gearbest.com%2Fled-strips-c_11267%2F%3Fpage%3D1%26testKey%3Dold%26attr%3D2234-10290&glb_cl=https%3A%2F%2Fwww.gearbest.com%2Fled-strips-c_11267%2F%3Fpage%3D1%26testKey%3Dold%26attr%3D2234-10290&glb_pl=https%3A%2F%2Fwww.gearbest.com%2Fled-strips-c_11267%2F HTTP/1.1\"^A^200^A^372^A^\"https://www.gearbest.com/led-strips-c_11267/?page=1&testKey=old&attr=2234-10290\"^A^\"Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like Gecko\"^A^s.logsss.com^A^89.222.164.190, 10.21.240.50, 2.21.240.36, 10.20.245.117, 2.23.84.70^A^89.222.164.190^A^RU^A^Russian Federation^A^ru-RU^A^1537976477";
-    String log = "172.31.63.147^A^-^A^[12/Nov/2018:04:54:20 +0000]^A^\"GET /_ubc.gif?glb_t=ic&glb_tm=1542283493785&glb_oi=3b271a5ded4086ed1900&glb_u=21642996&glb_d=10002&glb_b=e&glb_s=e013&glb_plf=m&glb_dc=1301&glb_x=MESSAGE&glb_ubcta={%22name%22:%22Up%20to%2040%%20Off%20|%20Kinetic%20Sale%22,%22type%22:%22gbsite_custom%22}&glb_w=14161&glb_od=wagswsqvdnuo1541320075440&glb_osr_referrer=originalurl&glb_osr_landing=https%3A%2F%2Fm.gearbest.com%2F&glb_cl=https%3A%2F%2Fuserm.gearbest.com%2Findex%23%2Fmessage%2Fsort%3Findex%3D2%26source%3Dgbsite_custom&glb_pl=https%3A%2F%2Fuserm.gearbest.com%2Findex HTTP/1.1\"^A^200^A^372^A^\"https://www.zaful.com/men-sweaters-cardigans-e_140/\"^A^\"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.77 Safari/537.36\"^A^s.logsss.com^A^24.5.91.206, 10.233.61.154, 63.233.61.142, 10.237.221.142, 204.237.221.212^A^24.5.91.206^A^US^A^United States^A^en-US,en;q=0.9,it-IT;q=0.8,it;q=0.7,en-CA;q=0.6^A^1541998460";
+    String log = "172.31.25.191^A^-^A^[21/Nov/2018:04:06:44 +0000]^A^\"GET /_ubc.gif?glb_t=ic&glb_tm=1542773204285&glb_oi=5c4e2a518781d34fefb1d3e3d5d7154c&glb_u=1510396&glb_d=10002&glb_b=b&glb_s=b02&glb_plf=pc&glb_dc=1301&glb_pm=mp&glb_x=sku&glb_ubcta={%22sk%22:%22%22,%22rank%22:%2234%22,%22sckw%22:%22Red%20LED%20Watch%20Black&Red%22}&glb_skuinfo={%22sku%22:%22281653102%22,%22pam%22:0,%22pc%22:%2211336%22,%22k%22:%221433363%22}&glb_filter={%22view%22:%2236%22,%22sort%22:%22relevance%22,%22page%22:%221%22}&glb_bts={%22versionid%22:%223%22,%22bucketid%22:%22%22,%22planid%22:%22%22,%22plancode%22:%22searchhot%22,%22policy%22:%22d%22}&glb_w=19687&glb_od=dnqhizwvsody1536428499983&glb_osr_referrer=originalurl&glb_osr_landing=https%3A%2F%2Fwww.gearbest.com%2Fsmartwatch-_gear%2F&glb_cl=https%3A%2F%2Fwww.gearbest.com%2FRed-LED-Watch-(Black%2526Red-_gear%2F&glb_pl=https%3A%2F%2Fwww.gearbest.com%2Fled-watches%2Fpp_269424.html%3Fwid%3D1433363 HTTP/1.1\"^A^200^A^372^A^\"https://www.gearbest.com/Red-LED-Watch-(Black%26Red-_gear/\"^A^\"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.110 Safari/537.36\"^A^s.logsss.com^A^179.5.221.27, 10.201.103.218, 23.201.103.189, 10.203.174.28, 23.203.174.52^A^179.5.221.27^A^SV^A^El Salvador^A^es-419,es;q=0.9,en;q=0.8^A^1542773204";
+    String log1 = "172.31.25.191^A^-^A^[21/Nov/2018:04:06:44 +0000]^A^\"GET /_ubc.gif?glb_t=ic&glb_tm=1542773204285&glb_oi=5c4e2a518781d34fefb1d3e3d5d7154c&glb_u=1510396&glb_d=10002&glb_b=b&glb_s=b02&glb_plf=pc&glb_dc=1301&glb_pm=mp&glb_x=sku&glb_ubcta={%22sk%22:%22%22,%22rank%22:%2234%22,%22sckw%22:%22Red%20LED%20Watch%20BlackRed%22}&glb_skuinfo={%22sku%22:%22281653102%22,%22pam%22:0,%22pc%22:%2211336%22,%22k%22:%221433363%22}&glb_filter={%22view%22:%2236%22,%22sort%22:%22relevance%22,%22page%22:%221%22}&glb_bts={%22versionid%22:%223%22,%22bucketid%22:%22%22,%22planid%22:%22%22,%22plancode%22:%22searchhot%22,%22policy%22:%22d%22}&glb_w=19687&glb_od=dnqhizwvsody1536428499983&glb_osr_referrer=originalurl&glb_osr_landing=https%3A%2F%2Fwww.gearbest.com%2Fsmartwatch-_gear%2F&glb_cl=https%3A%2F%2Fwww.gearbest.com%2FRed-LED-Watch-(Black%2526Red-_gear%2F&glb_pl=https%3A%2F%2Fwww.gearbest.com%2Fled-watches%2Fpp_269424.html%3Fwid%3D1433363 HTTP/1.1\"^A^200^A^372^A^\"https://www.gearbest.com/Red-LED-Watch-(Black%26Red-_gear/\"^A^\"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.110 Safari/537.36\"^A^s.logsss.com^A^179.5.221.27, 10.201.103.218, 23.201.103.189, 10.203.174.28, 23.203.174.52^A^179.5.221.27^A^SV^A^El Salvador^A^es-419,es;q=0.9,en;q=0.8^A^1542773204";
+    String log2 = "172.31.25.191^A^-^A^[21/Nov/2018:04:06:44 +0000]^A^\"GET /_ubc.gif?glb_t=ic&glb_tm=1542773204285&glb_oi=5c4e2a518781d34fefb1d3e3d5d7154c&glb_u=1510396&glb_d=10002&glb_b=b&glb_s=b02&glb_plf=pc&glb_dc=1301&glb_pm=mp&glb_x=sku&glb_ubcta={%22sk%22:%22%22,%22rank%22:%2234%22,%22sckw%22:%22Red%20LED%20Watch%20&Black&Red%22}&glb_skuinfo={%22sku%22:%22281653102%22,%22pam%22:0,%22pc%22:%2211336%22,%22k%22:%221433363%22}&glb_filter={%22view%22:%2236%22,%22sort%22:%22relevance%22,%22page%22:%221%22}&glb_bts={%22versionid%22:%223%22,%22bucketid%22:%22%22,%22planid%22:%22%22,%22plancode%22:%22searchhot%22,%22policy%22:%22d%22}&glb_w=19687&glb_od=dnqhizwvsody1536428499983&glb_osr_referrer=originalurl&glb_osr_landing=https%3A%2F%2Fwww.gearbest.com%2Fsmartwatch-_gear%2F&glb_cl=https%3A%2F%2Fwww.gearbest.com%2FRed-LED-Watch-(Black%2526Red-_gear%2F&glb_pl=https%3A%2F%2Fwww.gearbest.com%2Fled-watches%2Fpp_269424.html%3Fwid%3D1433363 HTTP/1.1\"^A^200^A^372^A^\"https://www.gearbest.com/Red-LED-Watch-(Black%26Red-_gear/\"^A^\"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.110 Safari/537.36\"^A^s.logsss.com^A^179.5.221.27, 10.201.103.218, 23.201.103.189, 10.203.174.28, 23.203.174.52^A^179.5.221.27^A^SV^A^El Salvador^A^es-419,es;q=0.9,en;q=0.8^A^1542773204";
 
     String s = "https://s.logsss.com/_ubc.gif?glb_t=ie&glb_w=10836&glb_tm=1538027308072&glb_pm=md&glb_ubcta=[{%22mdlc%22:%22B_3%22,%22mdID%22:%22812%22}]&glb_plf=pc&glb_oi=m5gi5dd08kg8iqrtpekmggbo46&glb_d=10013&glb_b=a&glb_k=sz01&glb_dc=1301&glb_od=100131527644242901364134&glb_osr_referrer=originalurl&glb_osr_landing=https%3A%2F%2Fwww.zaful.com%2F&glb_cl=https%3A%2F%2Fwww.zaful.com%2F";
+
+    @Test
+    public void testWhat() {
+        String s = "{\"af_content_id\":\"280836502\",\"af_content_type\":\"product\",\"af_changed_size_or_color\":\"1\",\"af_inner_mediasource\":\"category_سترات خفيفة\",\"af_version_id\":\"\",\"af_bucket_id\":\"\",\"af_plan_id\":\"\",\"af_content_category\":\"\\/نساء\\/بلايز\\/سترات خفيفة\",\"af_price\":\"18.33\",\"af_quantity\":\"1\",\"af_currency\":\"USD\"}";
+        System.out.println(s.split("&")[0]);
+    }
+
+    /**
+     * %22sckw%22:%22Red%20LED%20Watch%20Black&Red%22
+     */
+    @Test
+    public void testBadSckw() {
+        long start = System.currentTimeMillis();
+        Pattern p = Pattern.compile(badUrlPattern);
+        Matcher m = p.matcher(log2);
+        String s = "";
+        while (m.find()) {
+            s = m.group();
+            System.out.println(m.group());
+        }
+        System.out.println(System.currentTimeMillis() - start);
+        System.out.println(s.replaceAll("&", "%26"));
+        /*if (m.find()) {
+            System.out.println(m.group());
+        }*/
+
+    }
+    @Test
+    public void testLogToJson() throws Exception {
+        long start = System.currentTimeMillis();
+        System.out.println(JacksonUtil.toJSon(NginxLogConvertUtil.getNginxLogParameters(MyLogStringUtils.unescape_perl_string(log))));
+        System.out.println(System.currentTimeMillis() - start);
+    }
 
     @Test
     public void test() throws Exception {
