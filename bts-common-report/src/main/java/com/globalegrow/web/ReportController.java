@@ -32,7 +32,7 @@ public class ReportController {
 
         ExecutorService old = this.executorServiceMap.get(reportBuildRule.getReportName());
         if (old != null) {
-            old.shutdown();
+            old.shutdownNow();
         }
         ExecutorService executorService = Executors.newFixedThreadPool(1);
         executorService.execute(new ReportHandleRunnable(this.logDataCache, reportBuildRule));
@@ -48,7 +48,7 @@ public class ReportController {
 
         ExecutorService old = this.executorServiceMap.get(reportBuildRule.getReportName());
         if (old != null) {
-            old.shutdown();
+            old.shutdownNow();
         }
         ExecutorService executorService = Executors.newFixedThreadPool(1);
         executorService.execute(new ReportHandleRunnable(this.logDataCache, reportBuildRule));
@@ -70,7 +70,7 @@ public class ReportController {
     public String removeReportTask(String reportName) {
         ExecutorService old = this.executorServiceMap.get(reportName);
         if (old != null) {
-            old.shutdown();
+            old.shutdownNow();
         }
         this.executorServiceMap.remove(reportName);
         return "success";

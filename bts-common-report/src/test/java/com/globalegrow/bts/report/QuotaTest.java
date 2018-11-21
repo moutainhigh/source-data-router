@@ -30,6 +30,15 @@ public class QuotaTest {
 
     }
 
+    @Test
+    public void testGlbD() {
+        String json = "{\"glb_dc\":\"1301\",\"glb_cl\":\"https://m.gearbest.com/promotion-Lucky-Wheel-special-4508.html?lkid=17051471\",\"glb_w\":\"538\",\"glb_t\":\"ie\",\"glb_s\":\"b03\",\"glb_p\":\"4508\",\"glb_osr\":\"ol=http://syndication.exdynsrv.com/cimp.php|href=https://m.gearbest.com/promotion-Lucky-Wheel-special-4508.html?lkid=17051471\",\"glb_od\":\"gpnfczdofeqm1542386426146\",\"glb_plf\":\"m\",\"glb_tm\":\"1542699333390\",\"glb_d\":\"10002\",\"glb_pl\":\"http://syndication.exdynsrv.com/cimp.php?data=TVRVME1qWTVPVE16TVh3NE5UZ3lNR1V3Tmpoa01XRmxPVEJsTUROa01qZ3lNV1ZpWmpWbU1URXpOUT09fGh0dHBzOi8vZ2VhcmJlc3QubW9iaWxldHJhY2tpbmcucnUvU0dQfGh0dHB8MTgzLjkwLjM3LjE5M3xTR1B8MTQwfGFkZXhjaGFuZ2UtNzM5MjQwLmNvbXwyNTQ3NzR8NTU1MjA0fDczOTI0MHwzMDU1NDk2fDUxM3wyNDgxMDQ4fDIxNDQyNTA4fDExfDEwMHw1NnwxNjY4fDM0MjU1NzQ3fDExNzA4MnwwLjF8NzB8VVNEfFVTRHwxfDF8MjJ8fDF8U0dQfHw3NHw0fDB8fHZpc2l0b3JfaWR8YTFhOGJiYTBmMzQ0NzlkZGQwYmFkNDk3NzlkYTE1N2J8MXwwfDExNzA4Mi5vcGVudHJhZmYuY29tfDB8MHwwfDB8MXwyfGV4Y2hhbmdlX2xpbmt8MmJlZDNkMDYzNzJlOTA1ODhhMWE0Yjc3ZTI4Y2UyMjd8MHwwfDB8NzUzNTk1NHwtMXwwfDE4ODAyNTJ8fHwxfDE0NDB8fDB8T0t8ZTY5NjUyMTcwZTY3NTA1ODU2NjliYWJmYzgxNmIzYmQ=\",\"glb_b\":\"b\",\"glb_oi\":\"ce23c6b8214bfe7d60d2a99cede33e6f\",\"timestamp\":1542699334000}";
+        ReadContext ctx = JsonPath.parse(json);
+        Object filterValue = ctx.read("$.glb_d");
+        System.out.println(filterValue);
+
+    }
+
     private Map<String, Object> finalJsonMap(String source) {
         Map<String, Object> sourceMap = NginxLogConvertUtil.getNginxLogParameters(source);;
         Map<String,Object> finalMap = new HashMap<>();
