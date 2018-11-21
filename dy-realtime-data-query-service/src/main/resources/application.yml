@@ -39,7 +39,7 @@ server:
 
 app:
   es:
-    index-prefix: dy-test-sequence
+    index-prefix: dy-zf-app-
     index-aliases: search-logs-test
     index-type: log
   redis:
@@ -72,7 +72,7 @@ server:
 
 app:
   es:
-    index-prefix: dy-realtime-user-event-sequence
+    index-prefix: dy-zf-app-
     index-aliases: search-app-logs
     index-type: log
   redis:
@@ -89,9 +89,12 @@ spring:
   profiles: prod-event
   elasticsearch:
     jest:
-      uris[0]: http://172.31.51.179:9200
-      uris[1]: http://172.31.51.59:9200
-      uris[2]: http://172.31.51.250:9200
+      uris[0]: http://172.31.32.62:9202
+      uris[1]: http://172.31.43.158:9202
+      uris[2]: http://172.31.47.84:9202
+      uris[3]: http://172.31.55.231:9202
+      uris[4]: http://172.31.62.107:9202
+      uris[5]: http://172.31.62.2:9202
       read-timeout: 20000
       connection-timeout: 20000
       username: esearch-ai-aws
@@ -110,9 +113,12 @@ spring:
   profiles: prod-one-thousand
   elasticsearch:
     jest:
-      uris[0]: http://172.31.51.179:9200
-      uris[1]: http://172.31.51.59:9200
-      uris[2]: http://172.31.51.250:9200
+      uris[0]: http://172.31.32.62:9202
+      uris[1]: http://172.31.43.158:9202
+      uris[2]: http://172.31.47.84:9202
+      uris[3]: http://172.31.55.231:9202
+      uris[4]: http://172.31.62.107:9202
+      uris[5]: http://172.31.62.2:9202
       read-timeout: 20000
       connection-timeout: 20000
       username: esearch-ai-aws
