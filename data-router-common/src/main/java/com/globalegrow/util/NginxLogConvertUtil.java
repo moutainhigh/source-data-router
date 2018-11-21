@@ -87,7 +87,7 @@ public class NginxLogConvertUtil {
 
         }
 
-        if (StringUtils.isNotEmpty(sckwStr) && sckwStr.contains("&")) {
+        if (StringUtils.isNotEmpty(sckwStr) && sckwStr.contains("&") && sckwStr.contains("=")) {
 
             requestStr = requestStr.replaceAll(sckwStr, sckwStr.replaceAll("&", "%26"));
 
