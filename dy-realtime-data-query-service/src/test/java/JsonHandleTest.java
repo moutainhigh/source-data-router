@@ -1,9 +1,10 @@
+/*
 import com.globalegrow.dy.dto.UserActionDto;
 import com.globalegrow.dy.dto.UserActionEsDto;
 import com.globalegrow.dy.enums.AppEventEnums;
-import com.globalegrow.util.AppLogConvertUtil;
-import com.globalegrow.util.JacksonUtil;
-import com.globalegrow.util.NginxLogConvertUtil;
+import com.globalegrow.dy.utils.AppLogConvertUtil;
+import com.globalegrow.dy.utils.JacksonUtil;
+import com.globalegrow.dy.utils.NginxLogConvertUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.junit.Test;
@@ -113,3 +114,4 @@ public class JsonHandleTest {
 
 
 }
+*/

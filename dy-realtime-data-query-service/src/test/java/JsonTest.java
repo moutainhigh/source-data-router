@@ -1,14 +1,8 @@
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.globalegrow.dy.dto.UserActionEsDto;
-import com.globalegrow.dy.utils.JacksonUtil;
-import com.globalegrow.util.GsonUtil;
-import com.google.gson.Gson;
 import io.searchbox.client.config.HttpClientConfig;
-import org.apache.http.HttpHost;
 import org.junit.Test;
-import org.springframework.util.Assert;
-import org.springframework.util.StringUtils;
 
 import java.io.UnsupportedEncodingException;
 

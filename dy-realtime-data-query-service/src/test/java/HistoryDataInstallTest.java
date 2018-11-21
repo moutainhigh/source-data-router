@@ -1,7 +1,7 @@
 import com.globalegrow.dy.controller.AppEventEnums;
 import com.globalegrow.dy.controller.SiteUtil;
-import com.globalegrow.util.JacksonUtil;
-import com.globalegrow.util.NginxLogConvertUtil;
+import com.globalegrow.dy.utils.JacksonUtil;
+import com.globalegrow.dy.utils.NginxLogConvertUtil;
 import io.searchbox.core.Index;
 import io.searchbox.params.Parameters;
 import org.apache.commons.io.FileUtils;

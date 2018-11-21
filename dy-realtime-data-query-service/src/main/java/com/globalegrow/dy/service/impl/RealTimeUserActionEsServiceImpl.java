@@ -3,19 +3,11 @@ package com.globalegrow.dy.service.impl;
 import com.globalegrow.dy.dto.*;
 import com.globalegrow.dy.enums.AppEventEnums;
 import com.globalegrow.dy.service.RealTimeUserActionService;
-import com.google.gson.JsonObject;
-import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
-import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
 import io.searchbox.client.JestClient;
 import io.searchbox.client.JestResult;
 import io.searchbox.core.Search;
-import io.searchbox.core.SearchResult;
-import io.searchbox.core.SearchScroll;
 import io.searchbox.params.Parameters;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.time.DateFormatUtils;
 import org.elasticsearch.index.query.BoolQueryBuilder;
-import org.elasticsearch.index.query.FilteredQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
@@ -129,11 +121,11 @@ public class RealTimeUserActionEsServiceImpl implements RealTimeUserActionServic
             searchSourceBuilder.sort(sortBuilder);
             Search.Builder builder = new Search.Builder(searchSourceBuilder.toString());
             this.logger.debug("elasticsearch 搜索条件: {}", searchSourceBuilder.toString());
-            //builder.addIndex(this.indexPrefix + eventName);
+            builder.addIndex(this.indexPrefix + eventName);
             //builder.addIndex(this.indexAliases);
-            builder.addIndex(this.indexAliases);
+            //builder.addIndex(this.indexAliases);
             Search search = builder
-                    .addType(this.indexType).setParameter(Parameters.ROUTING, userActionParameterDto.getCookieId() + eventName)
+                    .addType(this.indexType).setParameter(Parameters.ROUTING, userActionParameterDto.getCookieId())
                     .build();
 
             try {
