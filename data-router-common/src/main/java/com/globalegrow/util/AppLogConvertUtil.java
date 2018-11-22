@@ -15,8 +15,10 @@ public class AppLogConvertUtil {
 
     public static final String PARAMETERS_PATTERN = "_app.gif\\??(.*)HTTP";
 
-    public static final String BAD_SCKW_PATTERN_STRING = "%22sckw%22:%22[\\w\\W&\\/]+?%22";
-    public static final Pattern BAD_SCKW_PATTERN = Pattern.compile(BAD_SCKW_PATTERN_STRING);
+    public static final String BAD_CONTENT_TYPE_22_22_W_W_22_PATTERN_STRING = "%22af_content_type%22:%22[\\w\\W&\\/]+?%22";
+    public static final String BAD_CONTENT_CATEGORY_22_22_W_W_22_PATTERN_STRING = "%22af_content_category%22:%22[\\w\\W&\\/]+?%22";
+    public static final Pattern BAD_CONTENT_TYPE_PATTERN = Pattern.compile(BAD_CONTENT_TYPE_22_22_W_W_22_PATTERN_STRING);
+    public static final Pattern BAD_CONTENT_CATEGORY_PATTERN = Pattern.compile(BAD_CONTENT_CATEGORY_22_22_W_W_22_PATTERN_STRING);
 
     public static final String TIMESTAMP_KEY = "timestamp";
 
@@ -31,7 +33,7 @@ public class AppLogConvertUtil {
             Pattern p = Pattern.compile(PARAMETERS_PATTERN);
             Matcher m = null;
             try {
-                m = p.matcher(URLDecoder.decode(log, "utf-8"));
+                m = p.matcher(log);
             } catch (Exception e) {
                 m = p.matcher(log);
             }
@@ -45,7 +47,7 @@ public class AppLogConvertUtil {
                 requestStr = m.group();
             }
 
-            Matcher sckwMatcher = BAD_SCKW_PATTERN.matcher(requestStr);
+            Matcher sckwMatcher = BAD_CONTENT_TYPE_PATTERN.matcher(requestStr);
 
             String sckwStr = "";
 
@@ -58,6 +60,23 @@ public class AppLogConvertUtil {
             if (StringUtils.isNotEmpty(sckwStr) && sckwStr.contains("&") && !sckwStr.contains("=")) {
 
                 requestStr = requestStr.replaceAll(sckwStr, sckwStr.replaceAll("&", "%26"));
+
+            }
+
+
+            Matcher categoryMatcher = BAD_CONTENT_CATEGORY_PATTERN.matcher(requestStr);
+
+            String categoryStr = "";
+
+            while (categoryMatcher.find()) {
+
+                categoryStr = categoryMatcher.group();
+
+            }
+
+            if (StringUtils.isNotEmpty(categoryStr) && categoryStr.contains("&") && !categoryStr.contains("=")) {
+
+                requestStr = requestStr.replaceAll(categoryStr, categoryStr.replaceAll("&", "%26"));
 
             }
 
