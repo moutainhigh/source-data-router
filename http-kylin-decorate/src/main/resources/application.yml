@@ -150,7 +150,7 @@ app:
 logging:
   #  config: classpath:logback-spring.xml
   path: logs
-  file: kylin-report.log
+  file: logs/kylin-report.log
   level:
     root: info
     org.springframework: ERROR
