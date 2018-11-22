@@ -15,6 +15,9 @@ public class AppLogConvertUtil {
 
     public static final String PARAMETERS_PATTERN = "_app.gif\\??(.*)HTTP";
 
+    public static final String BAD_SCKW_PATTERN_STRING = "%22sckw%22:%22[\\w\\W&\\/]+?%22";
+    public static final Pattern BAD_SCKW_PATTERN = Pattern.compile(BAD_SCKW_PATTERN_STRING);
+
     public static final String TIMESTAMP_KEY = "timestamp";
 
     /**
@@ -37,6 +40,27 @@ public class AppLogConvertUtil {
             while (m.find()) {
                 requestStr = m.group();
             }
+
+            while (m.find()) {
+                requestStr = m.group();
+            }
+
+            Matcher sckwMatcher = BAD_SCKW_PATTERN.matcher(requestStr);
+
+            String sckwStr = "";
+
+            while (sckwMatcher.find()) {
+
+                sckwStr = sckwMatcher.group();
+
+            }
+
+            if (StringUtils.isNotEmpty(sckwStr) && sckwStr.contains("&") && !sckwStr.contains("=")) {
+
+                requestStr = requestStr.replaceAll(sckwStr, sckwStr.replaceAll("&", "%26"));
+
+            }
+
             Map<String, Object> result = getStringObjectMap(log, requestStr, TIMESTAMP_KEY);
             if (result != null) return result;
 
