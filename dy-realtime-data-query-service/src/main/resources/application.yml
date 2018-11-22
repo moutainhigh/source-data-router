@@ -1,6 +1,6 @@
 spring:
   profiles:
-    active: prod
+    active: dev
 logging:
   #  config: classpath:logback-spring.xml
   path: logs
@@ -23,12 +23,12 @@ spring:
   profiles: dev
   elasticsearch:
     jest:
-      uris[0]: http://172.31.32.62:9202
-      uris[1]: http://172.31.43.158:9202
-      uris[2]: http://172.31.47.84:9202
-      uris[3]: http://172.31.55.231:9202
-      uris[4]: http://172.31.62.107:9202
-      uris[5]: http://172.31.62.2:9202
+      uris[0]: http://100.26.74.93:9202
+      uris[1]: http://100.26.77.0:9202
+      uris[2]: http://18.215.206.192:9202
+      uris[3]: http://50.16.25.252:9202
+      uris[4]: http://54.144.128.124:9202
+      uris[5]: http://18.204.149.153:9202
       read-timeout: 5000
       connection-timeout: 5000
       username: esearch-ai-aws

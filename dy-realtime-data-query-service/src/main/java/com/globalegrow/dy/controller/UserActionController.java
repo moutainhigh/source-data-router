@@ -1,9 +1,17 @@
 package com.globalegrow.dy.controller;
 
+import com.alibaba.csp.sentinel.Entry;
+import com.alibaba.csp.sentinel.SphU;
+import com.alibaba.csp.sentinel.annotation.SentinelResource;
+import com.alibaba.csp.sentinel.slots.block.BlockException;
+import com.alibaba.csp.sentinel.slots.block.RuleConstant;
+import com.alibaba.csp.sentinel.slots.block.flow.FlowRule;
+import com.alibaba.csp.sentinel.slots.block.flow.FlowRuleManager;
 import com.globalegrow.dy.dto.UserActionParameterDto;
 import com.globalegrow.dy.dto.UserActionResponseDto;
 import com.globalegrow.dy.service.RealTimeUserActionService;
 import com.netflix.hystrix.HystrixThreadPoolProperties;
+
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
 import org.slf4j.Logger;
@@ -17,6 +25,8 @@ import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @RequestMapping("user")
@@ -47,13 +57,27 @@ public class UserActionController {
             @HystrixProperty(name = "execution.isolation.strategy",value = "SEMAPHORE"),
             @HystrixProperty(name = "fallback.isolation.semaphore.maxConcurrentRequests",value = "5000"),
             @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds",value = "4000")})*/
-    /*@HystrixCommand(fallbackMethod = "fallbackMethod",commandProperties = {
+    @HystrixCommand(fallbackMethod = "fallbackMethod",commandProperties = {
             @HystrixProperty(name = "execution.isolation.strategy",value = "THREAD"),
-            @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds",value = "3000")})*/
+            @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds",value = "3000")})
     public UserActionResponseDto userActionInfo(@Validated @RequestBody UserActionParameterDto parameterDto) throws IOException, ParseException {
-        long start = System.currentTimeMillis();
-        UserActionResponseDto responseDto = this.realTimeUserActionEsServiceImpl.userActionData(parameterDto);
-        this.logger.info("query es and result handle costs: {}", System.currentTimeMillis() - start);
+        //long start = System.currentTimeMillis();
+        //UserActionResponseDto responseDto =  this.realTimeUserActionEsServiceImpl.userActionData(parameterDto);
+        initFlowRules();
+        UserActionResponseDto responseDto = new UserActionResponseDto();
+        Entry entry = null;
+        try {
+            entry = SphU.entry("getUserInfo");
+            responseDto = this.realTimeUserActionEsServiceImpl.userActionData(parameterDto);
+        } catch (BlockException e1) {
+            responseDto.setMessage("服务超时或繁忙");
+            responseDto.setSuccess(false);
+        } finally {
+            if (entry != null) {
+                entry.exit();
+            }
+        }
+        //this.logger.info("总时长: {}", System.currentTimeMillis() - start);
         return responseDto;
     }
 
@@ -84,5 +108,15 @@ public class UserActionController {
     @RequestMapping("mock")
     public String mock() {
         return "success";
+    }
+
+    private static void initFlowRules(){
+        List<FlowRule> rules = new ArrayList<FlowRule>();
+        FlowRule rule = new FlowRule();
+        rule.setResource("getUserInfo");
+        rule.setGrade(RuleConstant.FLOW_GRADE_QPS);
+        rule.setCount(5000);
+        rules.add(rule);
+        FlowRuleManager.loadRules(rules);
     }
 }
