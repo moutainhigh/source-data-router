@@ -23,6 +23,7 @@ public class NginxLogConvertUtil {
     public static final String URL_PARAMETERS_PATTREN = "(.*?)=(.*?)&";
     // 用于处理 json 中存在未转义的 & 字符
     public static final String URL_PARAMETERS_JSON_PATTREN = "(.*?)=\\{(.*?)}&";
+    // glb_sckw: Christmas Pajamas 这个字段待处理,也可能出现 & 符号
 
     public static final String BAD_SCKW_PATTERN_STRING = "%22sckw%22:%22[\\w\\W&\\/]+?%22";
     public static final Pattern BAD_SCKW_PATTERN = Pattern.compile(BAD_SCKW_PATTERN_STRING);
