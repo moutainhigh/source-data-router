@@ -13,7 +13,7 @@ import java.util.Map;
 /**
  * 用户 id cookie 关系保存
  */
-@Component
+//@Component
 public class CookieAndUserIHbasedRel extends AbstractHbaseDataPersistence {
 
     public static final String HBASE_TABLE_NAME = "dy_cookie_userid_rel";
