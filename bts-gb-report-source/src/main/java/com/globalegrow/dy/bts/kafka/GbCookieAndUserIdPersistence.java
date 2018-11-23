@@ -13,7 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 
-@Component
+//@Component
 public class GbCookieAndUserIdPersistence extends CommonLogConvert {
 
     public final CountDownLatch countDownLatch1 = new CountDownLatch(1);

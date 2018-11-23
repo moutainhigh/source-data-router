@@ -3,7 +3,11 @@ package com.globalegrow.dy.bts.kafka;
 import com.globalegrow.common.hbase.CommonHbaseMapper;
 import com.globalegrow.dy.bts.model.SkuCartInfo;
 import com.globalegrow.util.GsonUtil;
+import com.globalegrow.util.MD5CipherUtil;
 import com.globalegrow.util.SpringRedisUtil;
+import io.searchbox.client.JestClient;
+import io.searchbox.core.DocumentResult;
+import io.searchbox.core.Get;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.KeyValue;
@@ -47,7 +51,7 @@ public class ZafulRecommendCartHandle {
     }
 
     @Autowired
-    private CommonHbaseMapper hbaseMapper;
+    private JestClient jestClient;
 
     @Value("${app.hbase.zfapp-userid-table}")
     private String hbaseTableName;
@@ -68,7 +72,12 @@ public class ZafulRecommendCartHandle {
                 String userId = String.valueOf(logMap.get("customer_user_id"));
                 String sku = String.valueOf(eventValueMap.get("af_content_id"));
                 if (StringUtils.isEmpty(userId) || "null".equals(userId)) {
-                    userId = this.queryUserId(deviceId);
+
+                    String id = String.valueOf(logMap.get("appsflyer_device_id")) + "_" + String.valueOf(logMap.get("app_name")) + "_" + String.valueOf(logMap.get("platform"));
+                    this.logger.debug("根据 cookie 站点等信息查询用户 id 信息: {}", id);
+                    Get get = new Get.Builder("cookie-userid-rel", MD5CipherUtil.generatePassword(id)).type("userid").build();
+                    userId = getUserIdFromEs(userId, id, get);
+
                 }
 
                 if (userId != null) {
@@ -160,8 +169,20 @@ public class ZafulRecommendCartHandle {
         return null;
     }
 
-    private String queryUserId(String deviceId) {
-        return getUserIdByDeviceId(deviceId, this.logger, this.hbaseMapper, this.hbaseTableName, this.columnFamily);
+    private String getUserIdFromEs(String userId, String id, Get get) {
+        try {
+            DocumentResult result = this.jestClient.execute(get);
+            if (result != null) {
+                Map<String, String> cookieUserIdMap = result.getSourceAsObject(Map.class);
+                this.logger.debug("根据 cookie 站点等信息查询用户 id 结果:{} ,{}", id, cookieUserIdMap);
+                if (cookieUserIdMap != null) {
+                    userId = cookieUserIdMap.get("userid");
+                }
+            }
+        } catch (Exception e) {
+            logger.error("查询用户id error", e);
+        }
+        return userId;
     }
 
     static String getUserIdByDeviceId(String deviceId, Logger logger, CommonHbaseMapper hbaseMapper, String hbaseTableName, String columnFamily) {

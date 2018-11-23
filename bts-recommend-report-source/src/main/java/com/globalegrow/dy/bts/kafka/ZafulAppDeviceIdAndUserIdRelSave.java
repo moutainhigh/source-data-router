@@ -19,7 +19,7 @@ import java.util.concurrent.CountDownLatch;
  * a保存 app 埋点 device id 与 user id 的对应关系
  * customer_user_id，appsflyer_device_id
  */
-@Component
+//@Component
 public class ZafulAppDeviceIdAndUserIdRelSave {
 
     protected final Logger logger = LoggerFactory.getLogger(getClass());
