@@ -21,6 +21,14 @@ spring:
       value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       group-id: group-cu-rel
+  elasticsearch:
+    jest:
+      uris[0]: http://172.31.51.59:9200
+      uris[1]: http://172.31.51.250:9200
+      read-timeout: 20000
+      connection-timeout: 20000
+      username: esearch-ai-aws
+      password: a@ss&2@1aaAQ
   redis:
     timeout: 86400
     password: 6e1KWyC29w
