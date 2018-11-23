@@ -13,9 +13,13 @@ import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 
 import com.globalegrow.cu.constants.GlobalConstants;
-import com.globalegrow.cu.hbase.CuRelDataEventHandler;
 import com.globalegrow.util.JacksonUtil;
+import com.globalegrow.util.MD5CipherUtil;
 import com.globalegrow.util.SpringRedisUtil;
+
+import io.searchbox.client.JestClient;
+import io.searchbox.core.DocumentResult;
+import io.searchbox.core.Get;
 
 @Component
 public class BuryPointKafkaDataListener {
@@ -25,11 +29,15 @@ public class BuryPointKafkaDataListener {
 	@Value("${redis.bury-point-data.expireSeconds:86400}")
 	private Long expireSeconds;
 
+//	@Autowired
+//	private CuRelDataEventHandler cuRelDataEventHandler;
+
 	@Autowired
-	private CuRelDataEventHandler cuRelDataEventHandler;
+	private JestClient jestClient;
 
 	/**
 	 * 埋点数据存放redis处理
+	 * 
 	 * @param record
 	 */
 	@KafkaListener(topics = { "${app.kafka.log-json-topic}" }, groupId = "cookie_userid_get")
@@ -46,16 +54,25 @@ public class BuryPointKafkaDataListener {
 			String glbFmd = String.valueOf(mapJsonLog.get("glb_fmd"));
 			if (StringUtils.isNotBlank(cookie) && !"getDeatilRecommend".equals(cookie)) {
 				Map<String, Object> outJson = new HashMap<>();
-				//满足推荐位加购事件
-				boolean isFmdEvent = "1".equals(isOrder) && StringUtils.isNotBlank(glbSku) && StringUtils.isNotBlank(glbFmd);
+				// 满足推荐位加购事件
+				boolean isFmdEvent = "1".equals(isOrder) && StringUtils.isNotBlank(glbSku)
+						&& StringUtils.isNotBlank(glbFmd);
 				if (StringUtils.isBlank(userId) && isFmdEvent) {
-					logger.info("select rowKey familyColumn from hbase,cookie :{}", cookie);
-					Object obj = this.cuRelDataEventHandler.selectRowKeyFamilyColumn(GlobalConstants.CU_TABLE_NAME, cookie,
-							"user_id", GlobalConstants.COLUMN_FAMILY);
-					if (obj != null) {
-						userId = String.valueOf(obj);
-						logger.info("select rowKey familyColumn from hbase, result userId:", userId);
-					}
+					
+
+					String id = String.valueOf(mapJsonLog.get("glb_od")) + "_" + String.valueOf(mapJsonLog.get("glb_d"))
+							+ "_" + String.valueOf(mapJsonLog.get("glb_dc"));
+					this.logger.debug("根据 cookie 站点等信息查询用户 id 信息: {}", id);
+					Get get = new Get.Builder("cookie-userid-rel", MD5CipherUtil.generatePassword(id)).type("userid")
+							.build();
+					userId = getUserIdFromEs(userId, id, get);
+					logger.info("get userId from es,cookie :", cookie+" userId: "+userId);
+//					Object obj = this.cuRelDataEventHandler.selectRowKeyFamilyColumn(GlobalConstants.CU_TABLE_NAME, cookie,
+//							"user_id", GlobalConstants.COLUMN_FAMILY);
+//					if (obj != null) {
+//						userId = String.valueOf(obj);
+//						logger.info("select rowKey familyColumn from hbase, result userId:", userId);
+//					}
 				}
 				if (StringUtils.isNotBlank(userId) && isFmdEvent) {
 					for (String k : GlobalConstants.LOG_FIELD_LIST) {
@@ -70,33 +87,53 @@ public class BuryPointKafkaDataListener {
 			}
 
 		} catch (Exception e) {
-			//TODO 监控失败
+			// TODO 监控失败
 			logger.error("json 转换出错: {}", jsonLog, e);
 		}
 	}
 
-	/**
-	 * 埋点数据存放hbase处理
-	 * @param record
-	 */
-	@KafkaListener(topics = { "${app.kafka.log-json-topic}" }, groupId = "cookie_userid_put")
-	public void listenerInsertUser(ConsumerRecord<String, String> record) {
-		String jsonLog = record.value();
+	private String getUserIdFromEs(String userId, String id, Get get) {
 		try {
-			@SuppressWarnings("unchecked")
-			Map<String, String> mapJsonLog = JacksonUtil.readValue(jsonLog, Map.class);
-			String cookie = mapJsonLog.get("glb_od");
-			String userId = mapJsonLog.get("glb_u");
-			if (StringUtils.isNotBlank(cookie) && !"getDeatilRecommend".equals(cookie) && StringUtils.isNotBlank(userId)) {
-				logger.info("cookie and userid relation insert hbase,cookie :{},userid:{}" + cookie, userId);
-				Map<String, Object> data = new HashMap<>();
-				data.put("user_id", userId);
-				this.cuRelDataEventHandler.insertData(GlobalConstants.CU_TABLE_NAME, data, cookie,
-						GlobalConstants.COLUMN_FAMILY);
+			DocumentResult result = this.jestClient.execute(get);
+			if (result != null) {
+				Map<String, String> cookieUserIdMap = result.getSourceAsObject(Map.class);
+				this.logger.debug("根据 cookie 站点等信息查询用户 id 结果:{} ,{}", id, cookieUserIdMap);
+				if (cookieUserIdMap != null) {
+					userId = cookieUserIdMap.get("userid");
+				}
 			}
 		} catch (Exception e) {
-			logger.error("json 转换出错: {}", jsonLog, e);
+			logger.error("查询用户id error", e);
 		}
+		return userId;
 	}
+
+	/**
+	 * 埋点数据存放hbase处理
+	 * 
+	 * @param record
+	 */
+
+//	@KafkaListener(topics = { "${app.kafka.log-json-topic}" }, groupId = "cookie_userid_put")
+//	public void listenerInsertUser(ConsumerRecord<String, String> record) {
+//		String jsonLog = record.value();
+//		try {
+//
+//			@SuppressWarnings("unchecked")
+//			Map<String, String> mapJsonLog = JacksonUtil.readValue(jsonLog, Map.class);
+//			String cookie = mapJsonLog.get("glb_od");
+//			String userId = mapJsonLog.get("glb_u");
+//			if (StringUtils.isNotBlank(cookie) && !"getDeatilRecommend".equals(cookie)
+//					&& StringUtils.isNotBlank(userId)) {
+//				logger.info("cookie and userid relation insert hbase,cookie :{},userid:{}" + cookie, userId);
+//				Map<String, Object> data = new HashMap<>();
+//				data.put("user_id", userId);
+//				this.cuRelDataEventHandler.insertData(GlobalConstants.CU_TABLE_NAME, data, cookie,
+//						GlobalConstants.COLUMN_FAMILY);
+//			}
+//		} catch (Exception e) {
+//			logger.error("json 转换出错: {}", jsonLog, e);
+//		}
+//	}
 
 }
