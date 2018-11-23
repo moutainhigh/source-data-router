@@ -1,6 +1,8 @@
 spring:
   profiles:
     active: dev
+  application:
+    name: dy-realtime-data-query-service
 logging:
   #  config: classpath:logback-spring.xml
   path: logs
@@ -33,6 +35,12 @@ spring:
       connection-timeout: 5000
       username: esearch-ai-aws
       password: a@ss&2@1aaAQ
+  cloud:
+    sentinel:
+      transport:
+        dashboard: localhost:38194
+        port: 8721
+      eager: true
 
 server:
   port: 38193
@@ -67,6 +75,12 @@ spring:
       connection-timeout: 20000
       username: esearch-ai-aws
       password: a@ss&2@1aaAQ
+  cloud:
+    sentinel:
+      transport:
+        dashboard: 172.31.44.72:38194
+        port: 8721
+      eager: true
 server:
   port: 38193
 
