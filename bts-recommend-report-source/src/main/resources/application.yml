@@ -13,6 +13,14 @@ spring:
   profiles: test
   hbase:
     zkServers: 172.31.61.192:2181,172.31.62.7:2181,172.31.59.31:2181,172.31.62.153:2181,172.31.36.227:2181,172.31.40.73:2181
+  elasticsearch:
+    jest:
+      uris[0]: http://172.31.51.59:9200
+      uris[1]: http://172.31.51.250:9200
+      read-timeout: 20000
+      connection-timeout: 20000
+      username: esearch-ai-aws
+      password: a@ss&2@1aaAQ
   redis:
     timeout: 86400
     password: 6e1KWyC29w
@@ -50,6 +58,14 @@ spring:
   profiles: prod
   hbase:
     zkServers: bts-master:2181,bts-masterbak:2181,bts-datanode01:2181,bts-datanode02:2181,bts-datanode03:2181,bts-datanode04:2181
+  elasticsearch:
+    jest:
+      uris[0]: http://172.31.51.59:9200
+      uris[1]: http://172.31.51.250:9200
+      read-timeout: 20000
+      connection-timeout: 20000
+      username: esearch-ai-aws
+      password: a@ss&2@1aaAQ
   redis:
     timeout: 86400
     password: 6e1KWyC29w
