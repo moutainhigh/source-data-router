@@ -52,6 +52,7 @@ public class UserActionController {
      * @return
      * @throws IOException
      */
+    @SentinelResource(value = "getUserInfo", blockHandler = "exceptionHandler")
     @RequestMapping(value = "getUserInfo",produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     /*@HystrixCommand(fallbackMethod = "fallbackMethod",commandProperties = {
             @HystrixProperty(name = "execution.isolation.strategy",value = "SEMAPHORE"),
@@ -62,8 +63,8 @@ public class UserActionController {
             @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds",value = "3000")})
     public UserActionResponseDto userActionInfo(@Validated @RequestBody UserActionParameterDto parameterDto) throws IOException, ParseException {
         //long start = System.currentTimeMillis();
-        //UserActionResponseDto responseDto =  this.realTimeUserActionEsServiceImpl.userActionData(parameterDto);
-        initFlowRules();
+        UserActionResponseDto responseDto =  this.realTimeUserActionEsServiceImpl.userActionData(parameterDto);
+        /*initFlowRules();
         UserActionResponseDto responseDto = new UserActionResponseDto();
         Entry entry = null;
         try {
@@ -76,7 +77,7 @@ public class UserActionController {
             if (entry != null) {
                 entry.exit();
             }
-        }
+        }*/
         //this.logger.info("总时长: {}", System.currentTimeMillis() - start);
         return responseDto;
     }
@@ -110,7 +111,7 @@ public class UserActionController {
         return "success";
     }
 
-    private static void initFlowRules(){
+    /*private static void initFlowRules(){
         List<FlowRule> rules = new ArrayList<FlowRule>();
         FlowRule rule = new FlowRule();
         rule.setResource("getUserInfo");
@@ -118,5 +119,13 @@ public class UserActionController {
         rule.setCount(5000);
         rules.add(rule);
         FlowRuleManager.loadRules(rules);
+    }*/
+
+    public UserActionResponseDto exceptionHandler(UserActionParameterDto parameterDto, BlockException ex) {
+        logger.warn("服务超时或繁忙"+parameterDto.toString());
+        UserActionResponseDto actionResponseDto = new UserActionResponseDto();
+        actionResponseDto.setMessage("服务超时或繁忙");
+        actionResponseDto.setSuccess(false);
+        return actionResponseDto;
     }
 }
