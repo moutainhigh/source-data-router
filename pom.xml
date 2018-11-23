@@ -13,7 +13,6 @@
 		<!--<module>kafka-to-hbase</module> -->
 		<!-- <module>log-data-dimensions</module> -->
 		<module>data-router-common</module>
-		<module>test-data</module>
 		<!--<module>log-data-dimensions-recommend</module> -->
 		<module>persistence-cookie-and-userid-rel</module>
 		<module>common-hbase</module>
@@ -29,9 +28,13 @@
 		<!--<module>ips-data-service</module>
 		<module>ips-mq-service</module>-->
         <module>bts-gb-report-source</module>
-        <module>temp-log-data</module>
-		<module>hbase-test</module>
-	</modules>
+        <module>gb-mysql-binlog-handle</module>
+		<module>real-time-data-to-redis</module>
+        <module>dy-realtime-data-query-service</module>
+        <module>lzo-data-file-analyse</module>
+		<module>hdfs-remote-connector</module>
+        <module>bts-common-report</module>
+    </modules>
 
 	<parent>
 		<groupId>org.springframework.boot</groupId>

@@ -18,6 +18,20 @@ import org.springframework.web.client.RestTemplate;
 @Configuration
 public class RestTemplateConfig {
 
+/*
+    @Bean
+    public ThreadPoolTaskScheduler threadPoolTaskScheduler() {
+        ThreadPoolTaskScheduler threadPoolTaskScheduler = new ThreadPoolTaskScheduler();
+        threadPoolTaskScheduler.setPoolSize(10);
+        //threadPoolTaskScheduler.setRemoveOnCancelPolicy(true);
+        return threadPoolTaskScheduler;
+    }
+
+    @Bean
+    public ConcurrentHashMap<String, ScheduledFuture<?>> scheduleTaskContainer() {
+        return new ConcurrentHashMap<>();
+    }*/
+
     @Bean
     public RestTemplate restTemplate() {
         return new RestTemplate(httpRequestFactory());
@@ -25,8 +39,9 @@ public class RestTemplateConfig {
 
     @Bean
     public ClientHttpRequestFactory httpRequestFactory() {
-
-        return new HttpComponentsClientHttpRequestFactory(httpClient());
+        HttpComponentsClientHttpRequestFactory componentsClientHttpRequestFactory = new HttpComponentsClientHttpRequestFactory(httpClient());
+        componentsClientHttpRequestFactory.setReadTimeout(20000);
+        return componentsClientHttpRequestFactory;
 
     }
 
@@ -38,13 +53,13 @@ public class RestTemplateConfig {
                 .build();
         PoolingHttpClientConnectionManager connectionManager = new PoolingHttpClientConnectionManager(registry);
         //设置整个连接池最大连接数 根据自己的场景决定
-        connectionManager.setMaxTotal(200);
+        connectionManager.setMaxTotal(500);
         //路由是对maxTotal的细分
-        connectionManager.setDefaultMaxPerRoute(100);
+        connectionManager.setDefaultMaxPerRoute(10);
         RequestConfig requestConfig = RequestConfig.custom()
-                .setSocketTimeout(15000) //服务器返回数据(response)的时间，超过该时间抛出read timeout
-                .setConnectTimeout(15000)//连接上服务器(握手成功)的时间，超出该时间抛出connect timeout
-                .setConnectionRequestTimeout(5000)//从连接池中获取连接的超时时间，超过该时间未拿到可用连接，会抛出org.apache.http.conn.ConnectionPoolTimeoutException: Timeout waiting for connection from pool
+                .setSocketTimeout(20000) //服务器返回数据(response)的时间，超过该时间抛出read timeout
+                .setConnectTimeout(20000)//连接上服务器(握手成功)的时间，超出该时间抛出connect timeout
+                .setConnectionRequestTimeout(20000)//从连接池中获取连接的超时时间，超过该时间未拿到可用连接，会抛出org.apache.http.conn.ConnectionPoolTimeoutException: Timeout waiting for connection from pool
                 .build();
         return HttpClientBuilder.create()
                 .setDefaultRequestConfig(requestConfig)

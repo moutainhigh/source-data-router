@@ -52,6 +52,19 @@ public class SpringRedisUtil {
         return tMap;
     }
 
+    public static Set<String> SMEMBERS(String key) {
+        return redistemplate.opsForSet().members(key);
+    }
+
+    public static void putSet(String key, String... values) {
+        redistemplate.opsForSet().add(key, values);
+    }
+
+    public static void putSet(String key, Long expireSeconds, String... values) {
+        redistemplate.opsForSet().add(key, values);
+        redistemplate.expire(key, expireSeconds, TimeUnit.SECONDS);
+    }
+
     /**
      * 根据前缀获取 key
      * @param prefix

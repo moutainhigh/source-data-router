@@ -1,6 +1,8 @@
 package com.globalegrow.dy.service;
 
 import com.globalegrow.dy.dto.BtsReportFieldConfigDto;
+import com.globalegrow.dy.dto.BtsReportParameterDto;
+import com.globalegrow.dy.dto.FieldConfigParameterDto;
 import com.globalegrow.dy.model.BtsReportKylinConfig;
 
 import java.util.List;
@@ -22,6 +24,20 @@ public interface BtsReportConfigService {
      * @return
      */
     BtsReportKylinConfig getBtsReportKylinConfig(Long planId, String productLineCode, String queryType);
+
+    /**
+     * 现根据产品线及实验code查询，没有则根据实验 is 产品线查询
+     * @param btsReportParameterDto
+     * @return
+     */
+    BtsReportKylinConfig configMixedQuery(BtsReportParameterDto btsReportParameterDto);
+
+    /**
+     * 现根据产品线及实验code查询，没有则根据实验 is 产品线查询
+     * @param btsReportParameterDto
+     * @return
+     */
+    List<BtsReportFieldConfigDto> btsReportFieldConfigMixedQuery(FieldConfigParameterDto btsReportParameterDto);
 
     /**
      * 报表字段名配置

@@ -37,7 +37,7 @@ public abstract class CommonLogHandle extends CommonLogConvertAndSend{
      * @param logMap
      * @return
      */
-    protected abstract Map<String, Object> reportData(Map<String, Object> logMap);
+    protected abstract Map<String, Object> reportData(Map<String, Object> logMap) throws Exception;
 
     /**
      * 报表数据过滤，如站点过滤等

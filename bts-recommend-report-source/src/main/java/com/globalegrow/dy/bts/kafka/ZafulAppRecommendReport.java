@@ -5,7 +5,11 @@ import com.globalegrow.common.hbase.CommonHbaseMapper;
 import com.globalegrow.dy.report.enums.RecommendQuotaFields;
 import com.globalegrow.enums.CartRedisKeysPrefix;
 import com.globalegrow.util.GsonUtil;
+import com.globalegrow.util.MD5CipherUtil;
 import com.globalegrow.util.SpringRedisUtil;
+import io.searchbox.client.JestClient;
+import io.searchbox.core.DocumentResult;
+import io.searchbox.core.Get;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -35,7 +39,7 @@ public class ZafulAppRecommendReport extends CommonBtsAppLogHandle{
     private Long expiredSeconds;
 
     @Autowired
-    private CommonHbaseMapper hbaseMapper;
+    private JestClient jestClient;
 
     public final CountDownLatch countDownLatch1 = new CountDownLatch(1);
 
@@ -128,7 +132,12 @@ public class ZafulAppRecommendReport extends CommonBtsAppLogHandle{
                     if (StringUtils.isNotEmpty(goodNum) && !"null".equals(goodNum)) {
                         this.logger.debug("加购数  + {}", goodNum);
                         if (StringUtils.isEmpty(userId) || "null".equals(userId)) {
-                            userId = this.queryUserId(deviceId);
+
+                            String id = String.valueOf(logMap.get("appsflyer_device_id")) + "_" + String.valueOf(logMap.get("app_name")) + "_" + String.valueOf(logMap.get("platform"));
+                            this.logger.debug("根据 cookie 站点等信息查询用户 id 信息: {}", id);
+                            Get get = new Get.Builder("cookie-userid-rel", MD5CipherUtil.generatePassword(id)).type("userid").build();
+                            userId = getUserIdFromEs(userId, id, get);
+
                         }
                         int cartNum = Integer.valueOf(goodNum);
                         outJson.put(RecommendQuotaFields.skuAddCart.recommendReportFields.name(), cartNum);
@@ -151,14 +160,19 @@ public class ZafulAppRecommendReport extends CommonBtsAppLogHandle{
         return null;
     }
 
-    private String queryUserId(String deviceId) {
-        this.logger.debug("查询 userid");
-        Object obj = this.hbaseMapper.selectRowKeyFamilyColumn(this.hbaseTableName, deviceId,
-                "userid", this.columnFamily);
-        if (obj != null) {
-            return String.valueOf(obj);
+    private String getUserIdFromEs(String userId, String id, Get get) {
+        try {
+            DocumentResult result = this.jestClient.execute(get);
+            if (result != null) {
+                Map<String, String> cookieUserIdMap = result.getSourceAsObject(Map.class);
+                this.logger.debug("根据 cookie 站点等信息查询用户 id 结果:{} ,{}", id, cookieUserIdMap);
+                if (cookieUserIdMap != null) {
+                    userId = cookieUserIdMap.get("userid");
+                }
+            }
+        } catch (Exception e) {
+            logger.error("查询用户id error", e);
         }
-        this.logger.info("加购事件未找到 userid, cookie: {}", deviceId);
-        return null;
+        return userId;
     }
 }

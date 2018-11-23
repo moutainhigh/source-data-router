@@ -1,0 +1,53 @@
+logging:
+  #  config: classpath:logback-spring.xml
+  path: logs
+  file: data-redis.log
+  level:
+    root: info
+    org.springframework: ERROR
+    sun.rmi: ERROR
+    org.apache.http: ERROR
+spring:
+  profiles: prod
+  elasticsearch:
+    jest:
+      uris[0]: http://172.31.51.179:9200
+      uris[1]: http://172.31.51.59:9200
+      uris[2]: http://172.31.51.250:9200
+      read-timeout: 5000
+      connection-timeout: 5000
+      username: esearch-ai-aws
+      password: a@ss&2@1aaAQ
+  kafka:
+    consumer:
+      auto-offset-reset: latest
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      group-id: dy-realtime-app-elastic
+      max-poll-records: 10000
+      enable-auto-commit: true
+      auto-commit-interval: 1000
+    producer:
+      client-id: dy-realtime-app
+    bootstrap-servers: 172.31.35.194:9092,172.31.50.250:9092,172.31.63.112:9092
+    listener:
+      concurrency: 20
+
+server:
+  port: 38194
+log-source: glbg-analitic
+app:
+  es:
+    index-prefix: dy-app-data-temp-
+    index-aliases: search-temp-logs
+  redis:
+    readtime:
+      prefix: dy_rt_p_
+enable:
+  customer:
+    statistics: false
+    
+redis:
+  type: cluster
+  nodes: redis://172.31.47.78:6382,redis://172.31.47.222:6380,redis://172.31.47.222:6381,redis://172.31.44.253:6379,redis://172.31.44.253:6380,redis://172.31.47.78:6383
+  password: 6e1KWyC29w

@@ -23,12 +23,17 @@
     bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic kylin_bts_report --from-beginning <br>
     bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic kylin_bts_zaful_report --from-beginning <br>
     bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic kylin_bts_zaful_log --from-beginning <br>
-    bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic zaful_mysql_binlog_kylin --from-beginning <br>
+    bin/kafka-console-consumer.sh --bootstrap-server 172.31.35.194:9092,172.31.50.250:9092,172.31.63.112:9092 --topic zaful_mysql_binlog_kylin --from-beginning <br>
+    bin/kafka-console-consumer.sh --bootstrap-server 172.31.35.194:9092,172.31.50.250:9092,172.31.63.112:9092 --topic glbg-analitic --from-beginning <br>
     bin/kafka-console-producer.sh --broker-list localhost:9092 --topic bury_point_log_default <br>
     bin/kafka-topics.sh --list --zookeeper localhost:2181 <br>
     bin/kafka-topics.sh --zookeeper localhost:2181 --create --topic kylin_bts_zaful_report --partitions 1 --replication-factor 1 <br>
     bin/kafka-topics.sh --zookeeper localhost:2181 --create --topic kylin_bts_zaful_log --partitions 1 --replication-factor 1 <br>
     $KAFKA_HOME/bin/kafka-consumer-groups.sh --new-consumer --bootstrap-server 172.31.35.194:9092,172.31.50.250:9092,172.31.63.112:9092 --group mysql-bin-log-zaful --describe<br>
+    $KAFKA_HOME/bin/kafka-consumer-groups.sh --new-consumer --bootstrap-server 172.31.35.194:9092,172.31.50.250:9092,172.31.63.112:9092 --group bts-app-dopamine-base-quota --describe<br>
+    $KAFKA_HOME/bin/kafka-consumer-groups.sh --new-consumer --bootstrap-server 172.31.35.194:9092,172.31.50.250:9092,172.31.63.112:9092 --group nginx_log_convert --describe<br>
+    $KAFKA_HOME/bin/kafka-consumer-groups.sh --new-consumer --bootstrap-server 172.31.35.194:9092,172.31.50.250:9092,172.31.63.112:9092 --group dy-realtime-app-redis --describe<br>
+    $KAFKA_HOME/bin/kafka-consumer-groups.sh --new-consumer --bootstrap-server 172.31.35.194:9092,172.31.50.250:9092,172.31.63.112:9092 --group bts-app-dopamine-base-quota-refind --describe<br>
     $KAFKA_HOME/bin/kafka-consumer-groups.sh --new-consumer --bootstrap-server 172.31.35.194:9092,172.31.50.250:9092,172.31.63.112:9092 --group bts-log-dimensions_zafu_recommend --describe<br>
     $KAFKA_HOME/bin/kafka-console-consumer.sh --bootstrap-server 172.31.35.194:9092,172.31.50.250:9092,172.31.63.112:9092 --topic dy_bts_report_recommend_zaful --from-beginning<br>
     $KAFKA_HOME/bin/kafka-console-consumer.sh --bootstrap-server 172.31.35.194:9092,172.31.50.250:9092,172.31.63.112:9092 --topic dy_bts_gb_gd_rec_report --from-beginning<br>

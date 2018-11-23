@@ -4,12 +4,21 @@ spring:
 logging:
 #  config: classpath:logback-spring.xml
   path: logs
-  file: kylin-report.log
+  file: logs/kylin-report.log
   level:
     root: debug
     org.springframework: ERROR
     sun.rmi: ERROR
     org.apache.http: ERROR
+  pattern:
+    file: '[%d{yyyy-MM-dd HH:mm:ss.SSS}] [%thread] [%-5level] %logger{50} - %msg%n'
+server:
+  undertow:
+    io-threads: 8
+    worker-threads: 64
+    direct-buffers:
+  compression:
+    enabled: true
 
 ---
 logging:
@@ -46,11 +55,17 @@ spring:
   redis:
     timeout: 86400
     password: 6e1KWyC29w
+    #sentinel:
+      #master: sentinel-172.31.42.160-6383
+      #nodes: 172.31.34.55:6384,172.31.42.160:6384,172.31.54.133:6383
     sentinel:
-      master: sentinel-172.31.42.160-6383
-      nodes: 172.31.34.55:6384,172.31.42.160:6384,172.31.54.133:6383
-  cache:
-    cache-names:
+      master: mymaster
+      nodes: 10.60.49.130:26380,10.60.49.130:26381,10.60.49.130:26382
+  elasticsearch:
+    jest:
+      uris: http://18.213.71.71:9200,http://18.213.41.233:9200,http://52.204.111.230:9200
+      read-timeout: 20000
+      connection-timeout: 20000
 
 mybatis:
   mapperLocations: classpath*:com/globalegrow/dy/mapper/*.xml
@@ -59,24 +74,32 @@ mybatis:
 server:
   port: 38093
 
+app:
+  es:
+    index-prefix: dy-app-data-temp-
+    index-aliases: search-temp-logs
+  redis:
+    readtime:
+      prefix: dy_rt_p_
+
 ---
 logging:
   #  config: classpath:logback-spring.xml
   path: logs
   file: kylin-report.log
   level:
-    root: info
+    root: debug
     org.springframework: ERROR
     sun.rmi: ERROR
     org.apache.http: ERROR
 spring:
-  profiles: prod
+  profiles: test
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
     driver-class-name: com.mysql.jdbc.Driver
-    url: jdbc:mysql://bts_all_prd_mysql_m.gw-internel.com:3306/dy_report?useSSL=false&useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true
-    username: bts_m_user
-    password: cjQ6lt2vir
+    url: jdbc:mysql://52.202.56.79:3306/dy_report?useSSL=false&useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true
+    username: root
+    password: Hqyg@123456
     druid:
       initial-size: 2
       max-active: 5
@@ -94,11 +117,21 @@ spring:
   redis:
     timeout: 86400
     password: 6e1KWyC29w
-    sentinel:
-      master: sentinel-172.31.42.160-6383
-      nodes: 172.31.34.55:6384,172.31.42.160:6384,172.31.54.133:6383
-  cache:
-    cache-names:
+    cluster:
+      nodes[0]: 172.31.47.78:6382
+      nodes[1]: 172.31.47.222:6380
+      nodes[2]: 172.31.47.222:6381
+      nodes[3]: 172.31.44.253:6379
+      nodes[4]: 172.31.44.253:6380
+      nodes[5]: 172.31.47.78:6383
+
+  elasticsearch:
+    jest:
+      uris: http://172.31.51.179:9200,http://172.31.51.59:9200,http://172.31.51.250:9200
+      read-timeout: 20000
+      connection-timeout: 20000
+      username: esearch-ai-aws
+      password: a@ss&2@1aaAQ
 
 mybatis:
   mapperLocations: classpath*:com/globalegrow/dy/mapper/*.xml
@@ -106,3 +139,79 @@ mybatis:
 
 server:
   port: 38093
+app:
+  es:
+    index-prefix: dy-app-data-temp-
+    index-aliases: search-temp-logs
+  redis:
+    readtime:
+      prefix: dy_rt_p_
+---
+logging:
+  #  config: classpath:logback-spring.xml
+  path: logs
+  file: logs/kylin-report.log
+  level:
+    root: info
+    org.springframework: ERROR
+    sun.rmi: ERROR
+    org.apache.http: ERROR
+spring:
+  profiles: prod
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://172.31.62.7:3306/dy_report?useSSL=false&useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true
+    username: root
+    password: 1qRPaINi5lbY3n6r
+    druid:
+      initial-size: 2
+      max-active: 5
+      min-idle: 5
+      max-wait: 60000
+      pool-prepared-statements: true
+      max-pool-prepared-statement-per-connection-size: 20
+      validation-query: SELECT 1 FROM DUAL
+      validation-query-timeout: 60000
+      test-on-borrow: false
+      test-on-return: false
+      test-while-idle: true
+      time-between-eviction-runs-millis: 20000
+      min-evictable-idle-time-millis: 30000
+#172.31.47.78:6382|172.31.47.222:6380|172.31.47.222:6381|172.31.44.253:6379|172.31.44.253:6380|172.31.47.78:6383
+#6e1KWyC29w
+  redis:
+    timeout: 86400
+    password: 6e1KWyC29w
+    cluster:
+      nodes[0]: 172.31.47.78:6382
+      nodes[1]: 172.31.47.222:6380
+      nodes[2]: 172.31.47.222:6381
+      nodes[3]: 172.31.44.253:6379
+      nodes[4]: 172.31.44.253:6380
+      nodes[5]: 172.31.47.78:6383
+    pool:
+      max-active: 64
+      max-idle: 64
+      min-idle: 8
+  elasticsearch:
+    jest:
+      uris: http://172.31.51.179:9200,http://172.31.51.59:9200,http://172.31.51.250:9200
+      read-timeout: 20000
+      connection-timeout: 20000
+      username: esearch-ai-aws
+      password: a@ss&2@1aaAQ
+mybatis:
+  mapperLocations: classpath*:com/globalegrow/dy/mapper/*.xml
+  type-aliases-package: com.globalegrow.dy.model
+
+server:
+  port: 38093
+app:
+  es:
+    index-prefix: dy-app-data-temp-
+    index-aliases: search-temp-logs
+    index-type: log-test
+  redis:
+    readtime:
+      prefix: dy_rt_p_

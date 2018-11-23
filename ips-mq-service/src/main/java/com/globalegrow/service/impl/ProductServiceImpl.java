@@ -1,16 +1,14 @@
 package com.globalegrow.service.impl;
 
-import java.util.List;
-
+import com.globalegrow.bean.ProductInfo;
+import com.globalegrow.mapper.ProductMapper;
+import com.globalegrow.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.globalegrow.bean.ProductInfo;
-import com.globalegrow.mapper.ProductMapper;
-import com.globalegrow.service.ProductService;
-import com.globalegrow.util.SpringRedisUtil;
+import java.util.List;
 
 @Service
 public class ProductServiceImpl implements ProductService {

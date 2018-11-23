@@ -1,0 +1,72 @@
+spring:
+  profiles:
+    active: @profiles.active@
+logging:
+  path: logs
+  file: to-hbase.log
+  level:
+    root: debug
+    org.springframework: ERROR
+
+---
+spring:
+  profiles: test
+  kafka:
+    consumer:
+      bootstrap-servers: 172.18.0.2:9092
+      auto-offset-reset: latest
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      group-id: mysql-bin-log-zaful
+  redis:
+      timeout: 86400
+      password: 6e1KWyC29w
+      sentinel:
+        master: sentinel-172.31.42.160-6383
+        nodes: 172.31.34.55:6384,172.31.42.160:6384,172.31.54.133:6383
+
+app:
+  kafka:
+    order: dy_zaful_recommend_order_info
+        topics[0]: dy_zaful_recommend_order_info
+        topics[1]: dy_zaful_bts_recommend_order_info
+
+
+server:
+  port: 38083
+
+
+---
+spring:
+  profiles: prod
+  kafka:
+    bootstrap-servers: 172.31.35.194:9092,172.31.50.250:9092,172.31.63.112:9092
+    consumer:
+      auto-offset-reset: latest
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      group-id: mysql-bin-log-gb
+    listener:
+      concurrency: 5
+  redis:
+      timeout: 86400
+      password: 6e1KWyC29w
+      sentinel:
+        master: sentinel-172.31.42.160-6383
+        nodes: 172.31.34.55:6384,172.31.42.160:6384,172.31.54.133:6383
+
+
+app:
+  kafka:
+    topics[0]: dy_zaful_recommend_order_info
+    topics[1]: dy_zaful_bts_recommend_order_info
+    topics[2]: dy_bts_zaful_re_simple_report
+    topics[3]: dy_zaful_lp_order_source_data
+    zaful:
+        topic: dy_zaful_mysql_binlog
+        list-page-report: dy_bts_zaful_list_page_report
+  redis:
+    expire-seconds: 86400
+
+server:
+  port: 38086

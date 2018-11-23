@@ -6,7 +6,12 @@ import com.globalegrow.common.CommonBtsLogHandle;
 import com.globalegrow.common.hbase.CommonHbaseMapper;
 import com.globalegrow.enums.CartRedisKeysPrefix;
 import com.globalegrow.util.GsonUtil;
+import com.globalegrow.util.JacksonUtil;
+import com.globalegrow.util.MD5CipherUtil;
 import com.globalegrow.util.SpringRedisUtil;
+import io.searchbox.client.JestClient;
+import io.searchbox.core.DocumentResult;
+import io.searchbox.core.Get;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -17,15 +22,19 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
+import java.util.stream.Collectors;
 
 @Component
-public class GbGoodDetailRecommendReportListener extends CommonBtsLogHandle {
+public class GbGoodDetailRecommendReportListener extends GbBtsInfo {
 
     @Value("${app.kafka.gb-good-detail-rec-topic}")
     private String goodDetailRecommendReportTopic;
 
+   /* @Autowired
+    private CommonHbaseMapper commonHbaseMapper;*/
+
     @Autowired
-    private CommonHbaseMapper commonHbaseMapper;
+    private JestClient jestClient;
 
     @Value("${app.redis.gb-adt-expired-seconds:604800}")
     private Long expiredSeconds;
@@ -43,14 +52,14 @@ public class GbGoodDetailRecommendReportListener extends CommonBtsLogHandle {
     public final CountDownLatch countDownLatch5 = new CountDownLatch(1);
 
 
-    @KafkaListener(topicPartitions = {@TopicPartition(topic = "${app.kafka.log-source-topic}", partitions = {"6","7"})}, groupId = "bts_gb_gooddetail_recommend_report")
+    @KafkaListener(topics = "${app.kafka.log-source-topic}", groupId = "bts_gb_gooddetail_recommend_report")
     public void listen1(String logString) throws Exception {
         this.logger.debug("customer thread 1");
         this.handleLogData(logString);
         this.countDownLatch1.countDown();
     }
 
-    @KafkaListener(topicPartitions = {@TopicPartition(topic = "${app.kafka.log-source-topic}", partitions = {"8","9"})}, groupId = "bts_gb_gooddetail_recommend_report")
+    /*@KafkaListener(topicPartitions = {@TopicPartition(topic = "${app.kafka.log-source-topic}", partitions = {"8","9"})}, groupId = "bts_gb_gooddetail_recommend_report")
     public void listen2(String logString) throws Exception {
         this.logger.debug("customer thread 2");
         this.handleLogData(logString);
@@ -71,17 +80,17 @@ public class GbGoodDetailRecommendReportListener extends CommonBtsLogHandle {
         this.countDownLatch4.countDown();
     }
 
-    /**
+    *//**
      *
      * @throws Exception
-     */
+     *//*
     //@KafkaListener(topics = {"${app.kafka.log-source-topic}"}, groupId = "bts_gb_gooddetail_recommend_report")
     @KafkaListener(topicPartitions = {@TopicPartition(topic = "${app.kafka.log-source-topic}", partitions = {"0","1"})}, groupId = "bts_gb_gooddetail_recommend_report")
     public void listen5(String logString) throws Exception {
         this.logger.debug("customer thread 5");
         this.handleLogData(logString);
         this.countDownLatch5.countDown();
-    }
+    }*/
 
     /**
      * 最终输出的报表数据结构
@@ -90,7 +99,7 @@ public class GbGoodDetailRecommendReportListener extends CommonBtsLogHandle {
      * @return
      */
     @Override
-    protected Map<String, Object> reportData(Map<String, Object> logMap) {
+    protected Map<String, Object> reportData(Map<String, Object> logMap) throws Exception {
         Map<String, String> btsInfo = this.btsInfo(logMap);
         if (btsInfo != null) {
             String glbX = String.valueOf(logMap.get("glb_x"));
@@ -123,9 +132,16 @@ public class GbGoodDetailRecommendReportListener extends CommonBtsLogHandle {
                 if (isExposureEvent && pmIsMr && StringUtils.isNotEmpty(glbUbcta) && !"null".equals(glbUbcta)) {
                     this.logger.debug("推荐位曝光 pv");
                     btsGbRecommendReport.setRecommendTypeExposurePv(1);
-                    List ubcs = GsonUtil.readValue(glbUbcta, List.class);
+                    List<Map<String, String>> ubcs = GsonUtil.readValue(glbUbcta, List.class);
                     if (ubcs != null && ubcs.size() > 0) {
                         this.logger.debug("曝光商品数");
+                        /*String policy = btsInfo.get("mdlc");
+                        if (StringUtils.isNotEmpty(policy)) {
+                            List<Map<String, String>> ubcsBts =  ubcs.stream().filter(e -> policy.equals(e.get("mrlc"))).collect(Collectors.toList());
+                            btsGbRecommendReport.setSkuExposure(ubcsBts.size());
+                        }else {
+                            this.logger.warn("埋点中推荐位状态为空！");
+                        }*/
                         btsGbRecommendReport.setSkuExposure(ubcs.size());
                     }
                     return this.reportDataToMap(btsGbRecommendReport);
@@ -143,11 +159,17 @@ public class GbGoodDetailRecommendReportListener extends CommonBtsLogHandle {
                             && StringUtils.isNotEmpty(glbSkuInfo) && !"null".equals(glbSkuInfo)) {
                         this.logger.debug("sku 加购数");
                         if (StringUtils.isEmpty(glbU)) {
-                            glbU = this.queryUserId(glbOd);
+                            //glbU = this.queryUserId(glbOd);
+
+                            String id = String.valueOf(logMap.get("glb_od")) + "_" + String.valueOf(logMap.get("glb_d")) + "_" + String.valueOf(logMap.get("glb_dc"));
+                            this.logger.debug("根据 cookie 站点等信息查询用户 id 信息: {}", id);
+                            Get get = new Get.Builder("cookie-userid-rel", MD5CipherUtil.generatePassword(id)).type("userid").build();
+                            glbU = getUserIdFromEs(glbU, id, get);
+
                         }
                         if (glbSkuInfo.contains("[{")) {
                             this.logger.debug("buy together");
-                            List<Map<String, Object>> skus = GsonUtil.readValue(glbSkuInfo, List.class);
+                            List<Map<String, Object>> skus = JacksonUtil.readValue(glbSkuInfo, List.class);
                             if (skus != null && skus.size() > 0) {
                                 btsGbRecommendReport.setSkuAddCart(skus.size());
                                 if (StringUtils.isNotEmpty(glbU)) {
@@ -161,7 +183,7 @@ public class GbGoodDetailRecommendReportListener extends CommonBtsLogHandle {
                             }
                         } else {
                             this.logger.debug("单个商品加购");
-                            Map<String, Object> sku = GsonUtil.readValue(glbSkuInfo, Map.class);
+                            Map<String, Object> sku = JacksonUtil.readValue(glbSkuInfo, Map.class);
                             if (sku != null && sku.size() > 0) {
                                 btsGbRecommendReport.setSkuAddCart(1);
                                 if (StringUtils.isNotEmpty(glbU)) {
@@ -182,15 +204,20 @@ public class GbGoodDetailRecommendReportListener extends CommonBtsLogHandle {
         return null;
     }
 
-    private String queryUserId(String cookie) {
-        this.logger.debug("查询 userid");
-        Object obj = this.commonHbaseMapper.selectRowKeyFamilyColumn(this.hbaseTableName, cookie,
-                "userid", this.columnFamily);
-        if (obj != null) {
-            return String.valueOf(obj);
+    private String getUserIdFromEs(String userId, String id, Get get) {
+        try {
+            DocumentResult result = this.jestClient.execute(get);
+            if (result != null) {
+                Map<String, String> cookieUserIdMap = result.getSourceAsObject(Map.class);
+                this.logger.debug("根据 cookie 站点等信息查询用户 id 结果:{} ,{}", id, cookieUserIdMap);
+                if (cookieUserIdMap != null) {
+                    userId = cookieUserIdMap.get("userid");
+                }
+            }
+        } catch (Exception e) {
+            logger.error("查询用户id error", e);
         }
-        this.logger.info("加购事件未找到 userid, cookie: {}", cookie);
-        return null;
+        return userId;
     }
 
     private void cacheCartInfo(String cookie, String userId, String sku, Integer pam, Map<String, String> bts) {
