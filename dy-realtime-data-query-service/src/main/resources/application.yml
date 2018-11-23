@@ -79,7 +79,7 @@ spring:
     sentinel:
       transport:
         dashboard: 172.31.44.72:38194
-        port: 38193
+        #port: 38193
       eager: true
 server:
   port: 38193
