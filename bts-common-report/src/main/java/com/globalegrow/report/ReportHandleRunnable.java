@@ -1,5 +1,6 @@
 package com.globalegrow.report;
 
+import com.globalegrow.util.AppLogConvertUtil;
 import com.globalegrow.util.JacksonUtil;
 import com.globalegrow.util.NginxLogConvertUtil;
 import com.jayway.jsonpath.JsonPath;
@@ -228,33 +229,43 @@ public class ReportHandleRunnable implements Runnable {
 
 
     public Map<String, Object> finalJsonMap(String source) throws Exception {
-        Map<String, Object> sourceMap = NginxLogConvertUtil.getNginxLogParameters(source);
-        ;
+        Map<String, Object> sourceMap = null;
+        if (source.contains("/_app.gif?")) {
+            sourceMap = AppLogConvertUtil.getAppLogParameters(source);;
+        }else if (source.contains("/_ubc.gif?")){
+            sourceMap = NginxLogConvertUtil.getNginxLogParameters(source);;
+        }
         Map<String, Object> finalMap = new HashMap<>();
-        sourceMap.entrySet().stream().forEach(e -> {
-            String value = String.valueOf(e.getValue());
-            if (value.startsWith("{")) {
-                try {
-                    if (!value.contains(":") && !"{}".equals(value)) {
-                        logger.warn("{} 报表异常埋点数据 key: {} {}, source: {}", this.reportBuildRule.getReportName(),
-                                e.getKey(),
-                                value, source);
-                    } else {
-                        finalMap.put(e.getKey(), JacksonUtil.readValue(value, Map.class));
+
+        if (sourceMap == null) {
+
+            sourceMap.entrySet().stream().forEach(e -> {
+                String value = String.valueOf(e.getValue());
+                if (value.startsWith("{")) {
+                    try {
+                        if (!value.contains(":") && !"{}".equals(value)) {
+                            logger.warn("{} 报表异常埋点数据 key: {} {}, source: {}", this.reportBuildRule.getReportName(),
+                                    e.getKey(),
+                                    value, source);
+                        } else {
+                            finalMap.put(e.getKey(), JacksonUtil.readValue(value, Map.class));
+                        }
+                    } catch (Exception e1) {
+                        logger.error("{} 报表埋点字段 map 转换失败source: {} map: {}", this.reportBuildRule.getReportName(), source, value, e);
                     }
-                } catch (Exception e1) {
-                    logger.error("{} 报表埋点字段 map 转换失败source: {} map: {}", this.reportBuildRule.getReportName(), source, value, e);
+                } else if (value.startsWith("[") && !value.startsWith("[ETA]") && value.endsWith("]")) {
+                    try {
+                        finalMap.put(e.getKey(), JacksonUtil.readValue(value, List.class));
+                    } catch (Exception e1) {
+                        logger.error("{} 报表埋点字段 list 转换失败： {}", this.reportBuildRule.getReportName(), value, e);
+                    }
+                } else {
+                    finalMap.put(e.getKey(), value);
                 }
-            } else if (value.startsWith("[") && !value.startsWith("[ETA]") && value.endsWith("]")) {
-                try {
-                    finalMap.put(e.getKey(), JacksonUtil.readValue(value, List.class));
-                } catch (Exception e1) {
-                    logger.error("{} 报表埋点字段 list 转换失败： {}", this.reportBuildRule.getReportName(), value, e);
-                }
-            } else {
-                finalMap.put(e.getKey(), value);
-            }
-        });
+            });
+
+        }
+
         return finalMap;
     }
 

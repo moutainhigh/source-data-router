@@ -56,7 +56,7 @@ public class ZafulAppTouristBuyReportConfig {
 
         rule.setGlobaleJsonFilters(globaleFilters);
 
-        rule.setReportName("BTS_ZAFUL_TOURIST_BUY_REPORT");
+        rule.setReportName("BTS_ZAFUL_TOURIST_BUY_REPORT_APP");
         rule.setDescription("zaful APP 游客购买报表");
 
         // 默认值
