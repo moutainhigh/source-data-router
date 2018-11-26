@@ -8,7 +8,7 @@ public abstract class BtsReport {
         planid,versionid,bucketid,plancode,policy
     }
 
-    protected static final String skip = "";
+    protected static final String skip = "_skip";
 
     private String specimen = skip;
 

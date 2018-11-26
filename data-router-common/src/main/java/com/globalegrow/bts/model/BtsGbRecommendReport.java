@@ -20,7 +20,7 @@ public class BtsGbRecommendReport extends BtsReport{
     // sku 下单支付数
     private int skuOrderPaid = 0;
     // 支付金额
-    private int amount;
+    private int amount = 0;
 
     public int getGoodDetailPv() {
         return goodDetailPv;
