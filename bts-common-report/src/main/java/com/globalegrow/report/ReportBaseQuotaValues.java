@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -79,11 +80,11 @@ public enum ReportBaseQuotaValues {
     /**
      * 计算逗号用字符串分隔的数量，一般为 app 端的曝光数
      */
-    countStringWithComma{
+    countStringWithComma {
         @Override
         public Object getReportValueFromSourceLog(ReportQuotaFieldConfig reportQuotaFieldConfig, ReadContext ctx, String sourceJson) {
             Object value = filter(reportQuotaFieldConfig, ctx, sourceJson);
-            if (value != null) {
+            if (value == null) {
                 String s = ctx.read(reportQuotaFieldConfig.getExtractValueJsonPath(), String.class);
                 return s.split(",").length;
             }
@@ -98,8 +99,37 @@ public enum ReportBaseQuotaValues {
         public Object getReportValueFromSourceLog(ReportQuotaFieldConfig reportQuotaFieldConfig, ReadContext ctx, String sourceJson) {
             Object value = filter(reportQuotaFieldConfig, ctx, sourceJson);
             if (value == null) {
-                return ctx.read(reportQuotaFieldConfig.getExtractValueJsonPath(), Map.class);
+
+                Map map = ctx.read(reportQuotaFieldConfig.getExtractValueJsonPath(), Map.class);
+                if (map != null && map.size() > 0) {
+                    return map;
+                }
+
             }
+            return null;
+        }
+    }, extractAppBtsValueFromLog {
+        @Override
+        public Object getReportValueFromSourceLog(ReportQuotaFieldConfig reportQuotaFieldConfig, ReadContext ctx, String sourceJson) {
+            Object value = filter(reportQuotaFieldConfig, ctx, sourceJson);
+
+            if (value == null) {
+                String planId = ctx.read("$.event_value.af_plan_id", String.class);
+                String versionId = ctx.read("$.event_value.af_version_id", String.class);
+                String bucketId = ctx.read("$.event_value.af_bucket_id", String.class);
+                ;
+
+                if (StringUtils.isNotEmpty(planId) && StringUtils.isNotEmpty(versionId) && StringUtils.isNotEmpty(bucketId)
+                        && !"null".equals(planId) && !"null".equals(versionId) && !"null".equals(bucketId)) {
+                    Map<String, String> bts = new HashMap<>();
+                    bts.put("planid", planId);
+                    bts.put("versionid", versionId);
+                    bts.put("bucketid", bucketId);
+                    return bts;
+                }
+
+            }
+
             return null;
         }
     };
@@ -161,51 +191,46 @@ public enum ReportBaseQuotaValues {
                     // null 条件为空报异常表明满足过滤条件
                     return "not_null";
                 }
-            }else
+            } else
 
-            // not null
-            if ("not_null".equals(jsonLogFilter.getFilterRule())) {
+                // not null
+                if ("not_null".equals(jsonLogFilter.getFilterRule())) {
 
-                if ((ctx.read(jsonLogFilter.getJsonPath()) == null) || StringUtils.isEmpty(String.valueOf(ctx.read(jsonLogFilter.getJsonPath(), Object.class)))) {
-                    return null;
-                }
-            }else
-            if ("equals".equals(jsonLogFilter.getFilterRule())) {
-                // equals
-                if (!jsonLogFilter.getValueFilter().equals(ctx.read(jsonLogFilter.getJsonPath(), String.class))) {
-                    return null;
-                }
-
-            }else
-            if ("contains".contains(jsonLogFilter.getFilterRule())) {
-                // contains
-                if (!(jsonLogFilter.getValueFilter().contains(ctx.read(jsonLogFilter.getJsonPath(), String.class)))) {
-                    return null;
-                }
-            }else
-            // 布尔值
-            if ("true".equals(jsonLogFilter.getFilterRule())) {
-                // contains
-                if (!(ctx.read(jsonLogFilter.getJsonPath(), Boolean.class))) {
-                    return null;
-                }
-            }else
-            if ("false".equals(jsonLogFilter.getFilterRule())) {
-                // contains
-                if ((ctx.read(jsonLogFilter.getJsonPath(), Boolean.class))) {
-                    return null;
-                }
-            }else
-            // or
-                if ("or".equals(jsonLogFilter.getFilterRule())) {
-                    List<String> strings = Arrays.asList(jsonLogFilter.getValueFilter().split(","));
-                    String value = ctx.read(jsonLogFilter.getJsonPath(), String.class);
-                    if (strings.stream().filter(s -> s.equals(value)).count() <= 0) {
+                    if ((ctx.read(jsonLogFilter.getJsonPath()) == null) || StringUtils.isEmpty(String.valueOf(ctx.read(jsonLogFilter.getJsonPath(), Object.class)))) {
                         return null;
                     }
-                }
+                } else if ("equals".equals(jsonLogFilter.getFilterRule())) {
+                    // equals
+                    if (!jsonLogFilter.getValueFilter().equals(ctx.read(jsonLogFilter.getJsonPath(), String.class))) {
+                        return null;
+                    }
 
-
+                } else if ("contains".contains(jsonLogFilter.getFilterRule())) {
+                    // contains
+                    if (!(jsonLogFilter.getValueFilter().contains(ctx.read(jsonLogFilter.getJsonPath(), String.class)))) {
+                        return null;
+                    }
+                } else
+                    // 布尔值
+                    if ("true".equals(jsonLogFilter.getFilterRule())) {
+                        // contains
+                        if (!(ctx.read(jsonLogFilter.getJsonPath(), Boolean.class))) {
+                            return null;
+                        }
+                    } else if ("false".equals(jsonLogFilter.getFilterRule())) {
+                        // contains
+                        if ((ctx.read(jsonLogFilter.getJsonPath(), Boolean.class))) {
+                            return null;
+                        }
+                    } else
+                        // or
+                        if ("or".equals(jsonLogFilter.getFilterRule())) {
+                            List<String> strings = Arrays.asList(jsonLogFilter.getValueFilter().split(","));
+                            String value = ctx.read(jsonLogFilter.getJsonPath(), String.class);
+                            if (strings.stream().filter(s -> s.equals(value)).count() <= 0) {
+                                return null;
+                            }
+                        }
 
 
         } catch (PathNotFoundException e) {
