@@ -237,7 +237,7 @@ public class ReportHandleRunnable implements Runnable {
         }
         Map<String, Object> finalMap = new HashMap<>();
 
-        if (sourceMap == null) {
+        if (sourceMap != null) {
 
             sourceMap.entrySet().stream().forEach(e -> {
                 String value = String.valueOf(e.getValue());
