@@ -82,6 +82,7 @@ public class GbMysqlBinlog {
 
     /**
      * 从 elasticsearch 查找 userid
+     *
      * @param map
      * @return
      */
@@ -137,6 +138,7 @@ public class GbMysqlBinlog {
 
     /**
      * 处理订单
+     *
      * @param record
      */
     @KafkaListener(topics = {"dy_gb_mysql_binlog"})
@@ -148,12 +150,12 @@ public class GbMysqlBinlog {
             Map<String, Object> tableData = (Map<String, Object>) dataMap.get("data");
             this.logger.info("db order data: {}", mysqlBinLog);
             PictureCounter pictureCounter = new PictureCounter();
-            String userId = String.valueOf(((Double)tableData.get("user_id")).longValue());
+            String userId = String.valueOf(((Double) tableData.get("user_id")).longValue());
             String sku = String.valueOf(tableData.get("goods_sn"));
             String redisKey = "dy_gb_m" + userId + "_" + sku;
             String redisCache = SpringRedisUtil.getStringValue(redisKey);
-            this.logger.info("redis cache info, redis key: {} data: {}",redisKey, redisCache);
-            if (StringUtils.isNotEmpty(redisCache)) {
+            this.logger.info("redis cache info, redis key: {} data: {}", redisKey, redisCache);
+           /* if (StringUtils.isNotEmpty(redisCache)) {
                 GoodsAddCartInfo goodsAddCartInfo = GsonUtil.readValue(redisCache, GoodsAddCartInfo.class);
                 // 缓存付款 sku 数
                 goodsAddCartInfo.setPam(goodsAddCartInfo.getPam() + 1);
@@ -187,64 +189,69 @@ public class GbMysqlBinlog {
                 reportMap.putAll(goodsAddCartInfo.getBts());
                 reportMap.put(NginxLogConvertUtil.TIMESTAMP_KEY, System.currentTimeMillis());
 
-                this.send("bts-gb-gdd-m-pic-report-precisely", reportMap);
+                //this.send("bts-gb-gdd-m-pic-report-precisely", reportMap);
 
-            }
+            }*/
             // 推荐位加购事件处理
             String recommendRedisKey = CartRedisKeysPrefix.redisCartKey(CartRedisKeysPrefix.dyGbCartInfo, userId, sku);
             String recommendRedisCache = SpringRedisUtil.getStringValue(recommendRedisKey);
             if (StringUtils.isNotEmpty(recommendRedisCache)) {
                 com.globalegrow.bts.model.GoodsAddCartInfo goodsAddCartInfo = GsonUtil.readValue(recommendRedisCache, com.globalegrow.bts.model.GoodsAddCartInfo.class);
-                // dy_bts_gb_gd_rec_report
-                BtsGbRecommendReport btsGbRecommendReport = new BtsGbRecommendReport();
-                btsGbRecommendReport.setBts(goodsAddCartInfo.getBts());
-                String goodNum = String.valueOf(tableData.get("qty"));
-                if (goodNum.indexOf(".") > 0) {
-                    goodNum = goodNum.substring(0, goodNum.indexOf("."));
-                }
-                Float f = ((Float.valueOf(String.valueOf(tableData.get("price"))) * Integer.valueOf(goodNum)) * 100);
-                btsGbRecommendReport.setAmount(f.intValue());
-                btsGbRecommendReport.setSkuOrder(1);
-                Map reportMap = DyBeanUtils.objToMap(btsGbRecommendReport);
-                reportMap.put(NginxLogConvertUtil.TIMESTAMP_KEY, System.currentTimeMillis());
-                this.send("dy_bts_gb_gd_rec_report", reportMap);
+                if (goodsAddCartInfo.getBts() != null && goodsAddCartInfo.getBts().size() > 0) {
 
-                //String orderId = String.valueOf(tableData.get("order_goods_id"));
+                    // dy_bts_gb_gd_rec_report
+                    BtsGbRecommendReport btsGbRecommendReport = new BtsGbRecommendReport();
+                    btsGbRecommendReport.setBts(goodsAddCartInfo.getBts());
+                    String goodNum = String.valueOf(tableData.get("qty"));
+                    if (goodNum.indexOf(".") > 0) {
+                        goodNum = goodNum.substring(0, goodNum.indexOf("."));
+                    }
+                    Float f = ((Float.valueOf(String.valueOf(tableData.get("price"))) * Integer.valueOf(goodNum)) * 100);
+                    btsGbRecommendReport.setAmount(f.intValue());
+                    btsGbRecommendReport.setSkuOrder(1);
+                    Map reportMap = DyBeanUtils.objToMap(btsGbRecommendReport);
+                    reportMap.put(NginxLogConvertUtil.TIMESTAMP_KEY, System.currentTimeMillis());
+                    this.send("dy_bts_gb_gd_rec_report", reportMap);
+
+                    //String orderId = String.valueOf(tableData.get("order_goods_id"));
+                    String orderId = String.valueOf(tableData.get("order_sn"));
+                    // 缓存订单商品金额
+                    String amountKey = "dy_gb_recommend_amount_" + orderId;
+
+                    String redisAmount = SpringRedisUtil.getStringValue(amountKey);
+
+                    // Float f = ((Float.valueOf(String.valueOf(tableData.get("price"))) * Integer.valueOf(goodNum)) * 100);
+                    if (StringUtils.isEmpty(redisAmount)) {
+                        goodsAddCartInfo.setSalesAmount(f.intValue());
+                        SpringRedisUtil.put(amountKey, GsonUtil.toJson(goodsAddCartInfo), 1209600);
+                        this.logger.info("支付金额缓存: {}, {}", amountKey, goodsAddCartInfo);
+                        //SpringRedisUtil.put(amountKey, f.intValue() + "", 1209600);
+                    } else {
+                        com.globalegrow.bts.model.GoodsAddCartInfo goodsAddCartInfo1 = GsonUtil.readValue(redisAmount, com.globalegrow.bts.model.GoodsAddCartInfo.class);
+                        Integer intAmount = goodsAddCartInfo1.getSalesAmount() + f.intValue();
+                        goodsAddCartInfo1.setSalesAmount(intAmount);
+                        SpringRedisUtil.put(amountKey, GsonUtil.toJson(goodsAddCartInfo1) + "", 1209600);
+                        this.logger.info("支付金额缓存: {}, {}", amountKey, goodsAddCartInfo1);
+                        //SpringRedisUtil.put(amountKey, intAmount + "", 1209600);
+                    }
+
+                }
+
+            }
+        } else
+            // 订单金额
+            if (StringUtils.isNumeric(String.valueOf(dataMap.get("table")).replace("order_info_", ""))) {
+                Map<String, Object> tableData = (Map<String, Object>) dataMap.get("data");
+                this.logger.info("order_info_event: {}", mysqlBinLog);
                 String orderId = String.valueOf(tableData.get("order_sn"));
-                // 缓存订单商品金额
-                String amountKey = "dy_gb_recommend_amount_" + orderId;
+                String status = String.valueOf(tableData.get("pay_status"));
 
-                String redisAmount = SpringRedisUtil.getStringValue(amountKey);
-
-                // Float f = ((Float.valueOf(String.valueOf(tableData.get("price"))) * Integer.valueOf(goodNum)) * 100);
-                if (StringUtils.isEmpty(redisAmount)) {
-                    goodsAddCartInfo.setSalesAmount(f.intValue());
-                    SpringRedisUtil.put(amountKey, GsonUtil.toJson(goodsAddCartInfo), 1209600);
-                    this.logger.info("支付金额缓存: {}, {}", amountKey, goodsAddCartInfo);
-                    //SpringRedisUtil.put(amountKey, f.intValue() + "", 1209600);
-                }else {
-                    com.globalegrow.bts.model.GoodsAddCartInfo goodsAddCartInfo1 = GsonUtil.readValue(redisAmount, com.globalegrow.bts.model.GoodsAddCartInfo.class);
-                    Integer intAmount = goodsAddCartInfo1.getSalesAmount() + f.intValue();
-                    goodsAddCartInfo1.setSalesAmount(intAmount);
-                    SpringRedisUtil.put(amountKey, GsonUtil.toJson(goodsAddCartInfo1) + "", 1209600);
-                    this.logger.info("支付金额缓存: {}, {}", amountKey, goodsAddCartInfo1);
-                    //SpringRedisUtil.put(amountKey, intAmount + "", 1209600);
+                if (status.indexOf(".") > 0) {
+                    status = status.substring(0, status.indexOf("."));
                 }
-            }
-        }else
-        // 订单金额
-        if (StringUtils.isNumeric(String.valueOf(dataMap.get("table")).replace("order_info_", ""))) {
-            Map<String, Object> tableData = (Map<String, Object>) dataMap.get("data");
-            this.logger.info("order_info_event: {}", mysqlBinLog);
-            String orderId = String.valueOf(tableData.get("order_sn"));
-            String status = String.valueOf(tableData.get("pay_status"));
-
-            if (status.indexOf(".") > 0) {
-                status = status.substring(0, status.indexOf("."));
-            }
-            this.logger.info("order_info_event_status: {}", status);
-            if ("1".equals(status) || "3".equals(status)){
-                String amountKey = "dy_gb_m_amount_" + orderId;
+                this.logger.info("order_info_event_status: {}", status);
+                if ("1".equals(status) || "3".equals(status)) {
+                /*String amountKey = "dy_gb_m_amount_" + orderId;
                 String redisAmount = SpringRedisUtil.getStringValue(amountKey);
                 this.logger.info("paid_order: {}, {}", amountKey, redisAmount);
                 if (StringUtils.isNotEmpty(redisAmount)) {
@@ -260,26 +267,31 @@ public class GbMysqlBinlog {
 
                     this.send("bts-gb-gdd-m-pic-report-precisely", reportMap);
 
-                }
-                // 推荐位金额处理
-                String recommendAmountKey = "dy_gb_recommend_amount_" + orderId;
-                String redisRecommendAmount = SpringRedisUtil.getStringValue(recommendAmountKey);
-                if (StringUtils.isNotEmpty(redisRecommendAmount)) {
-                    this.logger.info("paid_order 已支付 推荐位订单信息: {}", redisRecommendAmount);
-                    com.globalegrow.bts.model.GoodsAddCartInfo goodsAddCartInfo1 = GsonUtil.readValue(redisRecommendAmount, com.globalegrow.bts.model.GoodsAddCartInfo.class);
-                    BtsGbRecommendReport btsGbRecommendReport = new BtsGbRecommendReport();
-                    btsGbRecommendReport.setBts(goodsAddCartInfo1.getBts());
-                    //btsGbRecommendReport.setAmount(goodsAddCartInfo1.getSalesAmount());
-                    btsGbRecommendReport.setSkuOrderPaid(goodsAddCartInfo1.getPam());
-                    Map reportMap = DyBeanUtils.objToMap(btsGbRecommendReport);
-                    reportMap.put(NginxLogConvertUtil.TIMESTAMP_KEY, System.currentTimeMillis());
+                }*/
+                    // 推荐位金额处理
+                    String recommendAmountKey = "dy_gb_recommend_amount_" + orderId;
+                    String redisRecommendAmount = SpringRedisUtil.getStringValue(recommendAmountKey);
+                    if (StringUtils.isNotEmpty(redisRecommendAmount)) {
+                        this.logger.info("paid_order 已支付 推荐位订单信息: {}", redisRecommendAmount);
+                        com.globalegrow.bts.model.GoodsAddCartInfo goodsAddCartInfo1 = GsonUtil.readValue(redisRecommendAmount, com.globalegrow.bts.model.GoodsAddCartInfo.class);
+                        if (goodsAddCartInfo1.getBts() != null && goodsAddCartInfo1.getBts().size() > 0) {
 
-                    this.send("dy_bts_gb_gd_rec_report", reportMap);
+                            BtsGbRecommendReport btsGbRecommendReport = new BtsGbRecommendReport();
+                            btsGbRecommendReport.setBts(goodsAddCartInfo1.getBts());
+                            //btsGbRecommendReport.setAmount(goodsAddCartInfo1.getSalesAmount());
+                            btsGbRecommendReport.setSkuOrderPaid(goodsAddCartInfo1.getPam());
+                            Map reportMap = DyBeanUtils.objToMap(btsGbRecommendReport);
+                            reportMap.put(NginxLogConvertUtil.TIMESTAMP_KEY, System.currentTimeMillis());
 
+                            this.send("dy_bts_gb_gd_rec_report", reportMap);
+
+                        }
+
+
+                    }
                 }
+
             }
-
-        }
 
     }
 
