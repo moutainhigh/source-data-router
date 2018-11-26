@@ -1,6 +1,5 @@
 package com.globalegrow.report;
 
-import com.globalegrow.common.hbase.CommonHbaseMapper;
 import com.globalegrow.util.JacksonUtil;
 import com.globalegrow.util.MD5CipherUtil;
 import com.globalegrow.util.SpringRedisUtil;
@@ -27,9 +26,6 @@ public class LogDataRedisCache implements LogDataCache {
     private JestClient jestClient;
 
     public static final String APP_REPORT_END_FLAG = "_APP";
-
-    @Autowired
-    private CommonHbaseMapper commonHbaseMapper;
 
     /**
      * 将埋点数据进行缓存主要为加购数据缓存,目前只支持加购信息缓存
