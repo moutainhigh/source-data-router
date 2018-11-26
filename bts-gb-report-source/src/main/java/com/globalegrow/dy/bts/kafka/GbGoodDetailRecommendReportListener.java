@@ -101,7 +101,7 @@ public class GbGoodDetailRecommendReportListener extends GbBtsInfo {
     @Override
     protected Map<String, Object> reportData(Map<String, Object> logMap) throws Exception {
         Map<String, String> btsInfo = this.btsInfo(logMap);
-        if (btsInfo != null) {
+        if (btsInfo != null && btsInfo.size() > 0) {
             String glbX = String.valueOf(logMap.get("glb_x"));
             String glbOd = String.valueOf(logMap.get("glb_od"));
             String glbT = String.valueOf(logMap.get("glb_t"));
