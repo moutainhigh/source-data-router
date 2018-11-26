@@ -1,6 +1,5 @@
 package com.globalegrow.dy.bts.kafka;
 
-import com.globalegrow.common.hbase.CommonHbaseMapper;
 import com.globalegrow.dy.bts.model.SkuCartInfo;
 import com.globalegrow.util.GsonUtil;
 import com.globalegrow.util.MD5CipherUtil;
@@ -9,12 +8,6 @@ import io.searchbox.client.JestClient;
 import io.searchbox.core.DocumentResult;
 import io.searchbox.core.Get;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.hbase.KeyValue;
-import org.apache.hadoop.hbase.TableName;
-import org.apache.hadoop.hbase.client.*;
-import org.apache.hadoop.hbase.filter.PrefixFilter;
-import org.apache.hadoop.hbase.util.Bytes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,9 +15,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -37,7 +27,7 @@ public class ZafulRecommendCartHandle {
 
     protected final Logger logger = LoggerFactory.getLogger(getClass());
 
-    @Autowired
+   /* @Autowired
     protected Configuration configuration;
 
     private Connection connection;
@@ -48,7 +38,7 @@ public class ZafulRecommendCartHandle {
     public void init() throws IOException {
         connection = ConnectionFactory.createConnection(this.configuration);
         table = connection.getTable(TableName.valueOf("dy_cookie_bts_info_rel"));
-    }
+    }*/
 
     @Autowired
     private JestClient jestClient;
@@ -91,7 +81,7 @@ public class ZafulRecommendCartHandle {
                     }
 
                     if (bts == null) {
-                        this.logger.debug("从 hbase 中查询 bts 实验信息");
+                        /*this.logger.debug("从 hbase 中查询 bts 实验信息");
 
                         List<Map<String, String>> btsList = this.getBtsInfoFromHbase(deviceId);
                         // this.logger.info("从 hbase 查询 bts 信息:{}", btsList);
@@ -106,7 +96,7 @@ public class ZafulRecommendCartHandle {
                             String redisKeyAppPush = "dy_zaful_app_push_" + userId + "_" + sku;
                             SpringRedisUtil.put(redisKey, GsonUtil.toJson(skuCartInfo), 604800);
                             SpringRedisUtil.put(redisKeyAppPush, GsonUtil.toJson(skuCartInfo), 604800);
-                        }
+                        }*/
 
                     } else if (bts != null) {
                         SkuCartInfo skuCartInfo = new SkuCartInfo();
@@ -130,7 +120,7 @@ public class ZafulRecommendCartHandle {
 
     }
 
-    private List<Map<String, String>> getBtsInfoFromHbase(String deviceId) {
+   /* private List<Map<String, String>> getBtsInfoFromHbase(String deviceId) {
         try {
             Scan s = new Scan();
             s.setFilter(new PrefixFilter(deviceId.getBytes()));
@@ -150,7 +140,7 @@ public class ZafulRecommendCartHandle {
             this.logger.error("从 hbase 查询 bts 信息失败", e);
         }
         return null;
-    }
+    }*/
 
     protected Map<String, String> appLogBtsInfo(Map<String, Object> eventValue) {
         //String eventValue = String.valueOf(logMap.get("event_value"));
@@ -185,7 +175,7 @@ public class ZafulRecommendCartHandle {
         return userId;
     }
 
-    static String getUserIdByDeviceId(String deviceId, Logger logger, CommonHbaseMapper hbaseMapper, String hbaseTableName, String columnFamily) {
+   /* static String getUserIdByDeviceId(String deviceId, Logger logger, CommonHbaseMapper hbaseMapper, String hbaseTableName, String columnFamily) {
         logger.debug("查询 userid");
         Object obj = hbaseMapper.selectRowKeyFamilyColumn(hbaseTableName, deviceId,
                 "userid", columnFamily);
@@ -194,6 +184,6 @@ public class ZafulRecommendCartHandle {
         }
         logger.info("加购事件未找到 userid, cookie: {}", deviceId);
         return null;
-    }
+    }*/
 
 }

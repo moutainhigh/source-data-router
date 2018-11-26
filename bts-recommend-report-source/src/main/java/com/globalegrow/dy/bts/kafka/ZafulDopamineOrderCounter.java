@@ -2,19 +2,12 @@ package com.globalegrow.dy.bts.kafka;
 
 import com.globalegrow.dy.bts.model.*;
 import com.globalegrow.util.*;
-import com.globalegrow.util.GsonUtil;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.hbase.TableName;
-import org.apache.hadoop.hbase.client.*;
-import org.apache.hadoop.hbase.filter.PrefixFilter;
-import org.apache.hadoop.hbase.util.Bytes;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.core.DefaultKafkaProducerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -23,7 +16,6 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -40,18 +32,18 @@ public class ZafulDopamineOrderCounter {
 
     private KafkaTemplate<String, String> kafkaTemplate;
 
-    @Autowired
+  /*  @Autowired
     protected Configuration configuration;
 
     private Connection connection;
 
-    Table table;
+    Table table;*/
 
     @PostConstruct
     public void init() throws IOException {
         kafkaTemplate = new KafkaTemplate<>(producerFactory());
-        connection = ConnectionFactory.createConnection(this.configuration);
-        table = connection.getTable(TableName.valueOf("dy_cookie_bts_info_rel"));
+       /* connection = ConnectionFactory.createConnection(this.configuration);
+        table = connection.getTable(TableName.valueOf("dy_cookie_bts_info_rel"));*/
     }
 
     public Map<String, Object> producerConfigs() {
@@ -59,17 +51,19 @@ public class ZafulDopamineOrderCounter {
         // kafka.metadata.broker.list=10.16.0.214:9092,10.16.0.215:9092,10.16.0.216:9092
         props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "bts-datanode08:9092");
         props.put(ProducerConfig.RETRIES_CONFIG, 0);
-        props.put(ProducerConfig.ACKS_CONFIG,"-1");
+        props.put(ProducerConfig.ACKS_CONFIG, "-1");
         props.put(ProducerConfig.BATCH_SIZE_CONFIG, 4096);
         props.put(ProducerConfig.LINGER_MS_CONFIG, 1);
         props.put(ProducerConfig.BUFFER_MEMORY_CONFIG, 40960);
-        props.put(ProducerConfig.MAX_REQUEST_SIZE_CONFIG,5048576);
+        props.put(ProducerConfig.MAX_REQUEST_SIZE_CONFIG, 5048576);
         props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
         props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
         return props;
     }
 
-    /** 获取工厂 */
+    /**
+     * 获取工厂
+     */
     public ProducerFactory<String, String> producerFactory() {
         return new DefaultKafkaProducerFactory<>(producerConfigs());
     }
@@ -193,74 +187,70 @@ public class ZafulDopamineOrderCounter {
         if (StringUtils.isNotEmpty(cache)) {
             SkuCartInfo skuCartInfo = GsonUtil.readValue(cache, SkuCartInfo.class);
             // 处理下单数、下单用户数、已支付订单数、GMV、整体指标
-            List<Map<String, String>> btsList = this.getBtsInfoFromHbase(skuCartInfo.getDeviceId());
-            if (btsList != null && btsList.size() > 0) {
-                btsList.forEach(bts -> {
-                    BtsAppDopamineReportQuota quota = new BtsAppDopamineReportQuota();
-                    quota.setBts(bts);
-                    String orderStatus = redisOrderInfo.getOrderInfo().getOrderStatus();
-                    if (skuCartInfo.getRecommend()) {
 
-                        quota.setOrder_uv(skuCartInfo.getDeviceId());
-                        if ("0".equals(orderStatus)) {
+            BtsAppDopamineReportQuota quota = new BtsAppDopamineReportQuota();
+            quota.setBts(skuCartInfo.getBts());
+            String orderStatus = redisOrderInfo.getOrderInfo().getOrderStatus();
+            if (skuCartInfo.getRecommend()) {
 
-                            quota.setOrder(Integer.valueOf(redisOrderInfo.getOrderInfo().getOrderId()));
-                            quota.setOrder_sku(orderGoodInfo.getGoodsNum());
-                            quota.setOrder_uv(skuCartInfo.getDeviceId());
-                            quota.setOrder_amount(orderGoodInfo.getAmount());
+                quota.setOrder_uv(skuCartInfo.getDeviceId());
+                if ("0".equals(orderStatus)) {
+
+                    quota.setOrder(Integer.valueOf(redisOrderInfo.getOrderInfo().getOrderId()));
+                    quota.setOrder_sku(orderGoodInfo.getGoodsNum());
+                    quota.setOrder_uv(skuCartInfo.getDeviceId());
+                    quota.setOrder_amount(orderGoodInfo.getAmount());
 
 
-                            quota.setWhole_order_uv(skuCartInfo.getDeviceId());
-                            quota.setWhole_order_amount(orderGoodInfo.getAmount());
-                        }
-                        if ("1".equals(orderStatus) || "8".equals(orderStatus)) {
-                            quota.setPaid_order(Integer.valueOf(redisOrderInfo.getOrderInfo().getOrderId()));
-                            quota.setPaid_uv(skuCartInfo.getDeviceId());
-                            quota.setAmount(orderGoodInfo.getAmount());
-                            quota.setSales_amount(orderGoodInfo.getGoodsNum());
+                    quota.setWhole_order_uv(skuCartInfo.getDeviceId());
+                    quota.setWhole_order_amount(orderGoodInfo.getAmount());
+                }
+                if ("1".equals(orderStatus) || "8".equals(orderStatus)) {
+                    quota.setPaid_order(Integer.valueOf(redisOrderInfo.getOrderInfo().getOrderId()));
+                    quota.setPaid_uv(skuCartInfo.getDeviceId());
+                    quota.setAmount(orderGoodInfo.getAmount());
+                    quota.setSales_amount(orderGoodInfo.getGoodsNum());
 
-                            quota.setWhole_amount(orderGoodInfo.getAmount());
-                            quota.setWhole_paid_uv(skuCartInfo.getDeviceId());
-                        }
+                    quota.setWhole_amount(orderGoodInfo.getAmount());
+                    quota.setWhole_paid_uv(skuCartInfo.getDeviceId());
+                }
 
-                    }else {
-                        if ("0".equals(orderStatus)) {
-                            quota.setWhole_order_uv(skuCartInfo.getDeviceId());
-                            quota.setWhole_order_amount(orderGoodInfo.getAmount());
-                        }
-                        if ("1".equals(orderStatus) || "8".equals(orderStatus)) {
-                            quota.setWhole_amount(orderGoodInfo.getAmount());
-                            quota.setWhole_paid_uv(skuCartInfo.getDeviceId());
-                        }
-                    }
-                    Map reportMap = DyBeanUtils.objToMap(quota);
-                    reportMap.put(NginxLogConvertUtil.TIMESTAMP_KEY, System.currentTimeMillis());
-                    if ("dy_bts_app_push_report".equals(topic)) {
-                        Map appPushMap = new HashMap();
-                        appPushMap.putAll(reportMap);
-                        appPushMap.put("view_push_page",0);
-                        appPushMap.put("view_push_uv", "");
-                        try {
-                            this.kafkaTemplate.send(topic, JacksonUtil.toJSon(appPushMap));
-                        } catch (Exception e) {
-                            logger.error("kafka send or json convert error: {}", appPushMap, e);
-                        }
-                    }else {
-                        this.logger.info("订单信息发送到 kafka");
-                        try {
-                            this.kafkaTemplate.send(topic, JacksonUtil.toJSon(reportMap));
-                        } catch (Exception e) {
-                            logger.error("kafka send or json convert error: {}", reportMap, e);
-                        }
-                    }
-
-                });
+            } else {
+                if ("0".equals(orderStatus)) {
+                    quota.setWhole_order_uv(skuCartInfo.getDeviceId());
+                    quota.setWhole_order_amount(orderGoodInfo.getAmount());
+                }
+                if ("1".equals(orderStatus) || "8".equals(orderStatus)) {
+                    quota.setWhole_amount(orderGoodInfo.getAmount());
+                    quota.setWhole_paid_uv(skuCartInfo.getDeviceId());
+                }
             }
+            Map reportMap = DyBeanUtils.objToMap(quota);
+            reportMap.put(NginxLogConvertUtil.TIMESTAMP_KEY, System.currentTimeMillis());
+            if ("dy_bts_app_push_report".equals(topic)) {
+                Map appPushMap = new HashMap();
+                appPushMap.putAll(reportMap);
+                appPushMap.put("view_push_page", 0);
+                appPushMap.put("view_push_uv", "");
+                try {
+                    this.kafkaTemplate.send(topic, JacksonUtil.toJSon(appPushMap));
+                } catch (Exception e) {
+                    logger.error("kafka send or json convert error: {}", appPushMap, e);
+                }
+            } else {
+                this.logger.info("订单信息发送到 kafka");
+                try {
+                    this.kafkaTemplate.send(topic, JacksonUtil.toJSon(reportMap));
+                } catch (Exception e) {
+                    logger.error("kafka send or json convert error: {}", reportMap, e);
+                }
+            }
+
 
         }
     }
 
-    private List<Map<String, String>> getBtsInfoFromHbase(String deviceId) {
+    /*private List<Map<String, String>> getBtsInfoFromHbase(String deviceId) {
         try  {
             Scan s = new Scan();
             s.setFilter(new PrefixFilter(deviceId.getBytes()));
@@ -280,7 +270,7 @@ public class ZafulDopamineOrderCounter {
             this.logger.error("从 hbase 查询 bts 信息失败", e);
         }
         return null;
-    }
+    }*/
 
     private OrderGoodInfo orderGoodInfo(Map<String, Object> dataMap) {
         Map<String, Object> tableData = this.getEventData(dataMap);

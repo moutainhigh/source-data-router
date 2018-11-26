@@ -1,7 +1,6 @@
 package com.globalegrow.dy.bts.kafka;
 
 import com.globalegrow.bts.model.GoodsAddCartInfo;
-import com.globalegrow.common.hbase.CommonHbaseMapper;
 import com.globalegrow.dy.report.enums.RecommendQuotaFields;
 import com.globalegrow.enums.CartRedisKeysPrefix;
 import com.globalegrow.util.GsonUtil;
@@ -14,7 +13,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.annotation.KafkaListener;
-import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
 import java.util.Map;
