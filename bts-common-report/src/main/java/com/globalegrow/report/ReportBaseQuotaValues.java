@@ -34,7 +34,11 @@ public enum ReportBaseQuotaValues {
         public Object getReportValueFromSourceLog(ReportQuotaFieldConfig reportQuotaFieldConfig, ReadContext ctx, String sourceJson) {
             Object value = filter(reportQuotaFieldConfig, ctx, sourceJson);
             if (value == null) {
-                return ctx.read(reportQuotaFieldConfig.getExtractValueJsonPath(), Integer.class);
+                try {
+                    return ctx.read(reportQuotaFieldConfig.getExtractValueJsonPath(), Integer.class);
+                } catch (Exception e) {
+                    // 忽略
+                }
             }
             return null;
         }
@@ -43,7 +47,11 @@ public enum ReportBaseQuotaValues {
         public Object getReportValueFromSourceLog(ReportQuotaFieldConfig reportQuotaFieldConfig, ReadContext ctx, String sourceJson) {
             Object value = filter(reportQuotaFieldConfig, ctx, sourceJson);
             if (value == null) {
-                return ctx.read(reportQuotaFieldConfig.getExtractValueJsonPath(), Long.class);
+                try {
+                    return ctx.read(reportQuotaFieldConfig.getExtractValueJsonPath(), Long.class);
+                } catch (Exception e) {
+                    // 忽略
+                }
             }
             return null;
         }
