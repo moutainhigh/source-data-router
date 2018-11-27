@@ -5,6 +5,7 @@ curl http://localhost:38195/report?configPath=/usr/local/services/bts-common-rep
 curl http://localhost:38195/report/remove?reportName=BTS_ZAFUL_ORDER_SEARCH_REC <br>
 curl http://localhost:38195/order/remove?reportName=BTS_ZAFUL_SEARCH_REC_ORDER <br>
 curl http://localhost:38195/report/remove?reportName=BTS_ZAFUL_TOURIST_BUY_REPORT_APP <br>
+curl http://localhost:38195/report/remove?reportName=BTS_GB_ORDER_RECOMMEND_REPORT <br>
 curl http://localhost:38195/report/threads <br>
 curl http://localhost:38195/order/threads <br>
 curl http://localhost:38195/order?configPath=/usr/local/services/bts-common-report-1.0-SNAPSHOT/bin/bts_zaful_search_rec_report_order.json <br>

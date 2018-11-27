@@ -7,6 +7,7 @@ import com.globalegrow.report.ReportKafkaConfig;
 import com.globalegrow.report.ReportQuotaFieldConfig;
 import com.globalegrow.util.DyBeanUtils;
 import com.globalegrow.util.JacksonUtil;
+import kafka.utils.Json;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -47,7 +48,7 @@ public class BtsGbRecommendReportConfigJson {
         rule.setGlobaleJsonFilters(globaleFilters);
 
         rule.setReportName("BTS_GB_ORDER_RECOMMEND_REPORT");
-        rule.setDescription("zaful 搜索算法 ab 测试报表取数指标配置");
+        rule.setDescription("GB 推荐位报表指标配置");
         BtsGbRecommendReport btsGbRecommendReport = new BtsGbRecommendReport();
         btsGbRecommendReport.setBts(bts);
         rule.setReportDefaultValues(DyBeanUtils.objToMap(btsGbRecommendReport));
@@ -99,7 +100,7 @@ public class BtsGbRecommendReportConfigJson {
 
         JsonLogFilter glb_cl = new JsonLogFilter();
         glb_cl.setJsonPath("$.glb_cl");
-        glb_cl.setFilterRule("contains");
+        glb_cl.setFilterRule("contains_backward");
         glb_cl.setValueFilter("/pp_");
         goodPvFilter.add(glb_cl);
 
@@ -124,7 +125,57 @@ public class BtsGbRecommendReportConfigJson {
         expNum.setExtractValueJsonPath("$.glb_ubcta");
         expNum.setValueEnum("countListWithFilter");
 
+        List<JsonLogFilter> expNumFilters = new ArrayList<>();
+        expNumFilters.add(tie);
+        expNumFilters.add(glbB);
 
+        JsonLogFilter glb_pm = new JsonLogFilter();
+        glb_pm.setJsonPath("$.glb_pm");
+        glb_pm.setValueFilter("mr");
+        expNumFilters.add(glb_pm);
+
+        expNum.setJsonLogFilters(expNumFilters);
+
+        reportQuotaFieldConfigs.add(expNum);
+
+        // 点击 sku 数
+        ReportQuotaFieldConfig clickSkuNum = new ReportQuotaFieldConfig();
+        clickSkuNum.setQuotaFieldName("skuClick");
+        clickSkuNum.setDefaultValue(0);
+        clickSkuNum.setValueEnum("countOneWithFilter");
+
+        List<JsonLogFilter> clickFilters = new ArrayList<>();
+        clickFilters.add(glbB);
+        clickFilters.add(glb_pm);
+
+        JsonLogFilter glb_t_ic = new JsonLogFilter();
+        glb_t_ic.setJsonPath("$.glb_t");
+        glb_t_ic.setValueFilter("ic");
+        clickFilters.add(glb_t_ic);
+
+        clickSkuNum.setJsonLogFilters(clickFilters);
+
+        reportQuotaFieldConfigs.add(clickSkuNum);
+
+        // 加购 sku 数
+        ReportQuotaFieldConfig cartSkuNum = new ReportQuotaFieldConfig();
+        cartSkuNum.setQuotaFieldName("skuAddCart");
+        cartSkuNum.setDefaultValue(0);
+        cartSkuNum.setValueEnum("countOneWithFilter");
+        cartSkuNum.setCacheData(true);
+
+        List<JsonLogFilter> cartFilters = new ArrayList<>();
+        cartFilters.add(glb_t_ic);
+        cartFilters.add(glbB);
+
+        JsonLogFilter glb_pm_mb_mbt = new JsonLogFilter();
+        glb_pm_mb_mbt.setJsonPath("$.glb_pm");
+        glb_pm_mb_mbt.setValueFilter("mb,mbt");
+        glb_pm_mb_mbt.setFilterRule("contains");
+        cartFilters.add(glb_pm_mb_mbt);
+
+        cartSkuNum.setJsonLogFilters(cartFilters);
+        reportQuotaFieldConfigs.add(cartSkuNum);
 
         // 样本量
         ReportQuotaFieldConfig specimen = new ReportQuotaFieldConfig();

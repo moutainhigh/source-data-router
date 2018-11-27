@@ -108,6 +108,34 @@ public enum ReportBaseQuotaValues {
             }
             return null;
         }
+    },extractBtsMapValueFromLog {
+        @Override
+        public Object getReportValueFromSourceLog(ReportQuotaFieldConfig reportQuotaFieldConfig, ReadContext ctx, String sourceJson) {
+            Object value = filter(reportQuotaFieldConfig, ctx, sourceJson);
+            if (value == null) {
+
+                Map map = ctx.read(reportQuotaFieldConfig.getExtractValueJsonPath(), Map.class);
+                if (map != null && map.size() > 0) {
+
+
+                    String planid = String.valueOf(map.get("planid"));
+                    String versionId = String.valueOf(map.get("versionId"));
+                    String bucketid = String.valueOf(map.get("bucketid"));
+                    if (StringUtils.isNotEmpty(planid) && StringUtils.isNotEmpty(versionId) && StringUtils.isNotEmpty(bucketid)) {
+
+                        Map<String, String> btsMap = new HashMap<>();
+                        btsMap.put("planid", planid);
+                        btsMap.put("versionId", versionId);
+                        btsMap.put("bucketid", bucketid);
+                        return btsMap;
+
+                    }
+
+                }
+
+            }
+            return null;
+        }
     }, extractAppBtsValueFromLog {
         @Override
         public Object getReportValueFromSourceLog(ReportQuotaFieldConfig reportQuotaFieldConfig, ReadContext ctx, String sourceJson) {
