@@ -12,6 +12,7 @@ import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerRecord;
+import org.apache.kafka.common.errors.InterruptException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -98,7 +99,7 @@ public class ReportHandleRunnable implements Runnable {
     public void run() {
 
         try {
-            while (true) {
+            kafkaCustomer: while (true) {
                 try {
                     ConsumerRecords<String, String> records = consumer.poll(100);
 
@@ -106,11 +107,15 @@ public class ReportHandleRunnable implements Runnable {
                     for (ConsumerRecord<String, String> consumerRecord : records) {
                         String source = consumerRecord.value();
 
-                        if (!this.canCount(source)) {
+                      /*  if (!this.canCount(source)) {
                             continue customerEach;
-                        }
+                        }*/
 
                         Map<String, Object> finalJsonMap = this.finalJsonMap(source);
+
+                        if (finalJsonMap == null || finalJsonMap.size() == 0) {
+                            continue customerEach;
+                        }
 
                         String value = JacksonUtil.toJSon(finalJsonMap);
 
@@ -213,7 +218,12 @@ public class ReportHandleRunnable implements Runnable {
 
                     }
                 } catch (Exception e) {
+                    if (e instanceof InterruptException) {
+                        this.logger.info("报表 {} 构建终止", this.reportBuildRule.getReportName());
+                        break kafkaCustomer;
+                    }
                     this.logger.error("报表 {} 数据处理 error", this.reportBuildRule.getReportName(), e);
+
                 }
 
             }
@@ -221,10 +231,6 @@ public class ReportHandleRunnable implements Runnable {
             this.consumer.close();
             ;
         }
-    }
-
-    public Boolean canCount(String source) {
-        return source.contains("_ubc.gif");
     }
 
 

@@ -39,6 +39,7 @@ public class JsonLogFilter {
         return new ToStringBuilder(this)
                 .append("jsonPath", jsonPath)
                 .append("valueFilter", valueFilter)
+                .append("filterRule", filterRule)
                 .toString();
     }
 }

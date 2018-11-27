@@ -10,6 +10,7 @@ import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerRecord;
+import org.apache.kafka.common.errors.InterruptException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -68,7 +69,7 @@ public class ReportOrderHandleRunnable implements Runnable {
     public void run() {
         this.logger.debug("{} 订单报表开始构建, 订单主题: {}", this.reportBuildRule.getReportName(),  this.reportDataTopic);
         try {
-            while (true) {
+            kafkaCustomer: while (true) {
                 try {
                     ConsumerRecords<String, String> records = consumer.poll(100);
 
@@ -166,6 +167,10 @@ public class ReportOrderHandleRunnable implements Runnable {
 
                     }
                 } catch (Exception e) {
+                    if (e instanceof InterruptException) {
+                        this.logger.info("报表 {} 构建终止", this.reportBuildRule.getReportName());
+                        break kafkaCustomer;
+                    }
                     this.logger.error("报表 {} 数据处理 error", this.reportBuildRule.getReportName(), e);
                 }
 

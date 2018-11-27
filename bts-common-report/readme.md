@@ -4,6 +4,7 @@ bin/kafka-topics.sh --zookeeper 172.31.61.192:2181,172.31.59.31:2181,172.31.62.1
 curl http://localhost:38195/report?configPath=/usr/local/services/bts-common-report-1.0-SNAPSHOT/bin/bts_zaful_search_rec_report.json <br>
 curl http://localhost:38195/report/remove?reportName=BTS_ZAFUL_ORDER_SEARCH_REC <br>
 curl http://localhost:38195/order/remove?reportName=BTS_ZAFUL_SEARCH_REC_ORDER <br>
+curl http://localhost:38195/report/remove?reportName=BTS_ZAFUL_TOURIST_BUY_REPORT_APP <br>
 curl http://localhost:38195/report/threads <br>
 curl http://localhost:38195/order/threads <br>
 curl http://localhost:38195/order?configPath=/usr/local/services/bts-common-report-1.0-SNAPSHOT/bin/bts_zaful_search_rec_report_order.json <br>

@@ -86,6 +86,15 @@ public class ZafulAppTouristBuyReportConfig {
 
     private void quota(List<ReportQuotaFieldConfig> reportQuotaFieldConfigs) {
 
+        // 样本量指标
+        ReportQuotaFieldConfig specimen = new ReportQuotaFieldConfig();
+        specimen.setQuotaFieldName("specimen");
+        specimen.setDefaultValue("_skip");
+        specimen.setExtractValueJsonPath("$.appsflyer_device_id");
+        specimen.setValueEnum("quotaStringValueExtractFromLog");
+
+        reportQuotaFieldConfigs.add(specimen);
+
         // 购物车指标
         ReportQuotaFieldConfig cartPv = new ReportQuotaFieldConfig();
         cartPv.setQuotaFieldName("cart_pv");
