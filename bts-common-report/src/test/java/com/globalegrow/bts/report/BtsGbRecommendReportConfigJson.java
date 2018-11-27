@@ -177,6 +177,15 @@ public class BtsGbRecommendReportConfigJson {
         cartSkuNum.setJsonLogFilters(cartFilters);
         reportQuotaFieldConfigs.add(cartSkuNum);
 
+        // bts 字段 extractBtsMapValueFromLog
+        ReportQuotaFieldConfig btsQuota = new ReportQuotaFieldConfig();
+        btsQuota.setQuotaFieldName("bts");
+        btsQuota.setDefaultValue(bts);
+        btsQuota.setExtractValueJsonPath("$.glb_bts");
+        btsQuota.setValueEnum("extractBtsMapValueFromLog");
+
+        reportQuotaFieldConfigs.add(btsQuota);
+
         // 样本量
         ReportQuotaFieldConfig specimen = new ReportQuotaFieldConfig();
         specimen.setQuotaFieldName("specimen");
