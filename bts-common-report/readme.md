@@ -18,7 +18,8 @@ curl http://localhost:38195/order?configPath=/usr/local/services/bts-common-repo
 2、每次有事件到达，都循环一次缓存 list 根据 userid 和 sku 去 redis 缓存中查找，前缀通过报表名前缀查询，查询到埋点数据，则生成订单数据，将订单数据放入埋点中，发送到订单 topic；
    每次发送完成后，删除该 key，更新状态，重新设置 list，订单 topic 名字为：dy_log_cart_order_info; <br>
 3、订单计算 job，配置项，zaful 统一指标，<br>
-4、报表名称要求，zaful 报表名 必须包含 ZAFUL，GB 报表名称必须包含 GB,必须包含order，zaful有订单的指标必须包含下面：ZAFUL_ORDER，GB：GB_ORDER， APP 端报表必须以 _APP 结尾
+4、报表名称要求，zaful 报表名 必须包含 ZAFUL，GB 报表名称必须包含 GB,必须包含order，zaful有订单的指标必须包含下面：ZAFUL_ORDER，GB：GB_ORDER， APP 端报表必须以 _APP 结尾<br>
+5、指标枚举 extractBtsMapValueFromLog、extractAppBtsValueFromLog 两个枚举用于处理 pc 和 app 端的 bts 实验信息的获取
 ## 部署信息
 服务器IP：172.31.33.169 <br>
 实际目录/data/apps/bts-common-report <br>
