@@ -205,12 +205,25 @@ public enum ReportBaseQuotaValues {
                         return null;
                     }
 
-                } else if ("contains".contains(jsonLogFilter.getFilterRule())) {
+                }
+                /**
+                 * 规则值包含 埋点值
+                 */
+                else if ("contains".contains(jsonLogFilter.getFilterRule())) {
                     // contains
                     if (!(jsonLogFilter.getValueFilter().contains(ctx.read(jsonLogFilter.getJsonPath(), String.class)))) {
                         return null;
                     }
-                } else
+                }
+                /**
+                 * 埋点值包含 输入值
+                 */
+                else if("contains_backward".contains(jsonLogFilter.getFilterRule())){
+                    // contains
+                    if (!(ctx.read(jsonLogFilter.getJsonPath(), String.class).contains(jsonLogFilter.getValueFilter()))) {
+                        return null;
+                    }
+                }else
                     // 布尔值
                     if ("true".equals(jsonLogFilter.getFilterRule())) {
                         // contains
