@@ -17,6 +17,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import java.text.DecimalFormat;
@@ -143,7 +144,13 @@ public class BtsReportServiceImpl implements BtsReportService {
             headers.add("Content-Type", "application/json;charset=UTF-8");
             headers.add("Authorization", btsReportKylinConfig.getKylinUserNamePassword());
             HttpEntity<Map<String, Object>> params = new HttpEntity<>(postParameters, headers);
-            Map<String, Object> result = this.restTemplate.postForObject(btsReportKylinConfig.getKylinQueryAdress(), params, Map.class);
+            Map<String, Object> result = null;
+            try {
+                result = this.restTemplate.postForObject(btsReportKylinConfig.getKylinQueryAdress(), params, Map.class);
+            } catch (RestClientException e) {
+                this.logger.error("kylin 查询异常",  e);
+                return mapReportPageDto;
+            }
             //this.logger.debug("报表返回结果: {}", result);
             List<Map<String, Object>> columnMetas = (List<Map<String, Object>>) result.get("columnMetas");
             List<List<Object>> data = (List<List<Object>>) result.get("results");
