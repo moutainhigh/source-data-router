@@ -127,7 +127,7 @@ public enum ReportBaseQuotaValues {
 
 
                     String planid = String.valueOf(map.get("planid"));
-                    String versionId = String.valueOf(map.get("versionId"));
+                    String versionId = String.valueOf(map.get("versionid"));
                     String bucketid = String.valueOf(map.get("bucketid"));
                     if (StringUtils.isNotEmpty(planid) && StringUtils.isNotEmpty(versionId) && StringUtils.isNotEmpty(bucketid)) {
 

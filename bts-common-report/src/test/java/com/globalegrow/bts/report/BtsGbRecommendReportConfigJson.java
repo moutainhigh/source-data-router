@@ -138,6 +138,16 @@ public class BtsGbRecommendReportConfigJson {
 
         reportQuotaFieldConfigs.add(expNum);
 
+        // 曝光 pv 数
+        ReportQuotaFieldConfig recommendTypeExposurePv = new ReportQuotaFieldConfig();
+        recommendTypeExposurePv.setQuotaFieldName("recommendTypeExposurePv");
+        recommendTypeExposurePv.setDefaultValue(0);
+        recommendTypeExposurePv.setValueEnum("countOneWithFilter");
+
+        recommendTypeExposurePv.setJsonLogFilters(expNumFilters);
+
+        reportQuotaFieldConfigs.add(recommendTypeExposurePv);
+
         // 点击 sku 数
         ReportQuotaFieldConfig clickSkuNum = new ReportQuotaFieldConfig();
         clickSkuNum.setQuotaFieldName("skuClick");
