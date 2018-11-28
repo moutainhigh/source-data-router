@@ -152,7 +152,7 @@ logging:
   path: logs
   file: logs/kylin-report.log
   level:
-    root: info
+    root: debug
     org.springframework: ERROR
     sun.rmi: ERROR
     org.apache.http: ERROR
