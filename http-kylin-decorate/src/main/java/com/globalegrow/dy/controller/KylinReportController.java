@@ -38,14 +38,15 @@ public class KylinReportController {
         // 判断是否为 EMP 邮件接口
         BtsReportKylinConfig btsReportKylinConfig = this.btsReportConfigService.configMixedQuery(btsReportParameterDto);
         if (btsReportKylinConfig != null) {
-            if (ReportServerType.EMP.name().equals(btsReportKylinConfig.getServerType())) {
+            return this.btsReportService.btsReport(btsReportKylinConfig, btsReportParameterDto);
+            /*if (ReportServerType.EMP.name().equals(btsReportKylinConfig.getServerType())) {
                 return this.btsReportService.btsReport(btsReportKylinConfig, btsReportParameterDto);
             }
             if (btsReportParameterDto.getGroupByFields().contains("hour_start")) {
                 return this.btsReportService.btsReport(btsReportKylinConfig, btsReportParameterDto);
-            }
+            }*/
         }
-        List<String> groupString = btsReportParameterDto.getGroupByFields();
+        /*List<String> groupString = btsReportParameterDto.getGroupByFields();
         boolean groupByVersion = groupString.contains("bts_versionid");
         boolean groupByDay = groupString.contains("day_start");
         if (!groupByDay) {
@@ -63,10 +64,10 @@ public class KylinReportController {
             Map<String, List<Map<String, Object>>> versionGroups = new HashMap<>();
             data.stream().forEach(o -> {
                 Map<String, Object> map = (Map<String, Object>) o;
-                if (versionGroups.get(/*map.get("BTS_VERSIONID") + "_" + map.get("DAY_START") + "_" +*/ map.get("BTS_PLANID")) == null) {
-                    versionGroups.put(/*String.valueOf(map.get("BTS_VERSIONID") + "_" + map.get("DAY_START") + "_" + */String.valueOf(map.get("BTS_PLANID")), new ArrayList<>());
+                if (versionGroups.get(*//*map.get("BTS_VERSIONID") + "_" + map.get("DAY_START") + "_" +*//* map.get("BTS_PLANID")) == null) {
+                    versionGroups.put(*//*String.valueOf(map.get("BTS_VERSIONID") + "_" + map.get("DAY_START") + "_" + *//*String.valueOf(map.get("BTS_PLANID")), new ArrayList<>());
                 }
-                versionGroups.get(/*map.get("BTS_VERSIONID") + "_" + map.get("DAY_START") + "_" + */map.get("BTS_PLANID")).add(map);
+                versionGroups.get(*//*map.get("BTS_VERSIONID") + "_" + map.get("DAY_START") + "_" + *//*map.get("BTS_PLANID")).add(map);
             });
             versionGroups.entrySet().forEach(e -> {
                 Map<String, Object> entry = new HashMap<>();
@@ -152,9 +153,9 @@ public class KylinReportController {
             List<Object> objects = new ArrayList<>();
             dataConvert.stream().forEach(e -> objects.add(e));
             reportPageDto.setData(objects);
-        }
+        }*/
         //this.logger.debug("报表转换结果: {}", reportPageDto);
-        return reportPageDto;
+        return new ReportPageDto();
     }
 
     /**
