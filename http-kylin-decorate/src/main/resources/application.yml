@@ -180,20 +180,20 @@ spring:
       min-evictable-idle-time-millis: 30000
 #172.31.47.78:6382|172.31.47.222:6380|172.31.47.222:6381|172.31.44.253:6379|172.31.44.253:6380|172.31.47.78:6383
 #6e1KWyC29w
-  redis:
-    timeout: 86400
-    password: 6e1KWyC29w
-    cluster:
-      nodes[0]: 172.31.47.78:6382
-      nodes[1]: 172.31.47.222:6380
-      nodes[2]: 172.31.47.222:6381
-      nodes[3]: 172.31.44.253:6379
-      nodes[4]: 172.31.44.253:6380
-      nodes[5]: 172.31.47.78:6383
-    pool:
-      max-active: 64
-      max-idle: 64
-      min-idle: 8
+#  redis:
+#    timeout: 86400
+#    password: 6e1KWyC29w
+#    cluster:
+#      nodes[0]: 172.31.47.78:6382
+#      nodes[1]: 172.31.47.222:6380
+#      nodes[2]: 172.31.47.222:6381
+#      nodes[3]: 172.31.44.253:6379
+#      nodes[4]: 172.31.44.253:6380
+#      nodes[5]: 172.31.47.78:6383
+#    pool:
+#      max-active: 64
+#      max-idle: 64
+#      min-idle: 8
   elasticsearch:
     jest:
       uris: http://172.31.51.179:9200,http://172.31.51.59:9200,http://172.31.51.250:9200

@@ -66,7 +66,7 @@ public class BtsReportServiceImpl implements BtsReportService {
      */
     // /*, sync = true*//*condition = "#btsReportKylinConfig.getData().size() > 0",#result != null && */
     @Override
-    @Cacheable(cacheNames = "bts_report_data_cache", key = "#btsReportParameterDto.getCacheKey()", unless = "#result.data.size() == 0")
+    //@Cacheable(cacheNames = "bts_report_data_cache", key = "#btsReportParameterDto.getCacheKey()", unless = "#result.data.size() == 0")
     public ReportPageDto btsReport(BtsReportParameterDto btsReportParameterDto) {
         BtsReportKylinConfig btsReportKylinConfig = this.btsReportConfigService.configMixedQuery(btsReportParameterDto);
         if (btsReportKylinConfig != null) {
@@ -77,7 +77,7 @@ public class BtsReportServiceImpl implements BtsReportService {
     }
 
     @Override
-    @Cacheable(cacheNames = "bts_report_cache_2", key = "#btsReportParameterDto.getCacheKey()",/*condition = "#btsReportKylinConfig.getData().size() > 0",#result != null && */ unless = "#result.data.size() == 0")
+    //@Cacheable(cacheNames = "bts_report_cache_2", key = "#btsReportParameterDto.getCacheKey()",/*condition = "#btsReportKylinConfig.getData().size() > 0",#result != null && */ unless = "#result.data.size() == 0")
     public ReportPageDto btsReport(BtsReportKylinConfig btsReportKylinConfig, BtsReportParameterDto btsReportParameterDto) {
         return this.reportPageDto(btsReportKylinConfig, btsReportParameterDto);
     }
