@@ -90,12 +90,13 @@ public class RealTimeUserActionHbaseServiceImpl implements RealTimeUserActionHba
                         String eventTime = keys[1];
                         boolean eventTimeStatus1 = eventTime.contains("_");
                         boolean eventTimeStatus2 = eventTime.contains(".");
-                        if(eventTimeStatus1 || eventTimeStatus2 || eventTime.length()<13){
-                            if(eventTime.length()>=13){
+                        if(eventTimeStatus1 || eventTimeStatus2 || eventTime.length()!=13){
+                            /*if(eventTime.length()>=13){
                                 eventTime = eventTime.substring(eventTime.length()-13);
                             }else{
                                 eventTime = System.currentTimeMillis()+"";
-                            }
+                            }*/
+                            continue;
                         }
                        /* System.out.println("keys[0]="+keys[0]);
                         System.out.println("eventTime="+eventTime);*/
