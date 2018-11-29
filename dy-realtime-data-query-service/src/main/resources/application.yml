@@ -23,6 +23,8 @@ server:
 ---
 spring:
   profiles: dev
+  hbase:
+    zkServers: btststhdp-datanode01:2181,btststhdp-datanode02:2181,btststhdp-datanode03:2181
   elasticsearch:
     jest:
       uris[0]: http://100.26.74.93:9202
@@ -39,7 +41,6 @@ spring:
     sentinel:
       transport:
         dashboard: localhost:38194
-        port: 38193
       eager: true
 
 server:
@@ -53,16 +54,20 @@ app:
   redis:
     readtime:
       prefix: dy_rt_p_
+  hbase:
+    table-name: dy-user-event
+    column-family: cf
 
 redis:
   type: sentinel
   master: sentinel-172.31.26.237-6379
   nodes: redis://172.31.26.152:6380,redis://172.31.26.237:6380,redis://172.31.26.162:6383
   password: 6e1KWyC29w
-
 ---
 spring:
   profiles: prod
+  hbase:
+    zkServers: 172.31.59.13:2181,172.31.57.199:2181,172.31.52.145:2181
   elasticsearch:
     jest:
       uris[0]: http://172.31.32.62:9202
@@ -92,12 +97,14 @@ app:
   redis:
     readtime:
       prefix: dy_rt_p_
+  hbase:
+    table-name: dy-user-event
+    column-family: cf
 
 redis:
   type: cluster
   nodes: redis://172.31.47.78:6382,redis://172.31.47.222:6380,redis://172.31.47.222:6381,redis://172.31.44.253:6379,redis://172.31.44.253:6380,redis://172.31.47.78:6383
   password: 6e1KWyC29w
-
 ---
 spring:
   profiles: prod-event

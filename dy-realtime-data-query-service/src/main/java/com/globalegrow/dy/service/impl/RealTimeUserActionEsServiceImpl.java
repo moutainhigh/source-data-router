@@ -52,6 +52,9 @@ public class RealTimeUserActionEsServiceImpl implements RealTimeUserActionServic
     @Value("${app.es.scroll:1s}")
     private String scroll;
 
+
+
+
     @PostConstruct
     public void before(){
 
@@ -156,4 +159,5 @@ public class RealTimeUserActionEsServiceImpl implements RealTimeUserActionServic
     public UserActionResponseDto mock(UserActionParameterDto userActionParameterDto) {
         return new UserActionResponseDto();
     }
+
 }

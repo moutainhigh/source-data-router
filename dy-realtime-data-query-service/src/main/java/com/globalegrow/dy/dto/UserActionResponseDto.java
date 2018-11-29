@@ -8,12 +8,13 @@ public class UserActionResponseDto {
     private boolean success = true;
 
     private String message;
-
-    private Map<String, List<UserActionData>> data;
     /**
      * 每页数量
      */
     private Integer size = 10;
+
+    private Map<String, List<UserActionData>> data;
+
 
     public Integer getSize() {
         return size;
