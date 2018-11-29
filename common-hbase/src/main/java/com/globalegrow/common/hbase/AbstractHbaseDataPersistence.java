@@ -6,14 +6,10 @@ import java.util.Map;
 import javax.annotation.PostConstruct;
 
 import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.hbase.Cell;
+import org.apache.hadoop.hbase.CellUtil;
 import org.apache.hadoop.hbase.TableName;
-import org.apache.hadoop.hbase.client.Connection;
-import org.apache.hadoop.hbase.client.ConnectionFactory;
-import org.apache.hadoop.hbase.client.Delete;
-import org.apache.hadoop.hbase.client.Get;
-import org.apache.hadoop.hbase.client.Put;
-import org.apache.hadoop.hbase.client.Result;
-import org.apache.hadoop.hbase.client.Table;
+import org.apache.hadoop.hbase.client.*;
 import org.apache.hadoop.hbase.util.Bytes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -83,6 +79,16 @@ public abstract class AbstractHbaseDataPersistence {
 		}
 		return null;
     }
+
+	public Result getRecordByRowKey(String tableName, String rowKey, Integer maxVersions)
+			throws IOException {
+		HTable table = (HTable) connection.getTable(TableName.valueOf(tableName));
+		Get get = new Get(Bytes.toBytes(rowKey));
+		get.setMaxVersions(maxVersions.intValue());
+		Result result = table.get(get);
+		table.close();
+		return result;
+	}
 
 
 }
