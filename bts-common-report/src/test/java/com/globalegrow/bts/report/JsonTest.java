@@ -5,7 +5,6 @@ import com.globalegrow.util.JacksonUtil;
 import com.globalegrow.util.NginxLogConvertUtil;
 import com.jayway.jsonpath.JsonPath;
 import com.jayway.jsonpath.ReadContext;
-import org.apache.commons.text.StringEscapeUtils;
 import org.junit.Test;
 
 import java.io.UnsupportedEncodingException;
@@ -21,6 +20,12 @@ import java.util.regex.Pattern;
 public class JsonTest {
 
     public static final String BAD_JSON_PATTERN = "\"([\\d]+_?)\":";
+
+    @Test
+    public void testList(){
+        ArrayList arrayList = new ArrayList();
+        System.out.println(arrayList instanceof List);
+    }
 
     @Test
     public void testReportJson() throws Exception {

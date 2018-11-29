@@ -250,7 +250,7 @@ public class ReportHandleRunnable implements Runnable {
 
         if (finalJsonMap != null && finalJsonMap.size() > 0) {
 
-            if ("BTS".equals(finalJsonMap.get("glb_t"))) {
+            if ("BTS".equals(finalJsonMap.get("glb_x"))) {
 
                 if (finalJsonMap.get("glb_skuinfo") instanceof List) {
 
