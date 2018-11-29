@@ -1,5 +1,6 @@
 package com.globalegrow.bts.report;
 
+import com.globalegrow.report.order.ReportOrderInfo;
 import com.globalegrow.util.JacksonUtil;
 import com.globalegrow.util.NginxLogConvertUtil;
 import com.jayway.jsonpath.JsonPath;
@@ -21,6 +22,11 @@ public class JsonTest {
 
     public static final String BAD_JSON_PATTERN = "\"([\\d]+_?)\":";
 
+    @Test
+    public void testReportJson() throws Exception {
+        ReportOrderInfo reportOrderInfo = new ReportOrderInfo();
+        System.out.println(JacksonUtil.toJSon(reportOrderInfo));
+    }
 
     @Test
     public void testNUllMap() throws Exception {

@@ -134,6 +134,11 @@ public class BtsGbRecommendReportConfigJson {
         glb_pm.setValueFilter("mr");
         expNumFilters.add(glb_pm);
 
+        JsonLogFilter ubcNotNull = new JsonLogFilter();
+        ubcNotNull.setJsonPath("$.glb_ubcta");
+        ubcNotNull.setFilterRule("not_null");
+        expNumFilters.add(ubcNotNull);
+
         expNum.setJsonLogFilters(expNumFilters);
 
         reportQuotaFieldConfigs.add(expNum);

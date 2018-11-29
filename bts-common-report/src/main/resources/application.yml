@@ -88,6 +88,15 @@ spring:
 dy_bts_zaful_report_order: dy_bts_zaful_report_order_dev
 dy_bts_gb_report_order: dy_bts_gb_report_order_dev
 
+app:
+  order:
+    zaful:
+      seconds: 604800
+    gb:
+      seconds: 604800
+
+
+
 server:
   port: 38195
 

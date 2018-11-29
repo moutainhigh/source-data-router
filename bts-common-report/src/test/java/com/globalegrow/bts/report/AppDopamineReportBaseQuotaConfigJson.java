@@ -49,15 +49,10 @@ public class AppDopamineReportBaseQuotaConfigJson {
 
         globaleFilters.add(btsFilter);
 
-        /*JsonLogFilter siteFilter = new JsonLogFilter();
-        siteFilter.setJsonPath("$.glb_d");
-        siteFilter.setValueFilter("10013");
-        globaleFilters.add(siteFilter);*/
-
         rule.setGlobaleJsonFilters(globaleFilters);
 
-        rule.setReportName("BTS_ZAFUL_TOURIST_BUY_REPORT_APP");
-        rule.setDescription("zaful APP 游客购买报表");
+        rule.setReportName("BTS_ZAFUL_ORDER_DOPAMINE_APP");
+        rule.setDescription("zaful APP 多巴胺推荐报表");
 
         // 默认值
         BtsAppDopamineReportQuota searchRecommendReportQuotaModel = new BtsAppDopamineReportQuota();
@@ -86,6 +81,130 @@ public class AppDopamineReportBaseQuotaConfigJson {
 
     private void quota(List<ReportQuotaFieldConfig> reportQuotaFieldConfigs) {
 
+        /*// push 落地页 pv uv
+        ReportQuotaFieldConfig appPushPv = new ReportQuotaFieldConfig();
+        appPushPv.setQuotaFieldName("view_push_page");
+        appPushPv.setDefaultValue(0);
+        appPushPv.setValueEnum("countOneWithFilter");
+
+        ReportQuotaFieldConfig appPushUv = new ReportQuotaFieldConfig();
+        appPushUv.setQuotaFieldName("view_push_uv");
+        appPushUv.setDefaultValue("_skip");
+        appPushUv.setExtractValueJsonPath("$.appsflyer_device_id");
+        appPushUv.setValueEnum("quotaStringValueExtractFromLog");
+
+        List<JsonLogFilter> pushFilters = new ArrayList<>();
+        JsonLogFilter pushFilter = new JsonLogFilter();
+        pushFilter.setValueFilter("af_view_pushpage");
+        pushFilter.setJsonPath("$.event_name");
+        pushFilters.add(pushFilter);
+
+        reportQuotaFieldConfigs.add(appPushPv);
+        reportQuotaFieldConfigs.add(appPushUv);*/
+
+        // 曝光数 pv uv
+        ReportQuotaFieldConfig af_impressionPv = new ReportQuotaFieldConfig();
+        af_impressionPv.setQuotaFieldName("exposure_count");
+        af_impressionPv.setDefaultValue(0);
+        af_impressionPv.setValueEnum("countOneWithFilter");
+
+        ReportQuotaFieldConfig af_impressionUv = new ReportQuotaFieldConfig();
+        af_impressionUv.setQuotaFieldName("good_view_uv");
+        af_impressionUv.setDefaultValue("_skip");
+        af_impressionUv.setExtractValueJsonPath("$.appsflyer_device_id");
+        af_impressionUv.setValueEnum("quotaStringValueExtractFromLog");
+
+        List<JsonLogFilter> af_impressionFilters = new ArrayList<>();
+        JsonLogFilter af_impressionFilter = new JsonLogFilter();
+        af_impressionFilter.setValueFilter("af_impression");
+        af_impressionFilter.setJsonPath("$.event_name");
+        af_impressionFilters.add(af_impressionFilter);
+
+        af_impressionPv.setJsonLogFilters(af_impressionFilters);
+        af_impressionUv.setJsonLogFilters(af_impressionFilters);
+
+        reportQuotaFieldConfigs.add(af_impressionPv);
+        reportQuotaFieldConfigs.add(af_impressionUv);
+
+        // 商品点击 pv uv
+        ReportQuotaFieldConfig af_view_productPv = new ReportQuotaFieldConfig();
+        af_view_productPv.setQuotaFieldName("good_click");
+        af_view_productPv.setDefaultValue(0);
+        af_view_productPv.setValueEnum("countOneWithFilter");
+
+        ReportQuotaFieldConfig af_view_productUv = new ReportQuotaFieldConfig();
+        af_view_productUv.setQuotaFieldName("good_click_uv");
+        af_view_productUv.setDefaultValue("_skip");
+        af_view_productUv.setExtractValueJsonPath("$.appsflyer_device_id");
+        af_view_productUv.setValueEnum("quotaStringValueExtractFromLog");
+
+        List<JsonLogFilter> af_view_productFilters = new ArrayList<>();
+        JsonLogFilter af_view_productFilter = new JsonLogFilter();
+        af_view_productFilter.setValueFilter("af_view_product");
+        af_view_productFilter.setJsonPath("$.event_name");
+        af_view_productFilters.add(af_view_productFilter);
+
+        JsonLogFilter colorFilter = new JsonLogFilter();
+        colorFilter.setValueFilter("0");
+        colorFilter.setJsonPath("$.event_value.af_changed_size_or_color");
+        af_view_productFilters.add(colorFilter);
+
+        af_view_productPv.setJsonLogFilters(af_view_productFilters);
+        af_view_productUv.setJsonLogFilters(af_view_productFilters);
+
+        reportQuotaFieldConfigs.add(af_view_productPv);
+        reportQuotaFieldConfigs.add(af_view_productUv);
+
+        // 商品加购 pv uv
+        ReportQuotaFieldConfig af_add_to_bagPv = new ReportQuotaFieldConfig();
+        af_add_to_bagPv.setQuotaFieldName("good_add_cart");
+        af_add_to_bagPv.setDefaultValue(0);
+        af_add_to_bagPv.setExtractValueJsonPath("$.event_value.af_quantity");
+        af_add_to_bagPv.setValueEnum("quotaIntValueExtractFromLog");
+        af_add_to_bagPv.setCacheData(true);
+
+        ReportQuotaFieldConfig af_add_to_bagUv = new ReportQuotaFieldConfig();
+        af_add_to_bagUv.setQuotaFieldName("good_add_cart_uv");
+        af_add_to_bagUv.setDefaultValue("_skip");
+        af_add_to_bagUv.setExtractValueJsonPath("$.appsflyer_device_id");
+        af_add_to_bagUv.setValueEnum("quotaStringValueExtractFromLog");
+
+        List<JsonLogFilter> af_add_to_bagFilters = new ArrayList<>();
+        JsonLogFilter af_add_to_bagFilter = new JsonLogFilter();
+        af_add_to_bagFilter.setValueFilter("af_add_to_bag");
+        af_add_to_bagFilter.setJsonPath("$.event_name");
+        af_add_to_bagFilters.add(af_add_to_bagFilter);
+
+        af_add_to_bagPv.setJsonLogFilters(af_add_to_bagFilters);
+        af_add_to_bagUv.setJsonLogFilters(af_add_to_bagFilters);
+
+        reportQuotaFieldConfigs.add(af_add_to_bagPv);
+        reportQuotaFieldConfigs.add(af_add_to_bagUv);
+
+
+        // 商品收藏 pv uv
+        ReportQuotaFieldConfig af_add_to_wishlistPv = new ReportQuotaFieldConfig();
+        af_add_to_wishlistPv.setQuotaFieldName("good_collect");
+        af_add_to_wishlistPv.setDefaultValue(0);
+        af_add_to_wishlistPv.setValueEnum("countOneWithFilter");
+
+        ReportQuotaFieldConfig af_add_to_wishlistUv = new ReportQuotaFieldConfig();
+        af_add_to_wishlistUv.setQuotaFieldName("good_collect_uv");
+        af_add_to_wishlistUv.setDefaultValue("_skip");
+        af_add_to_wishlistUv.setExtractValueJsonPath("$.appsflyer_device_id");
+        af_add_to_wishlistUv.setValueEnum("quotaStringValueExtractFromLog");
+
+        List<JsonLogFilter> af_add_to_wishlistFilters = new ArrayList<>();
+        JsonLogFilter af_add_to_wishlistFilter = new JsonLogFilter();
+        af_add_to_wishlistFilter.setValueFilter("af_add_to_wishlist");
+        af_add_to_wishlistFilter.setJsonPath("$.event_name");
+        af_add_to_wishlistFilters.add(af_add_to_wishlistFilter);
+
+        af_add_to_wishlistPv.setJsonLogFilters(af_add_to_wishlistFilters);
+        af_add_to_wishlistUv.setJsonLogFilters(af_add_to_wishlistFilters);
+
+        reportQuotaFieldConfigs.add(af_add_to_wishlistPv);
+        reportQuotaFieldConfigs.add(af_add_to_wishlistUv);
 
         // 样本量指标
         ReportQuotaFieldConfig specimen = new ReportQuotaFieldConfig();

@@ -254,4 +254,12 @@ public class ZafulOrderInfoHandle {
     private Map<String, Object> getEventData(Map<String, Object> dataMap) {
         return (Map<String, Object>) dataMap.get("data");
     }
+
+    public Long getOrderCacheSeconds() {
+        return orderCacheSeconds;
+    }
+
+    public void setOrderCacheSeconds(Long orderCacheSeconds) {
+        this.orderCacheSeconds = orderCacheSeconds;
+    }
 }

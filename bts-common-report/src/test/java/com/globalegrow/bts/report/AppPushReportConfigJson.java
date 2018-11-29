@@ -99,6 +99,9 @@ public class AppPushReportConfigJson {
         pushFilter.setJsonPath("$.event_name");
         pushFilters.add(pushFilter);
 
+        appPushPv.setJsonLogFilters(pushFilters);
+        appPushUv.setJsonLogFilters(pushFilters);
+
         reportQuotaFieldConfigs.add(appPushPv);
         reportQuotaFieldConfigs.add(appPushUv);
 
@@ -119,6 +122,9 @@ public class AppPushReportConfigJson {
         af_impressionFilter.setValueFilter("af_impression");
         af_impressionFilter.setJsonPath("$.event_name");
         af_impressionFilters.add(af_impressionFilter);
+
+        af_impressionPv.setJsonLogFilters(af_impressionFilters);
+        af_impressionUv.setJsonLogFilters(af_impressionFilters);
 
         reportQuotaFieldConfigs.add(af_impressionPv);
         reportQuotaFieldConfigs.add(af_impressionUv);
@@ -146,6 +152,9 @@ public class AppPushReportConfigJson {
         colorFilter.setJsonPath("$.event_value.af_changed_size_or_color");
         af_view_productFilters.add(colorFilter);
 
+        af_view_productPv.setJsonLogFilters(af_view_productFilters);
+        af_view_productUv.setJsonLogFilters(af_view_productFilters);
+
         reportQuotaFieldConfigs.add(af_view_productPv);
         reportQuotaFieldConfigs.add(af_view_productUv);
 
@@ -169,6 +178,9 @@ public class AppPushReportConfigJson {
         af_add_to_bagFilter.setJsonPath("$.event_name");
         af_add_to_bagFilters.add(af_add_to_bagFilter);
 
+        af_add_to_bagPv.setJsonLogFilters(af_add_to_bagFilters);
+        af_add_to_bagUv.setJsonLogFilters(af_add_to_bagFilters);
+
         reportQuotaFieldConfigs.add(af_add_to_bagPv);
         reportQuotaFieldConfigs.add(af_add_to_bagUv);
 
@@ -190,6 +202,9 @@ public class AppPushReportConfigJson {
         af_add_to_wishlistFilter.setValueFilter("af_add_to_wishlist");
         af_add_to_wishlistFilter.setJsonPath("$.event_name");
         af_add_to_wishlistFilters.add(af_add_to_wishlistFilter);
+
+        af_add_to_wishlistPv.setJsonLogFilters(af_add_to_wishlistFilters);
+        af_add_to_wishlistUv.setJsonLogFilters(af_add_to_wishlistFilters);
 
         reportQuotaFieldConfigs.add(af_add_to_wishlistPv);
         reportQuotaFieldConfigs.add(af_add_to_wishlistUv);

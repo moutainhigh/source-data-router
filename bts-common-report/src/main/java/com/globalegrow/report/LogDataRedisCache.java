@@ -85,7 +85,7 @@ public class LogDataRedisCache implements LogDataCache {
                 }
             }
         } catch (Exception e) {
-            logger.error("加购数据缓存出错", e);
+            logger.error("加购数据缓存出错 : {} ", jsonMap, e);
         }
 
     }
