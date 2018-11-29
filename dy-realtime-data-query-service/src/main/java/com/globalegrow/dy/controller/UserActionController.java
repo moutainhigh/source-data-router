@@ -1,14 +1,10 @@
 package com.globalegrow.dy.controller;
 
-import com.alibaba.csp.sentinel.Entry;
-import com.alibaba.csp.sentinel.SphU;
 import com.alibaba.csp.sentinel.annotation.SentinelResource;
 import com.alibaba.csp.sentinel.slots.block.BlockException;
-import com.alibaba.csp.sentinel.slots.block.RuleConstant;
-import com.alibaba.csp.sentinel.slots.block.flow.FlowRule;
-import com.alibaba.csp.sentinel.slots.block.flow.FlowRuleManager;
 import com.globalegrow.dy.dto.UserActionParameterDto;
 import com.globalegrow.dy.dto.UserActionResponseDto;
+import com.globalegrow.dy.service.RealTimeUserActionHbaseService;
 import com.globalegrow.dy.service.RealTimeUserActionService;
 import com.netflix.hystrix.HystrixThreadPoolProperties;
 
@@ -25,8 +21,6 @@ import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.List;
 
 @RestController
 @RequestMapping("user")
@@ -38,13 +32,19 @@ public class UserActionController {
     @Qualifier("realTimeUserActionEsServiceImpl")
     private RealTimeUserActionService realTimeUserActionEsServiceImpl;
 
+    @Autowired
+    @Qualifier("realTimeUserActionHbaseServiceImpl")
+    private RealTimeUserActionHbaseService realTimeUserActionHbaseServiceImpl;
+
     @PostConstruct
     public void before() {
         HystrixThreadPoolProperties.Setter().withCoreSize(40);
     }
 
-
-    //
+    @RequestMapping(value = "getUserInfoFromHbase",produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
+    public UserActionResponseDto getUserInfoFromHbase(@Validated @RequestBody UserActionParameterDto parameterDto){
+        return this.realTimeUserActionHbaseServiceImpl.getUserActionDataFromHbase(parameterDto);
+    }
 
     /**
      * 与源文档保持一致
