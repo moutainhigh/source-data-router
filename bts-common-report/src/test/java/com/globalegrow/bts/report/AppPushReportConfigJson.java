@@ -109,7 +109,7 @@ public class AppPushReportConfigJson {
         ReportQuotaFieldConfig af_impressionPv = new ReportQuotaFieldConfig();
         af_impressionPv.setQuotaFieldName("exposure_count");
         af_impressionPv.setDefaultValue(0);
-        af_impressionPv.setValueEnum("countOneWithFilter");
+        af_impressionPv.setValueEnum("countStringWithComma");
 
         ReportQuotaFieldConfig af_impressionUv = new ReportQuotaFieldConfig();
         af_impressionUv.setQuotaFieldName("good_view_uv");

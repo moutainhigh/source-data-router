@@ -65,6 +65,16 @@ public class BtsAppDopamineReportQuota extends BtsReport {
      */
     private int whole_order_amount = 0;
 
+    private long timestamp = System.currentTimeMillis();
+
+    public long getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(long timestamp) {
+        this.timestamp = timestamp;
+    }
+
     public int getExposure_count() {
         return exposure_count;
     }

@@ -37,7 +37,7 @@ public class AppDopamineReportOrderQuotaConfigJson {
         btsFilter.setJsonPath("$.event_value.af_plan_id");
         btsFilter.setFilterRule("not_null");
 
-        JsonLogFilter btsFilter2 = new JsonLogFilter();
+        /*JsonLogFilter btsFilter2 = new JsonLogFilter();
         btsFilter2.setJsonPath("$.event_value.af_version_id");
         btsFilter2.setFilterRule("not_null");
         globaleFilters.add(btsFilter2);
@@ -45,7 +45,7 @@ public class AppDopamineReportOrderQuotaConfigJson {
         JsonLogFilter btsFilter3 = new JsonLogFilter();
         btsFilter3.setJsonPath("$.event_value.af_bucket_id");
         btsFilter3.setFilterRule("not_null");
-        globaleFilters.add(btsFilter3);
+        globaleFilters.add(btsFilter3);*/
 
         globaleFilters.add(btsFilter);
 
