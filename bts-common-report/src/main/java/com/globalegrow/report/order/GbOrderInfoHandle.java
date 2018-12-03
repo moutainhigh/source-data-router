@@ -7,6 +7,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -156,10 +157,13 @@ public class GbOrderInfoHandle {
                 logger.debug("根据当前运行报表查询 redis 中的加购埋点数据:{}", this.executorServiceMap.keySet());
                 //循环所有报表 根据 用户 sku 查找埋点
                 executorServiceMap.keySet().stream().filter(key -> key.contains(GB_ORDER)).forEach(key -> {
-                    String cartKey = key + "_" + userId + "_" + reportOrderInfo.getSku();
+                    ReportOrderInfo reportOrderInfo1 = new ReportOrderInfo();
+                    BeanUtils.copyProperties(reportOrderInfo, reportOrderInfo1);
+                    reportOrderInfo1.setReport_name(key);
+                    String cartKey = key + "_" + userId + "_" + reportOrderInfo1.getSku();
                     String cartLog = SpringRedisUtil.getStringValue(cartKey);
                     this.logger.debug("根据当前运行报表查询到 redis key:{} 数据:{}", cartKey, cartLog);
-                    sendOrderBurryToOrderTopic(reportOrderInfo, cartLog, this.logger, this.kafkaTemplate);
+                    sendOrderBurryToOrderTopic(reportOrderInfo1, cartLog, this.logger, this.kafkaTemplate);
 
                 });
 

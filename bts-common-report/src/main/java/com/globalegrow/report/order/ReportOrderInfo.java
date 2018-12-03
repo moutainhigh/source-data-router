@@ -27,6 +27,16 @@ public class ReportOrderInfo {
 
     private Boolean order_data = false;
 
+    private String report_name = "_skip";
+
+    public String getReport_name() {
+        return report_name;
+    }
+
+    public void setReport_name(String report_name) {
+        this.report_name = report_name;
+    }
+
     public Boolean getOrder_data() {
         return order_data;
     }
