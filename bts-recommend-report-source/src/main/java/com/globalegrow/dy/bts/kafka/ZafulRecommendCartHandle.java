@@ -22,7 +22,7 @@ import java.util.Map;
 /**
  * 缓存加购信息
  */
-@Component
+//@Component
 public class ZafulRecommendCartHandle {
 
     protected final Logger logger = LoggerFactory.getLogger(getClass());

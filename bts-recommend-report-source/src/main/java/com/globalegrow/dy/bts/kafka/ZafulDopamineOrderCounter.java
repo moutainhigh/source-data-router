@@ -23,7 +23,7 @@ import java.util.Map;
 /**
  * zaful 推荐报表订单相关字段
  */
-@Component
+//@Component
 public class ZafulDopamineOrderCounter {
 
     protected final Logger logger = LoggerFactory.getLogger(getClass());
