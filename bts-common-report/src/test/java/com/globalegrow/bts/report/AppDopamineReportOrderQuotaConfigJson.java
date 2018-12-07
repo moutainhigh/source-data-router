@@ -47,6 +47,15 @@ public class AppDopamineReportOrderQuotaConfigJson {
         btsFilter3.setFilterRule("not_null");
         globaleFilters.add(btsFilter3);*/
 
+        JsonLogFilter cartFilter = new JsonLogFilter();
+        cartFilter.setJsonPath("$.event_name");
+        cartFilter.setValueFilter("af_add_to_bag");
+        JsonLogFilter reportFilter = new JsonLogFilter();
+        reportFilter.setJsonPath("$.db_order_info.report_name");
+        reportFilter.setValueFilter("BTS_ZAFUL_ORDER_DOPAMINE_APP");
+
+        globaleFilters.add(reportFilter);
+        globaleFilters.add(cartFilter);
         globaleFilters.add(btsFilter);
 
         rule.setGlobaleJsonFilters(globaleFilters);
@@ -81,7 +90,7 @@ public class AppDopamineReportOrderQuotaConfigJson {
 
     private void quota(List<ReportQuotaFieldConfig> reportQuotaFieldConfigs) {
 
-        // 下单数 order  生单金额 order_amount 生单用户数 order_uv whole_order_uv 整体下单金额 whole_order_amount
+        // 下单数 order  生单金额 order_amount 生单用户数 order_uv whole_order_uv 整体下单金额 whole_order_amount // order_sku
         List<JsonLogFilter> orderFilters = new ArrayList<>();
         JsonLogFilter orderStatus0 = new JsonLogFilter();
         // 订单状态为 0 算下单
@@ -101,6 +110,15 @@ public class AppDopamineReportOrderQuotaConfigJson {
         createOrder.setValueEnum("quotaIntValueExtractFromLog");
         createOrder.setJsonLogFilters(orderFilters);
         reportQuotaFieldConfigs.add(createOrder);
+
+        // 下单商品数
+        ReportQuotaFieldConfig createOrder_order_sku = new ReportQuotaFieldConfig();
+        createOrder_order_sku.setQuotaFieldName("order_sku");
+        createOrder_order_sku.setDefaultValue(0);
+        createOrder_order_sku.setExtractValueJsonPath("$.db_order_info.goods_num");
+        createOrder_order_sku.setValueEnum("quotaIntValueExtractFromLog");
+        createOrder_order_sku.setJsonLogFilters(orderFilters);
+        reportQuotaFieldConfigs.add(createOrder_order_sku);
 
         // 下单金额
         ReportQuotaFieldConfig orderAmount = new ReportQuotaFieldConfig();

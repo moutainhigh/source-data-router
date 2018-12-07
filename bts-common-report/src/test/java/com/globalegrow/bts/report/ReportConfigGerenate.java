@@ -57,6 +57,21 @@ public class ReportConfigGerenate {
         btsFilter.setFilterRule("not_null");
         globaleFilters.add(btsFilter);
 
+        JsonLogFilter btsValuePlanIdNotNullFilter = new JsonLogFilter();
+        btsValuePlanIdNotNullFilter.setJsonPath("$.glb_bts.planid");
+        btsValuePlanIdNotNullFilter.setFilterRule("not_null");
+        globaleFilters.add(btsValuePlanIdNotNullFilter);
+
+        JsonLogFilter btsValueversionidNotNullFilter = new JsonLogFilter();
+        btsValueversionidNotNullFilter.setJsonPath("$.glb_bts.versionid");
+        btsValueversionidNotNullFilter.setFilterRule("not_null");
+        globaleFilters.add(btsValueversionidNotNullFilter);
+
+        JsonLogFilter btsValuebucketidNotNullFilter = new JsonLogFilter();
+        btsValuebucketidNotNullFilter.setJsonPath("$.glb_bts.bucketid");
+        btsValuebucketidNotNullFilter.setFilterRule("not_null");
+        globaleFilters.add(btsValuebucketidNotNullFilter);
+
         JsonLogFilter siteFilter = new JsonLogFilter();
         siteFilter.setJsonPath("$.glb_d");
         siteFilter.setValueFilter("10013");

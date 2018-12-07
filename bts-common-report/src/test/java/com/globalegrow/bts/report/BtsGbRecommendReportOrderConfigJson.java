@@ -44,6 +44,12 @@ public class BtsGbRecommendReportOrderConfigJson {
         siteFilter.setValueFilter("10002");
         globaleFilters.add(siteFilter);
 
+        JsonLogFilter reportFilter = new JsonLogFilter();
+        reportFilter.setJsonPath("$.db_order_info.report_name");
+        reportFilter.setValueFilter("BTS_GB_ORDER_RECOMMEND_REPORT");
+
+        globaleFilters.add(reportFilter);
+
         rule.setGlobaleJsonFilters(globaleFilters);
 
         rule.setReportName("BTS_GB_RECOMMEND_REPORT_ORDER");

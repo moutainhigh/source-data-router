@@ -47,6 +47,15 @@ public class AppPushReportOrderConfigJson {
         btsFilter3.setFilterRule("not_null");
         globaleFilters.add(btsFilter3);
 
+        JsonLogFilter cartFilter = new JsonLogFilter();
+        cartFilter.setJsonPath("$.event_name");
+        cartFilter.setValueFilter("af_add_to_bag");
+        JsonLogFilter reportFilter = new JsonLogFilter();
+        reportFilter.setJsonPath("$.db_order_info.report_name");
+        reportFilter.setValueFilter("BTS_ZAFUL_ORDER_APP_PUSH_REPORT_APP");
+
+        globaleFilters.add(reportFilter);
+        globaleFilters.add(cartFilter);
         globaleFilters.add(btsFilter);
 
         rule.setGlobaleJsonFilters(globaleFilters);
@@ -101,6 +110,15 @@ public class AppPushReportOrderConfigJson {
         createOrder.setValueEnum("quotaIntValueExtractFromLog");
         createOrder.setJsonLogFilters(orderFilters);
         reportQuotaFieldConfigs.add(createOrder);
+
+        // 下单商品数
+        ReportQuotaFieldConfig createOrder_order_sku = new ReportQuotaFieldConfig();
+        createOrder_order_sku.setQuotaFieldName("order_sku");
+        createOrder_order_sku.setDefaultValue(0);
+        createOrder_order_sku.setExtractValueJsonPath("$.db_order_info.goods_num");
+        createOrder_order_sku.setValueEnum("quotaIntValueExtractFromLog");
+        createOrder_order_sku.setJsonLogFilters(orderFilters);
+        reportQuotaFieldConfigs.add(createOrder_order_sku);
 
         // 下单金额
         ReportQuotaFieldConfig orderAmount = new ReportQuotaFieldConfig();

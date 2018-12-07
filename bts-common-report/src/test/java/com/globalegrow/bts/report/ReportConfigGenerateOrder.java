@@ -77,6 +77,12 @@ public class ReportConfigGenerateOrder {
         cartJsonFilter.setValueFilter("ADT");
         cartFilter.add(cartJsonFilter);
 
+        JsonLogFilter reportFilter = new JsonLogFilter();
+        reportFilter.setJsonPath("$.db_order_info.report_name");
+        reportFilter.setValueFilter("BTS_ZAFUL_ORDER_SEARCH_REC");
+
+        globaleFilters.add(reportFilter);
+
         globaleFilters.addAll(cartFilter);
 
         rule.setGlobaleJsonFilters(globaleFilters);

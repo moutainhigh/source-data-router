@@ -9,6 +9,8 @@ curl http://172.31.33.169:38195/report/remove?reportName=BTS_ZAFUL_ORDER_APP_PUS
 curl http://172.31.33.169:38195/report/remove?reportName=BTS_GB_ORDER_RECOMMEND_REPORT <br>
 curl http://172.31.33.169:38195/report/remove?reportName=BTS_ZAFUL_ORDER_DOPAMINE_APP <br>
 curl http://172.31.33.169:38195/report/remove?reportName=BTS_ZAFUL_ORDER_APP_PUSH_REPORT_APP <br>
+curl http://172.31.33.169:38195/report/remove?reportName=BTS_ZAFUL_APP_PUSH_REPORT_APP_ORDER <br>
+curl http://172.31.33.169:38195/report/remove?reportName=BTS_GB_PAY_REPORT_REC <br>
 curl http://172.31.33.169:38195/report/threads <br>
 curl http://172.31.33.169:38195/order/threads <br>
 curl http://172.31.33.169:38195/order?configPath=/usr/local/services/bts-common-report-1.0-SNAPSHOT/bin/bts_zaful_search_rec_report_order.json <br>
