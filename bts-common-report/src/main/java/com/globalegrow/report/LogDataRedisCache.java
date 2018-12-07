@@ -4,14 +4,22 @@ import com.globalegrow.util.JacksonUtil;
 import com.globalegrow.util.MD5CipherUtil;
 import com.globalegrow.util.SpringRedisUtil;
 import io.searchbox.client.JestClient;
+import io.searchbox.client.JestResult;
 import io.searchbox.core.DocumentResult;
 import io.searchbox.core.Get;
+import io.searchbox.core.Search;
+import io.searchbox.params.Parameters;
 import org.apache.commons.lang3.StringUtils;
+import org.elasticsearch.index.query.BoolQueryBuilder;
+import org.elasticsearch.index.query.QueryBuilder;
+import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -49,11 +57,11 @@ public class LogDataRedisCache implements LogDataCache {
                     if (StringUtils.isNotEmpty(sku) && !"null".equals(sku)) {
 
                         if (StringUtils.isEmpty(userId) || "0".equals(userId)) {
-
-                            String id = String.valueOf(jsonMap.get("appsflyer_device_id")) + "_" + String.valueOf(jsonMap.get("app_name")) + "_" + String.valueOf(jsonMap.get("platform"));
-                            this.logger.debug("根据 cookie 站点等信息查询用户 id 信息: {}", id);
-                            Get get = new Get.Builder("cookie-userid-rel", MD5CipherUtil.generatePassword(id)).type("userid").build();
-                            userId = getUserIdFromEs(userId, id, get);
+                            String cookie = String.valueOf(jsonMap.get("appsflyer_device_id"));
+                            //String id = cookie + "_" + String.valueOf(jsonMap.get("app_name")) + "_" + String.valueOf(jsonMap.get("platform"));
+                            //this.logger.debug("根据 cookie 站点等信息查询用户 id 信息: {}", id);
+                            //Get get = new Get.Builder("cookie-userid-rel", MD5CipherUtil.generatePassword(id)).type("userid").build();
+                            userId = getUserIdFromEs(userId, cookie);
 
 
                         }
@@ -71,11 +79,11 @@ public class LogDataRedisCache implements LogDataCache {
                     String sku = String.valueOf(skuInfo.get("sku"));
                     if (StringUtils.isNotEmpty(sku) && !"null".equals(sku)) {
                         if (jsonMap.get("glb_u") == null || "0".equals(jsonMap.get("glb_u"))) {
-
-                            String id = String.valueOf(jsonMap.get("glb_od")) + "_" + String.valueOf(jsonMap.get("glb_d")) + "_" + String.valueOf(jsonMap.get("glb_dc"));
-                            this.logger.debug("根据 cookie 站点等信息查询用户 id 信息: {}", id);
-                            Get get = new Get.Builder("cookie-userid-rel", MD5CipherUtil.generatePassword(id)).type("userid").build();
-                            userId = getUserIdFromEs(userId, id, get);
+                            String cookie = String.valueOf(jsonMap.get("glb_od"));
+                            //String id = String.valueOf(jsonMap.get("glb_od")) + "_" + String.valueOf(jsonMap.get("glb_d")) + "_" + String.valueOf(jsonMap.get("glb_dc"));
+                            //this.logger.debug("根据 cookie 站点等信息查询用户 id 信息: {}", id);
+                            //Get get = new Get.Builder("cookie-userid-rel", MD5CipherUtil.generatePassword(id)).type("userid").build();
+                            userId = getUserIdFromEs(userId, cookie);
                         }
 
                         this.addCartLogCacheToRedis(reportName, jsonMap, userId, sku);
@@ -102,15 +110,32 @@ public class LogDataRedisCache implements LogDataCache {
         }
     }
 
-    private String getUserIdFromEs(String userId, String id, Get get) {
+    private String getUserIdFromEs(String userId, String cookie) {
         try {
-            DocumentResult result = this.jestClient.execute(get);
+            BoolQueryBuilder queryBuilder = QueryBuilders.boolQuery();
+            QueryBuilder cookieFilter = QueryBuilders.termQuery("cookie.keyword", cookie);
+            queryBuilder.filter(cookieFilter);
+            SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
+            searchSourceBuilder.query(queryBuilder);
+            searchSourceBuilder.from(0);
+            searchSourceBuilder.size(1);
+
+            Search.Builder builder = new Search.Builder(searchSourceBuilder.toString());
+            builder.addIndex("cookie-userid-rel");
+            Search search = builder
+                    .addType("userid")/*.setParameter(Parameters.ROUTING, userActionParameterDto.getCookieId())*/
+                    .build();
+
+            JestResult result = this.jestClient.execute(search);
             if (result != null) {
-                Map<String, String> cookieUserIdMap = result.getSourceAsObject(Map.class);
-                this.logger.debug("根据 cookie 站点等信息查询用户 id 结果:{} ,{}", id, cookieUserIdMap);
-                if (cookieUserIdMap != null) {
-                    userId = cookieUserIdMap.get("userid");
+
+                List<Map> mapList = result.getSourceAsObjectList(Map.class);
+                if (mapList != null && mapList.size() > 0) {
+                    userId = String.valueOf(mapList.get(0).get("userid"));
                 }
+
+                this.logger.debug("根据 cookie 站点等信息查询用户 id 结果:{} ,{}", cookie, mapList);
+
             }
         } catch (Exception e) {
             logger.error("查询用户id error", e);
