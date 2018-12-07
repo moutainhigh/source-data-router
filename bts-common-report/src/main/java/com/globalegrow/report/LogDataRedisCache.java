@@ -1,14 +1,10 @@
 package com.globalegrow.report;
 
 import com.globalegrow.util.JacksonUtil;
-import com.globalegrow.util.MD5CipherUtil;
 import com.globalegrow.util.SpringRedisUtil;
 import io.searchbox.client.JestClient;
 import io.searchbox.client.JestResult;
-import io.searchbox.core.DocumentResult;
-import io.searchbox.core.Get;
 import io.searchbox.core.Search;
-import io.searchbox.params.Parameters;
 import org.apache.commons.lang3.StringUtils;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilder;
