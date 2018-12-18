@@ -127,10 +127,10 @@ public class LogDataRedisCache implements LogDataCache {
 
                 List<Map> mapList = result.getSourceAsObjectList(Map.class);
                 if (mapList != null && mapList.size() > 0) {
-                    userId = String.valueOf(mapList.get(0).get("userid"));
+                   return String.valueOf(mapList.get(0).get("userid"));
                 }
 
-                this.logger.debug("根据 cookie 站点等信息查询用户 id 结果:{} ,{}", cookie, mapList);
+                //this.logger.debug("根据 cookie 站点等信息查询用户 id 结果:{} ,{}", cookie, mapList);
 
             }
         } catch (Exception e) {
