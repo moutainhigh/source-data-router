@@ -57,7 +57,7 @@ public class LogDataRedisCache implements LogDataCache {
                             //String id = cookie + "_" + String.valueOf(jsonMap.get("app_name")) + "_" + String.valueOf(jsonMap.get("platform"));
                             //this.logger.debug("根据 cookie 站点等信息查询用户 id 信息: {}", id);
                             //Get get = new Get.Builder("cookie-userid-rel", MD5CipherUtil.generatePassword(id)).type("userid").build();
-                            userId = getUserIdFromEs(userId, cookie);
+                            userId = getUserIdFromEs(cookie);
 
 
                         }
@@ -79,7 +79,7 @@ public class LogDataRedisCache implements LogDataCache {
                             //String id = String.valueOf(jsonMap.get("glb_od")) + "_" + String.valueOf(jsonMap.get("glb_d")) + "_" + String.valueOf(jsonMap.get("glb_dc"));
                             //this.logger.debug("根据 cookie 站点等信息查询用户 id 信息: {}", id);
                             //Get get = new Get.Builder("cookie-userid-rel", MD5CipherUtil.generatePassword(id)).type("userid").build();
-                            userId = getUserIdFromEs(userId, cookie);
+                            userId = getUserIdFromEs(cookie);
                         }
 
                         this.addCartLogCacheToRedis(reportName, jsonMap, userId, sku);
@@ -106,7 +106,7 @@ public class LogDataRedisCache implements LogDataCache {
         }
     }
 
-    private String getUserIdFromEs(String userId, String cookie) {
+    private String getUserIdFromEs(String cookie) {
         try {
             BoolQueryBuilder queryBuilder = QueryBuilders.boolQuery();
             QueryBuilder cookieFilter = QueryBuilders.termQuery("cookie.keyword", cookie);
@@ -136,6 +136,6 @@ public class LogDataRedisCache implements LogDataCache {
         } catch (Exception e) {
             logger.error("查询用户id error", e);
         }
-        return userId;
+        return "";
     }
 }
