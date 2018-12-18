@@ -283,7 +283,38 @@ public class ReportHandleRunnable implements Runnable {
 
         }
 
-        return list;
+        return flatBtsArray(list);
+    }
+
+    private List<Map<String, Object>> flatBtsArray(List<Map<String, Object>> list){
+        List<Map<String, Object>> flatBts = new ArrayList<>();
+
+        for (Map<String, Object> map : list) {
+            Object o = map.get("glb_bts");
+
+            if (o != null) {
+
+                if (o instanceof List) {
+                    List btss = (List)o;
+
+                    for (Object bts : btss) {
+                        Map<String, Object> mspBts = new HashMap<>();
+                        mspBts.putAll(map);
+                        mspBts.put("glb_bts", bts);
+                        flatBts.add(mspBts);
+                    }
+
+                }
+
+            }
+
+        }
+
+        if (flatBts.size() == 0) {
+            return list;
+        }
+
+        return flatBts;
     }
 
 
