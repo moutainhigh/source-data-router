@@ -99,7 +99,7 @@ public class BuryPointKafkaDataListener {
 				Map<String, String> cookieUserIdMap = result.getSourceAsObject(Map.class);
 				this.logger.debug("根据 cookie 站点等信息查询用户 id 结果:{} ,{}", id, cookieUserIdMap);
 				if (cookieUserIdMap != null) {
-					userId = cookieUserIdMap.get("userid");
+					return cookieUserIdMap.get("userid");
 				}
 			}
 		} catch (Exception e) {
