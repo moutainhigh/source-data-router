@@ -9,7 +9,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication(scanBasePackages = {"com.globalegrow"})
 @MapperScan("com.globalegrow.dy.mapper")
-//@EnableCaching
+@EnableCaching
 @EnableScheduling
 @EnableAspectJAutoProxy(proxyTargetClass = true)
 public class ServiceStart {

@@ -45,9 +45,9 @@
 
         <!--数据库连接 -->
         <jdbcConnection driverClass="com.mysql.jdbc.Driver"
-                        connectionURL="jdbc:mysql://52.202.56.79:3306/dy_report?useSSL=false&amp;useUnicode=true&amp;characterEncoding=UTF-8&amp;allowMultiQueries=true"
+                        connectionURL="jdbc:mysql://10.33.4.95/test?useSSL=false&amp;useUnicode=true&amp;characterEncoding=UTF-8&amp;allowMultiQueries=true"
                         userId="root"
-                        password="Hqyg@123456">
+                        password="root">
         </jdbcConnection>
         <!--默认false
            Java type resolver will always use java.math.BigDecimal if the database column is of type DECIMAL or NUMERIC.
@@ -72,7 +72,10 @@
             <!--<property name="rootInterface" value="com.lakala.lfuc.dal.entity.LfucBaseEnty"/>-->
         </javaClientGenerator>
 
-        <table tableName="DY_BTS_REPORT_KYLIN_CONFIG" domainObjectName="BtsReportKylinConfig" enableSelectByExample="true" enableCountByExample="true">
+        <!--<table tableName="DY_BTS_REPORT_KYLIN_CONFIG" domainObjectName="BtsReportKylinConfig" enableSelectByExample="true" enableCountByExample="true">
+            <generatedKey column="id" sqlStatement="Mysql"   identity="true"/>
+        </table>-->
+        <table tableName="dy_report_kylin_config" domainObjectName="DyReportKylinConfig" enableSelectByExample="true" enableCountByExample="true">
             <generatedKey column="id" sqlStatement="Mysql"   identity="true"/>
         </table>
 
