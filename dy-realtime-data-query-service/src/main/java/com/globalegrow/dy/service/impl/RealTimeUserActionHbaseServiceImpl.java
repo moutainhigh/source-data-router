@@ -75,7 +75,7 @@ public class RealTimeUserActionHbaseServiceImpl implements RealTimeUserActionHba
             }
         }*/
 
-        inputType.parallelStream().forEach(eventName -> {
+       /* inputType.parallelStream().forEach(eventName -> {
             StringBuilder rowkey =  new StringBuilder();
             rowkey = rowkey.append(userActionParameterDto.getSite().get(0)).append("_").append(eventName).append("_").append(userActionParameterDto.getCookieId());
             try {
@@ -91,15 +91,15 @@ public class RealTimeUserActionHbaseServiceImpl implements RealTimeUserActionHba
                         boolean eventTimeStatus1 = eventTime.contains("_");
                         boolean eventTimeStatus2 = eventTime.contains(".");
                         if(eventTimeStatus1 || eventTimeStatus2 || eventTime.length()!=13){
-                            /*if(eventTime.length()>=13){
+                            *//*if(eventTime.length()>=13){
                                 eventTime = eventTime.substring(eventTime.length()-13);
                             }else{
                                 eventTime = System.currentTimeMillis()+"";
-                            }*/
+                            }*//*
                             continue;
                         }
-                       /* System.out.println("keys[0]="+keys[0]);
-                        System.out.println("eventTime="+eventTime);*/
+                       *//* System.out.println("keys[0]="+keys[0]);
+                        System.out.println("eventTime="+eventTime);*//*
                         UserActionData userActionData = new UserActionData(keys[0],Long.parseLong(eventTime));
                         userActionDataList.add(userActionData);
                     }
@@ -108,7 +108,7 @@ public class RealTimeUserActionHbaseServiceImpl implements RealTimeUserActionHba
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        });
+        });*/
         userActionResponseDto.setSize(totalSize[0]);
         userActionResponseDto.setData(data);
         /*System.out.println("花费：");

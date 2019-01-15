@@ -53,7 +53,7 @@ public class RealTimeUserActionEsServiceImpl implements RealTimeUserActionServic
     private String scroll;
 
 
-
+    String appIndexPrefix = "dy_app_&&_event";
 
     @PostConstruct
     public void before(){
@@ -77,6 +77,8 @@ public class RealTimeUserActionEsServiceImpl implements RealTimeUserActionServic
         if (inputType.size() < 1) {
             inputType.addAll(Arrays.stream(AppEventEnums.values()).map(AppEventEnums :: name).collect(Collectors.toList()));
         }
+        String site = userActionParameterDto.getSite().toLowerCase();
+        String esIndex = appIndexPrefix.replace("&&", site);
         inputType.parallelStream().forEach(eventName -> {
             long start = System.currentTimeMillis();
 
@@ -100,19 +102,10 @@ public class RealTimeUserActionEsServiceImpl implements RealTimeUserActionServic
             }
 
             // 事件类型过滤
-            QueryBuilder qbevent = QueryBuilders.termQuery("event_name.keyword", eventName);
-            queryBuilder.filter(qbevent);
+//            QueryBuilder qbevent = QueryBuilders.termQuery("event_name.keyword", eventName);
+//            queryBuilder.filter(qbevent);
 
-            // 站点条件过滤
-            if (userActionParameterDto.getSite() != null && userActionParameterDto.getSite().size() > 0) {
-                QueryBuilder qbs = QueryBuilders.termsQuery("site.keyword", userActionParameterDto.getSite());
-                queryBuilder.filter(qbs);
-            }
-            // 终端条件过滤
-            if (userActionParameterDto.getPlatform() != null && userActionParameterDto.getPlatform().size() > 0) {
-                QueryBuilder qbd = QueryBuilders.termsQuery("platform.keyword", userActionParameterDto.getPlatform());
-                queryBuilder.filter(qbd);
-            }
+
 
             SortBuilder sortBuilder = new FieldSortBuilder("timestamp");
             sortBuilder.order(SortOrder.DESC);
@@ -128,7 +121,7 @@ public class RealTimeUserActionEsServiceImpl implements RealTimeUserActionServic
             //builder.addIndex(this.indexAliases);
             //builder.addIndex(this.indexAliases);
             Search search = builder
-                    .addType(this.indexType).setParameter(Parameters.ROUTING, userActionParameterDto.getCookieId())
+                    .addType(esIndex + "-" + eventName).setParameter(Parameters.ROUTING, userActionParameterDto.getCookieId())
                     .build();
 
             try {

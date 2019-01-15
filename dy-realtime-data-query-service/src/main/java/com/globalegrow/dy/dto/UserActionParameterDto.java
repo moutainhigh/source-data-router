@@ -10,7 +10,7 @@ import java.util.List;
 
 public class UserActionParameterDto {
 
-    @NotNull
+    @NotNull(message = "device_id 不能为空")
     private String cookieId;
 
     private List<String> type;
@@ -21,10 +21,10 @@ public class UserActionParameterDto {
     //@NotNull
     private Long endDate;
 
-    private List<String> site = new ArrayList<>();
+    @NotBlank(message = "网站标识不能为空")
+    private String site;
 
-    private List<String> platform = new ArrayList<>();
-
+    //private List<String> platform = new ArrayList<>();
 
     /**
      * 每页数量
@@ -75,20 +75,12 @@ public class UserActionParameterDto {
         this.endDate = endDate;
     }
 
-    public List<String> getSite() {
+    public String getSite() {
         return site;
     }
 
-    public void setSite(List<String> site) {
+    public void setSite(String site) {
         this.site = site;
-    }
-
-    public List<String> getPlatform() {
-        return platform;
-    }
-
-    public void setPlatform(List<String> platform) {
-        this.platform = platform;
     }
 
     @Override
@@ -98,8 +90,6 @@ public class UserActionParameterDto {
                 ", type='" + type + '\'' +
                 ", startDate=" + startDate +
                 ", endDate=" + endDate +
-                ", site=" + site +
-                ", divice=" + platform +
                 '}';
     }
 }

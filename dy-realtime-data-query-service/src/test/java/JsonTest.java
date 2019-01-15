@@ -11,6 +11,14 @@ public class JsonTest {
 
 
     @Test
+    public void stringTest() {
+        String appIndexPrefix = "dy_app_&&_event";
+        System.out.println(appIndexPrefix.replace("&&", "gb"));
+        System.out.println(appIndexPrefix);
+    }
+
+
+    @Test
     public void test() throws Exception {
         objectMapper.configure(JsonGenerator.Feature.ESCAPE_NON_ASCII, true);
         String s = "\"{\"site\":\"zaful\",\"device_id\":\"wangzhongfu\",\"user_id\":\"0\",\"event_name\":\"af_impression\",\"event_value\":\"232052511\",\"platform\":\"android\",\"timestamp\":1540445344000}\"";
