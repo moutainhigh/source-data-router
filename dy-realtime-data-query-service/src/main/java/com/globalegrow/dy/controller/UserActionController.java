@@ -2,10 +2,11 @@ package com.globalegrow.dy.controller;
 
 import com.alibaba.csp.sentinel.annotation.SentinelResource;
 import com.alibaba.csp.sentinel.slots.block.BlockException;
-import com.globalegrow.dy.dto.UserActionParameterDto;
-import com.globalegrow.dy.dto.UserActionResponseDto;
+import com.globalegrow.dy.dto.*;
 import com.globalegrow.dy.service.RealTimeUserActionHbaseService;
 import com.globalegrow.dy.service.RealTimeUserActionService;
+import com.globalegrow.dy.service.UserActionQueryAllService;
+import com.globalegrow.dy.service.UserBaseInfoService;
 import com.netflix.hystrix.HystrixThreadPoolProperties;
 
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
@@ -32,6 +33,12 @@ public class UserActionController {
     @Qualifier("realTimeUserActionEsServiceImpl")
     private RealTimeUserActionService realTimeUserActionEsServiceImpl;
 
+    @Autowired
+    private UserBaseInfoService userBaseInfoService;
+
+    @Autowired
+    private UserActionQueryAllService userActionQueryAllService;
+
 /*    @Autowired
     @Qualifier("realTimeUserActionHbaseServiceImpl")
     private RealTimeUserActionHbaseService realTimeUserActionHbaseServiceImpl;*/
@@ -41,29 +48,50 @@ public class UserActionController {
         HystrixThreadPoolProperties.Setter().withCoreSize(40);
     }
 
-    @RequestMapping(value = "getUserInfoFromHbase",produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
-    public UserActionResponseDto getUserInfoFromHbase(@Validated @RequestBody UserActionParameterDto parameterDto) throws IOException, ParseException {
-        return this.realTimeUserActionEsServiceImpl.userActionData(parameterDto);
+    /*  @RequestMapping(value = "getUserInfoFromHbase",produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
+      public UserActionResponseDto getUserInfoFromHbase(@Validated @RequestBody UserActionParameterDto parameterDto) throws IOException, ParseException {
+          return this.realTimeUserActionEsServiceImpl.userActionData(parameterDto);
+      }*/
+
+    /**
+     * 用户基本信息接口
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "base", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
+    public UserBaseInfoResponse getUsersBaseInfo(@Validated @RequestBody UserBaseInfoRequest request) {
+        return this.userBaseInfoService.getUsersBaseInfo(request);
+    }
+
+    /**
+     * 用户全部事件序列接口
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "all", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
+    public UserActionQueryAllResponse getAllUserActions(@Validated @RequestBody UserActionQueryAllRequest request) {
+        return this.userActionQueryAllService.getAllUserActions(request);
     }
 
     /**
      * 与源文档保持一致
+     *
      * @param parameterDto
      * @return
      * @throws IOException
      */
     @SentinelResource(value = "getUserInfo", blockHandler = "exceptionHandler")
-    @RequestMapping(value = "getUserInfo",produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
+    @RequestMapping(value = "getUserInfo", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     /*@HystrixCommand(fallbackMethod = "fallbackMethod",commandProperties = {
             @HystrixProperty(name = "execution.isolation.strategy",value = "SEMAPHORE"),
             @HystrixProperty(name = "fallback.isolation.semaphore.maxConcurrentRequests",value = "5000"),
             @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds",value = "4000")})*/
-    @HystrixCommand(fallbackMethod = "fallbackMethod",commandProperties = {
-            @HystrixProperty(name = "execution.isolation.strategy",value = "THREAD"),
-            @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds",value = "3000")})
+    @HystrixCommand(fallbackMethod = "fallbackMethod", commandProperties = {
+            @HystrixProperty(name = "execution.isolation.strategy", value = "THREAD"),
+            @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "3000")})
     public UserActionResponseDto userActionInfo(@Validated @RequestBody UserActionParameterDto parameterDto) throws IOException, ParseException {
         //long start = System.currentTimeMillis();
-        UserActionResponseDto responseDto =  this.realTimeUserActionEsServiceImpl.userActionData(parameterDto);
+        UserActionResponseDto responseDto = this.realTimeUserActionEsServiceImpl.userActionData(parameterDto);
         /*initFlowRules();
         UserActionResponseDto responseDto = new UserActionResponseDto();
         Entry entry = null;
@@ -122,7 +150,7 @@ public class UserActionController {
     }*/
 
     public UserActionResponseDto exceptionHandler(UserActionParameterDto parameterDto, BlockException ex) {
-        logger.warn("服务超时或繁忙"+parameterDto.toString());
+        logger.warn("服务超时或繁忙" + parameterDto.toString());
         UserActionResponseDto actionResponseDto = new UserActionResponseDto();
         actionResponseDto.setMessage("服务超时或繁忙");
         actionResponseDto.setSuccess(false);

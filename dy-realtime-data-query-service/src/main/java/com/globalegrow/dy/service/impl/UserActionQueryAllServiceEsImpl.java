@@ -93,6 +93,8 @@ public class UserActionQueryAllServiceEsImpl implements UserActionQueryAllServic
 
             }
 
+            allResponse.setData(userActions);
+
         }
 
 
