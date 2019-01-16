@@ -32,9 +32,9 @@ public class UserActionController {
     @Qualifier("realTimeUserActionEsServiceImpl")
     private RealTimeUserActionService realTimeUserActionEsServiceImpl;
 
-    @Autowired
+/*    @Autowired
     @Qualifier("realTimeUserActionHbaseServiceImpl")
-    private RealTimeUserActionHbaseService realTimeUserActionHbaseServiceImpl;
+    private RealTimeUserActionHbaseService realTimeUserActionHbaseServiceImpl;*/
 
     @PostConstruct
     public void before() {
@@ -42,8 +42,8 @@ public class UserActionController {
     }
 
     @RequestMapping(value = "getUserInfoFromHbase",produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
-    public UserActionResponseDto getUserInfoFromHbase(@Validated @RequestBody UserActionParameterDto parameterDto){
-        return this.realTimeUserActionHbaseServiceImpl.getUserActionDataFromHbase(parameterDto);
+    public UserActionResponseDto getUserInfoFromHbase(@Validated @RequestBody UserActionParameterDto parameterDto) throws IOException, ParseException {
+        return this.realTimeUserActionEsServiceImpl.userActionData(parameterDto);
     }
 
     /**

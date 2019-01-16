@@ -10,16 +10,18 @@ import org.junit.Test;
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
 import java.net.URLDecoder;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class JsonTest {
 
     public static final String BAD_JSON_PATTERN = "\"([\\d]+_?)\":";
+
+    @Test
+    public void testUUID() {
+        System.out.println(UUID.randomUUID().toString());
+    }
 
     @Test
     public void testList(){

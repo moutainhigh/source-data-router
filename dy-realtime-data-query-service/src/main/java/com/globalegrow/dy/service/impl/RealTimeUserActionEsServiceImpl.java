@@ -82,11 +82,7 @@ public class RealTimeUserActionEsServiceImpl implements RealTimeUserActionServic
         inputType.parallelStream().forEach(eventName -> {
             long start = System.currentTimeMillis();
 
-            //logger.debug("传入参数:{}", userActionParameterDto);
-
             JestResult result = null;
-
-            //this.logger.debug("第二次查询");
 
             BoolQueryBuilder queryBuilder = QueryBuilders.boolQuery();
             SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
@@ -101,11 +97,6 @@ public class RealTimeUserActionEsServiceImpl implements RealTimeUserActionServic
                 queryBuilder.filter(qbTime);
             }
 
-            // 事件类型过滤
-//            QueryBuilder qbevent = QueryBuilders.termQuery("event_name.keyword", eventName);
-//            queryBuilder.filter(qbevent);
-
-
 
             SortBuilder sortBuilder = new FieldSortBuilder("timestamp");
             sortBuilder.order(SortOrder.DESC);
@@ -117,11 +108,11 @@ public class RealTimeUserActionEsServiceImpl implements RealTimeUserActionServic
             searchSourceBuilder.sort(sortBuilder);
             Search.Builder builder = new Search.Builder(searchSourceBuilder.toString());
             //this.logger.debug("elasticsearch 搜索条件: {}", searchSourceBuilder.toString());
-            builder.addIndex(this.indexPrefix + eventName);
+            builder.addIndex(esIndex + "-" + eventName);
             //builder.addIndex(this.indexAliases);
             //builder.addIndex(this.indexAliases);
             Search search = builder
-                    .addType(esIndex + "-" + eventName).setParameter(Parameters.ROUTING, userActionParameterDto.getCookieId())
+                    .addType("log").setParameter(Parameters.ROUTING, userActionParameterDto.getCookieId())
                     .build();
 
             try {
@@ -135,8 +126,8 @@ public class RealTimeUserActionEsServiceImpl implements RealTimeUserActionServic
             if (result != null) {
                 long handleStart = System.currentTimeMillis();
                 //logger.debug("es data result size: {}", result.getSourceAsObjectList(UserActionEsDto.class).size());
-                result.getSourceAsObjectList(UserActionEsDto.class).parallelStream().collect(Collectors.groupingBy(UserActionEsDto::getEvent_name)).entrySet().stream().forEach(e -> {
-                    data.put(e.getKey(), e.getValue().parallelStream().map(esd -> new UserActionData(esd.getEvent_value(), esd.getTimestamp())).collect(Collectors.toList()));
+                result.getSourceAsObjectList(UserActionEsDto.class).stream().collect(Collectors.groupingBy(UserActionEsDto::getEvent_name)).entrySet().stream().forEach(e -> {
+                    data.put(e.getKey(), e.getValue().stream().map(esd -> new UserActionData(esd.getEvent_value(), esd.getTimestamp())).collect(Collectors.toList()));
                 });
                 //logger.debug("handle result costs: {}", System.currentTimeMillis() - handleStart);
             }
