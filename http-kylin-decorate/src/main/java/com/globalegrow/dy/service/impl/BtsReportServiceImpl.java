@@ -2,7 +2,7 @@ package com.globalegrow.dy.service.impl;
 
 import com.globalegrow.dy.dto.BtsReportParameterDto;
 import com.globalegrow.dy.dto.ReportPageDto;
-import com.globalegrow.dy.enums.BtsQueryConditions;
+import com.globalegrow.dy.enums.QueryConditions;
 import com.globalegrow.dy.enums.ReportServerType;
 import com.globalegrow.dy.model.BtsReportKylinConfig;
 import com.globalegrow.dy.service.BtsReportConfigService;
@@ -100,9 +100,9 @@ public class BtsReportServiceImpl implements BtsReportService {
             String sourceSql = btsReportKylinConfig.getKylinQuerySql();
             Map valuesMap = new HashMap();
             this.logger.debug("处理分组");
-            valuesMap.put(BtsQueryConditions.groupByFields.name(), this.groupFields(btsReportParameterDto, btsReportKylinConfig));
+            valuesMap.put(QueryConditions.groupByFields.name(), this.groupFields(btsReportParameterDto, btsReportKylinConfig));
             this.logger.debug("处理 where 条件");
-            valuesMap.put(BtsQueryConditions.whereFields.name(), this.whereFields(btsReportParameterDto, btsReportKylinConfig));
+            valuesMap.put(QueryConditions.whereFields.name(), this.whereFields(btsReportParameterDto, btsReportKylinConfig));
 
             this.logger.debug("处理排序字段");
             StringBuilder orderBy = new StringBuilder();
@@ -123,7 +123,7 @@ public class BtsReportServiceImpl implements BtsReportService {
                 orderBy.append(" day_start desc ");
             }*/
 
-            valuesMap.put(BtsQueryConditions.orderByFields.name(), orderBy.toString());
+            valuesMap.put(QueryConditions.orderByFields.name(), orderBy.toString());
 
             this.logger.debug("组装 sql");
             StringSubstitutor sub = new StringSubstitutor(valuesMap);

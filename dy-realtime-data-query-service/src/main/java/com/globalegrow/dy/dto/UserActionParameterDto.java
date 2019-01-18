@@ -8,7 +8,7 @@ import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UserActionParameterDto {
+public class UserActionParameterDto extends DyRequest{
 
     @NotNull(message = "device_id 不能为空")
     private String cookieId;

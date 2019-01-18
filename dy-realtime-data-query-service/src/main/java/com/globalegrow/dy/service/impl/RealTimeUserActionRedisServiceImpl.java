@@ -1,3 +1,4 @@
+/*
 package com.globalegrow.dy.service.impl;
 
 import com.globalegrow.dy.dto.UserActionDto;
@@ -29,10 +30,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+*/
 /**
  * 用户行为接口，redis 实现
  * 只根据用户 device id 查询用户当天的行为数据
- */
+ *//*
+
 //@Service
 @Deprecated
 public class RealTimeUserActionRedisServiceImpl implements RealTimeUserActionService {
@@ -75,12 +78,14 @@ public class RealTimeUserActionRedisServiceImpl implements RealTimeUserActionSer
     }
 
 
-    /**
+    */
+/**
      * 查询用户行为数据
      *
      * @param userActionParameterDto
      * @return
-     */
+     *//*
+
     @Override
     @HystrixCommand(fallbackMethod = "queryFromEs",commandProperties = { @HystrixProperty(name = "fallback.isolation.semaphore.maxConcurrentRequests",value = "1000"),
             @HystrixProperty(name = "hystrix.command.default.execution.isolation.semaphore.maxConcurrentRequests",value = "1000")})
@@ -88,7 +93,8 @@ public class RealTimeUserActionRedisServiceImpl implements RealTimeUserActionSer
         long start = System.currentTimeMillis();
         UserActionResponseDto userActionResponseDto = new UserActionResponseDto();
         this.logger.debug("user_action_parameter: {}", userActionParameterDto);
-       /* if (StringUtils.isNotEmpty(userActionParameterDto.getCookieId())) {
+       */
+/* if (StringUtils.isNotEmpty(userActionParameterDto.getCookieId())) {
             List<UserActionDto> list = new ArrayList<>();
             String key = redisKeyPrefix + userActionParameterDto.getCookieId() + "_" + DateFormatUtils.format(System.currentTimeMillis(), "yyyy-MM-dd");
             RSet<String> stringSet = redisson.getSet(key, StringCodec.INSTANCE);
@@ -114,7 +120,8 @@ public class RealTimeUserActionRedisServiceImpl implements RealTimeUserActionSer
             });
             this.logger.info("cost_handle string convert cost: {}", System.currentTimeMillis() - handleStart);
             userActionResponseDto.setData(list);
-        }*/
+        }*//*
+
 
         return userActionResponseDto;
     }
@@ -153,3 +160,4 @@ public class RealTimeUserActionRedisServiceImpl implements RealTimeUserActionSer
         list.add(userActionDto);
     }
 }
+*/

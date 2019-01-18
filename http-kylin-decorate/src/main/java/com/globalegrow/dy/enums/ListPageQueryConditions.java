@@ -2,6 +2,6 @@ package com.globalegrow.dy.enums;
 
 public enum ListPageQueryConditions {
 
-    glbPlf,hourStart,hourEnd
+    glbPlf,hourStart,hourEnd,groupByFields,whereFields,orderByFields
 
 }

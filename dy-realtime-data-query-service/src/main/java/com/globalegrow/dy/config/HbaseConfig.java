@@ -1,3 +1,4 @@
+/*
 package com.globalegrow.dy.config;
 
 import org.apache.hadoop.hbase.HBaseConfiguration;
@@ -5,8 +6,8 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-@Configuration
-@ConfigurationProperties(prefix = "spring.hbase")
+//@Configuration
+//@ConfigurationProperties(prefix = "spring.hbase")
 public class HbaseConfig {
 
     private String zkServers;
@@ -30,3 +31,4 @@ public class HbaseConfig {
         this.zkServers = zkServers;
     }
 }
+*/
