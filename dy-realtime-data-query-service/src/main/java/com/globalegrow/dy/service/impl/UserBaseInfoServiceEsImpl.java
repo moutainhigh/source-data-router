@@ -33,7 +33,7 @@ public class UserBaseInfoServiceEsImpl implements UserBaseInfoService {
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
-    @Qualifier("myJestClient")
+    //@Qualifier("myJestClient")
     private JestClient jestClient;
 
     String appIndexPrefix = "dy_app_&&_user_base";

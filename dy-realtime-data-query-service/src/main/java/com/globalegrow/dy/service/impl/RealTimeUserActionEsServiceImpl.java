@@ -34,7 +34,7 @@ public class RealTimeUserActionEsServiceImpl implements RealTimeUserActionServic
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
-    @Qualifier("myJestClient")
+    //@Qualifier("myJestClient")
     private JestClient jestClient;
     /**
      * 索引前缀，当天数据只查询当天索引 dy-app-data-temp-
@@ -59,7 +59,7 @@ public class RealTimeUserActionEsServiceImpl implements RealTimeUserActionServic
     private String appRealtimeEventIndex = "dy_app_&&_event_realtime";
 
     @PostConstruct
-    public void before(){
+    public void before() {
 
     }
 
@@ -74,16 +74,15 @@ public class RealTimeUserActionEsServiceImpl implements RealTimeUserActionServic
         UserActionResponseDto userActionResponseDto = new UserActionResponseDto();
         Map<String, List<UserActionData>> data = new HashMap<>();
         List<String> inputType = userActionParameterDto.getType();
-        if (inputType == null){
+        if (inputType == null) {
             inputType = new ArrayList<>();
         }
         if (inputType.size() < 1) {
-            inputType.addAll(Arrays.stream(AppEventEnums.values()).map(AppEventEnums :: name).collect(Collectors.toList()));
+            inputType.addAll(Arrays.stream(AppEventEnums.values()).map(AppEventEnums::name).collect(Collectors.toList()));
         }
         String site = userActionParameterDto.getSite().toLowerCase();
-        String esIndex = appIndexPrefix.replace("&&", site);
+        String esIndex = this.appIndexPrefix.replace("&&", site);
         inputType.parallelStream().forEach(eventName -> {
-            long start = System.currentTimeMillis();
 
             JestResult result = null;
 
@@ -145,39 +144,49 @@ public class RealTimeUserActionEsServiceImpl implements RealTimeUserActionServic
         UserActionResponseDto userActionResponseDto = new UserActionResponseDto();
         Map<String, List<UserActionData>> data = new HashMap<>();
         List<String> inputType = userActionParameterDto.getType();
-        if (inputType == null){
+        if (inputType == null) {
             inputType = new ArrayList<>();
         }
         if (inputType.size() < 1) {
-            inputType.addAll(Arrays.stream(AppEventEnums.values()).map(AppEventEnums :: name).collect(Collectors.toList()));
+            inputType.addAll(Arrays.stream(AppEventEnums.values()).map(AppEventEnums::name).collect(Collectors.toList()));
         }
         String site = userActionParameterDto.getSite().toLowerCase();
-        String esIndex = appIndexPrefix.replace("&&", site);
+        String esIndex = this.appRealtimeEventIndex.replace("&&", site);
 
         inputType.parallelStream().forEach(eventName -> {
 
-            Get get = new Get.Builder(esIndex, userActionParameterDto.getCookieId() + eventName).type("log").build();
+            String id = userActionParameterDto.getCookieId() + eventName;
+
+            Get get = new Get.Builder(esIndex, id).type("log").setParameter(Parameters.ROUTING, id).build();
 
             try {
                 JestResult jestResult = this.jestClient.execute(get);
-                UserRealtimeEventActions realtimeEventActions = jestResult.getSourceAsObject(UserRealtimeEventActions.class);
-                if (realtimeEventActions != null) {
+                if (jestResult != null) {
 
-                    String[] values = realtimeEventActions.getSkus();
+                    Map<String, Object> map = jestResult.getSourceAsObject(Map.class);
 
-                    if (values != null && values.length > 0) {
 
-                        List<UserActionData> list = new ArrayList<>();
+                   // UserRealtimeEventActions realtimeEventActions = jestResult.getSourceAsObject(UserRealtimeEventActions.class);
+                    if (map != null) {
 
-                        Arrays.stream(values).forEach(value -> list.add(new UserActionData(value.substring(0, value.lastIndexOf("_")), Long.valueOf(value.substring(value.lastIndexOf("_")+1)))));
+                        List<String> skus = (List<String>) map.get("skus");
 
-                        data.put(eventName, list);
+                        if (skus != null && skus.size() > 0) {
+
+                            List<UserActionData> list = new ArrayList<>();
+
+                            skus.forEach(value -> list.add(new UserActionData(value.substring(0, value.lastIndexOf("_")), Long.valueOf(value.substring(value.lastIndexOf("_") + 1)))));
+
+                            data.put(eventName, list);
+
+                        }
 
                     }
 
                 }
-            } catch (IOException e) {
-                logger.error("用户实时数据 query es error ,params: {}", get.toString(), e);
+
+            } catch (Exception e) {
+                logger.error("用户实时数据 query es error ,params: {}", get.getURI(), e);
             }
 
 

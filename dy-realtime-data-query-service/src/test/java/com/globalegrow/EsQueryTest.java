@@ -1,9 +1,11 @@
 package com.globalegrow;
 
+import com.globalegrow.dy.dto.UserActionData;
 import com.globalegrow.dy.utils.JacksonUtil;
 import com.google.gson.JsonObject;
 import io.searchbox.client.JestClient;
 import io.searchbox.client.JestResult;
+import io.searchbox.core.Get;
 import io.searchbox.core.Search;
 import io.searchbox.core.SearchResult;
 import io.searchbox.params.Parameters;
@@ -21,6 +23,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 @RunWith(SpringRunner.class)
@@ -28,8 +32,25 @@ import java.util.Map;
 public class EsQueryTest {
 
     @Autowired
-    @Qualifier("myJestClient")
+    //@Qualifier("myJestClient")
     private JestClient jestClient;
+
+    //dy_app_gb_event_realtime/log/1539374829411-5174249294348526115af_view_product
+    @Test
+    public void testGet() throws IOException {
+        Get get = new Get.Builder("dy_app_gb_event_realtime", "1539374829411-5174249294348526115af_view_product").type("log").setParameter(Parameters.ROUTING, "1539374829411-5174249294348526115af_view_product")
+                .build();
+        JestResult jestResult = this.jestClient.execute(get);
+        Map<String, Object> map = jestResult.getSourceAsObject(Map.class);
+        System.out.println(map.get("skus").getClass());
+
+        List<String> skus = (List<String>) map.get("skus");
+        List<UserActionData> list = new ArrayList<>();
+
+        skus.forEach(value -> list.add(new UserActionData(value.substring(0, value.lastIndexOf("_")), Long.valueOf(value.substring(value.lastIndexOf("_") + 1)))));
+
+        System.out.println(list.size());
+    }
 
     @Test
     public void test() throws Exception {

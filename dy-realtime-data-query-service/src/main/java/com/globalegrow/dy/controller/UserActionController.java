@@ -91,7 +91,7 @@ public class UserActionController {
 //            @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "3000")})
     public UserActionResponseDto userActionInfo(@Validated @RequestBody UserActionParameterDto parameterDto) throws IOException, ParseException {
         //long start = System.currentTimeMillis();
-        UserActionResponseDto responseDto = this.realTimeUserActionEsServiceImpl.userActionData(parameterDto);
+        UserActionResponseDto responseDto = this.realTimeUserActionEsServiceImpl.getActionByUserDeviceId(parameterDto);
         /*initFlowRules();
         UserActionResponseDto responseDto = new UserActionResponseDto();
         Entry entry = null;
