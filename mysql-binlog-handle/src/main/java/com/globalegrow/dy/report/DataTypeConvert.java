@@ -1,8 +1,5 @@
 package com.globalegrow.dy.report;
 
-import org.omg.PortableInterceptor.INACTIVE;
-
-import java.util.HashMap;
 import java.util.Map;
 
 public class DataTypeConvert {

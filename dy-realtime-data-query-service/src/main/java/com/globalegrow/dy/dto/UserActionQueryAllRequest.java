@@ -13,6 +13,8 @@ import java.util.List;
  */
 public class UserActionQueryAllRequest extends EsPageRequest {
 
+    private String cookieId;
+
     @NotBlank(message = "网站源不能为空")
     private String site;
 
@@ -32,6 +34,14 @@ public class UserActionQueryAllRequest extends EsPageRequest {
     @Min(0)
     @NotNull
     private Integer size = 100;
+
+    public String getCookieId() {
+        return cookieId;
+    }
+
+    public void setCookieId(String cookieId) {
+        this.cookieId = cookieId;
+    }
 
     public Integer getSize() {
         return size;

@@ -91,11 +91,11 @@ public class RealTimeUserActionEsServiceImpl implements RealTimeUserActionServic
             queryBuilder.filter(qb);
 
             // 时间限制
-            if (userActionParameterDto.getStartDate() != null && userActionParameterDto.getEndDate() != null) {
+            /*if (userActionParameterDto.getStartDate() != null && userActionParameterDto.getEndDate() != null) {
                 QueryBuilder qbTime = QueryBuilders.rangeQuery("timestamp").gte(userActionParameterDto.getStartDate())
                         .lte(userActionParameterDto.getEndDate()).includeLower(false).includeUpper(false).boost(2.0F);
                 queryBuilder.filter(qbTime);
-            }
+            }*/
 
 
             SortBuilder sortBuilder = new FieldSortBuilder("timestamp");
@@ -107,10 +107,8 @@ public class RealTimeUserActionEsServiceImpl implements RealTimeUserActionServic
             searchSourceBuilder.query(queryBuilder);
             searchSourceBuilder.sort(sortBuilder);
             Search.Builder builder = new Search.Builder(searchSourceBuilder.toString());
-            //this.logger.debug("elasticsearch 搜索条件: {}", searchSourceBuilder.toString());
+            this.logger.debug("elasticsearch 搜索条件: {}", searchSourceBuilder.toString());
             builder.addIndex(esIndex + "-" + eventName);
-            //builder.addIndex(this.indexAliases);
-            //builder.addIndex(this.indexAliases);
             Search search = builder
                     .addType("log").setParameter(Parameters.ROUTING, userActionParameterDto.getCookieId())
                     .build();

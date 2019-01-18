@@ -3,6 +3,7 @@ package com.globalegrow.dy.service.impl;
 import com.globalegrow.dy.dto.*;
 import com.globalegrow.dy.service.UserActionQueryAllService;
 import com.globalegrow.dy.service.UserBaseInfoService;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import io.searchbox.client.JestClient;
 import io.searchbox.client.JestResult;
@@ -59,9 +60,9 @@ public class UserActionQueryAllServiceEsImpl implements UserActionQueryAllServic
         Long currentTime = System.currentTimeMillis();
         Long startDate = request.getStartDate();
 
-        if (startDate < (currentTime - this.oneDay*this.maxEarliestDays)) {
+        if (startDate < (currentTime - this.oneDay * this.maxEarliestDays)) {
             this.logger.info("输入时间超过{}天，设置为 {} 天", this.maxEarliestDays, this.defaultEarliestDsys);
-            startDate = currentTime = this.oneDay*this.defaultEarliestDsys;
+            startDate = currentTime = this.oneDay * this.defaultEarliestDsys;
         }
 
         UserActionQueryAllResponse allResponse = new UserActionQueryAllResponse();
@@ -71,6 +72,7 @@ public class UserActionQueryAllServiceEsImpl implements UserActionQueryAllServic
 
         // 查询用户基本信息
         UserBaseInfoResponse userBaseInfoResponse = this.userBaseInfoService.getUsersBaseInfo(userBaseInfoRequest);
+        allResponse.setTotalCount(userBaseInfoResponse.getTotalCount());
         List<UserBaseInfo> userBaseInfos = userBaseInfoResponse.getData();
 
         if (userBaseInfos != null && userBaseInfos.size() > 0) {
@@ -86,7 +88,7 @@ public class UserActionQueryAllServiceEsImpl implements UserActionQueryAllServic
 
                 for (String eventName : request.getType()) {
 
-                    actions.put(eventName, this.getAllUserActionsByDeviceId(userBaseInfo.getDevice_id(), eventName, request.getSite(), startDate));
+                    actions.put(eventName, this.getAllUserActionsByDeviceId(userBaseInfo.getDevice_id(), eventName, request.getSite().toLowerCase(), startDate));
 
                 }
 
@@ -103,6 +105,7 @@ public class UserActionQueryAllServiceEsImpl implements UserActionQueryAllServic
 
     /**
      * 查询指定时间点之后的所有用户事件数据
+     *
      * @param deviceId
      * @param eventName
      * @param site
@@ -130,21 +133,33 @@ public class UserActionQueryAllServiceEsImpl implements UserActionQueryAllServic
         searchSourceBuilder.query(queryBuilder);
         searchSourceBuilder.sort(sortBuilder);
         Search.Builder builder = new Search.Builder(searchSourceBuilder.toString());
+
+        this.logger.debug("elasticsearch 搜索条件: {}", searchSourceBuilder.toString());
+
         builder.addIndex(esIndex + "-" + eventName);
         Search search = builder
-                .addType("log").setParameter(Parameters.ROUTING, device_id).setParameter(Parameters.SCROLL, this.scrollTime)
+                .addType("log").setParameter(Parameters.ROUTING, deviceId).setParameter(Parameters.SCROLL, this.scrollTime)
                 .build();
 
         try {
             JestResult result = this.jestClient.execute(search);
-            JsonObject jsonObject =  result.getJsonObject();
-            String scrollId = jsonObject.get("_scroll_id").getAsString();
+            JsonObject jsonObject = result.getJsonObject();
+            JsonElement jsonElement = jsonObject.get("_scroll_id");
+
+
             Long total = jsonObject.get("hits").getAsJsonObject().get("total").getAsLong();
             //int hints = jsonObject.get("hits").getAsJsonObject().get("hits").getAsJsonArray().size();
             if (total > 0) {
+
                 result.getSourceAsObjectList(UserActionEsDto.class).stream().collect(Collectors.groupingBy(UserActionEsDto::getEvent_name)).entrySet().stream().forEach(e ->
                         userActionData.addAll(e.getValue().stream().map(esd -> new UserActionData(esd.getEvent_value(), esd.getTimestamp())).collect(Collectors.toList())));
-                this.handleUserActionScroll(userActionData, scrollId);
+
+                if (jsonElement != null) {
+                    String scrollId = jsonElement.getAsString();
+                    this.logger.debug("用户基本信息：scroll_id {}", scrollId);
+                    this.handleUserActionScroll(userActionData, scrollId);
+                }
+
             }
 
         } catch (IOException e) {
@@ -159,14 +174,20 @@ public class UserActionQueryAllServiceEsImpl implements UserActionQueryAllServic
     public void handleUserActionScroll(List<UserActionData> userActionData, String scrollId) throws IOException {
         SearchScroll scroll = new SearchScroll.Builder(scrollId, this.scrollTime).build();
         JestResult result = this.jestClient.execute(scroll);
-        JsonObject jsonObject =  result.getJsonObject();
-        String scrollId_n = jsonObject.get("_scroll_id").getAsString();
-        int hints = jsonObject.get("hits").getAsJsonObject().get("hits").getAsJsonArray().size();
-        if (hints > 0) {
-            result.getSourceAsObjectList(UserActionEsDto.class).stream().collect(Collectors.groupingBy(UserActionEsDto::getEvent_name)).entrySet().stream().forEach(e ->
-                    userActionData.addAll(e.getValue().stream().map(esd -> new UserActionData(esd.getEvent_value(), esd.getTimestamp())).collect(Collectors.toList())));
-            handleUserActionScroll(userActionData, scrollId_n);
+        JsonObject jsonObject = result.getJsonObject();
+        JsonElement jsonElement = jsonObject.get("_scroll_id");
+        if (jsonElement != null) {
+
+            String scrollId_n = jsonElement.getAsString();
+            int hints = jsonObject.get("hits").getAsJsonObject().get("hits").getAsJsonArray().size();
+            if (hints > 0) {
+                result.getSourceAsObjectList(UserActionEsDto.class).stream().collect(Collectors.groupingBy(UserActionEsDto::getEvent_name)).entrySet().stream().forEach(e ->
+                        userActionData.addAll(e.getValue().stream().map(esd -> new UserActionData(esd.getEvent_value(), esd.getTimestamp())).collect(Collectors.toList())));
+                handleUserActionScroll(userActionData, scrollId_n);
+            }
+
         }
+
 
     }
 

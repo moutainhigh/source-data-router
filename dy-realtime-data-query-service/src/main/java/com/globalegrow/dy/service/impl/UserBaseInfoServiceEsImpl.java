@@ -4,6 +4,7 @@ import com.globalegrow.dy.dto.UserBaseInfo;
 import com.globalegrow.dy.dto.UserBaseInfoRequest;
 import com.globalegrow.dy.dto.UserBaseInfoResponse;
 import com.globalegrow.dy.service.UserBaseInfoService;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import io.searchbox.client.JestClient;
 import io.searchbox.client.JestResult;
@@ -54,7 +55,7 @@ public class UserBaseInfoServiceEsImpl implements UserBaseInfoService {
             }
 
         } else {
-            String esIndex = appIndexPrefix.replace("&&", request.getSite());
+            String esIndex = appIndexPrefix.replace("&&", request.getSite().toLowerCase());
             BoolQueryBuilder queryBuilder = QueryBuilders.boolQuery();
             SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
             searchSourceBuilder.size(request.getSize());
@@ -75,6 +76,9 @@ public class UserBaseInfoServiceEsImpl implements UserBaseInfoService {
             searchSourceBuilder.query(queryBuilder);
             searchSourceBuilder.sort(sortBuilder);
             Search.Builder builder = new Search.Builder(searchSourceBuilder.toString());
+
+            this.logger.debug("elasticsearch 搜索条件: {}", searchSourceBuilder.toString());
+
             builder.addIndex(esIndex);
             Search search = builder
                     .addType("log").setParameter(Parameters.SCROLL, this.scrollTime)
@@ -93,9 +97,12 @@ public class UserBaseInfoServiceEsImpl implements UserBaseInfoService {
     private void handleUserBaseInfoResponse(UserBaseInfoResponse response, JestResult result) throws IOException {
         response.setData(result.getSourceAsObjectList(UserBaseInfo.class));
         JsonObject jsonObject =  result.getJsonObject();
-        String scrollId = jsonObject.get("_scroll_id").getAsString();
-        this.logger.debug("用户基本信息：scroll_id {}", scrollId);
-        response.setRequestId(scrollId);
+        JsonElement jsonElement = jsonObject.get("_scroll_id");
+        if (jsonElement != null) {
+            String scrollId = jsonElement.getAsString();
+            this.logger.debug("用户基本信息：scroll_id {}", scrollId);
+            response.setRequestId(scrollId);
+        }
         response.setTotalCount(jsonObject.get("hits").getAsJsonObject().get("total").getAsLong());
     }
 

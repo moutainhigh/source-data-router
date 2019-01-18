@@ -18,9 +18,8 @@
 		<module>common-hbase</module>
 		<module>common-redis</module>
 		<module>mysql-binlog-handle</module>
-		<module>bts-planinfo-query</module>
-		<module>bts-recommend-report-source</module>
-		<module>common-logdata-handle</module>
+		<!--<module>bts-planinfo-query</module>-->
+		<!--<module>bts-recommend-report-source</module>-->
 		<!--<module>kafka-es</module>-->
 		<module>common-es</module>
 		<module>http-kylin-decorate</module>
