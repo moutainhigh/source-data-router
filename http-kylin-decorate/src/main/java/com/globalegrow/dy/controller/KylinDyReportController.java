@@ -44,7 +44,7 @@ public class KylinDyReportController {
         return result;
     }
 
-    @RequestMapping(value = "goodsReport", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
+    @RequestMapping(value = "goods", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     public ResponseDTO<ReportPageDto> goodsReport(@RequestBody @Validated GoodsReportParameterDto goodsReportParameterDto, BindingResult bindingResult) {
         this.logger.debug("报表请求参数: {}", goodsReportParameterDto);
         // 如果用户输入的值满足要求才能进行进一步操作
