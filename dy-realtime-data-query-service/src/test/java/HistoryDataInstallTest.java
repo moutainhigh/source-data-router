@@ -1,21 +1,13 @@
 import com.globalegrow.dy.controller.AppEventEnums;
 import com.globalegrow.dy.controller.SiteUtil;
 import com.globalegrow.dy.utils.JacksonUtil;
-import com.globalegrow.dy.utils.NginxLogConvertUtil;
-import io.searchbox.core.Index;
-import io.searchbox.params.Parameters;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.LineIterator;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.StringEscapeUtils;
 import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.HashMap;
 import java.util.Map;
 
 public class HistoryDataInstallTest {

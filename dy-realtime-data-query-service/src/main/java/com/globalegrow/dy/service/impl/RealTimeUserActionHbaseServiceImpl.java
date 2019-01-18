@@ -1,3 +1,4 @@
+/*
 package com.globalegrow.dy.service.impl;
 
 import com.globalegrow.common.hbase.CommonHbaseMapper;
@@ -24,7 +25,7 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
-@Service
+//@Service
 public class RealTimeUserActionHbaseServiceImpl implements RealTimeUserActionHbaseService {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
@@ -40,7 +41,9 @@ public class RealTimeUserActionHbaseServiceImpl implements RealTimeUserActionHba
 
     @Override
     public UserActionResponseDto getUserActionDataFromHbase(UserActionParameterDto userActionParameterDto){
-        /*long start = System.currentTimeMillis();*/
+        */
+/*long start = System.currentTimeMillis();*//*
+
         UserActionResponseDto userActionResponseDto = new UserActionResponseDto();
         Map<String, List<UserActionData>> data = new HashMap<>();
         final int[] totalSize = {0};
@@ -52,7 +55,8 @@ public class RealTimeUserActionHbaseServiceImpl implements RealTimeUserActionHba
             inputType.addAll(Arrays.stream(AppEventEnums.values()).map(AppEventEnums :: name).collect(Collectors.toList()));
         }
 
-        /*for (int i = 0; i < inputType.size(); i++) {
+        */
+/*for (int i = 0; i < inputType.size(); i++) {
             String eventName = inputType.get(i);
             StringBuilder rowkey =  new StringBuilder();
             rowkey = rowkey.append(userActionParameterDto.getSite().get(0)).append("_").append(eventName).append("_").append(userActionParameterDto.getCookieId());
@@ -73,9 +77,11 @@ public class RealTimeUserActionHbaseServiceImpl implements RealTimeUserActionHba
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        }*/
+        }*//*
 
-        inputType.parallelStream().forEach(eventName -> {
+
+       */
+/* inputType.parallelStream().forEach(eventName -> {
             StringBuilder rowkey =  new StringBuilder();
             rowkey = rowkey.append(userActionParameterDto.getSite().get(0)).append("_").append(eventName).append("_").append(userActionParameterDto.getCookieId());
             try {
@@ -91,15 +97,23 @@ public class RealTimeUserActionHbaseServiceImpl implements RealTimeUserActionHba
                         boolean eventTimeStatus1 = eventTime.contains("_");
                         boolean eventTimeStatus2 = eventTime.contains(".");
                         if(eventTimeStatus1 || eventTimeStatus2 || eventTime.length()!=13){
-                            /*if(eventTime.length()>=13){
+                            *//*
+*/
+/*if(eventTime.length()>=13){
                                 eventTime = eventTime.substring(eventTime.length()-13);
                             }else{
                                 eventTime = System.currentTimeMillis()+"";
-                            }*/
+                            }*//*
+*/
+/*
                             continue;
                         }
-                       /* System.out.println("keys[0]="+keys[0]);
-                        System.out.println("eventTime="+eventTime);*/
+                       *//*
+*/
+/* System.out.println("keys[0]="+keys[0]);
+                        System.out.println("eventTime="+eventTime);*//*
+*/
+/*
                         UserActionData userActionData = new UserActionData(keys[0],Long.parseLong(eventTime));
                         userActionDataList.add(userActionData);
                     }
@@ -108,12 +122,16 @@ public class RealTimeUserActionHbaseServiceImpl implements RealTimeUserActionHba
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        });
+        });*//*
+
         userActionResponseDto.setSize(totalSize[0]);
         userActionResponseDto.setData(data);
-        /*System.out.println("花费：");
-        System.out.println(System.currentTimeMillis() - start);*/
+        */
+/*System.out.println("花费：");
+        System.out.println(System.currentTimeMillis() - start);*//*
+
 
         return userActionResponseDto;
     }
 }
+*/

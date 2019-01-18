@@ -53,7 +53,7 @@ public class RealTimeUserActionEsServiceImpl implements RealTimeUserActionServic
     private String scroll;
 
 
-
+    String appIndexPrefix = "dy_app_&&_event";
 
     @PostConstruct
     public void before(){
@@ -77,14 +77,12 @@ public class RealTimeUserActionEsServiceImpl implements RealTimeUserActionServic
         if (inputType.size() < 1) {
             inputType.addAll(Arrays.stream(AppEventEnums.values()).map(AppEventEnums :: name).collect(Collectors.toList()));
         }
+        String site = userActionParameterDto.getSite().toLowerCase();
+        String esIndex = appIndexPrefix.replace("&&", site);
         inputType.parallelStream().forEach(eventName -> {
             long start = System.currentTimeMillis();
 
-            //logger.debug("传入参数:{}", userActionParameterDto);
-
             JestResult result = null;
-
-            //this.logger.debug("第二次查询");
 
             BoolQueryBuilder queryBuilder = QueryBuilders.boolQuery();
             SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
@@ -93,26 +91,12 @@ public class RealTimeUserActionEsServiceImpl implements RealTimeUserActionServic
             queryBuilder.filter(qb);
 
             // 时间限制
-            if (userActionParameterDto.getStartDate() != null && userActionParameterDto.getEndDate() != null) {
+            /*if (userActionParameterDto.getStartDate() != null && userActionParameterDto.getEndDate() != null) {
                 QueryBuilder qbTime = QueryBuilders.rangeQuery("timestamp").gte(userActionParameterDto.getStartDate())
                         .lte(userActionParameterDto.getEndDate()).includeLower(false).includeUpper(false).boost(2.0F);
                 queryBuilder.filter(qbTime);
-            }
+            }*/
 
-            // 事件类型过滤
-            QueryBuilder qbevent = QueryBuilders.termQuery("event_name.keyword", eventName);
-            queryBuilder.filter(qbevent);
-
-            // 站点条件过滤
-            if (userActionParameterDto.getSite() != null && userActionParameterDto.getSite().size() > 0) {
-                QueryBuilder qbs = QueryBuilders.termsQuery("site.keyword", userActionParameterDto.getSite());
-                queryBuilder.filter(qbs);
-            }
-            // 终端条件过滤
-            if (userActionParameterDto.getPlatform() != null && userActionParameterDto.getPlatform().size() > 0) {
-                QueryBuilder qbd = QueryBuilders.termsQuery("platform.keyword", userActionParameterDto.getPlatform());
-                queryBuilder.filter(qbd);
-            }
 
             SortBuilder sortBuilder = new FieldSortBuilder("timestamp");
             sortBuilder.order(SortOrder.DESC);
@@ -123,12 +107,10 @@ public class RealTimeUserActionEsServiceImpl implements RealTimeUserActionServic
             searchSourceBuilder.query(queryBuilder);
             searchSourceBuilder.sort(sortBuilder);
             Search.Builder builder = new Search.Builder(searchSourceBuilder.toString());
-            //this.logger.debug("elasticsearch 搜索条件: {}", searchSourceBuilder.toString());
-            builder.addIndex(this.indexPrefix + eventName);
-            //builder.addIndex(this.indexAliases);
-            //builder.addIndex(this.indexAliases);
+            this.logger.debug("elasticsearch 搜索条件: {}", searchSourceBuilder.toString());
+            builder.addIndex(esIndex + "-" + eventName);
             Search search = builder
-                    .addType(this.indexType).setParameter(Parameters.ROUTING, userActionParameterDto.getCookieId())
+                    .addType("log").setParameter(Parameters.ROUTING, userActionParameterDto.getCookieId())
                     .build();
 
             try {
@@ -142,8 +124,8 @@ public class RealTimeUserActionEsServiceImpl implements RealTimeUserActionServic
             if (result != null) {
                 long handleStart = System.currentTimeMillis();
                 //logger.debug("es data result size: {}", result.getSourceAsObjectList(UserActionEsDto.class).size());
-                result.getSourceAsObjectList(UserActionEsDto.class).parallelStream().collect(Collectors.groupingBy(UserActionEsDto::getEvent_name)).entrySet().stream().forEach(e -> {
-                    data.put(e.getKey(), e.getValue().parallelStream().map(esd -> new UserActionData(esd.getEvent_value(), esd.getTimestamp())).collect(Collectors.toList()));
+                result.getSourceAsObjectList(UserActionEsDto.class).stream().collect(Collectors.groupingBy(UserActionEsDto::getEvent_name)).entrySet().stream().forEach(e -> {
+                    data.put(e.getKey(), e.getValue().stream().map(esd -> new UserActionData(esd.getEvent_value(), esd.getTimestamp())).collect(Collectors.toList()));
                 });
                 //logger.debug("handle result costs: {}", System.currentTimeMillis() - handleStart);
             }

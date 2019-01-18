@@ -32,11 +32,11 @@
             <artifactId>data-router-common</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
-        <dependency>
+        <!--<dependency>
             <groupId>com.globalegrow.dy</groupId>
             <artifactId>common-hbase</artifactId>
             <version>1.0-SNAPSHOT</version>
-        </dependency>
+        </dependency>-->
         <!--<dependency>
             <groupId>com.globalegrow.dy</groupId>
             <artifactId>common-redis</artifactId>

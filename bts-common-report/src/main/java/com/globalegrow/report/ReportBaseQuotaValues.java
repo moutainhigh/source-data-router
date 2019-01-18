@@ -252,14 +252,78 @@ public enum ReportBaseQuotaValues {
                     }
                 }
                 /**
+                 * 开始或者等于
+                 */
+                else if ("start_or_equal".equals(jsonLogFilter.getFilterRule())) {
+
+                    String[] values = jsonLogFilter.getValueFilter().split("&&");
+
+                    String[] orValues = values[0].split("%");
+
+                    String valueEqual = values[1];
+
+                    String value = ctx.read(jsonLogFilter.getJsonPath(), String.class);
+
+                    for (String orValue : orValues) {
+                        if (value.startsWith(orValue)) {
+                            return "not_null";
+                        }
+                    }
+
+                    if (!(value.equals(valueEqual))) {
+                        return null;
+                    }
+
+                }else if ("contains_or_equal".equals(jsonLogFilter.getFilterRule())) {
+
+                    String[] values = jsonLogFilter.getValueFilter().split("&&");
+
+                    String[] orValues = values[0].split("%");
+
+                    String valueEqual = values[1];
+
+                    String value = ctx.read(jsonLogFilter.getJsonPath(), String.class);
+
+                    for (String orValue : orValues) {
+                        if (value.contains(orValue)) {
+                            return "not_null";
+                        }
+                    }
+
+                    if (!(value.equals(valueEqual))) {
+                        return null;
+                    }
+
+                }else if ("end_or_equal".equals(jsonLogFilter.getFilterRule())) {
+
+                    String[] values = jsonLogFilter.getValueFilter().split("&&");
+
+                    String[] orValues = values[0].split("%");
+
+                    String valueEqual = values[1];
+
+                    String value = ctx.read(jsonLogFilter.getJsonPath(), String.class);
+
+                    for (String orValue : orValues) {
+                        if (value.endsWith(orValue)) {
+                            return "not_null";
+                        }
+                    }
+
+                    if (!(value.equals(valueEqual))) {
+                        return null;
+                    }
+
+                }
+                /**
                  * 埋点值包含 输入值
                  */
-                else if("contains_backward".contains(jsonLogFilter.getFilterRule())){
+                else if ("contains_backward".contains(jsonLogFilter.getFilterRule())) {
                     // contains
                     if (!(ctx.read(jsonLogFilter.getJsonPath(), String.class).contains(jsonLogFilter.getValueFilter()))) {
                         return null;
                     }
-                }else
+                } else
                     // 布尔值
                     if ("true".equals(jsonLogFilter.getFilterRule())) {
                         // contains
