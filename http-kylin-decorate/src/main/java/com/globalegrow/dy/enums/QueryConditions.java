@@ -1,6 +1,6 @@
 package com.globalegrow.dy.enums;
 
-public enum BtsQueryConditions {
+public enum QueryConditions {
 
     groupByFields,whereFields,orderByFields
 
