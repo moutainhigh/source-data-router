@@ -5,6 +5,7 @@ import com.globalegrow.dy.enums.AppEventEnums;
 import com.globalegrow.dy.service.RealTimeUserActionService;
 import io.searchbox.client.JestClient;
 import io.searchbox.client.JestResult;
+import io.searchbox.core.Get;
 import io.searchbox.core.Search;
 import io.searchbox.params.Parameters;
 import org.elasticsearch.index.query.BoolQueryBuilder;
@@ -53,7 +54,9 @@ public class RealTimeUserActionEsServiceImpl implements RealTimeUserActionServic
     private String scroll;
 
 
-    String appIndexPrefix = "dy_app_&&_event";
+    private String appIndexPrefix = "dy_app_&&_event";
+
+    private String appRealtimeEventIndex = "dy_app_&&_event_realtime";
 
     @PostConstruct
     public void before(){
@@ -129,6 +132,55 @@ public class RealTimeUserActionEsServiceImpl implements RealTimeUserActionServic
                 });
                 //logger.debug("handle result costs: {}", System.currentTimeMillis() - handleStart);
             }
+        });
+
+        userActionResponseDto.setSize(userActionParameterDto.getSize());
+        userActionResponseDto.setData(data);
+
+        return userActionResponseDto;
+    }
+
+    @Override
+    public UserActionResponseDto getActionByUserDeviceId(UserActionParameterDto userActionParameterDto) {
+        UserActionResponseDto userActionResponseDto = new UserActionResponseDto();
+        Map<String, List<UserActionData>> data = new HashMap<>();
+        List<String> inputType = userActionParameterDto.getType();
+        if (inputType == null){
+            inputType = new ArrayList<>();
+        }
+        if (inputType.size() < 1) {
+            inputType.addAll(Arrays.stream(AppEventEnums.values()).map(AppEventEnums :: name).collect(Collectors.toList()));
+        }
+        String site = userActionParameterDto.getSite().toLowerCase();
+        String esIndex = appIndexPrefix.replace("&&", site);
+
+        inputType.parallelStream().forEach(eventName -> {
+
+            Get get = new Get.Builder(esIndex, userActionParameterDto.getCookieId() + eventName).type("log").build();
+
+            try {
+                JestResult jestResult = this.jestClient.execute(get);
+                UserRealtimeEventActions realtimeEventActions = jestResult.getSourceAsObject(UserRealtimeEventActions.class);
+                if (realtimeEventActions != null) {
+
+                    String[] values = realtimeEventActions.getSkus();
+
+                    if (values != null && values.length > 0) {
+
+                        List<UserActionData> list = new ArrayList<>();
+
+                        Arrays.stream(values).forEach(value -> list.add(new UserActionData(value.substring(0, value.lastIndexOf("_")), Long.valueOf(value.substring(value.lastIndexOf("_")+1)))));
+
+                        data.put(eventName, list);
+
+                    }
+
+                }
+            } catch (IOException e) {
+                logger.error("用户实时数据 query es error ,params: {}", get.toString(), e);
+            }
+
+
         });
 
         userActionResponseDto.setSize(userActionParameterDto.getSize());
