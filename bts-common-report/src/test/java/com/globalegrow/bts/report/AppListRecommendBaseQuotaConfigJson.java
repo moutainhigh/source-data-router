@@ -14,9 +14,9 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * zaful app 推荐位规则2018-12-17
+ * zaful app 分类页规则2019-01-17
  */
-public class AppRecommendReportBaseQuotaConfigJson {
+public class AppListRecommendBaseQuotaConfigJson {
 
     private Map<String, String> bts = new HashMap() {
 
@@ -39,6 +39,7 @@ public class AppRecommendReportBaseQuotaConfigJson {
         JsonLogFilter btsFilter = new JsonLogFilter();
         btsFilter.setJsonPath("$.event_value.af_plan_id");
         btsFilter.setFilterRule("not_null");
+        globaleFilters.add(btsFilter);
 
         JsonLogFilter btsFilter2 = new JsonLogFilter();
         btsFilter2.setJsonPath("$.event_value.af_version_id");
@@ -50,15 +51,24 @@ public class AppRecommendReportBaseQuotaConfigJson {
         btsFilter3.setFilterRule("not_null");
         globaleFilters.add(btsFilter3);
 
-        globaleFilters.add(btsFilter);
+        JsonLogFilter btsFilter4 = new JsonLogFilter();
+        btsFilter4.setJsonPath("$.event_value.af_inner_mediasource");
+        btsFilter4.setValueFilter("category_");
+        btsFilter4.setFilterRule("contains");
+        globaleFilters.add(btsFilter4);
+
+        JsonLogFilter btsFilter5 = new JsonLogFilter();
+        btsFilter5.setJsonPath("$.event_value.af_sort");
+        btsFilter5.setValueFilter("recommend");
+        globaleFilters.add(btsFilter5);
 
         rule.setGlobaleJsonFilters(globaleFilters);
 
-        rule.setReportName("BTS_ZAFUL_ORDER_CART_RECOMMEND_APP");
-        rule.setDescription("zaful APP 购物车推荐报表");
+        rule.setReportName("BTS_ZAFUL_LIST_RECOMMEND_APP");
+        rule.setDescription("zaful APP 分类页推荐报表");
 
         // 默认值
-        BtsAppRecommendReportQuota searchRecommendReportQuotaModel = new BtsAppRecommendReportQuota();
+        BtsAppListRecommendReportQuota searchRecommendReportQuotaModel = new BtsAppListRecommendReportQuota();
         searchRecommendReportQuotaModel.setBts(bts);
         rule.setReportDefaultValues(DyBeanUtils.objToMap(searchRecommendReportQuotaModel));
 
@@ -66,9 +76,9 @@ public class AppRecommendReportBaseQuotaConfigJson {
         ReportKafkaConfig reportKafkaConfig = new ReportKafkaConfig();
         reportKafkaConfig.setBootstrapServers("172.31.35.194:9092,172.31.50.250:9092,172.31.63.112:9092");
         reportKafkaConfig.setDataSourceTopic("glbg-analitic");
-        reportKafkaConfig.setBootstrapGroupId("dy_bts_app_recommend_report");
+        reportKafkaConfig.setBootstrapGroupId("dy_bts_app_list_recommend_report");
         reportKafkaConfig.setReportStrapServers("172.31.35.194:9092,172.31.50.250:9092,172.31.63.112:9092");
-        reportKafkaConfig.setReportDataTopic("dy_bts_app_recommend_report");
+        reportKafkaConfig.setReportDataTopic("dy_bts_app_list_recommend_report");
 
         rule.setReportFromKafka(reportKafkaConfig);
 
@@ -84,33 +94,12 @@ public class AppRecommendReportBaseQuotaConfigJson {
 
     private void quota(List<ReportQuotaFieldConfig> reportQuotaFieldConfigs) {
 
-        // 坑位曝光 pv
-        ReportQuotaFieldConfig recommendPv = new ReportQuotaFieldConfig();
-        recommendPv.setQuotaFieldName("view_recommend_pv");
-        recommendPv.setDefaultValue(0);
-        recommendPv.setExtractValueJsonPath("$.appsflyer_device_id");
-        recommendPv.setValueEnum("countOneWithFilter");
-
-        List<JsonLogFilter> recommendFilters = new ArrayList<>();
-        JsonLogFilter recommendFilter = new JsonLogFilter();
-        recommendFilter.setValueFilter("af_impression");
-        recommendFilter.setJsonPath("$.event_name");
-        recommendFilters.add(recommendFilter);
-        recommendPv.setJsonLogFilters(recommendFilters);
-        reportQuotaFieldConfigs.add(recommendPv);
-
-        // 曝光数 pv uv
+        //商品(SKU)曝光
         ReportQuotaFieldConfig af_impressionPv = new ReportQuotaFieldConfig();
         af_impressionPv.setQuotaFieldName("exposure_count");
         af_impressionPv.setDefaultValue(0);
         af_impressionPv.setExtractValueJsonPath("$.event_value.af_content_id");
         af_impressionPv.setValueEnum("countStringWithComma");
-
-        ReportQuotaFieldConfig af_impressionUv = new ReportQuotaFieldConfig();
-        af_impressionUv.setQuotaFieldName("good_view_uv");
-        af_impressionUv.setDefaultValue("_skip");
-        af_impressionUv.setExtractValueJsonPath("$.appsflyer_device_id");
-        af_impressionUv.setValueEnum("quotaStringValueExtractFromLog");
 
         List<JsonLogFilter> af_impressionFilters = new ArrayList<>();
         JsonLogFilter af_impressionFilter = new JsonLogFilter();
@@ -119,18 +108,16 @@ public class AppRecommendReportBaseQuotaConfigJson {
         af_impressionFilters.add(af_impressionFilter);
 
         af_impressionPv.setJsonLogFilters(af_impressionFilters);
-        af_impressionUv.setJsonLogFilters(af_impressionFilters);
 
         reportQuotaFieldConfigs.add(af_impressionPv);
-        reportQuotaFieldConfigs.add(af_impressionUv);
 
-        // 商品点击 pv uv
+        //点击量
         ReportQuotaFieldConfig af_view_productPv = new ReportQuotaFieldConfig();
         af_view_productPv.setQuotaFieldName("good_click");
         af_view_productPv.setDefaultValue(0);
         af_view_productPv.setExtractValueJsonPath("$.appsflyer_device_id");
         af_view_productPv.setValueEnum("countOneWithFilter");
-
+        //点击用户量
         ReportQuotaFieldConfig af_view_productUv = new ReportQuotaFieldConfig();
         af_view_productUv.setQuotaFieldName("good_click_uv");
         af_view_productUv.setDefaultValue("_skip");
@@ -154,14 +141,14 @@ public class AppRecommendReportBaseQuotaConfigJson {
         reportQuotaFieldConfigs.add(af_view_productPv);
         reportQuotaFieldConfigs.add(af_view_productUv);
 
-        // 商品加购 pv uv
+        //商品加购数量
         ReportQuotaFieldConfig af_add_to_bagPv = new ReportQuotaFieldConfig();
         af_add_to_bagPv.setQuotaFieldName("good_add_cart");
         af_add_to_bagPv.setDefaultValue(0);
         af_add_to_bagPv.setExtractValueJsonPath("$.event_value.af_quantity");
         af_add_to_bagPv.setValueEnum("quotaIntValueExtractFromLog");
         af_add_to_bagPv.setCacheData(true);
-
+        //加购用户数
         ReportQuotaFieldConfig af_add_to_bagUv = new ReportQuotaFieldConfig();
         af_add_to_bagUv.setQuotaFieldName("good_add_cart_uv");
         af_add_to_bagUv.setDefaultValue("_skip");
@@ -181,13 +168,13 @@ public class AppRecommendReportBaseQuotaConfigJson {
         reportQuotaFieldConfigs.add(af_add_to_bagUv);
 
 
-        // 商品收藏 pv uv
+        //商品加收次数
         ReportQuotaFieldConfig af_add_to_wishlistPv = new ReportQuotaFieldConfig();
         af_add_to_wishlistPv.setQuotaFieldName("good_collect");
         af_add_to_wishlistPv.setDefaultValue(0);
         af_add_to_wishlistPv.setExtractValueJsonPath("$.event_name");
         af_add_to_wishlistPv.setValueEnum("countOneWithFilter");
-
+        //加收用户数
         ReportQuotaFieldConfig af_add_to_wishlistUv = new ReportQuotaFieldConfig();
         af_add_to_wishlistUv.setQuotaFieldName("good_collect_uv");
         af_add_to_wishlistUv.setDefaultValue("_skip");

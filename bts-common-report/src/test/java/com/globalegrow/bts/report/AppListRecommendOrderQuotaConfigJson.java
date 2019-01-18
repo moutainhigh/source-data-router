@@ -12,10 +12,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 /**
- * zaful app 推荐位规则2018-12-17
+ * zaful app 分类页规则2019-01-17
  */
-public class AppRecommendReportOrderQuotaConfigJson {
+public class AppListRecommendOrderQuotaConfigJson {
 
     private Map<String, String> bts = new HashMap() {
 
@@ -49,12 +50,23 @@ public class AppRecommendReportOrderQuotaConfigJson {
         btsFilter3.setFilterRule("not_null");
         globaleFilters.add(btsFilter3);
 
+        JsonLogFilter btsFilter4 = new JsonLogFilter();
+        btsFilter4.setJsonPath("$.event_value.af_inner_mediasource");
+        btsFilter4.setValueFilter("category_");
+        btsFilter4.setFilterRule("contains");
+        globaleFilters.add(btsFilter4);
+
+        JsonLogFilter btsFilter5 = new JsonLogFilter();
+        btsFilter5.setJsonPath("$.event_value.af_sort");
+        btsFilter5.setValueFilter("recommend");
+        globaleFilters.add(btsFilter5);
+
         JsonLogFilter cartFilter = new JsonLogFilter();
         cartFilter.setJsonPath("$.event_name");
         cartFilter.setValueFilter("af_add_to_bag");
         JsonLogFilter reportFilter = new JsonLogFilter();
         reportFilter.setJsonPath("$.db_order_info.report_name");
-        reportFilter.setValueFilter("BTS_ZAFUL_ORDER_CART_RECOMMEND_APP");
+        reportFilter.setValueFilter("BTS_ZAFUL_ORDER_LIST_RECOMMEND_APP");
 
         globaleFilters.add(reportFilter);
         globaleFilters.add(cartFilter);
@@ -62,11 +74,11 @@ public class AppRecommendReportOrderQuotaConfigJson {
 
         rule.setGlobaleJsonFilters(globaleFilters);
 
-        rule.setReportName("BTS_ZAFUL_CART_RECOMMEND_APP_ORDER");
-        rule.setDescription("zaful APP 购物车 推荐报表");
+        rule.setReportName("BTS_ZAFUL_ORDER_LIST2_RECOMMEND_APP");
+        rule.setDescription("zaful APP 分类页 推荐报表");
 
         // 默认值
-        BtsAppRecommendReportQuota searchRecommendReportQuotaModel = new BtsAppRecommendReportQuota();
+        BtsAppListRecommendReportQuota searchRecommendReportQuotaModel = new BtsAppListRecommendReportQuota();
         searchRecommendReportQuotaModel.setBts(bts);
         rule.setReportDefaultValues(DyBeanUtils.objToMap(searchRecommendReportQuotaModel));
 
@@ -74,9 +86,9 @@ public class AppRecommendReportOrderQuotaConfigJson {
         ReportKafkaConfig reportKafkaConfig = new ReportKafkaConfig();
         reportKafkaConfig.setBootstrapServers("172.31.35.194:9092,172.31.50.250:9092,172.31.63.112:9092");
         reportKafkaConfig.setDataSourceTopic("dy_log_cart_order_info");
-        reportKafkaConfig.setBootstrapGroupId("dy_bts_app_recommend_report_order");
+        reportKafkaConfig.setBootstrapGroupId("dy_bts_app_list_recommend_report_order");
         reportKafkaConfig.setReportStrapServers("172.31.35.194:9092,172.31.50.250:9092,172.31.63.112:9092");
-        reportKafkaConfig.setReportDataTopic("dy_bts_app_recommend_report");
+        reportKafkaConfig.setReportDataTopic("dy_bts_app_list_recommend_report");
 
         rule.setReportFromKafka(reportKafkaConfig);
 
@@ -104,16 +116,7 @@ public class AppRecommendReportOrderQuotaConfigJson {
         orderFalse.setJsonPath("$.db_order_info.order_data");
         orderFalse.setFilterRule("false");
         orderFilters.add(orderFalse);
-        // 下单数
-        ReportQuotaFieldConfig createOrder = new ReportQuotaFieldConfig();
-        createOrder.setQuotaFieldName("order");
-        createOrder.setDefaultValue(0);
-        createOrder.setExtractValueJsonPath("$.db_order_info.order_id");
-        createOrder.setValueEnum("quotaIntValueExtractFromLog");
-        createOrder.setJsonLogFilters(orderFilters);
-        reportQuotaFieldConfigs.add(createOrder);
-
-        // 下单商品数
+        //下单商品数
         ReportQuotaFieldConfig createOrder_order_sku = new ReportQuotaFieldConfig();
         createOrder_order_sku.setQuotaFieldName("order_sku");
         createOrder_order_sku.setDefaultValue(0);
@@ -131,15 +134,8 @@ public class AppRecommendReportOrderQuotaConfigJson {
         orderAmount.setJsonLogFilters(orderFilters);
         reportQuotaFieldConfigs.add(orderAmount);
 
-//        ReportQuotaFieldConfig whole_order_amountorderAmount = new ReportQuotaFieldConfig();
-//        whole_order_amountorderAmount.setQuotaFieldName("whole_order_amount");
-//        whole_order_amountorderAmount.setDefaultValue(0);
-//        whole_order_amountorderAmount.setExtractValueJsonPath("$.db_order_info.gmv");
-//        whole_order_amountorderAmount.setValueEnum("quotaIntValueExtractFromLog");
-//        whole_order_amountorderAmount.setJsonLogFilters(orderFilters);
-//        reportQuotaFieldConfigs.add(whole_order_amountorderAmount);
 
-        // 下单用户数 &整体下单用户数
+        //下单客户数
         ReportQuotaFieldConfig orderUv = new ReportQuotaFieldConfig();
         orderUv.setQuotaFieldName("order_uv");
         orderUv.setDefaultValue("_skip");
@@ -148,16 +144,7 @@ public class AppRecommendReportOrderQuotaConfigJson {
         orderUv.setJsonLogFilters(orderFilters);
         reportQuotaFieldConfigs.add(orderUv);
 
-//        ReportQuotaFieldConfig whole_order_uvorderUv = new ReportQuotaFieldConfig();
-//        whole_order_uvorderUv.setQuotaFieldName("whole_order_uv");
-//        whole_order_uvorderUv.setDefaultValue("_skip");
-//        whole_order_uvorderUv.setExtractValueJsonPath("$.appsflyer_device_id");
-//        whole_order_uvorderUv.setValueEnum("quotaStringValueExtractFromLog");
-//        whole_order_uvorderUv.setJsonLogFilters(orderFilters);
-//        reportQuotaFieldConfigs.add(whole_order_uvorderUv);
 
-
-        // 订单成交量 paid_order 支付用户数  paid_uv 销售额 amount 销量 sales_amount
         List<JsonLogFilter> paidOrderFilters = new ArrayList<>();
         paidOrderFilters.add(orderFalse);
 
@@ -168,16 +155,7 @@ public class AppRecommendReportOrderQuotaConfigJson {
 
         paidOrderFilters.add(status18);
 
-        // 订单成交量
-        ReportQuotaFieldConfig paidOrderNum = new ReportQuotaFieldConfig();
-        paidOrderNum.setQuotaFieldName("paid_order");
-        paidOrderNum.setDefaultValue(0);
-        paidOrderNum.setExtractValueJsonPath("$.db_order_info.order_id");
-        paidOrderNum.setValueEnum("quotaIntValueExtractFromLog");
-        paidOrderNum.setJsonLogFilters(paidOrderFilters);
-        reportQuotaFieldConfigs.add(paidOrderNum);
-
-        // 支付用户数
+        //付款客户数
         ReportQuotaFieldConfig paid_uvorderUv = new ReportQuotaFieldConfig();
         paid_uvorderUv.setQuotaFieldName("paid_uv");
         paid_uvorderUv.setDefaultValue("_skip");
@@ -186,15 +164,7 @@ public class AppRecommendReportOrderQuotaConfigJson {
         paid_uvorderUv.setJsonLogFilters(paidOrderFilters);
         reportQuotaFieldConfigs.add(paid_uvorderUv);
 
-//        ReportQuotaFieldConfig whole_paid_uvpaid_uvorderUv = new ReportQuotaFieldConfig();
-//        whole_paid_uvpaid_uvorderUv.setQuotaFieldName("whole_paid_uv");
-//        whole_paid_uvpaid_uvorderUv.setDefaultValue("_skip");
-//        whole_paid_uvpaid_uvorderUv.setExtractValueJsonPath("$.appsflyer_device_id");
-//        whole_paid_uvpaid_uvorderUv.setValueEnum("quotaStringValueExtractFromLog");
-//        whole_paid_uvpaid_uvorderUv.setJsonLogFilters(paidOrderFilters);
-//        reportQuotaFieldConfigs.add(whole_paid_uvpaid_uvorderUv);
-
-        // 销售额
+        //付款金额
         ReportQuotaFieldConfig amount = new ReportQuotaFieldConfig();
         amount.setQuotaFieldName("amount");
         amount.setDefaultValue(0);
@@ -203,15 +173,7 @@ public class AppRecommendReportOrderQuotaConfigJson {
         amount.setJsonLogFilters(paidOrderFilters);
         reportQuotaFieldConfigs.add(amount);
 
-//        ReportQuotaFieldConfig whole_amount = new ReportQuotaFieldConfig();
-//        whole_amount.setQuotaFieldName("whole_amount");
-//        whole_amount.setDefaultValue(0);
-//        whole_amount.setExtractValueJsonPath("$.db_order_info.gmv");
-//        whole_amount.setValueEnum("quotaIntValueExtractFromLog");
-//        whole_amount.setJsonLogFilters(paidOrderFilters);
-//        reportQuotaFieldConfigs.add(whole_amount);
-
-        // sales_amount
+        //付款商品数
         ReportQuotaFieldConfig sales_amount = new ReportQuotaFieldConfig();
         sales_amount.setQuotaFieldName("sales_amount");
         sales_amount.setDefaultValue(0);
