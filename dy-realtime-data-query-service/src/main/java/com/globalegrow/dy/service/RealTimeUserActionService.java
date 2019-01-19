@@ -17,6 +17,8 @@ public interface RealTimeUserActionService {
      */
     UserActionResponseDto userActionData(UserActionParameterDto userActionParameterDto) throws IOException, ParseException;
 
+    UserActionResponseDto getActionByUserDeviceId(UserActionParameterDto userActionParameterDto);
+
     UserActionResponseDto mock(UserActionParameterDto userActionParameterDto);
 
 }

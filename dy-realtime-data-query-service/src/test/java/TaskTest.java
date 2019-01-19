@@ -10,6 +10,14 @@ public class TaskTest {
 
 
     @Test
+    public void testString() {
+        String s = "278581801_1540849417000";
+        System.out.println(s.substring(0, s.lastIndexOf("_")));
+        System.out.println(s.substring(s.lastIndexOf("_")+1));
+    }
+
+
+    @Test
     public void listTest() {
         //List
     }

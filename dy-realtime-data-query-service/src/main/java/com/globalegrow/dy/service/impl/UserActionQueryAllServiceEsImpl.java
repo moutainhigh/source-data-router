@@ -38,7 +38,7 @@ public class UserActionQueryAllServiceEsImpl implements UserActionQueryAllServic
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
-    @Qualifier("myJestClient")
+    //@Qualifier("myJestClient")
     private JestClient jestClient;
 
     @Autowired
@@ -62,7 +62,7 @@ public class UserActionQueryAllServiceEsImpl implements UserActionQueryAllServic
 
         if (startDate < (currentTime - this.oneDay * this.maxEarliestDays)) {
             this.logger.info("输入时间超过{}天，设置为 {} 天", this.maxEarliestDays, this.defaultEarliestDsys);
-            startDate = currentTime = this.oneDay * this.defaultEarliestDsys;
+            startDate = this.oneDay * this.defaultEarliestDsys;
         }
 
         UserActionQueryAllResponse allResponse = new UserActionQueryAllResponse();
