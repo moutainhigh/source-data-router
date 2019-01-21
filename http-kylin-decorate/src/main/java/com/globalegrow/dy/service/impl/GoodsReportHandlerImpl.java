@@ -42,8 +42,8 @@ public class GoodsReportHandlerImpl implements GoodsReportHandler {
         Map<String, Object> postParametersCount = new HashMap<>();
         postParametersCount.put("project", dyReportKylinConfig.getKylinProjectName());
         postParametersCount.put("sql", countSql);
-        postParametersCount.put("limit", 1);
-        postParametersCount.put("offset", 0);
+//        postParametersCount.put("limit", 1);
+//        postParametersCount.put("offset", 0);
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Type", "application/json;charset=UTF-8");
         headers.add("Authorization", dyReportKylinConfig.getKylinUserNamePassword());
