@@ -69,6 +69,8 @@ public class GoodsReportServiceImpl implements GoodsReportService {
             valuesMap.put(QueryConditions.whereFields.name(), this.whereFields(goodsReportParameterDto, dyReportKylinConfig));
             this.logger.debug("处理分组");
             valuesMap.put(QueryConditions.groupByFields.name(), this.groupFields(goodsReportParameterDto, dyReportKylinConfig));
+            this.logger.debug("处理返回值");
+            valuesMap.put(QueryConditions.selectFields.name(), this.selectFields(goodsReportParameterDto, dyReportKylinConfig));
             this.logger.debug("处理排序");
             valuesMap.put(QueryConditions.orderByFields.name(), this.orderByFields(goodsReportParameterDto, dyReportKylinConfig));
 
@@ -128,6 +130,34 @@ public class GoodsReportServiceImpl implements GoodsReportService {
             StringBuilder stringBuilder = new StringBuilder();
             if (groups.size() >= 0) {
                 stringBuilder.append("group by ");
+                for (int i = 0; i < groups.size(); i++) {
+                    if (i == 0) {
+                        stringBuilder.append(groups.get(i));
+                    } else {
+                        stringBuilder.append("," + groups.get(i));
+                    }
+                }
+            }
+            return stringBuilder.toString();
+        } else {
+            return "";
+        }
+    }
+
+    /**
+     * 分组统计后返回字段处理
+     *
+     * @param goodsReportParameterDto
+     * @param dyReportKylinConfig
+     * @return
+     */
+    private String selectFields(GoodsReportParameterDto goodsReportParameterDto, DyReportKylinConfig dyReportKylinConfig) {
+        if (goodsReportParameterDto.getGroupByFields() != null && goodsReportParameterDto.getGroupByFields().size() > 0) {
+            List<String> groups = goodsReportParameterDto.getGroupByFields();
+            this.logger.debug("根据传入分组条件设置");
+            StringBuilder stringBuilder = new StringBuilder();
+            if (groups.size() >= 0) {
+                stringBuilder.append(",");
                 for (int i = 0; i < groups.size(); i++) {
                     if (i == 0) {
                         stringBuilder.append(groups.get(i));
