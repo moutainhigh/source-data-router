@@ -3,11 +3,10 @@ package com.globalegrow.dy.controller;
 import com.alibaba.csp.sentinel.annotation.SentinelResource;
 import com.alibaba.csp.sentinel.slots.block.BlockException;
 import com.globalegrow.dy.dto.*;
-import com.globalegrow.dy.service.*;
-import com.netflix.hystrix.HystrixThreadPoolProperties;
-
-import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
-import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
+import com.globalegrow.dy.service.RealTimeUserActionService;
+import com.globalegrow.dy.service.SearchWordSkusService;
+import com.globalegrow.dy.service.UserActionQueryAllService;
+import com.globalegrow.dy.service.UserBaseInfoService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +14,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.text.ParseException;
@@ -27,7 +25,7 @@ public class UserActionController {
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
-    @Qualifier("realTimeUserActionEsServiceImpl")
+    @Qualifier("realTimeUserActionRedisServiceImpl")
     private RealTimeUserActionService realTimeUserActionEsServiceImpl;
 
     @Autowired
@@ -39,25 +37,12 @@ public class UserActionController {
     @Autowired
     private SearchWordSkusService searchWordSkusService;
 
-/*    @Autowired
-    @Qualifier("realTimeUserActionHbaseServiceImpl")
-    private RealTimeUserActionHbaseService realTimeUserActionHbaseServiceImpl;*/
-
-    @PostConstruct
-    public void before() {
-        HystrixThreadPoolProperties.Setter().withCoreSize(40);
-    }
-
-    /*  @RequestMapping(value = "getUserInfoFromHbase",produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
-      public UserActionResponseDto getUserInfoFromHbase(@Validated @RequestBody UserActionParameterDto parameterDto) throws IOException, ParseException {
-          return this.realTimeUserActionEsServiceImpl.userActionData(parameterDto);
-      }*/
-
     /**
      * 用户基本信息接口
      * @param request
      * @return
      */
+    @SentinelResource(blockHandler = "exceptionHandler")
     @RequestMapping(value = "base", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     public UserBaseInfoResponse getUsersBaseInfo(@Validated @RequestBody UserBaseInfoRequest request) {
         return this.userBaseInfoService.getUsersBaseInfo(request);
@@ -68,6 +53,7 @@ public class UserActionController {
      * @param request
      * @return
      */
+    @SentinelResource(blockHandler = "exceptionHandler")
     @RequestMapping(value = "all", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     public UserActionQueryAllResponse getAllUserActions(@Validated @RequestBody UserActionQueryAllRequest request) {
         return this.userActionQueryAllService.getAllUserActions(request);
@@ -78,6 +64,7 @@ public class UserActionController {
      * @param request
      * @return
      */
+    @SentinelResource(blockHandler = "exceptionHandler")
     @RequestMapping(value = "search/word/skus", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     public SearchWordSkusResponse searchWordSkus(@Validated @RequestBody SearchWordSkusRequest request) {
         return this.searchWordSkusService.getSkusByWord(request);
@@ -90,7 +77,7 @@ public class UserActionController {
      * @return
      * @throws IOException
      */
-    @SentinelResource(value = "getUserInfo", blockHandler = "exceptionHandler")
+    @SentinelResource(blockHandler = "exceptionHandler")
     @RequestMapping(value = "getUserInfo", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     /*@HystrixCommand(fallbackMethod = "fallbackMethod",commandProperties = {
             @HystrixProperty(name = "execution.isolation.strategy",value = "SEMAPHORE"),
@@ -137,16 +124,6 @@ public class UserActionController {
         responseDto.setSuccess(false);
         responseDto.setMessage(e.getMessage());
         return responseDto;
-    }
-
-    @RequestMapping(value = "mockTest")
-    public UserActionResponseDto userActionInfoMock(@Validated @RequestBody UserActionParameterDto parameterDto) {
-        return this.realTimeUserActionEsServiceImpl.mock(parameterDto);
-    }
-
-    @RequestMapping("mock")
-    public String mock() {
-        return "success";
     }
 
     /*private static void initFlowRules(){

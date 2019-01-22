@@ -24,6 +24,16 @@ public class UserBaseInfoRequest extends EsPageRequest {
     @NotBlank(message = "网站源不能为空")
     private String site;
 
+    private Long startDate;
+
+    public Long getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(Long startDate) {
+        this.startDate = startDate;
+    }
+
     public String getCookieId() {
         return cookieId;
     }
