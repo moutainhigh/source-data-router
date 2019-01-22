@@ -30,7 +30,7 @@
     bin/kafka-topics.sh --list --zookeeper localhost:2181 <br>
     bin/kafka-topics.sh --zookeeper localhost:2181 --create --topic kylin_bts_zaful_report --partitions 1 --replication-factor 1 <br>
     bin/kafka-topics.sh --zookeeper localhost:2181 --create --topic kylin_bts_zaful_log --partitions 1 --replication-factor 1 <br>
-    $KAFKA_HOME/bin/kafka-consumer-groups.sh --new-consumer --bootstrap-server 172.31.35.194:9092,172.31.50.250:9092,172.31.63.112:9092 --group mysql-bin-log-zaful --describe<br>
+    $KAFKA_HOME/bin/kafka-consumer-groups.sh --new-consumer --bootstrap-server 172.31.35.194:9092,172.31.50.250:9092,172.31.63.112:9092 --group dy_app_gb_stream --describe<br>
     $KAFKA_HOME/bin/kafka-consumer-groups.sh --new-consumer --bootstrap-server 172.31.35.194:9092,172.31.50.250:9092,172.31.63.112:9092 --group bts-app-dopamine-base-quota --describe<br>
     $KAFKA_HOME/bin/kafka-consumer-groups.sh --new-consumer --bootstrap-server 172.31.35.194:9092,172.31.50.250:9092,172.31.63.112:9092 --group nginx_log_convert --describe<br>
     $KAFKA_HOME/bin/kafka-consumer-groups.sh --new-consumer --bootstrap-server 172.31.35.194:9092,172.31.50.250:9092,172.31.63.112:9092 --group nginx_app_log_convert --describe<br>

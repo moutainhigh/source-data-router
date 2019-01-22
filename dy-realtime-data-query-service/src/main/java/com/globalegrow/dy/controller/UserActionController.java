@@ -3,10 +3,7 @@ package com.globalegrow.dy.controller;
 import com.alibaba.csp.sentinel.annotation.SentinelResource;
 import com.alibaba.csp.sentinel.slots.block.BlockException;
 import com.globalegrow.dy.dto.*;
-import com.globalegrow.dy.service.RealTimeUserActionHbaseService;
-import com.globalegrow.dy.service.RealTimeUserActionService;
-import com.globalegrow.dy.service.UserActionQueryAllService;
-import com.globalegrow.dy.service.UserBaseInfoService;
+import com.globalegrow.dy.service.*;
 import com.netflix.hystrix.HystrixThreadPoolProperties;
 
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
@@ -38,6 +35,9 @@ public class UserActionController {
 
     @Autowired
     private UserActionQueryAllService userActionQueryAllService;
+
+    @Autowired
+    private SearchWordSkusService searchWordSkusService;
 
 /*    @Autowired
     @Qualifier("realTimeUserActionHbaseServiceImpl")
@@ -74,6 +74,16 @@ public class UserActionController {
     }
 
     /**
+     * 搜索词与 sku 对应关系接口
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "search/word/skus", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
+    public SearchWordSkusResponse searchWordSkus(@Validated @RequestBody SearchWordSkusRequest request) {
+        return this.searchWordSkusService.getSkusByWord(request);
+    }
+
+    /**
      * 与源文档保持一致
      *
      * @param parameterDto
@@ -90,7 +100,7 @@ public class UserActionController {
 //            @HystrixProperty(name = "execution.isolation.strategy", value = "THREAD"),
 //            @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "3000")})
     public UserActionResponseDto userActionInfo(@Validated @RequestBody UserActionParameterDto parameterDto) throws IOException, ParseException {
-        //long start = System.currentTimeMillis();
+        long start = System.currentTimeMillis();
         UserActionResponseDto responseDto = this.realTimeUserActionEsServiceImpl.getActionByUserDeviceId(parameterDto);
         /*initFlowRules();
         UserActionResponseDto responseDto = new UserActionResponseDto();
@@ -106,7 +116,7 @@ public class UserActionController {
                 entry.exit();
             }
         }*/
-        //this.logger.info("总时长: {}", System.currentTimeMillis() - start);
+        this.logger.info("总时长: {}", System.currentTimeMillis() - start);
         return responseDto;
     }
 
