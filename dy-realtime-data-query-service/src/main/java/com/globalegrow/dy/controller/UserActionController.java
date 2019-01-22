@@ -42,7 +42,7 @@ public class UserActionController {
      * @param request
      * @return
      */
-    @SentinelResource(blockHandler = "exceptionHandler")
+    @SentinelResource(value = "user_base",blockHandler = "exceptionHandler")
     @RequestMapping(value = "base", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     public UserBaseInfoResponse getUsersBaseInfo(@Validated @RequestBody UserBaseInfoRequest request) {
         return this.userBaseInfoService.getUsersBaseInfo(request);
@@ -53,7 +53,7 @@ public class UserActionController {
      * @param request
      * @return
      */
-    @SentinelResource(blockHandler = "exceptionHandler")
+    @SentinelResource(value = "user_all_event",blockHandler = "exceptionHandler")
     @RequestMapping(value = "all", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     public UserActionQueryAllResponse getAllUserActions(@Validated @RequestBody UserActionQueryAllRequest request) {
         return this.userActionQueryAllService.getAllUserActions(request);
@@ -64,7 +64,7 @@ public class UserActionController {
      * @param request
      * @return
      */
-    @SentinelResource(blockHandler = "exceptionHandler")
+    @SentinelResource(value = "search_word_skus",blockHandler = "exceptionHandler")
     @RequestMapping(value = "search/word/skus", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     public SearchWordSkusResponse searchWordSkus(@Validated @RequestBody SearchWordSkusRequest request) {
         return this.searchWordSkusService.getSkusByWord(request);
@@ -77,7 +77,7 @@ public class UserActionController {
      * @return
      * @throws IOException
      */
-    @SentinelResource(blockHandler = "exceptionHandler")
+    @SentinelResource(value = "user_realtime_1000_events",blockHandler = "exceptionHandler")
     @RequestMapping(value = "getUserInfo", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     /*@HystrixCommand(fallbackMethod = "fallbackMethod",commandProperties = {
             @HystrixProperty(name = "execution.isolation.strategy",value = "SEMAPHORE"),
