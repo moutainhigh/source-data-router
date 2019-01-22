@@ -23,6 +23,7 @@ import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 @Service
@@ -79,7 +80,7 @@ public class RealTimeUserActionRedisServiceImpl implements RealTimeUserActionSer
     }
 
     /**
-     * 从 redis 中查询
+     * 从 redis 中查询,redis 中没有则从 es 查询
      *
      * @param userActionParameterDto
      * @return
@@ -102,7 +103,20 @@ public class RealTimeUserActionRedisServiceImpl implements RealTimeUserActionSer
             String id = "dy" + site + "apd" + userActionParameterDto.getCookieId() + eventName;
             this.logger.debug("用户实时数据 redis key : {}", id);
             RList<String> rList = this.redisson.getList(id);
-            rList.readAll().stream().forEach(value -> list.add(new UserActionData(value.substring(0, value.lastIndexOf("_")), Long.valueOf(value.substring(value.lastIndexOf("_") + 1)))));
+            if (rList == null || rList.size() == 0) {
+                // 从 es 查询
+                List<String> skus = this.realTimeUserActionEsServiceImpl.getById(userActionParameterDto.getCookieId() + eventName, site);
+                if (skus != null) {
+                    skus.stream().forEach(value -> list.add(new UserActionData(value.substring(0, value.lastIndexOf("_")), Long.valueOf(value.substring(value.lastIndexOf("_") + 1)))));
+                    rList.addAll(skus);
+                    // 过期时间为 3 天
+                    rList.expire(259200, TimeUnit.SECONDS);
+                }
+
+            }else {
+                rList.readAll().stream().forEach(value -> list.add(new UserActionData(value.substring(0, value.lastIndexOf("_")), Long.valueOf(value.substring(value.lastIndexOf("_") + 1)))));
+            }
+
 
             data.put(eventName, list);
 
@@ -114,6 +128,11 @@ public class RealTimeUserActionRedisServiceImpl implements RealTimeUserActionSer
 
     @Override
     public UserActionResponseDto mock(UserActionParameterDto userActionParameterDto) {
+        return null;
+    }
+
+    @Override
+    public List<String> getById(String id, String site) {
         return null;
     }
 }
