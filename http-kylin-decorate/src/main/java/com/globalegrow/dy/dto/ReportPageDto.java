@@ -7,8 +7,6 @@ import java.util.List;
 public class ReportPageDto implements Serializable {
 
     private static final long serialVersionUID = 8864000217789639409L;
-    private List<Object> data = new ArrayList<>();
-
 
     private long totalCount = 0;
 
@@ -17,6 +15,8 @@ public class ReportPageDto implements Serializable {
     private int currentPage = 0;
 
     private int pageSize = 10;
+
+    private List<Object> data = new ArrayList<>();
 
     public List<Object> getData() {
         return data;
