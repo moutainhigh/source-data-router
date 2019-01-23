@@ -20,4 +20,9 @@ public class TimeTest {
         System.out.println(simpleDateFormat.parse(date1231).getTime());
     }
 
+    @Test
+    public void testString() {
+        System.out.println("1543755070000\\u0001ES".replaceAll("\\\\u0001ES",""));
+    }
+
 }

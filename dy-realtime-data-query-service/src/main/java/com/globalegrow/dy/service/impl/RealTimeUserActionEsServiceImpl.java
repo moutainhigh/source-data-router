@@ -203,4 +203,34 @@ public class RealTimeUserActionEsServiceImpl implements RealTimeUserActionServic
         return new UserActionResponseDto();
     }
 
+    @Override
+    public List<String> getById(String id, String site) {
+        String esIndex = this.appRealtimeEventIndex.replace("&&", site);
+        Get get = new Get.Builder(esIndex, id).type("log").setParameter(Parameters.ROUTING, id).build();
+        try {
+            JestResult jestResult = this.jestClient.execute(get);
+            if (jestResult != null) {
+
+                Map<String, Object> map = jestResult.getSourceAsObject(Map.class);
+
+                if (map != null) {
+
+                    List<String> skus = (List<String>) map.get("skus");
+
+                    if (skus != null && skus.size() > 0) {
+
+                        return skus;
+
+                    }
+
+                }
+
+            }
+
+        } catch (Exception e) {
+            logger.error("用户实时数据 query es error ,params: {}", get.getURI(), e);
+        }
+        return null;
+    }
+
 }

@@ -1,5 +1,9 @@
 package com.globalegrow.dy.dto;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+
+import java.util.Objects;
+
 public class UserActionData {
 
     private String workType;
@@ -25,5 +29,26 @@ public class UserActionData {
 
     public void setTime(Long time) {
         this.time = time;
+    }
+
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        UserActionData that = (UserActionData) o;
+        return workType.equals(that.workType) &&
+                time.equals(that.time);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(workType, time);
+    }
+
+    @Override
+    public String toString() {
+        return this.workType + "_" + this.time;
     }
 }

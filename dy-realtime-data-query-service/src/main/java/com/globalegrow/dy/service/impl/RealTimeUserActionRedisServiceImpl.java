@@ -23,6 +23,7 @@ import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 @Service
@@ -38,6 +39,8 @@ public class RealTimeUserActionRedisServiceImpl implements RealTimeUserActionSer
     private String redisKeyPrefix;
 
     private RedissonClient redisson;
+
+    private static final String searchWordSplitString = "\\u0001ES";
 
     @Value("${redis.type}")
     private String redisType;
@@ -79,13 +82,14 @@ public class RealTimeUserActionRedisServiceImpl implements RealTimeUserActionSer
     }
 
     /**
-     * 从 redis 中查询
+     * 从 redis 中查询,redis 中没有则从 es 查询
      *
      * @param userActionParameterDto
      * @return
      */
     @Override
     public UserActionResponseDto getActionByUserDeviceId(UserActionParameterDto userActionParameterDto) {
+        Long current = System.currentTimeMillis();
         UserActionResponseDto userActionResponseDto = new UserActionResponseDto();
         Map<String, List<UserActionData>> data = new HashMap<>();
         List<String> inputType = userActionParameterDto.getType();
@@ -99,10 +103,51 @@ public class RealTimeUserActionRedisServiceImpl implements RealTimeUserActionSer
         inputType.parallelStream().forEach(eventName -> {
 
             List<UserActionData> list = new ArrayList<>();
-            String id = "dy" + site + "apd" + userActionParameterDto.getCookieId() + eventName;
+            String id = "dy_" + site + "_app" + userActionParameterDto.getCookieId() + eventName;
             this.logger.debug("用户实时数据 redis key : {}", id);
             RList<String> rList = this.redisson.getList(id);
-            rList.readAll().stream().forEach(value -> list.add(new UserActionData(value.substring(0, value.lastIndexOf("_")), Long.valueOf(value.substring(value.lastIndexOf("_") + 1)))));
+            if (rList == null || rList.size() == 0) {
+                // 从 es 查询
+                List<String> skus = this.realTimeUserActionEsServiceImpl.getById(userActionParameterDto.getCookieId() + eventName, site);
+                if (skus != null) {
+                    skus.stream().forEach(value -> list.add(new UserActionData(value.substring(0, value.lastIndexOf("_")), Long.valueOf(value.substring(value.lastIndexOf("_") + 1)))));
+                    rList.addAllAsync(skus);
+                    // 过期时间为 3 天
+                    rList.expire(259200, TimeUnit.SECONDS);
+                }
+
+            } else {
+
+                List<String> redisList = rList.readAll();
+
+                redisList.stream().forEach(value -> list.add(new UserActionData(value.substring(0, value.lastIndexOf("_")), Long.valueOf(handleEsMark(value.substring(value.lastIndexOf("_") + 1))))));
+
+                if (list.size() < 1000) {
+                    Long maxTime = list.stream().mapToLong(UserActionData::getTime).max().getAsLong();
+                    if ((maxTime - current) < 60 && redisList.stream().filter(value -> value.endsWith(this.searchWordSplitString)).count() == 0) {
+                        this.logger.debug("redis 中的数据少于 1000 条且缓存时间少于 1 分钟，从 es 中查询历史数据");
+                        Set<String> history1000 = new HashSet<>();
+                        List<String> skus = this.realTimeUserActionEsServiceImpl.getById(userActionParameterDto.getCookieId() + eventName, site);
+                        if (skus != null && skus.size() > 0) {
+
+
+                            history1000.addAll(skus);
+                            history1000.addAll(redisList);
+
+                            list.clear();
+
+                            history1000.stream().forEach(value -> list.add(new UserActionData(value.substring(0, value.lastIndexOf("_")), Long.valueOf(value.substring(value.lastIndexOf("_") + 1)))));
+
+                            rList.clear();
+                            rList.addAllAsync(history1000.stream().map(value -> value + searchWordSplitString).collect(Collectors.toList()));
+                            rList.expire(259200, TimeUnit.SECONDS);
+
+                        }
+
+                    }
+                }
+            }
+
 
             data.put(eventName, list);
 
@@ -112,8 +157,22 @@ public class RealTimeUserActionRedisServiceImpl implements RealTimeUserActionSer
         return userActionResponseDto;
     }
 
+    /**
+     * 处理从 es 查询出来的标记数据
+     * @param esMarked
+     * @return
+     */
+    static String handleEsMark(String esMarked) {
+        return esMarked.replaceAll("\\\\u0001ES", "");
+    }
+
     @Override
     public UserActionResponseDto mock(UserActionParameterDto userActionParameterDto) {
+        return null;
+    }
+
+    @Override
+    public List<String> getById(String id, String site) {
         return null;
     }
 }

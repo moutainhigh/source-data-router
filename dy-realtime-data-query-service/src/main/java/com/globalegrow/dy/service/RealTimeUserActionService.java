@@ -21,4 +21,6 @@ public interface RealTimeUserActionService {
 
     UserActionResponseDto mock(UserActionParameterDto userActionParameterDto);
 
+    List<String> getById(String id, String site);
+
 }
