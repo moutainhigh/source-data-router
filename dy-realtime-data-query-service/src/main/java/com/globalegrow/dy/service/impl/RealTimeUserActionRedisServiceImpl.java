@@ -112,11 +112,11 @@ public class RealTimeUserActionRedisServiceImpl implements RealTimeUserActionSer
             this.logger.debug("用户实时数据 redis key : {}", id);
             RList<String> rList = this.redisson.getList(id);
             if (rList == null || rList.size() == 0) {
-                // 从 es 查询
+                // 从 es 查询，并将数据添加 es mark
                 List<String> skus = this.realTimeUserActionEsServiceImpl.getById(userActionParameterDto.getCookieId() + eventName, site);
                 if (skus != null) {
                     skus.stream().forEach(value -> list.add(new UserActionData(value.substring(0, value.lastIndexOf("_")), Long.valueOf(value.substring(value.lastIndexOf("_") + 1)))));
-                    rList.addAllAsync(skus);
+                    rList.addAllAsync(skus.stream().map(value -> value + searchWordSplitString).collect(Collectors.toList()));
                     // 过期时间为 3 天
                     rList.expire(this.redisExpireTime, TimeUnit.SECONDS);
                 }
@@ -129,6 +129,7 @@ public class RealTimeUserActionRedisServiceImpl implements RealTimeUserActionSer
 
                 if (list.size() < 1000) {
                     Long maxTime = list.stream().mapToLong(UserActionData::getTime).max().getAsLong();
+                    //
                     if ((maxTime - current) < 60 && redisList.stream().filter(value -> value.endsWith(this.searchWordSplitString)).count() == 0) {
                         this.logger.debug("redis 中的数据少于 1000 条且缓存时间少于 1 分钟，从 es 中查询历史数据");
                         Set<String> history1000 = new HashSet<>();
@@ -144,6 +145,7 @@ public class RealTimeUserActionRedisServiceImpl implements RealTimeUserActionSer
                             history1000.stream().forEach(value -> list.add(new UserActionData(value.substring(0, value.lastIndexOf("_")), Long.valueOf(value.substring(value.lastIndexOf("_") + 1)))));
 
                             rList.clear();
+                            // 添加 es mark
                             rList.addAllAsync(history1000.stream().map(value -> value + searchWordSplitString).collect(Collectors.toList()));
                             rList.expire(this.redisExpireTime, TimeUnit.SECONDS);
 
