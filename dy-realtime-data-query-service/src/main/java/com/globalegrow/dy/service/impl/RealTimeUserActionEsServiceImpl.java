@@ -205,7 +205,7 @@ public class RealTimeUserActionEsServiceImpl implements RealTimeUserActionServic
 
     @Override
     public List<String> getById(String id, String site) {
-        String esIndex = this.appIndexPrefix.replace("&&", site);
+        String esIndex = this.appRealtimeEventIndex.replace("&&", site);
         Get get = new Get.Builder(esIndex, id).type("log").setParameter(Parameters.ROUTING, id).build();
         try {
             JestResult jestResult = this.jestClient.execute(get);

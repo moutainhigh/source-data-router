@@ -87,6 +87,7 @@ public class RealTimeUserActionRedisServiceImpl implements RealTimeUserActionSer
      */
     @Override
     public UserActionResponseDto getActionByUserDeviceId(UserActionParameterDto userActionParameterDto) {
+        Long current = System.currentTimeMillis();
         UserActionResponseDto userActionResponseDto = new UserActionResponseDto();
         Map<String, List<UserActionData>> data = new HashMap<>();
         List<String> inputType = userActionParameterDto.getType();
@@ -100,7 +101,7 @@ public class RealTimeUserActionRedisServiceImpl implements RealTimeUserActionSer
         inputType.parallelStream().forEach(eventName -> {
 
             List<UserActionData> list = new ArrayList<>();
-            String id = "dy" + site + "apd" + userActionParameterDto.getCookieId() + eventName;
+            String id = "dy_" + site + "_app" + userActionParameterDto.getCookieId() + eventName;
             this.logger.debug("用户实时数据 redis key : {}", id);
             RList<String> rList = this.redisson.getList(id);
             if (rList == null || rList.size() == 0) {
@@ -108,13 +109,31 @@ public class RealTimeUserActionRedisServiceImpl implements RealTimeUserActionSer
                 List<String> skus = this.realTimeUserActionEsServiceImpl.getById(userActionParameterDto.getCookieId() + eventName, site);
                 if (skus != null) {
                     skus.stream().forEach(value -> list.add(new UserActionData(value.substring(0, value.lastIndexOf("_")), Long.valueOf(value.substring(value.lastIndexOf("_") + 1)))));
-                    rList.addAll(skus);
+                    rList.addAllAsync(skus);
                     // 过期时间为 3 天
                     rList.expire(259200, TimeUnit.SECONDS);
                 }
 
             }else {
-                rList.readAll().stream().forEach(value -> list.add(new UserActionData(value.substring(0, value.lastIndexOf("_")), Long.valueOf(value.substring(value.lastIndexOf("_") + 1)))));
+
+                List<String> redisList = rList.readAll();
+                redisList.stream().forEach(value -> list.add(new UserActionData(value.substring(0, value.lastIndexOf("_")), Long.valueOf(value.substring(value.lastIndexOf("_") + 1)))));
+
+                if (list.size() < 1000) {
+                    Long maxTime = list.stream().mapToLong(UserActionData::getTime).max().getAsLong();
+                    if ((maxTime - current) < 86400) {
+                        this.logger.debug("redis 中的数据少于 1000 条且缓存时间少于 1 天，从 es 中查询历史数据");
+                        Set<String> history1000 = new HashSet<>();
+                        List<String> skus = this.realTimeUserActionEsServiceImpl.getById(userActionParameterDto.getCookieId() + eventName, site);
+                        history1000.addAll(skus);
+                        history1000.addAll(skus);
+
+                        list.clear();
+
+                        history1000.stream().forEach(value -> list.add(new UserActionData(value.substring(0, value.lastIndexOf("_")), Long.valueOf(value.substring(value.lastIndexOf("_") + 1)))));
+
+                    }
+                }
             }
 
 

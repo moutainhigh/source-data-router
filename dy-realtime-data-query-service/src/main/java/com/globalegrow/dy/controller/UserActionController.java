@@ -26,6 +26,10 @@ public class UserActionController {
 
     @Autowired
     @Qualifier("realTimeUserActionRedisServiceImpl")
+    private RealTimeUserActionService realTimeUserActionServiceImpl;
+
+    @Autowired
+    @Qualifier("realTimeUserActionEsServiceImpl")
     private RealTimeUserActionService realTimeUserActionEsServiceImpl;
 
     @Autowired
@@ -88,7 +92,7 @@ public class UserActionController {
 //            @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "3000")})
     public UserActionResponseDto userActionInfo(@Validated @RequestBody UserActionParameterDto parameterDto) throws IOException, ParseException {
         long start = System.currentTimeMillis();
-        UserActionResponseDto responseDto = this.realTimeUserActionEsServiceImpl.getActionByUserDeviceId(parameterDto);
+        UserActionResponseDto responseDto = this.realTimeUserActionServiceImpl.getActionByUserDeviceId(parameterDto);
         /*initFlowRules();
         UserActionResponseDto responseDto = new UserActionResponseDto();
         Entry entry = null;
@@ -137,10 +141,10 @@ public class UserActionController {
     }*/
 
     public UserActionResponseDto exceptionHandler(UserActionParameterDto parameterDto, BlockException ex) {
-        logger.warn("服务超时或繁忙" + parameterDto.toString());
-        UserActionResponseDto actionResponseDto = new UserActionResponseDto();
-        actionResponseDto.setMessage("服务超时或繁忙");
-        actionResponseDto.setSuccess(false);
-        return actionResponseDto;
+        logger.warn("redis 查询出错，查询 es " + parameterDto.toString());
+//        UserActionResponseDto actionResponseDto = new UserActionResponseDto();
+//        actionResponseDto.setMessage("服务超时或繁忙");
+//        actionResponseDto.setSuccess(false);
+        return this.realTimeUserActionEsServiceImpl.getActionByUserDeviceId(parameterDto);
     }
 }
