@@ -131,7 +131,7 @@ public class RealTimeUserActionRedisServiceImpl implements RealTimeUserActionSer
 
                 if (list.size() < 1000) {
                     Long maxTime = list.stream().mapToLong(UserActionData::getTime).max().getAsLong();
-                    //
+                    // 最大数据时间戳少于 60 ms 为新数据，新数据少于 1000, 且未查询过 es
                     if ((maxTime - current) < 60 && redisList.stream().filter(value -> value.endsWith(this.searchWordSplitString)).count() == 0) {
                         this.logger.debug("redis 中的数据少于 1000 条且缓存时间少于 1 分钟，从 es 中查询历史数据");
                         // set 去重
