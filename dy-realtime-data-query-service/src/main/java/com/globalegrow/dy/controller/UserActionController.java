@@ -43,10 +43,11 @@ public class UserActionController {
 
     /**
      * 用户基本信息接口
+     *
      * @param request
      * @return
      */
-    @SentinelResource(value = "user_base",blockHandler = "exceptionHandler")
+    @SentinelResource(value = "user_base", blockHandler = "exceptionHandler")
     @RequestMapping(value = "base", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     public UserBaseInfoResponse getUsersBaseInfo(@Validated @RequestBody UserBaseInfoRequest request) {
         return this.userBaseInfoService.getUsersBaseInfo(request);
@@ -54,10 +55,11 @@ public class UserActionController {
 
     /**
      * 用户全部事件序列接口
+     *
      * @param request
      * @return
      */
-    @SentinelResource(value = "user_all_event",blockHandler = "exceptionHandler")
+    @SentinelResource(value = "user_all_event", blockHandler = "exceptionHandler")
     @RequestMapping(value = "all", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     public UserActionQueryAllResponse getAllUserActions(@Validated @RequestBody UserActionQueryAllRequest request) {
         return this.userActionQueryAllService.getAllUserActions(request);
@@ -65,10 +67,11 @@ public class UserActionController {
 
     /**
      * 搜索词与 sku 对应关系接口
+     *
      * @param request
      * @return
      */
-    @SentinelResource(value = "search_word_skus",blockHandler = "exceptionHandler")
+    @SentinelResource(value = "search_word_skus", blockHandler = "exceptionHandler")
     @RequestMapping(value = "search/word/skus", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     public SearchWordSkusResponse searchWordSkus(@Validated @RequestBody SearchWordSkusRequest request) {
         return this.searchWordSkusService.getSkusByWord(request);
@@ -81,15 +84,8 @@ public class UserActionController {
      * @return
      * @throws IOException
      */
-    @SentinelResource(value = "user_realtime_1000_events",blockHandler = "exceptionHandler")
+    @SentinelResource(value = "user_realtime_1000_events", blockHandler = "exceptionHandler", fallback = "exceptionHandler")
     @RequestMapping(value = "getUserInfo", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
-    /*@HystrixCommand(fallbackMethod = "fallbackMethod",commandProperties = {
-            @HystrixProperty(name = "execution.isolation.strategy",value = "SEMAPHORE"),
-            @HystrixProperty(name = "fallback.isolation.semaphore.maxConcurrentRequests",value = "5000"),
-            @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds",value = "4000")})*/
-//    @HystrixCommand(fallbackMethod = "fallbackMethod", commandProperties = {
-//            @HystrixProperty(name = "execution.isolation.strategy", value = "THREAD"),
-//            @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "3000")})
     public UserActionResponseDto userActionInfo(@Validated @RequestBody UserActionParameterDto parameterDto) throws IOException, ParseException {
         long start = System.currentTimeMillis();
         UserActionResponseDto responseDto = this.realTimeUserActionServiceImpl.getActionByUserDeviceId(parameterDto);

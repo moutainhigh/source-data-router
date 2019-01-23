@@ -51,7 +51,7 @@ MAIN_CLASS=com.globalegrow.ServiceStart
 
 CLASSPATH="$CONF_DIR:$DEPLOY_DIR/templates:$DEPLOY_DIR/static"
 echo -e "Starting the $SERVER_NAME ...\c"
-nohup java -Dcsp.sentinel.dashboard.server=172.31.47.22:8082 $JAVA_OPTS $JAVA_DEBUG_OPTS $JAVA_JMX_OPTS -cp $LIB_JARS $MAIN_CLASS > $STDOUT_FILE 2>&1 &
+nohup java $JAVA_OPTS $JAVA_DEBUG_OPTS $JAVA_JMX_OPTS -cp $LIB_JARS $MAIN_CLASS > $STDOUT_FILE 2>&1 &
 
 echo "OK!"
 PIDS=`ps -f | grep java | grep "$DEPLOY_DIR" | awk '{print $2}'`

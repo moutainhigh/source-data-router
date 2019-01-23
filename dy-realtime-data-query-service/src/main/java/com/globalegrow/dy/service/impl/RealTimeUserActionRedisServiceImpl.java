@@ -40,6 +40,8 @@ public class RealTimeUserActionRedisServiceImpl implements RealTimeUserActionSer
 
     private RedissonClient redisson;
 
+    private static final String searchWordSplitString = "\\u0001ES";
+
     @Value("${redis.type}")
     private String redisType;
     @Value("${redis.master:none}")
@@ -114,23 +116,33 @@ public class RealTimeUserActionRedisServiceImpl implements RealTimeUserActionSer
                     rList.expire(259200, TimeUnit.SECONDS);
                 }
 
-            }else {
+            } else {
 
                 List<String> redisList = rList.readAll();
-                redisList.stream().forEach(value -> list.add(new UserActionData(value.substring(0, value.lastIndexOf("_")), Long.valueOf(value.substring(value.lastIndexOf("_") + 1)))));
+
+                redisList.stream().forEach(value -> list.add(new UserActionData(value.substring(0, value.lastIndexOf("_")), Long.valueOf(handleEsMark(value.substring(value.lastIndexOf("_") + 1))))));
 
                 if (list.size() < 1000) {
                     Long maxTime = list.stream().mapToLong(UserActionData::getTime).max().getAsLong();
-                    if ((maxTime - current) < 86400) {
-                        this.logger.debug("redis 中的数据少于 1000 条且缓存时间少于 1 天，从 es 中查询历史数据");
+                    if ((maxTime - current) < 60 && redisList.stream().filter(value -> value.endsWith(this.searchWordSplitString)).count() == 0) {
+                        this.logger.debug("redis 中的数据少于 1000 条且缓存时间少于 1 分钟，从 es 中查询历史数据");
                         Set<String> history1000 = new HashSet<>();
                         List<String> skus = this.realTimeUserActionEsServiceImpl.getById(userActionParameterDto.getCookieId() + eventName, site);
-                        history1000.addAll(skus);
-                        history1000.addAll(skus);
+                        if (skus != null && skus.size() > 0) {
 
-                        list.clear();
 
-                        history1000.stream().forEach(value -> list.add(new UserActionData(value.substring(0, value.lastIndexOf("_")), Long.valueOf(value.substring(value.lastIndexOf("_") + 1)))));
+                            history1000.addAll(skus);
+                            history1000.addAll(redisList);
+
+                            list.clear();
+
+                            history1000.stream().forEach(value -> list.add(new UserActionData(value.substring(0, value.lastIndexOf("_")), Long.valueOf(value.substring(value.lastIndexOf("_") + 1)))));
+
+                            rList.clear();
+                            rList.addAllAsync(history1000.stream().map(value -> value + searchWordSplitString).collect(Collectors.toList()));
+                            rList.expire(259200, TimeUnit.SECONDS);
+
+                        }
 
                     }
                 }
@@ -143,6 +155,15 @@ public class RealTimeUserActionRedisServiceImpl implements RealTimeUserActionSer
         });
         userActionResponseDto.setData(data);
         return userActionResponseDto;
+    }
+
+    /**
+     * 处理从 es 查询出来的标记数据
+     * @param esMarked
+     * @return
+     */
+    static String handleEsMark(String esMarked) {
+        return esMarked.replaceAll(searchWordSplitString, "");
     }
 
     @Override
