@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("report-config")
-public class KylinConfigController {
+public class KylinConfigController extends CommonController{
 
     @Autowired
     private BtsReportConfigService btsReportConfigService;

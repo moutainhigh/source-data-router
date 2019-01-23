@@ -16,6 +16,16 @@ public class ReportPageDto implements Serializable {
 
     private int pageSize = 10;
 
+    private String message;
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
     private List<Object> data = new ArrayList<>();
 
     public List<Object> getData() {

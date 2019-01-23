@@ -15,7 +15,7 @@ public class TimeTest {
 
     @Test
     public void testTimestamp14() throws ParseException {
-        String date1231 = "2019-01-01 00:00:00";
+        String date1231 = "2018-12-01 00:00:00";
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         System.out.println(simpleDateFormat.parse(date1231).getTime());
     }
