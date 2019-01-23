@@ -163,7 +163,7 @@ public class RealTimeUserActionRedisServiceImpl implements RealTimeUserActionSer
      * @return
      */
     static String handleEsMark(String esMarked) {
-        return esMarked.replaceAll(searchWordSplitString, "");
+        return esMarked.replaceAll("\\\\u0001ES", "");
     }
 
     @Override
