@@ -1,5 +1,6 @@
 package com.globalegrow.dy.controller;
 
+import com.alibaba.csp.sentinel.annotation.SentinelResource;
 import com.globalegrow.dy.dto.*;
 import com.globalegrow.dy.enums.ReportServerType;
 import com.globalegrow.dy.model.BtsReportKylinConfig;
@@ -10,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -20,7 +22,7 @@ import java.util.*;
 
 @RestController
 @RequestMapping("report/bts")
-public class KylinReportController {
+public class KylinReportController extends CommonController{
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -32,6 +34,7 @@ public class KylinReportController {
 
     static final List<String> FIXED_FIELDS = Arrays.asList("bts_planid", "bts_versionid", "bts_bucketid", "bts_policy", "bts_plancode", "day_start");
 
+    @SentinelResource(value = "bts_report",blockHandler = "exceptionHandler",fallback = "exceptionHandler")
     @RequestMapping(produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     public ReportPageDto btsReport(@RequestBody BtsReportParameterDto btsReportParameterDto) {
         this.logger.debug("报表请求参数: {}", btsReportParameterDto);
@@ -158,6 +161,13 @@ public class KylinReportController {
         return new ReportPageDto();
     }
 
+    public ReportPageDto exceptionHandler(BtsReportParameterDto btsReportParameterDto) {
+        ReportPageDto pageDto = new ReportPageDto();
+        this.logger.warn("kylin 服务异常");
+        pageDto.setMessage("kylin 服务异常");
+        return pageDto;
+    }
+
     /**
      * 小数取均值
      *
@@ -193,9 +203,17 @@ public class KylinReportController {
         }
     }
 
+    @SentinelResource(value = "bts_report_config",blockHandler = "configExceptionHandler",fallback = "configExceptionHandler")
     @RequestMapping(value = "config", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     public ReportFieldConfigResultDto fieldConfigDtos(@RequestBody FieldConfigParameterDto dto) {
         return new ReportFieldConfigResultDto(this.btsReportConfigService.btsReportFieldConfigMixedQuery(dto));
+    }
+
+    public ReportFieldConfigResultDto configExceptionHandler(FieldConfigParameterDto dto) {
+        ReportFieldConfigResultDto reportFieldConfigResultDto = new ReportFieldConfigResultDto(Collections.EMPTY_LIST);
+        reportFieldConfigResultDto.setMessage("bts 报表配置查询异常");
+        this.logger.warn("bts 报表配置查询异常");
+        return reportFieldConfigResultDto;
     }
 
  /*   public static void main(String[] args) {
