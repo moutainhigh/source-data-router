@@ -18,7 +18,7 @@ public class ResponseDTO<T> implements Serializable{
 	/**
 	 * 提示信息
 	 */
-	private String message="調用成功";
+	private String message="调用成功";
 
 	public ResponseDTO() {
 

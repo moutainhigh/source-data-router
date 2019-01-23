@@ -7,7 +7,7 @@ package com.globalegrow.dy.enums;
 public enum ResponseCodeEnum {
 	/**操作*/
 	SUCCESS("200", "操作成功"),
-	FAIL("600", "系统异常"),
+	FAIL("500", "系统异常"),
 
 	/**报表*/
 	NOT_NUll_ERROR("10001","参数不能为空"),
