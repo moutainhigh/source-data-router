@@ -116,9 +116,11 @@ public class RealTimeUserActionRedisServiceImpl implements RealTimeUserActionSer
                 List<String> skus = this.realTimeUserActionEsServiceImpl.getById(userActionParameterDto.getCookieId() + eventName, site);
                 if (skus != null) {
                     skus.stream().forEach(value -> list.add(new UserActionData(value.substring(0, value.lastIndexOf("_")), Long.valueOf(value.substring(value.lastIndexOf("_") + 1)))));
+
+                    // 放入 redis 并添加 es 查询标签
                     rList.addAllAsync(skus.stream().map(value -> value + searchWordSplitString).collect(Collectors.toList()));
-                    // 过期时间为 3 天
-                    rList.expire(this.redisExpireTime, TimeUnit.SECONDS);
+                    // 设置过期时间
+                    rList.expireAsync(this.redisExpireTime, TimeUnit.SECONDS);
                 }
 
             } else {
@@ -132,10 +134,10 @@ public class RealTimeUserActionRedisServiceImpl implements RealTimeUserActionSer
                     //
                     if ((maxTime - current) < 60 && redisList.stream().filter(value -> value.endsWith(this.searchWordSplitString)).count() == 0) {
                         this.logger.debug("redis 中的数据少于 1000 条且缓存时间少于 1 分钟，从 es 中查询历史数据");
+                        // set 去重
                         Set<String> history1000 = new HashSet<>();
                         List<String> skus = this.realTimeUserActionEsServiceImpl.getById(userActionParameterDto.getCookieId() + eventName, site);
                         if (skus != null && skus.size() > 0) {
-
 
                             history1000.addAll(skus);
                             history1000.addAll(redisList);
@@ -147,7 +149,7 @@ public class RealTimeUserActionRedisServiceImpl implements RealTimeUserActionSer
                             rList.clear();
                             // 添加 es mark
                             rList.addAllAsync(history1000.stream().map(value -> value + searchWordSplitString).collect(Collectors.toList()));
-                            rList.expire(this.redisExpireTime, TimeUnit.SECONDS);
+                            rList.expireAsync(this.redisExpireTime, TimeUnit.SECONDS);
 
                         }
 
