@@ -35,8 +35,11 @@ public class RealTimeUserActionRedisServiceImpl implements RealTimeUserActionSer
     @Qualifier("realTimeUserActionEsServiceImpl")
     private RealTimeUserActionService realTimeUserActionEsServiceImpl;
 
-    @Value("${app.redis.readtime.prefix:dy_real_time_}")
+    @Value("${redis.key-prefix:dy_&&_app}")
     private String redisKeyPrefix;
+
+    @Value("${redis.expire-seconds:86400}")
+    private Long redisExpireTime;
 
     private RedissonClient redisson;
 
@@ -50,6 +53,8 @@ public class RealTimeUserActionRedisServiceImpl implements RealTimeUserActionSer
     private String nodes;
     @Value("${redis.password}")
     private String redisPassword;
+
+
 
     @PostConstruct
     public void before() {
@@ -103,7 +108,7 @@ public class RealTimeUserActionRedisServiceImpl implements RealTimeUserActionSer
         inputType.parallelStream().forEach(eventName -> {
 
             List<UserActionData> list = new ArrayList<>();
-            String id = "dy_" + site + "_app" + userActionParameterDto.getCookieId() + eventName;
+            String id = this.redisKeyPrefix.replaceFirst("&&", site) + userActionParameterDto.getCookieId() + eventName;
             this.logger.debug("用户实时数据 redis key : {}", id);
             RList<String> rList = this.redisson.getList(id);
             if (rList == null || rList.size() == 0) {
@@ -113,7 +118,7 @@ public class RealTimeUserActionRedisServiceImpl implements RealTimeUserActionSer
                     skus.stream().forEach(value -> list.add(new UserActionData(value.substring(0, value.lastIndexOf("_")), Long.valueOf(value.substring(value.lastIndexOf("_") + 1)))));
                     rList.addAllAsync(skus);
                     // 过期时间为 3 天
-                    rList.expire(259200, TimeUnit.SECONDS);
+                    rList.expire(this.redisExpireTime, TimeUnit.SECONDS);
                 }
 
             } else {
@@ -140,7 +145,7 @@ public class RealTimeUserActionRedisServiceImpl implements RealTimeUserActionSer
 
                             rList.clear();
                             rList.addAllAsync(history1000.stream().map(value -> value + searchWordSplitString).collect(Collectors.toList()));
-                            rList.expire(259200, TimeUnit.SECONDS);
+                            rList.expire(this.redisExpireTime, TimeUnit.SECONDS);
 
                         }
 
