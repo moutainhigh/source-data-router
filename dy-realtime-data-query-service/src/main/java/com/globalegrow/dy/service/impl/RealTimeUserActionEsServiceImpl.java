@@ -72,7 +72,7 @@ public class RealTimeUserActionEsServiceImpl implements RealTimeUserActionServic
     @Override
     public UserActionResponseDto userActionData(UserActionParameterDto userActionParameterDto) throws IOException, ParseException {
         UserActionResponseDto userActionResponseDto = new UserActionResponseDto();
-        Map<String, List<UserActionData>> data = new HashMap<>();
+        Map<String, Set<UserActionData>> data = new HashMap<>();
         List<String> inputType = userActionParameterDto.getType();
         if (inputType == null) {
             inputType = new ArrayList<>();
@@ -127,7 +127,7 @@ public class RealTimeUserActionEsServiceImpl implements RealTimeUserActionServic
                 long handleStart = System.currentTimeMillis();
                 //logger.debug("es data result size: {}", result.getSourceAsObjectList(UserActionEsDto.class).size());
                 result.getSourceAsObjectList(UserActionEsDto.class).stream().collect(Collectors.groupingBy(UserActionEsDto::getEvent_name)).entrySet().stream().forEach(e -> {
-                    data.put(e.getKey(), e.getValue().stream().map(esd -> new UserActionData(esd.getEvent_value(), esd.getTimestamp())).collect(Collectors.toList()));
+                    data.put(e.getKey(), e.getValue().stream().map(esd -> new UserActionData(esd.getEvent_value(), esd.getTimestamp())).collect(Collectors.toSet()));
                 });
                 //logger.debug("handle result costs: {}", System.currentTimeMillis() - handleStart);
             }
@@ -142,7 +142,7 @@ public class RealTimeUserActionEsServiceImpl implements RealTimeUserActionServic
     @Override
     public UserActionResponseDto getActionByUserDeviceId(UserActionParameterDto userActionParameterDto) {
         UserActionResponseDto userActionResponseDto = new UserActionResponseDto();
-        Map<String, List<UserActionData>> data = new HashMap<>();
+        Map<String, Set<UserActionData>> data = new HashMap<>();
         List<String> inputType = userActionParameterDto.getType();
         if (inputType == null) {
             inputType = new ArrayList<>();
@@ -173,7 +173,7 @@ public class RealTimeUserActionEsServiceImpl implements RealTimeUserActionServic
 
                         if (skus != null && skus.size() > 0) {
 
-                            List<UserActionData> list = new ArrayList<>();
+                            Set<UserActionData> list = new TreeSet<>();
 
                             skus.forEach(value -> list.add(new UserActionData(value.substring(0, value.lastIndexOf("_")), Long.valueOf(value.substring(value.lastIndexOf("_") + 1)))));
 

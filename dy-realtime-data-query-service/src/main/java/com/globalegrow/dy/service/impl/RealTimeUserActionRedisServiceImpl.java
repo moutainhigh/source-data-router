@@ -96,7 +96,7 @@ public class RealTimeUserActionRedisServiceImpl implements RealTimeUserActionSer
     public UserActionResponseDto getActionByUserDeviceId(UserActionParameterDto userActionParameterDto) {
         Long current = System.currentTimeMillis();
         UserActionResponseDto userActionResponseDto = new UserActionResponseDto();
-        Map<String, List<UserActionData>> data = new HashMap<>();
+        Map<String, Set<UserActionData>> data = new HashMap<>();
         List<String> inputType = userActionParameterDto.getType();
         if (inputType == null) {
             inputType = new ArrayList<>();
@@ -107,7 +107,7 @@ public class RealTimeUserActionRedisServiceImpl implements RealTimeUserActionSer
         String site = userActionParameterDto.getSite().toLowerCase();
         inputType.parallelStream().forEach(eventName -> {
 
-            List<UserActionData> list = new ArrayList<>();
+            Set<UserActionData> list = new TreeSet<>();
             String id = this.redisKeyPrefix.replaceFirst("&&", site) + userActionParameterDto.getCookieId() + eventName;
             this.logger.debug("用户实时数据 redis key : {}", id);
             RList<String> rList = this.redisson.getList(id);
@@ -157,9 +157,9 @@ public class RealTimeUserActionRedisServiceImpl implements RealTimeUserActionSer
                 }
             }
 
-            Collections.sort(list);
+            //Collections.sort(list);
             if (list.size() > userActionParameterDto.getSize()) {
-                data.put(eventName, list.subList(0, userActionParameterDto.getSize()));
+                data.put(eventName, list.stream().limit(userActionParameterDto.getSize()).collect(Collectors.toSet()));
             }else{
                 data.put(eventName, list);
             }
