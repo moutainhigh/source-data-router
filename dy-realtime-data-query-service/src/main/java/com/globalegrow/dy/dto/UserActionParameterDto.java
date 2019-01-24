@@ -1,5 +1,6 @@
 package com.globalegrow.dy.dto;
 
+import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.constraints.Max;
@@ -11,6 +12,7 @@ import java.util.List;
 public class UserActionParameterDto extends DyRequest{
 
     @NotNull(message = "device_id 不能为空")
+    @Length(min = 10, max = 256, message = "cookieid 长度为 10-256")
     private String cookieId;
 
     private List<String> type;

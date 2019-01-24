@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.validation.BindException;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -122,7 +123,11 @@ public class UserActionController {
         UserActionResponseDto responseDto = new UserActionResponseDto();
         //ReponseDTO<Object> reponseDTO = new ReponseDTO<>(ExceptionCode.FAIL.getCode(),ExceptionCode.FAIL.getMessage());
         responseDto.setSuccess(false);
-        responseDto.setMessage(e.getMessage());
+        StringBuilder stringBuilder = new StringBuilder();
+        if (e instanceof BindException) {
+            ((BindException) e).getFieldErrors().forEach(fieldError -> stringBuilder.append(fieldError.getDefaultMessage()));
+        }
+       responseDto.setMessage(stringBuilder.toString());
         return responseDto;
     }
 
