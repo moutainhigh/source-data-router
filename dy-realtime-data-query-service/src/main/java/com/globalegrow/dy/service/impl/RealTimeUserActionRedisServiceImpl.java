@@ -54,6 +54,7 @@ public class RealTimeUserActionRedisServiceImpl implements RealTimeUserActionSer
     @Value("${redis.password}")
     private String redisPassword;
 
+    private String emptyEvent = "empty";
 
 
     @PostConstruct
@@ -114,26 +115,33 @@ public class RealTimeUserActionRedisServiceImpl implements RealTimeUserActionSer
             if (rList == null || rList.size() == 0) {
                 // 从 es 查询，并将数据添加 es mark
                 List<String> skus = this.realTimeUserActionEsServiceImpl.getById(userActionParameterDto.getCookieId() + eventName, site);
-                if (skus != null) {
+                if (skus != null && skus.size() > 0) {
                     skus.stream().forEach(value -> list.add(new UserActionData(value.substring(0, value.lastIndexOf("_")), Long.valueOf(value.substring(value.lastIndexOf("_") + 1)))));
 
                     // 放入 redis 并添加 es 查询标签
                     rList.addAllAsync(skus.stream().map(value -> value + searchWordSplitString).collect(Collectors.toList()));
                     // 设置过期时间
                     rList.expireAsync(this.redisExpireTime, TimeUnit.SECONDS);
+                } else {
+
+                    // 添加一条空
+                    rList.addAsync(this.emptyEvent);
+                    rList.expireAsync(this.redisExpireTime, TimeUnit.SECONDS);
+
                 }
 
             } else {
 
-                List<String> redisList = rList.readAll();
+                List<String> redisList = rList.readAll().stream().collect(Collectors.toList());
 
-                redisList.stream().forEach(value -> list.add(new UserActionData(value.substring(0, value.lastIndexOf("_")), Long.valueOf(handleEsMark(value.substring(value.lastIndexOf("_") + 1))))));
-
+                redisList.stream().filter(value -> !emptyEvent.equals(value)).forEach(value -> list.add(new UserActionData(value.substring(0, value.lastIndexOf("_")), Long.valueOf(handleEsMark(value.substring(value.lastIndexOf("_") + 1))))));
+                //this.logger.debug("redis data {}", redisList);
                 if (list.size() < userActionParameterDto.getSize()) {
-                    Long maxTime = list.stream().mapToLong(UserActionData::getTime).max().getAsLong();
-                    // 最大数据时间戳少于 60 ms 为新数据，新数据少于 1000, 且未查询过 es
-                    if (/*(maxTime - current) < 60 && */redisList.stream().filter(value -> value.endsWith(this.searchWordSplitString)).count() == 0) {
-                        this.logger.debug("redis 中的数据少于 {} 条，从 es 中查询历史数据", userActionParameterDto.getSize());
+                    //Long maxTime = list.stream().mapToLong(UserActionData::getTime).max().getAsLong();
+                    // 未查询过 es 去查询 es
+                    if (redisList.stream().filter(value -> value.endsWith(this.searchWordSplitString)).count() == 0
+                            && redisList.stream().filter(value -> emptyEvent.equals(value)).count() == 0) {
+                        this.logger.debug("redis 中的数据少于 {} 条，从 es 中查询历史数据 {}", userActionParameterDto.getSize());
                         // set 去重
                         Set<String> history1000 = new HashSet<>();
                         List<String> skus = this.realTimeUserActionEsServiceImpl.getById(userActionParameterDto.getCookieId() + eventName, site);
@@ -153,14 +161,23 @@ public class RealTimeUserActionRedisServiceImpl implements RealTimeUserActionSer
 
                         }
 
+                        if(list.size() == 0){
+
+                            // 添加一条空
+                            rList.addAsync(this.emptyEvent);
+                            rList.expireAsync(this.redisExpireTime, TimeUnit.SECONDS);
+
+                        }
+
                     }
                 }
             }
 
             //Collections.sort(list);
             if (list.size() > userActionParameterDto.getSize()) {
+                this.logger.debug("数据截取 {}", userActionParameterDto.getSize());
                 data.put(eventName, list.stream().limit(userActionParameterDto.getSize()).collect(Collectors.toSet()));
-            }else{
+            } else {
                 data.put(eventName, list);
             }
 
@@ -172,6 +189,7 @@ public class RealTimeUserActionRedisServiceImpl implements RealTimeUserActionSer
 
     /**
      * 处理从 es 查询出来的标记数据
+     *
      * @param esMarked
      * @return
      */

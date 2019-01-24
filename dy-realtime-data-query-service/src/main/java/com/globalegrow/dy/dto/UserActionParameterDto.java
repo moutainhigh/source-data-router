@@ -11,7 +11,7 @@ import java.util.List;
 
 public class UserActionParameterDto extends DyRequest{
 
-    @NotNull(message = "device_id 不能为空")
+    @NotNull(message = "cookieid 不能为空")
     @Length(min = 10, max = 256, message = "cookieid 长度为 10-256")
     private String cookieId;
 

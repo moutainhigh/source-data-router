@@ -129,7 +129,7 @@ public class UserActionController {
             ((BindException) e).getFieldErrors().forEach(fieldError -> stringBuilder.append(fieldError.getDefaultMessage()));
         }
         if (e instanceof org.springframework.web.bind.MethodArgumentNotValidException) {
-            ((MethodArgumentNotValidException) e).getBindingResult().getAllErrors().forEach(error -> stringBuilder.append(error.getDefaultMessage()));
+            ((MethodArgumentNotValidException) e).getBindingResult().getAllErrors().forEach(error -> stringBuilder.append(error.getDefaultMessage() + "\n"));
         }
         responseDto.setMessage(stringBuilder.toString());
         return responseDto;
