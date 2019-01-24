@@ -129,11 +129,11 @@ public class RealTimeUserActionRedisServiceImpl implements RealTimeUserActionSer
 
                 redisList.stream().forEach(value -> list.add(new UserActionData(value.substring(0, value.lastIndexOf("_")), Long.valueOf(handleEsMark(value.substring(value.lastIndexOf("_") + 1))))));
 
-                if (list.size() < 1000) {
+                if (list.size() < userActionParameterDto.getSize()) {
                     Long maxTime = list.stream().mapToLong(UserActionData::getTime).max().getAsLong();
                     // 最大数据时间戳少于 60 ms 为新数据，新数据少于 1000, 且未查询过 es
-                    if ((maxTime - current) < 60 && redisList.stream().filter(value -> value.endsWith(this.searchWordSplitString)).count() == 0) {
-                        this.logger.debug("redis 中的数据少于 1000 条且缓存时间少于 1 分钟，从 es 中查询历史数据");
+                    if (/*(maxTime - current) < 60 && */redisList.stream().filter(value -> value.endsWith(this.searchWordSplitString)).count() == 0) {
+                        this.logger.debug("redis 中的数据少于 {} 条，从 es 中查询历史数据", userActionParameterDto.getSize());
                         // set 去重
                         Set<String> history1000 = new HashSet<>();
                         List<String> skus = this.realTimeUserActionEsServiceImpl.getById(userActionParameterDto.getCookieId() + eventName, site);
@@ -157,8 +157,12 @@ public class RealTimeUserActionRedisServiceImpl implements RealTimeUserActionSer
                 }
             }
 
-
-            data.put(eventName, list);
+            Collections.sort(list);
+            if (list.size() > userActionParameterDto.getSize()) {
+                data.put(eventName, list.subList(0, userActionParameterDto.getSize()));
+            }else{
+                data.put(eventName, list);
+            }
 
 
         });

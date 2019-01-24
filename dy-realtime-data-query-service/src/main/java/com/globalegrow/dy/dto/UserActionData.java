@@ -1,10 +1,8 @@
 package com.globalegrow.dy.dto;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
-
 import java.util.Objects;
 
-public class UserActionData {
+public class UserActionData implements Comparable<UserActionData>{
 
     private String workType;
 
@@ -50,5 +48,10 @@ public class UserActionData {
     @Override
     public String toString() {
         return this.workType + "_" + this.time;
+    }
+
+    @Override
+    public int compareTo(UserActionData o) {
+        return o.getTime().compareTo(this.getTime());
     }
 }

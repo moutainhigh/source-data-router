@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.validation.BindException;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -127,7 +128,10 @@ public class UserActionController {
         if (e instanceof BindException) {
             ((BindException) e).getFieldErrors().forEach(fieldError -> stringBuilder.append(fieldError.getDefaultMessage()));
         }
-       responseDto.setMessage(stringBuilder.toString());
+        if (e instanceof org.springframework.web.bind.MethodArgumentNotValidException) {
+            ((MethodArgumentNotValidException) e).getBindingResult().getAllErrors().forEach(error -> stringBuilder.append(error.getDefaultMessage()));
+        }
+        responseDto.setMessage(stringBuilder.toString());
         return responseDto;
     }
 
