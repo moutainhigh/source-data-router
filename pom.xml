@@ -33,6 +33,7 @@
         <!--<module>lzo-data-file-analyse</module>-->
 		<!--<module>hdfs-remote-connector</module>-->
         <module>bts-common-report</module>
+        <module>dy-zaful-app-user-frature</module>
     </modules>
 
 	<parent>

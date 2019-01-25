@@ -19,8 +19,8 @@ public class TimeTest {
     public void testTimestamp14() throws ParseException {
 
 
-        String date1231 = "2019-01-21 16:00:00";// 22 上午8点
-        String date1232= "2019-01-22 15:59:59";// 23 号上午8点
+        String date1231 = "2019-01-24 07:00:00";// 22 上午8点
+        String date1232= "2019-01-24 07:59:59";// 23 号上午8点
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         //DateParser dateParser = new FastDateParser();
         //1546617452749-9082441235731332735

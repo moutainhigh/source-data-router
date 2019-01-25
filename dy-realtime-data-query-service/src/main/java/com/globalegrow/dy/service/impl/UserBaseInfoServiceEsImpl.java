@@ -82,6 +82,7 @@ public class UserBaseInfoServiceEsImpl implements UserBaseInfoService {
             //sortBuilder.order(SortOrder.DESC);
 
             searchSourceBuilder.query(queryBuilder);
+
             searchSourceBuilder.sort(sortBuilder);
             Search.Builder builder = new Search.Builder(searchSourceBuilder.toString());
 
