@@ -2,6 +2,11 @@ package com.globalegrow.dy.controller;
 
 import com.alibaba.csp.sentinel.annotation.SentinelResource;
 import com.alibaba.csp.sentinel.slots.block.BlockException;
+import com.alibaba.csp.sentinel.slots.block.RuleConstant;
+import com.alibaba.csp.sentinel.slots.block.degrade.DegradeRule;
+import com.alibaba.csp.sentinel.slots.block.degrade.DegradeRuleManager;
+import com.alibaba.csp.sentinel.slots.block.flow.FlowRule;
+import com.alibaba.csp.sentinel.slots.block.flow.FlowRuleManager;
 import com.globalegrow.dy.dto.*;
 import com.globalegrow.dy.service.RealTimeUserActionService;
 import com.globalegrow.dy.service.SearchWordSkusService;
@@ -16,9 +21,12 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @RequestMapping("user")
@@ -42,6 +50,31 @@ public class UserActionController {
 
     @Autowired
     private SearchWordSkusService searchWordSkusService;
+
+    @PostConstruct
+    public void init() {
+        // 用户实时序列数据流量控制
+        List<FlowRule> rules = new ArrayList<>();
+        FlowRule rule1 = new FlowRule();
+        rule1.setResource("user_realtime_1000_events");
+        // set limit qps to 20
+        rule1.setCount(5000);
+        rule1.setGrade(RuleConstant.FLOW_GRADE_QPS);
+        rule1.setLimitApp("default");
+        rules.add(rule1);
+        FlowRuleManager.loadRules(rules);
+
+        // 用户实时序列数据降级规则
+        List<DegradeRule> rulesD = new ArrayList<>();
+        DegradeRule rule = new DegradeRule();
+        rule.setResource("user_realtime_1000_events");
+        // set threshold RT, 50 ms
+        rule.setCount(50);
+        rule.setGrade(RuleConstant.DEGRADE_GRADE_RT);
+        rule.setTimeWindow(10);
+        rulesD.add(rule);
+        DegradeRuleManager.loadRules(rulesD);
+    }
 
     /**
      * 用户基本信息接口
