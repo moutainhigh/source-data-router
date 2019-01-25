@@ -49,10 +49,17 @@ public class UserActionController {
      * @param request
      * @return
      */
-    @SentinelResource(value = "user_base", blockHandler = "exceptionHandler")
+    @SentinelResource(value = "user_base", blockHandler = "userBaseInfoExceptionHandler")
     @RequestMapping(value = "base", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     public UserBaseInfoResponse getUsersBaseInfo(@Validated @RequestBody UserBaseInfoRequest request) {
         return this.userBaseInfoService.getUsersBaseInfo(request);
+    }
+
+    public UserBaseInfoResponse userBaseInfoExceptionHandler(UserBaseInfoRequest request) {
+        UserBaseInfoResponse response = new UserBaseInfoResponse();
+        response.setSuccess(false);
+        response.setMessage("阻塞异常");
+        return response;
     }
 
     /**
@@ -61,10 +68,17 @@ public class UserActionController {
      * @param request
      * @return
      */
-    @SentinelResource(value = "user_all_event", blockHandler = "exceptionHandler")
+    @SentinelResource(value = "user_all_event", blockHandler = "userAllEventBlockHandler")
     @RequestMapping(value = "all", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     public UserActionQueryAllResponse getAllUserActions(@Validated @RequestBody UserActionQueryAllRequest request) {
         return this.userActionQueryAllService.getAllUserActions(request);
+    }
+
+    public UserActionQueryAllResponse userAllEventBlockHandler(UserActionQueryAllRequest request) {
+        UserActionQueryAllResponse response = new UserActionQueryAllResponse();
+        response.setSuccess(false);
+        response.setMessage("服务阻塞");
+        return response;
     }
 
     /**
@@ -73,10 +87,17 @@ public class UserActionController {
      * @param request
      * @return
      */
-    @SentinelResource(value = "search_word_skus", blockHandler = "exceptionHandler")
+    @SentinelResource(value = "search_word_skus", blockHandler = "searchBlockHandler")
     @RequestMapping(value = "search/word/skus", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     public SearchWordSkusResponse searchWordSkus(@Validated @RequestBody SearchWordSkusRequest request) {
         return this.searchWordSkusService.getSkusByWord(request);
+    }
+
+    public SearchWordSkusResponse searchBlockHandler(SearchWordSkusRequest request) {
+        SearchWordSkusResponse response = new SearchWordSkusResponse();
+        response.setSuccess(false);
+        response.setMessage("服务阻塞");
+        return response;
     }
 
     /**
@@ -86,7 +107,7 @@ public class UserActionController {
      * @return
      * @throws IOException
      */
-    @SentinelResource(value = "user_realtime_1000_events", blockHandler = "exceptionHandler", fallback = "exceptionHandler")
+    @SentinelResource(value = "user_realtime_1000_events", blockHandler = "exceptionHandler", fallback = "fallBackExceptionHandler")
     @RequestMapping(value = "getUserInfo", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     public UserActionResponseDto userActionInfo(@Validated @RequestBody UserActionParameterDto parameterDto) throws IOException, ParseException {
         long start = System.currentTimeMillis();
@@ -147,9 +168,11 @@ public class UserActionController {
 
     public UserActionResponseDto exceptionHandler(UserActionParameterDto parameterDto, BlockException ex) {
         logger.warn("redis 查询出错，查询 es " + parameterDto.toString());
-//        UserActionResponseDto actionResponseDto = new UserActionResponseDto();
-//        actionResponseDto.setMessage("服务超时或繁忙");
-//        actionResponseDto.setSuccess(false);
+        return this.realTimeUserActionEsServiceImpl.getActionByUserDeviceId(parameterDto);
+    }
+
+    public UserActionResponseDto fallBackExceptionHandler(UserActionParameterDto parameterDto) {
+        logger.warn("功能降级，查询 es " + parameterDto.toString());
         return this.realTimeUserActionEsServiceImpl.getActionByUserDeviceId(parameterDto);
     }
 }

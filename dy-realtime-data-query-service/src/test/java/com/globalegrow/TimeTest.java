@@ -1,6 +1,8 @@
 package com.globalegrow;
 
 import org.apache.commons.lang3.time.DateFormatUtils;
+import org.apache.commons.lang3.time.DateParser;
+import org.apache.commons.lang3.time.FastDateParser;
 import org.junit.Test;
 
 import java.text.ParseException;
@@ -15,9 +17,15 @@ public class TimeTest {
 
     @Test
     public void testTimestamp14() throws ParseException {
-        String date1231 = "2018-12-01 00:00:00";
+
+
+        String date1231 = "2019-01-21 16:00:00";// 22 上午8点
+        String date1232= "2019-01-22 15:59:59";// 23 号上午8点
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        //DateParser dateParser = new FastDateParser();
+        //1546617452749-9082441235731332735
         System.out.println(simpleDateFormat.parse(date1231).getTime());
+        System.out.println(simpleDateFormat.parse(date1232).getTime());
     }
 
     @Test

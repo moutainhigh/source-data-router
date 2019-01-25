@@ -95,7 +95,7 @@ public class RealTimeUserActionRedisServiceImpl implements RealTimeUserActionSer
      */
     @Override
     public UserActionResponseDto getActionByUserDeviceId(UserActionParameterDto userActionParameterDto) {
-        Long current = System.currentTimeMillis();
+        //Long current = System.currentTimeMillis();
         UserActionResponseDto userActionResponseDto = new UserActionResponseDto();
         Map<String, Set<UserActionData>> data = new HashMap<>();
         List<String> inputType = userActionParameterDto.getType();
@@ -176,7 +176,7 @@ public class RealTimeUserActionRedisServiceImpl implements RealTimeUserActionSer
             //Collections.sort(list);
             if (list.size() > userActionParameterDto.getSize()) {
                 this.logger.debug("数据截取 {}", userActionParameterDto.getSize());
-                data.put(eventName, list.stream().limit(userActionParameterDto.getSize()).collect(Collectors.toSet()));
+                data.put(eventName, list.stream().limit(userActionParameterDto.getSize()).collect(Collectors.toCollection(() -> new TreeSet<>())));
             } else {
                 data.put(eventName, list);
             }
