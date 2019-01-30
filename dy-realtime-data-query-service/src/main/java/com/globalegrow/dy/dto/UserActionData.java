@@ -52,6 +52,9 @@ public class UserActionData implements Comparable<UserActionData>{
 
     @Override
     public int compareTo(UserActionData o) {
+        if (this.getTime().equals(o.getTime()) && !this.getWorkType().equals(o.getWorkType())) {
+            return this.getWorkType().compareTo(o.getWorkType());
+        }
         return o.getTime().compareTo(this.getTime());
     }
 }

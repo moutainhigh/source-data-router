@@ -135,7 +135,7 @@ public class RealTimeUserActionRedisServiceImpl implements RealTimeUserActionSer
                 List<String> redisList = rList.readAll().stream().collect(Collectors.toList());
 
                 redisList.stream().filter(value -> !emptyEvent.equals(value)).forEach(value -> list.add(new UserActionData(value.substring(0, value.lastIndexOf("_")), Long.valueOf(handleEsMark(value.substring(value.lastIndexOf("_") + 1))))));
-                //this.logger.debug("redis data {}", redisList);
+                this.logger.debug("redis data {}", redisList);
                 if (list.size() < userActionParameterDto.getSize()) {
                     //Long maxTime = list.stream().mapToLong(UserActionData::getTime).max().getAsLong();
                     // 未查询过 es 去查询 es

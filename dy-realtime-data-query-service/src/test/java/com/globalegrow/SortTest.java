@@ -44,7 +44,7 @@ public class SortTest {
         UserActionData u2 = new UserActionData("9", 1544058242000L);
         UserActionData u3 = new UserActionData("10", 1544382443000L);
         UserActionData u4 = new UserActionData("1", 1544056441000L);
-        UserActionData u5 = new UserActionData("3", 1544059277000L);
+        UserActionData u5 = new UserActionData("3", 1543791497000L);
 
         userActionData.add(u1);
         userActionData.add(u2);
