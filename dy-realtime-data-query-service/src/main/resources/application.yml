@@ -151,3 +151,5 @@ redis:
   password: 6e1KWyC29w
   expire-seconds: 86400
   key-prefix: dy_&&_app
+  fufill:
+    es: false

@@ -56,6 +56,9 @@ public class RealTimeUserActionRedisServiceImpl implements RealTimeUserActionSer
 
     private String emptyEvent = "empty";
 
+    @Value("${redis.fulfill.es:true}")
+    private Boolean fulfillDataFromEs = true;
+
 
     @PostConstruct
     public void before() {
@@ -112,7 +115,7 @@ public class RealTimeUserActionRedisServiceImpl implements RealTimeUserActionSer
             String id = this.redisKeyPrefix.replaceFirst("&&", site) + userActionParameterDto.getCookieId() + eventName;
             this.logger.debug("用户实时数据 redis key : {}", id);
             RList<String> rList = this.redisson.getList(id);
-            if (rList == null || rList.size() == 0) {
+            if (rList == null || rList.size() == 0 && this.fulfillDataFromEs) {
                 // 从 es 查询，并将数据添加 es mark
                 List<String> skus = this.realTimeUserActionEsServiceImpl.getById(userActionParameterDto.getCookieId() + eventName, site);
                 if (skus != null && skus.size() > 0) {
