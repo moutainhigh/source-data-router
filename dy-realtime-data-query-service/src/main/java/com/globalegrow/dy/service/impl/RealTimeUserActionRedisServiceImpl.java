@@ -143,7 +143,7 @@ public class RealTimeUserActionRedisServiceImpl implements RealTimeUserActionSer
                     //Long maxTime = list.stream().mapToLong(UserActionData::getTime).max().getAsLong();
                     // 未查询过 es 去查询 es
                     if (redisList.stream().filter(value -> value.endsWith(this.searchWordSplitString)).count() == 0
-                            && redisList.stream().filter(value -> emptyEvent.equals(value)).count() == 0) {
+                            && redisList.stream().filter(value -> emptyEvent.equals(value)).count() == 0 && this.fulfillDataFromEs) {
                         this.logger.debug("redis 中的数据少于 {} 条，从 es 中查询历史数据 {}", userActionParameterDto.getSize());
                         // set 去重
                         Set<String> history1000 = new HashSet<>();
