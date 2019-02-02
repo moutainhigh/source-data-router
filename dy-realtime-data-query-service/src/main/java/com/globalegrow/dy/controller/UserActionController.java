@@ -16,6 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.validation.BindException;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -50,6 +51,9 @@ public class UserActionController {
 
     @Autowired
     private SearchWordSkusService searchWordSkusService;
+
+    @Value("${query-realtime-data-from-es:false}")
+    private Boolean queryRealtimeDataFromEs = false;
 
     @PostConstruct
     public void init() {
@@ -144,7 +148,13 @@ public class UserActionController {
     @RequestMapping(value = "getUserInfo", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     public UserActionResponseDto userActionInfo(@Validated @RequestBody UserActionParameterDto parameterDto) throws IOException, ParseException {
         long start = System.currentTimeMillis();
-        UserActionResponseDto responseDto = this.realTimeUserActionServiceImpl.getActionByUserDeviceId(parameterDto);
+        UserActionResponseDto responseDto;
+        if (this.queryRealtimeDataFromEs) {
+            responseDto = this.realTimeUserActionEsServiceImpl.getActionByUserDeviceId(parameterDto);
+        }else {
+            responseDto = this.realTimeUserActionServiceImpl.getActionByUserDeviceId(parameterDto);
+        }
+
         /*initFlowRules();
         UserActionResponseDto responseDto = new UserActionResponseDto();
         Entry entry = null;

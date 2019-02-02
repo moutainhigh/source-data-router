@@ -139,6 +139,11 @@ public class RealTimeUserActionEsServiceImpl implements RealTimeUserActionServic
         return userActionResponseDto;
     }
 
+    /**
+     * 从 es 获取最近 1000 条事件数据
+     * @param userActionParameterDto
+     * @return
+     */
     @Override
     public UserActionResponseDto getActionByUserDeviceId(UserActionParameterDto userActionParameterDto) {
         UserActionResponseDto userActionResponseDto = new UserActionResponseDto();

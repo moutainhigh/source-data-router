@@ -153,3 +153,4 @@ redis:
   key-prefix: dy_&&_app
   fufill:
     es: false
+query-realtime-data-from-es: true

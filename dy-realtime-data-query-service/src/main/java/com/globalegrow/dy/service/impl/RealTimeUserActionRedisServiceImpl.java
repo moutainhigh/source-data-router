@@ -162,6 +162,13 @@ public class RealTimeUserActionRedisServiceImpl implements RealTimeUserActionSer
                             rList.addAllAsync(history1000.stream().map(value -> value + searchWordSplitString).collect(Collectors.toList()));
                             rList.expireAsync(this.redisExpireTime, TimeUnit.SECONDS);
 
+                        }else {
+                            // 添加 es mark
+                            rList.clear();
+                            // 添加 es mark
+                            rList.addAllAsync(redisList.stream().map(value -> value + searchWordSplitString).collect(Collectors.toList()));
+                            rList.expireAsync(this.redisExpireTime, TimeUnit.SECONDS);
+                           // rList.expireAsync(this.redisExpireTime, TimeUnit.SECONDS);
                         }
 
                         if(list.size() == 0){
