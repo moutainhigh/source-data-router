@@ -199,15 +199,13 @@ public class UserActionController {
         return responseDto;
     }
 
-    /*private static void initFlowRules(){
-        List<FlowRule> rules = new ArrayList<FlowRule>();
-        FlowRule rule = new FlowRule();
-        rule.setResource("getUserInfo");
-        rule.setGrade(RuleConstant.FLOW_GRADE_QPS);
-        rule.setCount(5000);
-        rules.add(rule);
-        FlowRuleManager.loadRules(rules);
-    }*/
+    public Boolean getQueryRealtimeDataFromEs() {
+        return queryRealtimeDataFromEs;
+    }
+
+    public void setQueryRealtimeDataFromEs(Boolean queryRealtimeDataFromEs) {
+        this.queryRealtimeDataFromEs = queryRealtimeDataFromEs;
+    }
 
     public UserActionResponseDto exceptionHandler(UserActionParameterDto parameterDto, BlockException ex) {
         logger.warn("redis 查询出错，查询 es " + parameterDto.toString());
