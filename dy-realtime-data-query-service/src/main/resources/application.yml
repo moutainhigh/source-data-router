@@ -4,7 +4,7 @@ spring:
     #active: @profiles.active@
     active: pressure-test
 logging:
-  config: classpath:logback.xml
+  #config: classpath:logback.xml
   path: logs
   file: logs/dy-realtime-data-query-service.log
   level:
