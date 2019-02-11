@@ -59,6 +59,9 @@ public class RealTimeUserActionRedisServiceImpl implements RealTimeUserActionSer
     @Value("${redis.fulfill.es:true}")
     private Boolean fulfillDataFromEs = true;
 
+    @Value("${query-realtime-data-from-es:false}")
+    private Boolean queryRealtimeDataFromEs = false;
+
 
     @PostConstruct
     public void before() {
