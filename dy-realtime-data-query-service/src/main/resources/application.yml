@@ -65,6 +65,8 @@ redis:
   master: sentinel-172.31.26.237-6379
   nodes: redis://172.31.26.152:6380,redis://172.31.26.237:6380,redis://172.31.26.162:6383
   password: 6e1KWyC29w
+  # MASTER_SLAVE
+  read-model: SLAVE
 ---
 spring:
   profiles: prod

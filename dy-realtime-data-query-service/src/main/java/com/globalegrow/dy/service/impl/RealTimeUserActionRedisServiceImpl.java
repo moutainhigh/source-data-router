@@ -11,6 +11,7 @@ import org.redisson.api.RedissonClient;
 import org.redisson.client.codec.StringCodec;
 import org.redisson.config.ClusterServersConfig;
 import org.redisson.config.Config;
+import org.redisson.config.ReadMode;
 import org.redisson.config.SentinelServersConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -71,6 +72,7 @@ public class RealTimeUserActionRedisServiceImpl implements RealTimeUserActionSer
             ClusterServersConfig clusterServersConfig = config.useClusterServers();
             clusterServersConfig.addNodeAddress(nodes.split(","));
             clusterServersConfig.setPassword(redisPassword);
+            clusterServersConfig.setReadMode(ReadMode.MASTER_SLAVE);
         } else if ("sentinel".equals(redisType)) {
             SentinelServersConfig sentinelServersConfig = config.useSentinelServers();
             sentinelServersConfig.setMasterName(master);
