@@ -66,7 +66,7 @@ redis:
   nodes: redis://172.31.26.152:6380,redis://172.31.26.237:6380,redis://172.31.26.162:6383
   password: 6e1KWyC29w
   # MASTER_SLAVE
-  read-model: SLAVE
+  read-model: MASTER_SLAVE
 ---
 spring:
   profiles: prod
@@ -110,7 +110,7 @@ redis:
   password: 6e1KWyC29w
   expire-seconds: 86400
   key-prefix: dy_&&_app
-  read-model: SLAVE
+  read-model: MASTER_SLAVE
 ---
 spring:
   profiles: pressure-test
@@ -154,7 +154,7 @@ redis:
   password: 6e1KWyC29w
   expire-seconds: 86400
   key-prefix: dy_&&_app
-  read-model: SLAVE
+  read-model: MASTER_SLAVE
   fufill:
     es: false
 query-realtime-data-from-es: false
