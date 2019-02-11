@@ -12,7 +12,7 @@
         <appender-ref ref="FILE" />
     </appender>
 
-    <logger name="com.globalegrow" level="debug" additivity="true">
+    <logger name="com.globalegrow" level="info" additivity="true">
         <appender-ref ref="CONSOLE" />
         <appender-ref ref="ASYNC_FILE" />
     </logger>
