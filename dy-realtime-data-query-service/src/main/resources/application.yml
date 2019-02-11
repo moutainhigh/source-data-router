@@ -110,6 +110,7 @@ redis:
   password: 6e1KWyC29w
   expire-seconds: 86400
   key-prefix: dy_&&_app
+  read-model: SLAVE
 ---
 spring:
   profiles: pressure-test
@@ -153,6 +154,7 @@ redis:
   password: 6e1KWyC29w
   expire-seconds: 86400
   key-prefix: dy_&&_app
+  read-model: SLAVE
   fufill:
     es: false
 query-realtime-data-from-es: false

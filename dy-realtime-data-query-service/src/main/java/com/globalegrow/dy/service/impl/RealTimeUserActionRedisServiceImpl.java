@@ -111,7 +111,7 @@ public class RealTimeUserActionRedisServiceImpl implements RealTimeUserActionSer
      */
     @Override
     public UserActionResponseDto getActionByUserDeviceId(UserActionParameterDto userActionParameterDto) {
-        //Long current = System.currentTimeMillis();
+        Long current = System.currentTimeMillis();
         UserActionResponseDto userActionResponseDto = new UserActionResponseDto();
         Map<String, Set<UserActionData>> data = new HashMap<>();
         List<String> inputType = userActionParameterDto.getType();
@@ -128,6 +128,7 @@ public class RealTimeUserActionRedisServiceImpl implements RealTimeUserActionSer
             String id = this.redisKeyPrefix.replaceFirst("&&", site) + userActionParameterDto.getCookieId() + eventName;
             this.logger.debug("用户实时数据 redis key : {}", id);
             RList<String> rList = this.redisson.getList(id);
+            this.logger.info("redis 查询耗时:{} ms", System.currentTimeMillis()-current);
             if (rList == null || rList.size() == 0 && this.fulfillDataFromEs) {
                 // 从 es 查询，并将数据添加 es mark
                 List<String> skus = this.realTimeUserActionEsServiceImpl.getById(userActionParameterDto.getCookieId() + eventName, site);
