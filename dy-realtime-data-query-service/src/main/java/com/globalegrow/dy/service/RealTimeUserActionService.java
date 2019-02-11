@@ -1,6 +1,5 @@
 package com.globalegrow.dy.service;
 
-import com.globalegrow.dy.dto.UserActionDto;
 import com.globalegrow.dy.dto.UserActionParameterDto;
 import com.globalegrow.dy.dto.UserActionResponseDto;
 
