@@ -63,6 +63,9 @@ public class RealTimeUserActionRedisServiceImpl implements RealTimeUserActionSer
     @Value("${query-realtime-data-from-es:false}")
     private Boolean queryRealtimeDataFromEs = false;
 
+    @Value("${redis.read-model:MASTER_SLAVE}")
+    private String readModel;
+
 
     @PostConstruct
     public void before() {
@@ -72,12 +75,17 @@ public class RealTimeUserActionRedisServiceImpl implements RealTimeUserActionSer
             ClusterServersConfig clusterServersConfig = config.useClusterServers();
             clusterServersConfig.addNodeAddress(nodes.split(","));
             clusterServersConfig.setPassword(redisPassword);
-            clusterServersConfig.setReadMode(ReadMode.MASTER_SLAVE);
+            if ("MASTER_SLAVE".equals(this.readModel)) {
+                clusterServersConfig.setReadMode(ReadMode.MASTER_SLAVE);
+            }
         } else if ("sentinel".equals(redisType)) {
             SentinelServersConfig sentinelServersConfig = config.useSentinelServers();
             sentinelServersConfig.setMasterName(master);
             sentinelServersConfig.addSentinelAddress(nodes.split(","));
             sentinelServersConfig.setPassword(redisPassword);
+            if ("MASTER_SLAVE".equals(this.readModel)) {
+                sentinelServersConfig.setReadMode(ReadMode.MASTER_SLAVE);
+            }
         }
 
         this.redisson = Redisson.create(config);
