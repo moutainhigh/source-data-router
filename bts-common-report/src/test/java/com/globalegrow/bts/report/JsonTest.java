@@ -18,6 +18,22 @@ public class JsonTest {
 
     public static final String BAD_JSON_PATTERN = "\"([\\d]+_?)\":";
 
+    String s = "https://s.logsss.com/_ubc.gif?glb_t=ie&glb_w=10836&glb_tm=1538027308072&glb_pm=md&glb_ubcta=[{%22mrlc%22:%22B_3%22,%22mdID%22:%22812%22}]&glb_plf=pc&glb_oi=m5gi5dd08kg8iqrtpekmggbo46&glb_d=10013&glb_b=a&glb_k=sz01&glb_dc=1301&glb_od=100131527644242901364134&glb_osr_referrer=originalurl&glb_osr_landing=https%3A%2F%2Fwww.zaful.com%2F&glb_cl=https%3A%2F%2Fwww.zaful.com%2F HTTP/1.1\"^A^200^A^372^A^\"https://www.rosegal.com/%7Bjjgj/shop/\"^A^\"Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.102 Safari/537.36\"^A^s.logsss.com^A^189.234.54.93, 10.247.163.71, 189.247.163.85, 10.223.52.104, 173.223.52.109^A^189.234.54.93^A^MX^A^Mexico^A^es-ES,es;q=0.9^A^1542831362";
+
+    @Test
+    public void testUbctaFilter() throws Exception {
+        Map<String, Object> map = NginxLogConvertUtil.getNginxLogParameters(s);
+        System.out.println(map);
+        String ubcta = (String) map.get("glb_ubcta");
+        List<Map> mapList = JacksonUtil.readValue(ubcta, List.class);
+        System.out.println(mapList);
+        map.put("glb_ubcta", mapList);
+        String json = JacksonUtil.toJSon(map);
+        ReadContext ctx  = JsonPath.parse(json);
+        System.out.println(ctx.read("$.glb_ubcta[0].mrlc", String.class));
+
+    }
+
     @Test
     public void testUUID() {
         System.out.println(UUID.randomUUID().toString());
