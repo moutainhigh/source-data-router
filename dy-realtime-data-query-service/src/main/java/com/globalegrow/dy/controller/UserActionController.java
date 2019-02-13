@@ -2,32 +2,42 @@ package com.globalegrow.dy.controller;
 
 import com.alibaba.csp.sentinel.annotation.SentinelResource;
 import com.alibaba.csp.sentinel.slots.block.BlockException;
+import com.alibaba.csp.sentinel.slots.block.RuleConstant;
+import com.alibaba.csp.sentinel.slots.block.degrade.DegradeRule;
+import com.alibaba.csp.sentinel.slots.block.degrade.DegradeRuleManager;
+import com.alibaba.csp.sentinel.slots.block.flow.FlowRule;
+import com.alibaba.csp.sentinel.slots.block.flow.FlowRuleManager;
 import com.globalegrow.dy.dto.*;
-import com.globalegrow.dy.service.RealTimeUserActionHbaseService;
 import com.globalegrow.dy.service.RealTimeUserActionService;
+import com.globalegrow.dy.service.SearchWordSkusService;
 import com.globalegrow.dy.service.UserActionQueryAllService;
 import com.globalegrow.dy.service.UserBaseInfoService;
-import com.netflix.hystrix.HystrixThreadPoolProperties;
-
-import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
-import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.validation.BindException;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @RequestMapping("user")
 public class UserActionController {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
+
+    @Autowired
+    @Qualifier("realTimeUserActionRedisServiceImpl")
+    private RealTimeUserActionService realTimeUserActionServiceImpl;
 
     @Autowired
     @Qualifier("realTimeUserActionEsServiceImpl")
@@ -39,38 +49,92 @@ public class UserActionController {
     @Autowired
     private UserActionQueryAllService userActionQueryAllService;
 
-/*    @Autowired
-    @Qualifier("realTimeUserActionHbaseServiceImpl")
-    private RealTimeUserActionHbaseService realTimeUserActionHbaseServiceImpl;*/
+    @Autowired
+    private SearchWordSkusService searchWordSkusService;
+
+    @Value("${query-realtime-data-from-es:false}")
+    private Boolean queryRealtimeDataFromEs = false;
 
     @PostConstruct
-    public void before() {
-        HystrixThreadPoolProperties.Setter().withCoreSize(40);
-    }
+    public void init() {
+        // 用户实时序列数据流量控制
+        List<FlowRule> rules = new ArrayList<>();
+        FlowRule rule1 = new FlowRule();
+        rule1.setResource("user_realtime_1000_events");
+        // set limit qps to 20
+        rule1.setCount(5000);
+        rule1.setGrade(RuleConstant.FLOW_GRADE_QPS);
+        rule1.setLimitApp("default");
+        rules.add(rule1);
+        FlowRuleManager.loadRules(rules);
 
-    /*  @RequestMapping(value = "getUserInfoFromHbase",produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
-      public UserActionResponseDto getUserInfoFromHbase(@Validated @RequestBody UserActionParameterDto parameterDto) throws IOException, ParseException {
-          return this.realTimeUserActionEsServiceImpl.userActionData(parameterDto);
-      }*/
+        // 用户实时序列数据降级规则
+        List<DegradeRule> rulesD = new ArrayList<>();
+        DegradeRule rule = new DegradeRule();
+        rule.setResource("user_realtime_1000_events");
+        // set threshold RT, 50 ms
+        rule.setCount(50);
+        rule.setGrade(RuleConstant.DEGRADE_GRADE_RT);
+        rule.setTimeWindow(10);
+        rulesD.add(rule);
+        DegradeRuleManager.loadRules(rulesD);
+    }
 
     /**
      * 用户基本信息接口
+     *
      * @param request
      * @return
      */
+    @SentinelResource(value = "user_base", blockHandler = "userBaseInfoExceptionHandler")
     @RequestMapping(value = "base", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     public UserBaseInfoResponse getUsersBaseInfo(@Validated @RequestBody UserBaseInfoRequest request) {
         return this.userBaseInfoService.getUsersBaseInfo(request);
     }
 
+    public UserBaseInfoResponse userBaseInfoExceptionHandler(UserBaseInfoRequest request) {
+        UserBaseInfoResponse response = new UserBaseInfoResponse();
+        response.setSuccess(false);
+        response.setMessage("阻塞异常");
+        return response;
+    }
+
     /**
      * 用户全部事件序列接口
+     *
      * @param request
      * @return
      */
+    @SentinelResource(value = "user_all_event", blockHandler = "userAllEventBlockHandler")
     @RequestMapping(value = "all", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     public UserActionQueryAllResponse getAllUserActions(@Validated @RequestBody UserActionQueryAllRequest request) {
         return this.userActionQueryAllService.getAllUserActions(request);
+    }
+
+    public UserActionQueryAllResponse userAllEventBlockHandler(UserActionQueryAllRequest request) {
+        UserActionQueryAllResponse response = new UserActionQueryAllResponse();
+        response.setSuccess(false);
+        response.setMessage("服务阻塞");
+        return response;
+    }
+
+    /**
+     * 搜索词与 sku 对应关系接口
+     *
+     * @param request
+     * @return
+     */
+    @SentinelResource(value = "search_word_skus", blockHandler = "searchBlockHandler")
+    @RequestMapping(value = "search/word/skus", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
+    public SearchWordSkusResponse searchWordSkus(@Validated @RequestBody SearchWordSkusRequest request) {
+        return this.searchWordSkusService.getSkusByWord(request);
+    }
+
+    public SearchWordSkusResponse searchBlockHandler(SearchWordSkusRequest request) {
+        SearchWordSkusResponse response = new SearchWordSkusResponse();
+        response.setSuccess(false);
+        response.setMessage("服务阻塞");
+        return response;
     }
 
     /**
@@ -80,18 +144,17 @@ public class UserActionController {
      * @return
      * @throws IOException
      */
-    @SentinelResource(value = "getUserInfo", blockHandler = "exceptionHandler")
+    @SentinelResource(value = "user_realtime_1000_events", blockHandler = "exceptionHandler", fallback = "fallBackExceptionHandler")
     @RequestMapping(value = "getUserInfo", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
-    /*@HystrixCommand(fallbackMethod = "fallbackMethod",commandProperties = {
-            @HystrixProperty(name = "execution.isolation.strategy",value = "SEMAPHORE"),
-            @HystrixProperty(name = "fallback.isolation.semaphore.maxConcurrentRequests",value = "5000"),
-            @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds",value = "4000")})*/
-//    @HystrixCommand(fallbackMethod = "fallbackMethod", commandProperties = {
-//            @HystrixProperty(name = "execution.isolation.strategy", value = "THREAD"),
-//            @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "3000")})
     public UserActionResponseDto userActionInfo(@Validated @RequestBody UserActionParameterDto parameterDto) throws IOException, ParseException {
-        //long start = System.currentTimeMillis();
-        UserActionResponseDto responseDto = this.realTimeUserActionEsServiceImpl.userActionData(parameterDto);
+        long start = System.currentTimeMillis();
+        UserActionResponseDto responseDto;
+        if (this.queryRealtimeDataFromEs) {
+            responseDto = this.realTimeUserActionEsServiceImpl.getActionByUserDeviceId(parameterDto);
+        }else {
+            responseDto = this.realTimeUserActionServiceImpl.getActionByUserDeviceId(parameterDto);
+        }
+
         /*initFlowRules();
         UserActionResponseDto responseDto = new UserActionResponseDto();
         Entry entry = null;
@@ -106,7 +169,7 @@ public class UserActionController {
                 entry.exit();
             }
         }*/
-        //this.logger.info("总时长: {}", System.currentTimeMillis() - start);
+        this.logger.info("总时长: {}", System.currentTimeMillis() - start);
         return responseDto;
     }
 
@@ -125,35 +188,32 @@ public class UserActionController {
         UserActionResponseDto responseDto = new UserActionResponseDto();
         //ReponseDTO<Object> reponseDTO = new ReponseDTO<>(ExceptionCode.FAIL.getCode(),ExceptionCode.FAIL.getMessage());
         responseDto.setSuccess(false);
-        responseDto.setMessage(e.getMessage());
+        StringBuilder stringBuilder = new StringBuilder();
+        if (e instanceof BindException) {
+            ((BindException) e).getFieldErrors().forEach(fieldError -> stringBuilder.append(fieldError.getDefaultMessage()));
+        }
+        if (e instanceof org.springframework.web.bind.MethodArgumentNotValidException) {
+            ((MethodArgumentNotValidException) e).getBindingResult().getAllErrors().forEach(error -> stringBuilder.append(error.getDefaultMessage() + "\n"));
+        }
+        responseDto.setMessage(stringBuilder.toString());
         return responseDto;
     }
 
-    @RequestMapping(value = "mockTest")
-    public UserActionResponseDto userActionInfoMock(@Validated @RequestBody UserActionParameterDto parameterDto) {
-        return this.realTimeUserActionEsServiceImpl.mock(parameterDto);
+    public Boolean getQueryRealtimeDataFromEs() {
+        return queryRealtimeDataFromEs;
     }
 
-    @RequestMapping("mock")
-    public String mock() {
-        return "success";
+    public void setQueryRealtimeDataFromEs(Boolean queryRealtimeDataFromEs) {
+        this.queryRealtimeDataFromEs = queryRealtimeDataFromEs;
     }
-
-    /*private static void initFlowRules(){
-        List<FlowRule> rules = new ArrayList<FlowRule>();
-        FlowRule rule = new FlowRule();
-        rule.setResource("getUserInfo");
-        rule.setGrade(RuleConstant.FLOW_GRADE_QPS);
-        rule.setCount(5000);
-        rules.add(rule);
-        FlowRuleManager.loadRules(rules);
-    }*/
 
     public UserActionResponseDto exceptionHandler(UserActionParameterDto parameterDto, BlockException ex) {
-        logger.warn("服务超时或繁忙" + parameterDto.toString());
-        UserActionResponseDto actionResponseDto = new UserActionResponseDto();
-        actionResponseDto.setMessage("服务超时或繁忙");
-        actionResponseDto.setSuccess(false);
-        return actionResponseDto;
+        logger.warn("redis 查询出错，查询 es " + parameterDto.toString());
+        return this.realTimeUserActionEsServiceImpl.getActionByUserDeviceId(parameterDto);
+    }
+
+    public UserActionResponseDto fallBackExceptionHandler(UserActionParameterDto parameterDto) {
+        logger.warn("功能降级，查询 es " + parameterDto.toString());
+        return this.realTimeUserActionEsServiceImpl.getActionByUserDeviceId(parameterDto);
     }
 }

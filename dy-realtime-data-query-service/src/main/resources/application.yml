@@ -1,11 +1,10 @@
 spring:
   profiles:
     #active: dev
-    active: @profiles.active@
-  application:
-    name: dy-realtime-data-query-service
+    #active: @profiles.active@
+    active: pressure-test
 logging:
-  #  config: classpath:logback-spring.xml
+  #config: classpath:logback.xml
   path: logs
   file: logs/dy-realtime-data-query-service.log
   level:
@@ -15,15 +14,17 @@ logging:
     org.apache.http: ERROR
   pattern:
     file: '[%d{yyyy-MM-dd HH:mm:ss.SSS}] [%thread] [%-5level] %logger{50} - %msg%n'
-server:
-  undertow:
-    io-threads: 128
-    worker-threads: 1024
-  compression:
-    enabled: false
+#server:
+#  undertow:
+#    io-threads: 128
+#    worker-threads: 1024
+#  compression:
+#    enabled: false
 ---
 spring:
   profiles: dev
+  application:
+    name: dy-realtime-data-query-service-dev
   hbase:
     zkServers: btststhdp-datanode01:2181,btststhdp-datanode02:2181,btststhdp-datanode03:2181
   elasticsearch:
@@ -31,9 +32,9 @@ spring:
       uris[0]: http://100.26.74.93:9202
       uris[1]: http://100.26.77.0:9202
       uris[2]: http://18.215.206.192:9202
-      uris[3]: http://50.16.25.252:9202
-      uris[4]: http://54.144.128.124:9202
-      uris[5]: http://18.204.149.153:9202
+      #uris[3]: http://50.16.25.252:9202
+      #uris[4]: http://54.144.128.124:9202
+      #uris[5]: http://18.204.149.153:9202
       read-timeout: 5000
       connection-timeout: 5000
       username: esearch-ai-aws
@@ -64,19 +65,20 @@ redis:
   master: sentinel-172.31.26.237-6379
   nodes: redis://172.31.26.152:6380,redis://172.31.26.237:6380,redis://172.31.26.162:6383
   password: 6e1KWyC29w
+  # MASTER_SLAVE
+  read-model: MASTER_SLAVE
 ---
 spring:
   profiles: prod
+  application:
+    name: dy-realtime-data-query-service-prod
   hbase:
     zkServers: 172.31.59.13:2181,172.31.57.199:2181,172.31.52.145:2181
   elasticsearch:
     jest:
-      uris[0]: http://172.31.32.62:9202
-      uris[1]: http://172.31.43.158:9202
-      uris[2]: http://172.31.47.84:9202
-      uris[3]: http://172.31.55.231:9202
-      uris[4]: http://172.31.62.107:9202
-      uris[5]: http://172.31.62.2:9202
+      uris[0]: http://172.31.43.158:9202
+      uris[1]: http://172.31.47.84:9202
+      uris[2]: http://172.31.55.231:9202
       read-timeout: 20000
       connection-timeout: 20000
       username: esearch-ai-aws
@@ -106,18 +108,31 @@ redis:
   type: cluster
   nodes: redis://172.31.47.78:6382,redis://172.31.47.222:6380,redis://172.31.47.222:6381,redis://172.31.44.253:6379,redis://172.31.44.253:6380,redis://172.31.47.78:6383
   password: 6e1KWyC29w
+  expire-seconds: 86400
+  key-prefix: dy_&&_app
+  read-model: MASTER_SLAVE
 ---
 spring:
-  profiles: kexing
+  profiles: pressure-test
+  application:
+    name: dy-realtime-data-query-service-prod-pressure-test
+  hbase:
+    zkServers: 172.31.59.13:2181,172.31.57.199:2181,172.31.52.145:2181
   elasticsearch:
     jest:
-      uris[0]: http://10.4.4.87:9202
-      uris[1]: http://10.4.4.88:9202
-      uris[2]: http://10.4.4.89:9202
+      uris[0]: http://172.31.43.158:9202
+      uris[1]: http://172.31.47.84:9202
+      uris[2]: http://172.31.55.231:9202
       read-timeout: 20000
       connection-timeout: 20000
-#      username: esearch-ai-aws
-#      password: a@ss&2@1aaAQ
+      username: esearch-ai-aws
+      password: a@ss&2@1aaAQ
+  cloud:
+    sentinel:
+      transport:
+        dashboard: 172.31.44.72:38194
+        #port: 38193
+      eager: true
 server:
   port: 38193
 
@@ -126,3 +141,20 @@ app:
     index-prefix: dy-zf-app-
     index-aliases: search-app-logs
     index-type: log
+  redis:
+    readtime:
+      prefix: dy_rt_p_
+  hbase:
+    table-name: dy-user-event
+    column-family: cf
+
+redis:
+  type: cluster
+  nodes: redis://172.31.57.199:6381,redis://172.31.57.199:6382,redis://172.31.52.145:6381,redis://172.31.52.145:6382,redis://172.31.52.145:6383,redis://172.31.52.145:6384,redis://172.31.47.22:6381
+  password: 6e1KWyC29w
+  expire-seconds: 86400
+  key-prefix: dy_&&_app
+  read-model: MASTER_SLAVE
+  fufill:
+    es: false
+query-realtime-data-from-es: false

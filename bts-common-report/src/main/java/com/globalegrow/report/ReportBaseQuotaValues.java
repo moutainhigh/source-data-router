@@ -116,7 +116,7 @@ public enum ReportBaseQuotaValues {
             }
             return null;
         }
-    },extractBtsMapValueFromLog {
+    }, extractBtsMapValueFromLog {
         @Override
         public Object getReportValueFromSourceLog(ReportQuotaFieldConfig reportQuotaFieldConfig, ReadContext ctx, String sourceJson) {
             Object value = filter(reportQuotaFieldConfig, ctx, sourceJson);
@@ -274,7 +274,7 @@ public enum ReportBaseQuotaValues {
                         return null;
                     }
 
-                }else if ("contains_or_equal".equals(jsonLogFilter.getFilterRule())) {
+                } else if ("contains_or_equal".equals(jsonLogFilter.getFilterRule())) {
 
                     String[] values = jsonLogFilter.getValueFilter().split("&&");
 
@@ -294,7 +294,7 @@ public enum ReportBaseQuotaValues {
                         return null;
                     }
 
-                }else if ("end_or_equal".equals(jsonLogFilter.getFilterRule())) {
+                } else if ("end_or_equal".equals(jsonLogFilter.getFilterRule())) {
 
                     String[] values = jsonLogFilter.getValueFilter().split("&&");
 
@@ -343,6 +343,13 @@ public enum ReportBaseQuotaValues {
                             if (strings.stream().filter(s -> s.equals(value)).count() <= 0) {
                                 return null;
                             }
+                        } else
+                            // 数组曝光条件过滤,一般用于推荐位过滤 $.glb_ubcta[0].mrlc
+                            if ("array_field_filter".equals(jsonLogFilter.getFilterRule())) {
+                                String mrlc = ctx.read(jsonLogFilter.getJsonPath(), String.class);
+                                if (StringUtils.isEmpty(mrlc) || !(jsonLogFilter.getValueFilter().equals(mrlc))) {
+                                    return null;
+                                }
                         }
 
 

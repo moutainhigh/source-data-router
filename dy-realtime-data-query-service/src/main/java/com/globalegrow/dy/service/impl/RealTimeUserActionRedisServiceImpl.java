@@ -1,18 +1,17 @@
-/*
 package com.globalegrow.dy.service.impl;
 
-import com.globalegrow.dy.dto.UserActionDto;
-import com.globalegrow.dy.dto.UserActionEsDto;
+import com.globalegrow.dy.dto.UserActionData;
 import com.globalegrow.dy.dto.UserActionParameterDto;
 import com.globalegrow.dy.dto.UserActionResponseDto;
 import com.globalegrow.dy.enums.AppEventEnums;
 import com.globalegrow.dy.service.RealTimeUserActionService;
-import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
-import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
 import org.redisson.Redisson;
+import org.redisson.api.RList;
 import org.redisson.api.RedissonClient;
+import org.redisson.client.codec.StringCodec;
 import org.redisson.config.ClusterServersConfig;
 import org.redisson.config.Config;
+import org.redisson.config.ReadMode;
 import org.redisson.config.SentinelServersConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,24 +19,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
-*/
-/**
- * 用户行为接口，redis 实现
- * 只根据用户 device id 查询用户当天的行为数据
- *//*
-
-//@Service
-@Deprecated
+@Service
 public class RealTimeUserActionRedisServiceImpl implements RealTimeUserActionService {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
@@ -46,10 +36,15 @@ public class RealTimeUserActionRedisServiceImpl implements RealTimeUserActionSer
     @Qualifier("realTimeUserActionEsServiceImpl")
     private RealTimeUserActionService realTimeUserActionEsServiceImpl;
 
-    @Value("${app.redis.readtime.prefix:dy_real_time_}")
+    @Value("${redis.key-prefix:dy_&&_app}")
     private String redisKeyPrefix;
 
+    @Value("${redis.expire-seconds:86400}")
+    private Long redisExpireTime;
+
     private RedissonClient redisson;
+
+    private static final String searchWordSplitString = "\\u0001ES";
 
     @Value("${redis.type}")
     private String redisType;
@@ -60,104 +55,179 @@ public class RealTimeUserActionRedisServiceImpl implements RealTimeUserActionSer
     @Value("${redis.password}")
     private String redisPassword;
 
+    private String emptyEvent = "empty";
+
+    @Value("${redis.fulfill.es:true}")
+    private Boolean fulfillDataFromEs = true;
+
+    @Value("${query-realtime-data-from-es:false}")
+    private Boolean queryRealtimeDataFromEs = false;
+
+    @Value("${redis.read-model:MASTER_SLAVE}")
+    private String readModel;
+
+
     @PostConstruct
     public void before() {
         Config config = new Config();
+        config.setCodec(new StringCodec());
         if ("cluster".equals(redisType)) {
             ClusterServersConfig clusterServersConfig = config.useClusterServers();
             clusterServersConfig.addNodeAddress(nodes.split(","));
             clusterServersConfig.setPassword(redisPassword);
+            if ("MASTER_SLAVE".equals(this.readModel)) {
+                clusterServersConfig.setReadMode(ReadMode.MASTER_SLAVE);
+            }
         } else if ("sentinel".equals(redisType)) {
             SentinelServersConfig sentinelServersConfig = config.useSentinelServers();
             sentinelServersConfig.setMasterName(master);
             sentinelServersConfig.addSentinelAddress(nodes.split(","));
             sentinelServersConfig.setPassword(redisPassword);
+            if ("MASTER_SLAVE".equals(this.readModel)) {
+                sentinelServersConfig.setReadMode(ReadMode.MASTER_SLAVE);
+            }
         }
 
-        redisson = Redisson.create(config);
+        this.redisson = Redisson.create(config);
     }
 
 
-    */
-/**
+    /**
      * 查询用户行为数据
      *
      * @param userActionParameterDto
      * @return
-     *//*
-
+     */
     @Override
-    @HystrixCommand(fallbackMethod = "queryFromEs",commandProperties = { @HystrixProperty(name = "fallback.isolation.semaphore.maxConcurrentRequests",value = "1000"),
-            @HystrixProperty(name = "hystrix.command.default.execution.isolation.semaphore.maxConcurrentRequests",value = "1000")})
-    public UserActionResponseDto userActionData(UserActionParameterDto userActionParameterDto) throws IOException {
-        long start = System.currentTimeMillis();
+    public UserActionResponseDto userActionData(UserActionParameterDto userActionParameterDto) throws IOException, ParseException {
+        return null;
+    }
+
+    /**
+     * 从 redis 中查询,redis 中没有则从 es 查询
+     *
+     * @param userActionParameterDto
+     * @return
+     */
+    @Override
+    public UserActionResponseDto getActionByUserDeviceId(UserActionParameterDto userActionParameterDto) {
+        //Long current = System.currentTimeMillis();
         UserActionResponseDto userActionResponseDto = new UserActionResponseDto();
-        this.logger.debug("user_action_parameter: {}", userActionParameterDto);
-       */
-/* if (StringUtils.isNotEmpty(userActionParameterDto.getCookieId())) {
-            List<UserActionDto> list = new ArrayList<>();
-            String key = redisKeyPrefix + userActionParameterDto.getCookieId() + "_" + DateFormatUtils.format(System.currentTimeMillis(), "yyyy-MM-dd");
-            RSet<String> stringSet = redisson.getSet(key, StringCodec.INSTANCE);
-            this.logger.debug("从 redis 查询到数据 key: {}, data: {}", key, stringSet);
-            this.logger.info("cost_redis query from redis cost: {}", System.currentTimeMillis() - start);
-            long handleStart = System.currentTimeMillis();
-            stringSet.stream().map(s -> {
-                try {
-                    if (s.startsWith("\"")) {
-                        s = s.replaceFirst("\"", "");
-                    }
-                    if (s.endsWith("\"")) {
-                        s = s.substring(0, s.lastIndexOf("\""));
-                    }
-                    return JacksonUtil.readValue(s.replaceAll("\\\\", ""), UserActionEsDto.class);
-                } catch (Exception e) {
-                    logger.error("json 转换 error", e);
-                    return null;
+        Map<String, Set<UserActionData>> data = new HashMap<>();
+        List<String> inputType = userActionParameterDto.getType();
+        if (inputType == null) {
+            inputType = new ArrayList<>();
+        }
+        if (inputType.size() < 1) {
+            inputType.addAll(Arrays.stream(AppEventEnums.values()).map(AppEventEnums::name).collect(Collectors.toList()));
+        }
+        String site = userActionParameterDto.getSite().toLowerCase();
+        inputType.parallelStream().forEach(eventName -> {
+
+            Set<UserActionData> list = new TreeSet<>();
+            String id = this.redisKeyPrefix.replaceFirst("&&", site) + userActionParameterDto.getCookieId() + eventName;
+            this.logger.debug("用户实时数据 redis key : {}", id);
+            RList<String> rList = this.redisson.getList(id);
+            //this.logger.info("redis 查询耗时:{} ms", System.currentTimeMillis()-current);
+            if (rList == null || rList.size() == 0 && this.fulfillDataFromEs) {
+                // 从 es 查询，并将数据添加 es mark
+                List<String> skus = this.realTimeUserActionEsServiceImpl.getById(userActionParameterDto.getCookieId() + eventName, site);
+                if (skus != null && skus.size() > 0) {
+                    skus.stream().forEach(value -> list.add(new UserActionData(value.substring(0, value.lastIndexOf("_")), Long.valueOf(value.substring(value.lastIndexOf("_") + 1)))));
+
+                    // 放入 redis 并添加 es 查询标签
+                    rList.addAllAsync(skus.stream().map(value -> value + searchWordSplitString).collect(Collectors.toList()));
+                    // 设置过期时间
+                    rList.expireAsync(this.redisExpireTime, TimeUnit.SECONDS);
+                } else {
+
+                    // 添加一条空
+                    rList.addAsync(this.emptyEvent);
+                    rList.expireAsync(this.redisExpireTime, TimeUnit.SECONDS);
+
                 }
-            }).filter(d -> d != null).collect(Collectors.toList()).stream().collect(Collectors.groupingBy(UserActionEsDto::getDevice_id))
-                    .entrySet().stream().forEach(a -> {
-                handleUserActionData(list, a, logger);
-            });
-            this.logger.info("cost_handle string convert cost: {}", System.currentTimeMillis() - handleStart);
-            userActionResponseDto.setData(list);
-        }*//*
+
+            } else {
+
+                List<String> redisList = rList.readAll().stream().collect(Collectors.toList());
+
+                redisList.stream().filter(value -> !emptyEvent.equals(value)).forEach(value -> list.add(new UserActionData(value.substring(0, value.lastIndexOf("_")), Long.valueOf(handleEsMark(value.substring(value.lastIndexOf("_") + 1))))));
+                this.logger.debug("redis data {}", redisList);
+                if (list.size() < userActionParameterDto.getSize()) {
+                    //Long maxTime = list.stream().mapToLong(UserActionData::getTime).max().getAsLong();
+                    // 未查询过 es 去查询 es
+                    if (redisList.stream().filter(value -> value.endsWith(this.searchWordSplitString)).count() == 0
+                            && redisList.stream().filter(value -> emptyEvent.equals(value)).count() == 0 && this.fulfillDataFromEs) {
+                        this.logger.debug("redis 中的数据少于 {} 条，从 es 中查询历史数据 {}", userActionParameterDto.getSize());
+                        // set 去重
+                        Set<String> history1000 = new HashSet<>();
+                        List<String> skus = this.realTimeUserActionEsServiceImpl.getById(userActionParameterDto.getCookieId() + eventName, site);
+                        if (skus != null && skus.size() > 0) {
+
+                            history1000.addAll(skus);
+                            history1000.addAll(redisList);
+
+                            list.clear();
+
+                            history1000.stream().forEach(value -> list.add(new UserActionData(value.substring(0, value.lastIndexOf("_")), Long.valueOf(value.substring(value.lastIndexOf("_") + 1)))));
+
+                            rList.clear();
+                            // 添加 es mark
+                            rList.addAllAsync(history1000.stream().map(value -> value + searchWordSplitString).collect(Collectors.toList()));
+                            rList.expireAsync(this.redisExpireTime, TimeUnit.SECONDS);
+
+                        }else {
+                            // 添加 es mark
+                            rList.clear();
+                            // 添加 es mark
+                            rList.addAllAsync(redisList.stream().map(value -> value + searchWordSplitString).collect(Collectors.toList()));
+                            rList.expireAsync(this.redisExpireTime, TimeUnit.SECONDS);
+                           // rList.expireAsync(this.redisExpireTime, TimeUnit.SECONDS);
+                        }
+
+                        if(list.size() == 0){
+
+                            // 添加一条空
+                            rList.addAsync(this.emptyEvent);
+                            rList.expireAsync(this.redisExpireTime, TimeUnit.SECONDS);
+
+                        }
+
+                    }
+                }
+            }
+
+            //Collections.sort(list);
+            if (list.size() > userActionParameterDto.getSize()) {
+                this.logger.debug("数据截取 {}", userActionParameterDto.getSize());
+                data.put(eventName, list.stream().limit(userActionParameterDto.getSize()).collect(Collectors.toCollection(() -> new TreeSet<>())));
+            } else {
+                data.put(eventName, list);
+            }
 
 
+        });
+        userActionResponseDto.setData(data);
         return userActionResponseDto;
     }
 
+    /**
+     * 处理从 es 查询出来的标记数据
+     *
+     * @param esMarked
+     * @return
+     */
+    static String handleEsMark(String esMarked) {
+        return esMarked.replaceAll("\\\\u0001ES", "");
+    }
+
     @Override
-    @HystrixCommand(fallbackMethod = "queryFromEs",commandProperties = { @HystrixProperty(name = "fallback.isolation.semaphore.maxConcurrentRequests",value = "1000"),
-            @HystrixProperty(name = "hystrix.command.default.execution.isolation.semaphore.maxConcurrentRequests",value = "1000")})
     public UserActionResponseDto mock(UserActionParameterDto userActionParameterDto) {
-
-        RestTemplate template = new RestTemplate();
-        template.getForObject("http://localhost:38093/user/mock", String.class);
-
-        return new UserActionResponseDto();
+        return null;
     }
 
-    public UserActionResponseDto queryFromEs(UserActionParameterDto userActionParameterDto) throws IOException, ParseException {
-        this.logger.info("redis 服务熔断，查询发送到 es");
-        return this.realTimeUserActionEsServiceImpl.userActionData(userActionParameterDto);
-    }
-
-    static void handleUserActionData(List<UserActionDto> list, Map.Entry<String, List<UserActionEsDto>> a, Logger logger) {
-        UserActionDto userActionDto = new UserActionDto();
-        userActionDto.setCookieId(a.getKey());
-        List<UserActionEsDto> data = a.getValue();
-        if (data != null && data.size() > 0) {
-            userActionDto.setUserId(data.get(0).getUser_id());
-            data.stream().collect(Collectors.groupingBy(UserActionEsDto::getEvent_name))
-                    .entrySet().stream().forEach(e -> {
-                try {
-                    AppEventEnums.valueOf(e.getKey()).handleEventResult(userActionDto, e.getValue());
-                } catch (IllegalArgumentException e1) {
-                    logger.error("event not supported {}", e.getKey(), e);
-                }
-            });
-        }
-        list.add(userActionDto);
+    @Override
+    public List<String> getById(String id, String site) {
+        return null;
     }
 }
-*/

@@ -1,6 +1,5 @@
 package com.globalegrow.dy.service;
 
-import com.globalegrow.dy.dto.UserActionDto;
 import com.globalegrow.dy.dto.UserActionParameterDto;
 import com.globalegrow.dy.dto.UserActionResponseDto;
 
@@ -20,5 +19,7 @@ public interface RealTimeUserActionService {
     UserActionResponseDto getActionByUserDeviceId(UserActionParameterDto userActionParameterDto);
 
     UserActionResponseDto mock(UserActionParameterDto userActionParameterDto);
+
+    List<String> getById(String id, String site);
 
 }

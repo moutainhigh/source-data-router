@@ -1,13 +1,11 @@
 package com.globalegrow.bts.report;
 
-import com.globalegrow.bts.model.BtsGbRecommendReport;
 import com.globalegrow.report.JsonLogFilter;
 import com.globalegrow.report.ReportBuildRule;
 import com.globalegrow.report.ReportKafkaConfig;
 import com.globalegrow.report.ReportQuotaFieldConfig;
 import com.globalegrow.util.DyBeanUtils;
 import com.globalegrow.util.JacksonUtil;
-import kafka.utils.Json;
 import org.junit.Test;
 
 import java.util.ArrayList;

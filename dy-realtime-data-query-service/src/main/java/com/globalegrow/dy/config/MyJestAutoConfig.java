@@ -21,10 +21,10 @@ import org.springframework.util.StringUtils;
 
 import java.util.List;
 
-@Configuration
-@ConditionalOnClass(JestClient.class)
-@EnableConfigurationProperties(JestProperties.class)
-@AutoConfigureAfter(GsonAutoConfiguration.class)
+//@Configuration
+//@ConditionalOnClass(JestClient.class)
+//@EnableConfigurationProperties(JestProperties.class)
+//@AutoConfigureAfter(GsonAutoConfiguration.class)
 public class MyJestAutoConfig {
 
     private final JestProperties properties;

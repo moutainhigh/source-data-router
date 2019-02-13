@@ -15,6 +15,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.index.query.RangeQueryBuilder;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.elasticsearch.search.sort.FieldSortBuilder;
 import org.elasticsearch.search.sort.SortBuilder;
@@ -33,7 +34,7 @@ public class UserBaseInfoServiceEsImpl implements UserBaseInfoService {
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
-    @Qualifier("myJestClient")
+    //@Qualifier("myJestClient")
     private JestClient jestClient;
 
     String appIndexPrefix = "dy_app_&&_user_base";
@@ -70,10 +71,18 @@ public class UserBaseInfoServiceEsImpl implements UserBaseInfoService {
                 queryBuilder.filter(device_id);
             }
 
+            // 按时间过滤
+            if (request.getStartDate() != null) {
+                QueryBuilder timeFilter = QueryBuilders.rangeQuery("timestamp");
+                ((RangeQueryBuilder) timeFilter).gte(request.getStartDate());
+                queryBuilder.filter(timeFilter);
+            }
+
             SortBuilder sortBuilder = new FieldSortBuilder("_doc");
             //sortBuilder.order(SortOrder.DESC);
 
             searchSourceBuilder.query(queryBuilder);
+
             searchSourceBuilder.sort(sortBuilder);
             Search.Builder builder = new Search.Builder(searchSourceBuilder.toString());
 

@@ -26,10 +26,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -38,7 +35,7 @@ public class UserActionQueryAllServiceEsImpl implements UserActionQueryAllServic
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
-    @Qualifier("myJestClient")
+    //@Qualifier("myJestClient")
     private JestClient jestClient;
 
     @Autowired
@@ -62,7 +59,7 @@ public class UserActionQueryAllServiceEsImpl implements UserActionQueryAllServic
 
         if (startDate < (currentTime - this.oneDay * this.maxEarliestDays)) {
             this.logger.info("输入时间超过{}天，设置为 {} 天", this.maxEarliestDays, this.defaultEarliestDsys);
-            startDate = currentTime = this.oneDay * this.defaultEarliestDsys;
+            startDate = this.oneDay * this.defaultEarliestDsys;
         }
 
         UserActionQueryAllResponse allResponse = new UserActionQueryAllResponse();
@@ -78,17 +75,18 @@ public class UserActionQueryAllServiceEsImpl implements UserActionQueryAllServic
         if (userBaseInfos != null && userBaseInfos.size() > 0) {
             allResponse.setRequestId(userBaseInfoResponse.getRequestId());
 
-            Map<String, Map<String, List<UserActionData>>> userActions = new HashMap<>();
+            Map<String, Map<String, Set<UserActionData>>> userActions = new HashMap<>();
 
             for (UserBaseInfo userBaseInfo : userBaseInfos) {
 
-                Map<String, List<UserActionData>> actions = new HashMap<>();
+                Map<String, Set<UserActionData>> actions = new HashMap<>();
 
                 userActions.put(userBaseInfo.getDevice_id(), actions);
 
                 for (String eventName : request.getType()) {
+                    List<UserActionData> userActionData = this.getAllUserActionsByDeviceId(userBaseInfo.getDevice_id(), eventName, request.getSite().toLowerCase(), startDate);
 
-                    actions.put(eventName, this.getAllUserActionsByDeviceId(userBaseInfo.getDevice_id(), eventName, request.getSite().toLowerCase(), startDate));
+                    actions.put(eventName, new TreeSet<>(userActionData));
 
                 }
 

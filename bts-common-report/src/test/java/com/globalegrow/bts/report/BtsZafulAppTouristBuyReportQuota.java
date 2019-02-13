@@ -1,7 +1,5 @@
 package com.globalegrow.bts.report;
 
-import com.globalegrow.bts.model.BtsReport;
-
 /**
  * @ClassName BtsZafulAppTouristBuyReportQuota
  * @Description zafulAPP游客购买报表指标

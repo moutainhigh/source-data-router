@@ -1,0 +1,90 @@
+spring:
+  profiles:
+    #active: dev
+    active: @profiles.active@
+logging:
+  #  config: classpath:logback-spring.xml
+  path: logs
+  file: logs/dy-realtime-data-query-service.log
+  level:
+    root: info
+    org.springframework: ERROR
+    sun.rmi: ERROR
+    org.apache.http: ERROR
+  pattern:
+    file: '[%d{yyyy-MM-dd HH:mm:ss.SSS}] [%thread] [%-5level] %logger{50} - %msg%n'
+server:
+  undertow:
+    io-threads: 128
+    worker-threads: 1024
+  compression:
+    enabled: false
+---
+spring:
+  profiles: dev
+  application:
+    name: dy-zaful-app-user-feature-dev
+  elasticsearch:
+    jest:
+      uris[0]: http://100.26.74.93:9202
+      uris[1]: http://100.26.77.0:9202
+      uris[2]: http://18.215.206.192:9202
+      #uris[3]: http://50.16.25.252:9202
+      #uris[4]: http://54.144.128.124:9202
+      #uris[5]: http://18.204.149.153:9202
+      read-timeout: 5000
+      connection-timeout: 5000
+      username: esearch-ai-aws
+      password: a@ss&2@1aaAQ
+  cloud:
+    sentinel:
+      transport:
+        dashboard: localhost:38194
+      eager: true
+
+server:
+  port: 38193
+---
+spring:
+  profiles: test
+  application:
+    name: dy-zaful-app-user-feature-test
+  elasticsearch:
+    jest:
+      uris[0]: http://172.31.43.158:9202
+      uris[1]: http://172.31.47.84:9202
+      uris[2]: http://172.31.55.231:9202
+      read-timeout: 20000
+      connection-timeout: 20000
+      username: esearch-ai-aws
+      password: a@ss&2@1aaAQ
+  cloud:
+    sentinel:
+      transport:
+        dashboard: 172.31.44.72:38194
+        #port: 38193
+      eager: true
+server:
+  port: 38193
+---
+spring:
+  profiles: prod
+  application:
+    name: dy-zaful-app-user-feature-prod
+  elasticsearch:
+    jest:
+      uris[0]: http://172.31.43.158:9202
+      uris[1]: http://172.31.47.84:9202
+      uris[2]: http://172.31.55.231:9202
+      read-timeout: 20000
+      connection-timeout: 20000
+      username: esearch-ai-aws
+      password: a@ss&2@1aaAQ
+  cloud:
+    sentinel:
+      transport:
+        dashboard: 172.31.44.72:38194
+        #port: 38193
+      eager: true
+server:
+  port: 38193

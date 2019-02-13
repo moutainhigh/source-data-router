@@ -30,7 +30,7 @@ public class UserActionQueryAllRequest extends EsPageRequest {
      * 事件类型
      */
     private List<String> type = new ArrayList<>();
-    @Max(100)
+    @Max(1000)
     @Min(0)
     @NotNull
     private Integer size = 100;

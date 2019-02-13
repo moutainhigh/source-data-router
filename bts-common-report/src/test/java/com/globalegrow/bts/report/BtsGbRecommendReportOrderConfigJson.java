@@ -1,6 +1,5 @@
 package com.globalegrow.bts.report;
 
-import com.globalegrow.bts.model.BtsGbRecommendReport;
 import com.globalegrow.report.JsonLogFilter;
 import com.globalegrow.report.ReportBuildRule;
 import com.globalegrow.report.ReportKafkaConfig;

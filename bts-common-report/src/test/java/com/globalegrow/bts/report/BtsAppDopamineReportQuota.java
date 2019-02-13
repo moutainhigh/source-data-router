@@ -1,11 +1,9 @@
 package com.globalegrow.bts.report;
 
-import com.globalegrow.bts.model.BtsReport;
-
 /**
  * 多巴胺推荐报表指标字段
  */
-public class BtsAppDopamineReportQuota extends BtsReport {
+public class BtsAppDopamineReportQuota extends CommonReport {
 
     private int exposure_count = 0;
 

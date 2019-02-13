@@ -2,6 +2,7 @@ package com.globalegrow.dy.dto;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class UserActionResponseDto {
 
@@ -13,7 +14,7 @@ public class UserActionResponseDto {
      */
     private Integer size = 10;
 
-    private Map<String, List<UserActionData>> data;
+    private Map<String, Set<UserActionData>> data;
 
 
     public Integer getSize() {
@@ -53,11 +54,11 @@ public class UserActionResponseDto {
         this.message = message;
     }
 
-    public Map<String, List<UserActionData>> getData() {
+    public Map<String, Set<UserActionData>> getData() {
         return data;
     }
 
-    public void setData(Map<String, List<UserActionData>> data) {
+    public void setData(Map<String, Set<UserActionData>> data) {
         this.data = data;
     }
 

@@ -1,6 +1,8 @@
 spring:
   profiles:
     active: @profiles.active@
+  application:
+     name: http-kylin-decorate
 logging:
 #  config: classpath:logback-spring.xml
   path: logs
@@ -35,7 +37,7 @@ spring:
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
     driver-class-name: com.mysql.jdbc.Driver
-    url: jdbc:mysql://10.33.4.95/test?useSSL=false&useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true
+    url: jdbc:mysql://10.33.4.240/test?useSSL=false&useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true
     username: root
     password: root
     druid:
@@ -52,27 +54,37 @@ spring:
       test-while-idle: true
       time-between-eviction-runs-millis: 20000
       min-evictable-idle-time-millis: 30000
+
+  cloud:
+    sentinel:
+      transport:
+        port: 8719
+        dashboard: 172.31.44.72:38194
+      eager: true
+#172.31.44.72:38194
+#52.200.84.145:38194
   redis:
     timeout: 86400
     password: 6e1KWyC29w
-    #sentinel:
-      #master: sentinel-172.31.42.160-6383
-      #nodes: 172.31.34.55:6384,172.31.42.160:6384,172.31.54.133:6383
     sentinel:
-      master: sentinel-192.168.0.31-6420
-      nodes: 192.168.0.45:26406,192.168.0.31:6421,192.168.0.32:6422
+      master: sentinel-172.31.42.160-6383
+      nodes: 172.31.34.55:6384,172.31.42.160:6384,172.31.54.133:6383
+    #sentinel:
+      #master: sentinel-192.168.0.31-6420
+      #nodes: 192.168.0.45:26406,192.168.0.31:6421,192.168.0.32:6422
   elasticsearch:
     jest:
       uris: http://18.213.71.71:9200,http://18.213.41.233:9200,http://52.204.111.230:9200
       read-timeout: 20000
       connection-timeout: 20000
+#http://172.31.47.84:9202,http://172.31.43.158:9202,http://172.31.55.231:9202
 
 mybatis:
   mapperLocations: classpath*:com/globalegrow/dy/mapper/*.xml
   type-aliases-package: com.globalegrow.dy.model
 
 server:
-  port: 38093
+  port: 38091
 
 app:
   es:
@@ -125,6 +137,12 @@ spring:
       nodes[4]: 172.31.44.253:6380
       nodes[5]: 172.31.47.78:6383
 
+  cloud:
+    sentinel:
+      transport:
+        port: 8719
+        dashboard: 172.31.44.72:38194
+      eager: true
 #  elasticsearch:
 #    jest:
 #      uris: http://172.31.51.179:9200,http://172.31.51.59:9200,http://172.31.51.250:9200
@@ -178,6 +196,13 @@ spring:
       test-while-idle: true
       time-between-eviction-runs-millis: 20000
       min-evictable-idle-time-millis: 30000
+
+  cloud:
+    sentinel:
+      transport:
+        port: 8719
+        dashboard: 172.31.44.72:38194
+      eager: true
 #172.31.47.78:6382|172.31.47.222:6380|172.31.47.222:6381|172.31.44.253:6379|172.31.44.253:6380|172.31.47.78:6383
 #6e1KWyC29w
   redis:
