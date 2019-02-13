@@ -1,11 +1,9 @@
 package com.globalegrow.bts.report;
 
-import com.globalegrow.bts.model.BtsReport;
-
 /**
  * 购物车推荐报表指标字段
  */
-public class BtsAppRecommendReportQuota extends BtsReport {
+public class BtsAppRecommendReportQuota extends CommonReport {
     private int view_recommend_pv=0;//坑位曝光
     private int exposure_count = 0;//商品(SKU)曝光
 
