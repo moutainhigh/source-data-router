@@ -10,7 +10,7 @@ import com.globalegrow.bts.model.GoodsAddCartInfo;
 import com.globalegrow.dy.report.enums.RecommendQuotaFields;
 import com.globalegrow.dy.report.enums.RecommendReportFields;
 import com.globalegrow.dy.report.enums.ValueType;
-import com.globalegrow.enums.CartRedisKeysPrefix;
+import com.globalegrow.bts.enums.CartRedisKeysPrefix;
 import com.globalegrow.util.*;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.kafka.clients.consumer.ConsumerRecord;

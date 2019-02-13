@@ -1,4 +1,4 @@
-package com.globalegrow.enums;
+package com.globalegrow.bts.enums;
 
 import org.apache.commons.text.StringSubstitutor;
 
