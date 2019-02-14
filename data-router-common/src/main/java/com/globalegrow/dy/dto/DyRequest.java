@@ -3,7 +3,7 @@ package com.globalegrow.dy.dto;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
 
-public abstract class DyRequest {
+public abstract class DyRequest extends CommonToStringModel{
 
     /**
      * 调用方

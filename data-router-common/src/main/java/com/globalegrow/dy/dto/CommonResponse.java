@@ -1,6 +1,6 @@
 package com.globalegrow.dy.dto;
 
-public abstract class CommonResponse {
+public abstract class CommonResponse extends CommonToStringModel{
 
     private boolean success = true;
 
