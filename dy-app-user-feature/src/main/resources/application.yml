@@ -21,7 +21,7 @@ spring:
 logging:
   #  config: classpath:logback-spring.xml
   path: logs
-  file: logs/dy-realtime-data-query-service.log
+  file: logs/dy-app-user-feature.log
   level:
     root: debug
     org.springframework: ERROR
@@ -51,7 +51,7 @@ spring:
 logging:
   #  config: classpath:logback-spring.xml
   path: logs
-  file: logs/dy-realtime-data-query-service.log
+  file: logs/dy-app-user-feature.log
   level:
     root: info
     org.springframework: ERROR
