@@ -26,7 +26,8 @@
         <module>dy-realtime-data-query-service</module>
 
         <module>bts-common-report</module>
-        <module>dy-app-user-frature</module>
+        <module>dy-app-user-feature</module>
+
 		<!--<module>bts-planinfo-query</module>-->
 		<!--<module>bts-recommend-report-source</module>-->
 		<!--<module>kafka-es</module>-->

@@ -8,7 +8,7 @@ import java.util.Map;
 /**
  * 用户基本信息与用户特征信息响应对象
  */
-public class AppUserFeatureResponse extends CommonPatternResponse<List<Map<String,String>>> {
+public class AppUserFeatureResponse extends CommonPatternResponse<List<Map<String,Object>>> {
 
 
 

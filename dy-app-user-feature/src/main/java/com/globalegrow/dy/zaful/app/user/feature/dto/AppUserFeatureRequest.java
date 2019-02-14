@@ -18,7 +18,7 @@ public class AppUserFeatureRequest extends DyRequest {
     private String site;
 
     @Size(min = 1, max = 1000, message = "用户 id 数量必须在 1-1000")
-    private List<String> cookieId = new ArrayList<>();
+    private List<String> device_id = new ArrayList<>();
 
     public String getSite() {
         return site;
@@ -28,11 +28,11 @@ public class AppUserFeatureRequest extends DyRequest {
         this.site = site;
     }
 
-    public List<String> getCookieId() {
-        return cookieId;
+    public List<String> getDevice_id() {
+        return device_id;
     }
 
-    public void setCookieId(List<String> cookieId) {
-        this.cookieId = cookieId;
+    public void setDevice_id(List<String> device_id) {
+        this.device_id = device_id;
     }
 }
