@@ -7,5 +7,5 @@ import java.util.Map;
 /**
  * FB 广告特征数据
  */
-public class FbADFeatureResponse extends CommonPatternResponse<Map<String,String>> {
+public class FbADFeatureResponse extends CommonPatternResponse<Map<String,Object>> {
 }

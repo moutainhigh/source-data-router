@@ -31,14 +31,8 @@
     <dependencies>
         <dependency>
             <groupId>com.globalegrow.dy</groupId>
-            <artifactId>data-router-common</artifactId>
+            <artifactId>spring-common-controller</artifactId>
             <version>1.0-SNAPSHOT</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.httpcomponents</groupId>
-            <artifactId>httpclient</artifactId>
-            <version>4.5</version>
         </dependency>
 
         <dependency>
@@ -61,39 +55,6 @@
             <version>1.8.10</version>
         </dependency>
 
-        <dependency>
-            <groupId>io.searchbox</groupId>
-            <artifactId>jest</artifactId>
-            <version>5.3.3</version>
-        </dependency>
-        <dependency>
-            <groupId>org.elasticsearch.client</groupId>
-            <artifactId>transport</artifactId>
-            <version>5.6.4</version>
-        </dependency>
-        <!-- https://mvnrepository.com/artifact/com.netflix.hystrix/hystrix-core -->
-
-        <dependency>
-            <groupId>commons-io</groupId>
-            <artifactId>commons-io</artifactId>
-            <version>2.6</version>
-        </dependency>
-        <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-lang3 -->
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
-            <version>3.7</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-text</artifactId>
-            <version>1.4</version>
-        </dependency>
-        <dependency>
-            <groupId>commons-beanutils</groupId>
-            <artifactId>commons-beanutils</artifactId>
-            <version>1.9.3</version>
-        </dependency>
         <!-- https://mvnrepository.com/artifact/com.alibaba.csp/sentinel-core -->
         <dependency>
             <groupId>com.alibaba.csp</groupId>

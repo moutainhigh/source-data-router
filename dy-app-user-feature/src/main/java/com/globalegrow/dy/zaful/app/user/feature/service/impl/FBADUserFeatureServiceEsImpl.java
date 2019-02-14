@@ -1,0 +1,52 @@
+package com.globalegrow.dy.zaful.app.user.feature.service.impl;
+
+import com.globalegrow.dy.es.ElasticSearchRepository;
+import com.globalegrow.dy.zaful.app.user.feature.dto.FbADFeatureRequest;
+import com.globalegrow.dy.zaful.app.user.feature.dto.FbADFeatureResponse;
+import com.globalegrow.dy.zaful.app.user.feature.service.FBADUserFeatureService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+
+@Service
+public class FBADUserFeatureServiceEsImpl implements FBADUserFeatureService {
+
+    private final Logger logger = LoggerFactory.getLogger(getClass());
+
+    @Autowired
+    private ElasticSearchRepository elasticSearchRepository;
+
+    @Value("${app.es.fb.index-name:dy_fb_ad_feature}")
+    private String fbIndexName;
+
+    @Value("${app.es.fb.index-type:ad_feature}")
+    private String fbIndexType;
+
+    @Override
+    public FbADFeatureResponse getAdUserFeatureDataById(FbADFeatureRequest request) {
+        FbADFeatureResponse response = new FbADFeatureResponse();
+        this.logger.debug("广告信息 FB id: {}", request.getFb_adset_id());
+
+        response.setData(this.elasticSearchRepository.getDoc(this.fbIndexName, this.fbIndexType, request.getFb_adset_id()));
+
+        return response;
+    }
+
+    public String getFbIndexName() {
+        return fbIndexName;
+    }
+
+    public void setFbIndexName(String fbIndexName) {
+        this.fbIndexName = fbIndexName;
+    }
+
+    public String getFbIndexType() {
+        return fbIndexType;
+    }
+
+    public void setFbIndexType(String fbIndexType) {
+        this.fbIndexType = fbIndexType;
+    }
+}
