@@ -1,8 +1,13 @@
 package com.globalegrow.dy.dto;
 
+import lombok.Data;
+import lombok.ToString;
+
 /**
  * es 分页对象
  */
+@Data
+@ToString
 public abstract class EsPageRequest extends DyRequest{
 
     /**
@@ -10,12 +15,4 @@ public abstract class EsPageRequest extends DyRequest{
      */
     private String requestId;
 
-
-    public String getRequestId() {
-        return requestId;
-    }
-
-    public void setRequestId(String requestId) {
-        this.requestId = requestId;
-    }
 }

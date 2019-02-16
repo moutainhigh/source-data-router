@@ -8,6 +8,8 @@ import io.searchbox.client.JestResult;
 import io.searchbox.core.Get;
 import io.searchbox.core.Search;
 import io.searchbox.params.Parameters;
+import lombok.Data;
+import lombok.ToString;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
@@ -28,6 +30,7 @@ import java.text.ParseException;
 import java.util.*;
 import java.util.stream.Collectors;
 
+@Data
 @Service
 public class RealTimeUserActionEsServiceImpl implements RealTimeUserActionService {
 

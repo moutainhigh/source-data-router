@@ -4,12 +4,13 @@ import com.globalegrow.dy.es.ElasticSearchRepository;
 import com.globalegrow.dy.zaful.app.user.feature.dto.FbADFeatureRequest;
 import com.globalegrow.dy.zaful.app.user.feature.dto.FbADFeatureResponse;
 import com.globalegrow.dy.zaful.app.user.feature.service.FBADUserFeatureService;
+import lombok.Data;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-
+@Data
 @Service
 public class FBADUserFeatureServiceEsImpl implements FBADUserFeatureService {
 
@@ -34,19 +35,4 @@ public class FBADUserFeatureServiceEsImpl implements FBADUserFeatureService {
         return response;
     }
 
-    public String getFbIndexName() {
-        return fbIndexName;
-    }
-
-    public void setFbIndexName(String fbIndexName) {
-        this.fbIndexName = fbIndexName;
-    }
-
-    public String getFbIndexType() {
-        return fbIndexType;
-    }
-
-    public void setFbIndexType(String fbIndexType) {
-        this.fbIndexType = fbIndexType;
-    }
 }

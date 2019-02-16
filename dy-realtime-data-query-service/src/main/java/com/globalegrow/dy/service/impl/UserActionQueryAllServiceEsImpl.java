@@ -10,6 +10,7 @@ import io.searchbox.client.JestResult;
 import io.searchbox.core.Search;
 import io.searchbox.core.SearchScroll;
 import io.searchbox.params.Parameters;
+import lombok.Data;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
@@ -28,7 +29,7 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
-
+@Data
 @Service
 public class UserActionQueryAllServiceEsImpl implements UserActionQueryAllService {
 
@@ -189,27 +190,4 @@ public class UserActionQueryAllServiceEsImpl implements UserActionQueryAllServic
 
     }
 
-    public Integer getMaxEarliestDays() {
-        return maxEarliestDays;
-    }
-
-    public void setMaxEarliestDays(Integer maxEarliestDays) {
-        this.maxEarliestDays = maxEarliestDays;
-    }
-
-    public Integer getDefaultEarliestDsys() {
-        return defaultEarliestDsys;
-    }
-
-    public void setDefaultEarliestDsys(Integer defaultEarliestDsys) {
-        this.defaultEarliestDsys = defaultEarliestDsys;
-    }
-
-    public String getScrollTime() {
-        return scrollTime;
-    }
-
-    public void setScrollTime(String scrollTime) {
-        this.scrollTime = scrollTime;
-    }
 }

@@ -1,17 +1,15 @@
 package com.globalegrow.dy.dto;
 
+import lombok.Data;
+import lombok.ToString;
+
 import java.util.Map;
 import java.util.Set;
 
+@Data
+@ToString
 public class UserActionQueryAllResponse extends EsPageResponse {
 
     private Map<String,Map<String, Set<UserActionData>>> data;
 
-    public Map<String, Map<String, Set<UserActionData>>> getData() {
-        return data;
-    }
-
-    public void setData(Map<String, Map<String, Set<UserActionData>>> data) {
-        this.data = data;
-    }
 }

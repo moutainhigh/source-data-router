@@ -11,6 +11,7 @@ import io.searchbox.client.JestResult;
 import io.searchbox.core.Search;
 import io.searchbox.core.SearchScroll;
 import io.searchbox.params.Parameters;
+import lombok.Data;
 import org.apache.commons.lang3.StringUtils;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilder;
@@ -27,7 +28,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-
+@Data
 @Service
 public class UserBaseInfoServiceEsImpl implements UserBaseInfoService {
 
@@ -115,11 +116,4 @@ public class UserBaseInfoServiceEsImpl implements UserBaseInfoService {
         response.setTotalCount(jsonObject.get("hits").getAsJsonObject().get("total").getAsLong());
     }
 
-    public String getScrollTime() {
-        return scrollTime;
-    }
-
-    public void setScrollTime(String scrollTime) {
-        this.scrollTime = scrollTime;
-    }
 }

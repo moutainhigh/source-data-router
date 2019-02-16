@@ -1,7 +1,11 @@
 package com.globalegrow.dy.dto;
 
+import lombok.Data;
+import lombok.ToString;
 import org.hibernate.validator.constraints.NotBlank;
 
+@Data
+@ToString
 public class SearchWordSkusRequest extends DyRequest{
 
     @NotBlank(message = "搜索词不能为空")
@@ -10,19 +14,4 @@ public class SearchWordSkusRequest extends DyRequest{
     @NotBlank(message = "站点不能为空")
     private String site;
 
-    public String getWord() {
-        return word;
-    }
-
-    public void setWord(String word) {
-        this.word = word;
-    }
-
-    public String getSite() {
-        return site;
-    }
-
-    public void setSite(String site) {
-        this.site = site;
-    }
 }
