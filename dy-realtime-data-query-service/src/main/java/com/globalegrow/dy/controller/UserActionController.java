@@ -12,8 +12,7 @@ import com.globalegrow.dy.service.RealTimeUserActionService;
 import com.globalegrow.dy.service.SearchWordSkusService;
 import com.globalegrow.dy.service.UserActionQueryAllService;
 import com.globalegrow.dy.service.UserBaseInfoService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -31,9 +30,8 @@ import java.util.List;
 
 @RestController
 @RequestMapping("user")
+@Slf4j
 public class UserActionController {
-
-    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
     @Qualifier("realTimeUserActionRedisServiceImpl")
@@ -169,12 +167,12 @@ public class UserActionController {
                 entry.exit();
             }
         }*/
-        this.logger.info("总时长: {}", System.currentTimeMillis() - start);
+        log.info("总时长: {}", System.currentTimeMillis() - start);
         return responseDto;
     }
 
     public UserActionResponseDto fallbackMethod(UserActionParameterDto userActionParameterDto) {
-        logger.warn("服务超时或繁忙");
+        log.warn("服务超时或繁忙");
         UserActionResponseDto actionResponseDto = new UserActionResponseDto();
         actionResponseDto.setMessage("服务超时或繁忙");
         actionResponseDto.setSuccess(false);
@@ -184,7 +182,7 @@ public class UserActionController {
 
     @ExceptionHandler({Exception.class})
     public UserActionResponseDto databaseError(HttpServletRequest req, Exception e) {
-        logger.error("调用异常，入口：" + req.getRequestURI(), e);
+        log.error("调用异常，入口：" + req.getRequestURI(), e);
         UserActionResponseDto responseDto = new UserActionResponseDto();
         //ReponseDTO<Object> reponseDTO = new ReponseDTO<>(ExceptionCode.FAIL.getCode(),ExceptionCode.FAIL.getMessage());
         responseDto.setSuccess(false);
@@ -208,12 +206,12 @@ public class UserActionController {
     }
 
     public UserActionResponseDto exceptionHandler(UserActionParameterDto parameterDto, BlockException ex) {
-        logger.warn("redis 查询出错，查询 es " + parameterDto.toString());
+        log.warn("redis 查询出错，查询 es " + parameterDto.toString());
         return this.realTimeUserActionEsServiceImpl.getActionByUserDeviceId(parameterDto);
     }
 
     public UserActionResponseDto fallBackExceptionHandler(UserActionParameterDto parameterDto) {
-        logger.warn("功能降级，查询 es " + parameterDto.toString());
+        log.warn("功能降级，查询 es " + parameterDto.toString());
         return this.realTimeUserActionEsServiceImpl.getActionByUserDeviceId(parameterDto);
     }
 }

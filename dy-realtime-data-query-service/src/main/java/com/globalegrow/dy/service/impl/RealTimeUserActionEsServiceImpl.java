@@ -10,6 +10,7 @@ import io.searchbox.core.Search;
 import io.searchbox.params.Parameters;
 import lombok.Data;
 import lombok.ToString;
+import lombok.extern.slf4j.Slf4j;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
@@ -31,10 +32,9 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Data
+@Slf4j
 @Service
 public class RealTimeUserActionEsServiceImpl implements RealTimeUserActionService {
-
-    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
     //@Qualifier("myJestClient")
@@ -112,7 +112,7 @@ public class RealTimeUserActionEsServiceImpl implements RealTimeUserActionServic
             searchSourceBuilder.query(queryBuilder);
             searchSourceBuilder.sort(sortBuilder);
             Search.Builder builder = new Search.Builder(searchSourceBuilder.toString());
-            this.logger.debug("elasticsearch 搜索条件: {}", searchSourceBuilder.toString());
+            log.debug("elasticsearch 搜索条件: {}", searchSourceBuilder.toString());
             builder.addIndex(esIndex + "-" + eventName);
             Search search = builder
                     .addType("log").setParameter(Parameters.ROUTING, userActionParameterDto.getCookieId())
@@ -121,7 +121,7 @@ public class RealTimeUserActionEsServiceImpl implements RealTimeUserActionServic
             try {
                 result = jestClient.execute(search);
             } catch (IOException e) {
-                logger.error("query es error ,params: {}", searchSourceBuilder.toString(), e);
+                log.error("query es error ,params: {}", searchSourceBuilder.toString(), e);
             }
             //logger.info("query from es cost: {}", System.currentTimeMillis() - start);
 
@@ -194,7 +194,7 @@ public class RealTimeUserActionEsServiceImpl implements RealTimeUserActionServic
                 }
 
             } catch (Exception e) {
-                logger.error("用户实时数据 query es error ,params: {}", get.getURI(), e);
+                log.error("用户实时数据 query es error ,params: {}", get.getURI(), e);
             }
 
 
@@ -236,7 +236,7 @@ public class RealTimeUserActionEsServiceImpl implements RealTimeUserActionServic
             }
 
         } catch (Exception e) {
-            logger.error("用户实时数据 query es error ,params: {}", get.getURI(), e);
+            log.error("用户实时数据 query es error ,params: {}", get.getURI(), e);
         }
         return null;
     }

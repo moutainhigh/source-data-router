@@ -5,16 +5,15 @@ import com.globalegrow.dy.zaful.app.user.feature.dto.FbADFeatureRequest;
 import com.globalegrow.dy.zaful.app.user.feature.dto.FbADFeatureResponse;
 import com.globalegrow.dy.zaful.app.user.feature.service.FBADUserFeatureService;
 import lombok.Data;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+
 @Data
 @Service
+@Slf4j
 public class FBADUserFeatureServiceEsImpl implements FBADUserFeatureService {
-
-    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
     private ElasticSearchRepository elasticSearchRepository;
@@ -28,7 +27,7 @@ public class FBADUserFeatureServiceEsImpl implements FBADUserFeatureService {
     @Override
     public FbADFeatureResponse getAdUserFeatureDataById(FbADFeatureRequest request) {
         FbADFeatureResponse response = new FbADFeatureResponse();
-        this.logger.debug("广告信息 FB id: {}", request.getFb_adset_id());
+        log.debug("广告信息 FB id: {}", request.getFb_adset_id());
 
         response.setData(this.elasticSearchRepository.getDoc(this.fbIndexName, this.fbIndexType, request.getFb_adset_id()));
 

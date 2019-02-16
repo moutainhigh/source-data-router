@@ -6,6 +6,7 @@ import com.globalegrow.dy.dto.UserActionResponseDto;
 import com.globalegrow.dy.enums.AppEventEnums;
 import com.globalegrow.dy.service.RealTimeUserActionService;
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 import org.redisson.Redisson;
 import org.redisson.api.RList;
 import org.redisson.api.RedissonClient;
@@ -27,11 +28,11 @@ import java.text.ParseException;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
+
 @Data
+@Slf4j
 @Service
 public class RealTimeUserActionRedisServiceImpl implements RealTimeUserActionService {
-
-    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
     @Qualifier("realTimeUserActionEsServiceImpl")
@@ -127,7 +128,7 @@ public class RealTimeUserActionRedisServiceImpl implements RealTimeUserActionSer
 
             Set<UserActionData> list = new TreeSet<>();
             String id = this.redisKeyPrefix.replaceFirst("&&", site) + userActionParameterDto.getCookieId() + eventName;
-            this.logger.debug("用户实时数据 redis key : {}", id);
+            log.debug("用户实时数据 redis key : {}", id);
             RList<String> rList = this.redisson.getList(id);
             //this.logger.info("redis 查询耗时:{} ms", System.currentTimeMillis()-current);
             if (rList == null || rList.size() == 0 && this.fulfillDataFromEs) {
@@ -153,13 +154,13 @@ public class RealTimeUserActionRedisServiceImpl implements RealTimeUserActionSer
                 List<String> redisList = rList.readAll().stream().collect(Collectors.toList());
 
                 redisList.stream().filter(value -> !emptyEvent.equals(value)).forEach(value -> list.add(new UserActionData(value.substring(0, value.lastIndexOf("_")), Long.valueOf(handleEsMark(value.substring(value.lastIndexOf("_") + 1))))));
-                this.logger.debug("redis data {}", redisList);
+                log.debug("redis data {}", redisList);
                 if (list.size() < userActionParameterDto.getSize()) {
                     //Long maxTime = list.stream().mapToLong(UserActionData::getTime).max().getAsLong();
                     // 未查询过 es 去查询 es
                     if (redisList.stream().filter(value -> value.endsWith(this.searchWordSplitString)).count() == 0
                             && redisList.stream().filter(value -> emptyEvent.equals(value)).count() == 0 && this.fulfillDataFromEs) {
-                        this.logger.debug("redis 中的数据少于 {} 条，从 es 中查询历史数据 {}", userActionParameterDto.getSize());
+                        log.debug("redis 中的数据少于 {} 条，从 es 中查询历史数据 {}", userActionParameterDto.getSize());
                         // set 去重
                         Set<String> history1000 = new HashSet<>();
                         List<String> skus = this.realTimeUserActionEsServiceImpl.getById(userActionParameterDto.getCookieId() + eventName, site);
@@ -177,16 +178,16 @@ public class RealTimeUserActionRedisServiceImpl implements RealTimeUserActionSer
                             rList.addAllAsync(history1000.stream().map(value -> value + searchWordSplitString).collect(Collectors.toList()));
                             rList.expireAsync(this.redisExpireTime, TimeUnit.SECONDS);
 
-                        }else {
+                        } else {
                             // 添加 es mark
                             rList.clear();
                             // 添加 es mark
                             rList.addAllAsync(redisList.stream().map(value -> value + searchWordSplitString).collect(Collectors.toList()));
                             rList.expireAsync(this.redisExpireTime, TimeUnit.SECONDS);
-                           // rList.expireAsync(this.redisExpireTime, TimeUnit.SECONDS);
+                            // rList.expireAsync(this.redisExpireTime, TimeUnit.SECONDS);
                         }
 
-                        if(list.size() == 0){
+                        if (list.size() == 0) {
 
                             // 添加一条空
                             rList.addAsync(this.emptyEvent);
@@ -200,7 +201,7 @@ public class RealTimeUserActionRedisServiceImpl implements RealTimeUserActionSer
 
             //Collections.sort(list);
             if (list.size() > userActionParameterDto.getSize()) {
-                this.logger.debug("数据截取 {}", userActionParameterDto.getSize());
+                log.debug("数据截取 {}", userActionParameterDto.getSize());
                 data.put(eventName, list.stream().limit(userActionParameterDto.getSize()).collect(Collectors.toCollection(() -> new TreeSet<>())));
             } else {
                 data.put(eventName, list);

@@ -10,6 +10,7 @@ import io.searchbox.client.JestResult;
 import io.searchbox.core.Get;
 import io.searchbox.params.Parameters;
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,10 +20,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 @Data
+@Slf4j
 @Service
 public class SearchWordSkusServiceEsImpl implements SearchWordSkusService {
-
-    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
     //@Qualifier("myJestClient")
@@ -61,7 +61,7 @@ public class SearchWordSkusServiceEsImpl implements SearchWordSkusService {
             }
 
         } catch (Exception e) {
-            logger.error("搜索词数据 query es error ,params: {}", get.getURI(), e);
+            log.error("搜索词数据 query es error ,params: {}", get.getURI(), e);
         }
 
         return response;

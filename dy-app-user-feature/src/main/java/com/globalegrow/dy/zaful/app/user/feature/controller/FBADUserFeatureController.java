@@ -4,6 +4,8 @@ import com.globalegrow.dy.controller.CommonController;
 import com.globalegrow.dy.zaful.app.user.feature.dto.FbADFeatureRequest;
 import com.globalegrow.dy.zaful.app.user.feature.dto.FbADFeatureResponse;
 import com.globalegrow.dy.zaful.app.user.feature.service.FBADUserFeatureService;
+import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -13,6 +15,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("fb-ad-user-feature")
+@Data
+@Slf4j
 public class FBADUserFeatureController extends CommonController {
 
     @Autowired
