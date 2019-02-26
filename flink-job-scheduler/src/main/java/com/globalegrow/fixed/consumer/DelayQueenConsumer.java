@@ -31,7 +31,7 @@ public class DelayQueenConsumer implements Runnable {
                         flinkJobQueen.runFlinkJob();
 
                     }else {
-
+                        log.info("{} 不可运行，重新放入延时队列", flinkJobQueen);
                         flinkJobQueens.offer(flinkJobQueen);
 
                     }

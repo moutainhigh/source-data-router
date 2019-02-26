@@ -3,13 +3,12 @@ package com.globalegrow.fixed.queen;
 import com.globalegrow.hdfs.utils.HdfsUtil;
 import com.globalegrow.util.CommonTextUtils;
 import lombok.Data;
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
+import lombok.ToString;
 
-import java.util.concurrent.Delayed;
 import java.util.concurrent.TimeUnit;
 
 @Data
+@ToString
 public class FBADFeatureMessage extends AbstractFlinkJobQueen {
 
     private String hdfsPath;

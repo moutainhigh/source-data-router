@@ -14,6 +14,7 @@ public class DateTest {
         System.out.println(DateUtil.thisYear() + DateUtil.thisMonth() + DateUtil.thisDayOfMonth() + DateUtil.thisHour(true));
         System.out.println(DateUtil.month(new Date()));
         System.out.println(DateFormatUtils.format(new Date(), "yyyyMMddHH"));
+        System.out.println(DateUtil.thisHour(true));
     }
 
 }

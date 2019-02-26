@@ -29,6 +29,7 @@ public abstract class AbstractFlinkJobQueen implements Delayed {
      }
 
     public boolean runFlinkJob() {
+         log.info("job rerun");
         if (this.canRun()) {
             Process process = null;
             //List<String> processList = new ArrayList<String>();

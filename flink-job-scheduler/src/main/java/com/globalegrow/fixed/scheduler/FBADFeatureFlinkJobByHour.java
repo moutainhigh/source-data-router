@@ -1,5 +1,6 @@
 package com.globalegrow.fixed.scheduler;
 
+import cn.hutool.core.date.DateUtil;
 import com.globalegrow.fixed.consumer.DelayQueenConsumer;
 import com.globalegrow.fixed.queen.AbstractFlinkJobQueen;
 import com.globalegrow.fixed.queen.FBADFeatureMessage;
@@ -41,10 +42,23 @@ public class FBADFeatureFlinkJobByHour {
     @Scheduled(cron = "${app.cron.dfad-freatrue}")
     public void run() {
         // 首先运行检查 hdfs 文件是否存在，如果不存在则放入延时队列中
-        String hdfsPath = CommonTextUtils.replaceOneParameter(rootHdfsPath, "date_hour", DateFormatUtils.format(new Date(), "yyyyMMddHH"));
+        int thisHour = DateUtil.thisHour(true);
+        String fileDatePath = "";
+        if (thisHour == 0) {
+            log.info("{} 点跑前一天 23 点数据", thisHour);
+            fileDatePath = DateUtil.yesterday().toString("yyyyMMdd") + "23";
+        }else {
+            if (thisHour < 10) {
+                fileDatePath = DateFormatUtils.format(new Date(), "yyyyMMdd") + "0" + (thisHour - 1);
+            }else {
+                fileDatePath = DateFormatUtils.format(new Date(), "yyyyMMdd") + (thisHour - 1);
+            }
+
+        }
+        String hdfsPath = CommonTextUtils.replaceOneParameter(rootHdfsPath, "date_hour", fileDatePath);
         log.info("检查文件 {} 是否存在", hdfsPath);
         if (HdfsUtil.dyFileExist(hdfsPath)) {
-            log.info("文件 {} 存在, 执行 flink 任务");
+            log.info("文件 {} 存在, 执行 flink 任务", hdfsPath);
 
             String flinkRunCommandLine = CommonTextUtils.replaceOneParameter(flinkCommandLine, "hdfs_path", hdfsPath);
 
@@ -66,7 +80,7 @@ public class FBADFeatureFlinkJobByHour {
 
 
         }else {
-            log.info("文件 {} 不存在，将任务放入延时队列中 ");
+            log.info("文件 {} 不存在，将任务放入延时队列中 ", hdfsPath);
             AbstractFlinkJobQueen jobQueen = new FBADFeatureMessage(hdfsPath, System.currentTimeMillis(), 600000L);
             this.flinkJobQueens.offer(jobQueen);
         }
