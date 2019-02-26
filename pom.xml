@@ -26,7 +26,8 @@
 
         <module>bts-common-report</module>
         <module>dy-app-user-feature</module>
-		<!--<module>kafka-to-hbase</module> -->
+        <module>flink-job-scheduler</module>
+        <!--<module>kafka-to-hbase</module> -->
 		<!-- <module>log-data-dimensions</module> -->
 		<!--<module>log-data-dimensions-recommend</module> -->
 		<!--<module>bts-planinfo-query</module>-->

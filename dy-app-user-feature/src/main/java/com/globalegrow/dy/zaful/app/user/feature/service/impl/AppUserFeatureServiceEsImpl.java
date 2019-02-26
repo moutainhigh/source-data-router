@@ -32,7 +32,7 @@ public class AppUserFeatureServiceEsImpl implements AppUserFeatureService {
         AppUserFeatureResponse response = new AppUserFeatureResponse();
         log.debug("入参请求：{}", request);
 
-        response.setData(this.elasticSearchRepository.idInSearch(this.userFeatureIndexName.replace(DyConstants.ES_INDEX_NAME_SITE_SPLIT, request.getSite().toLowerCase()), this.indexType, request.getDevice_id()));
+        response.setData(this.elasticSearchRepository.idInSearch(this.userFeatureIndexName.replace(DyConstants.ES_INDEX_NAME_SITE_SPLIT, request.getSite().toLowerCase()), this.indexType, request.getDevice_id(), 1000));
 
         return response;
     }

@@ -44,9 +44,9 @@ public class ElasticSearchRepository {
                 .actionGet();
     }
 
-    public List<Map<String, Object>> idInSearch(String index, String type, List<String> ids) {
+    public List<Map<String, Object>> idInSearch(String index, String type, List<String> ids, int size) {
         List<Map<String, Object>> mapList = new ArrayList<>();
-        Arrays.stream(this.client.prepareSearch(index).setTypes(type)
+        Arrays.stream(this.client.prepareSearch(index).setTypes(type).setSize(size)
                 .setQuery(QueryBuilders.termsQuery("_id", ids)).get().getHits().getHits()).forEach(searchHitFields -> mapList.add(searchHitFields.getSourceAsMap()));
         return mapList;
     }
