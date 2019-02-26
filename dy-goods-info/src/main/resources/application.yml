@@ -1,0 +1,69 @@
+spring:
+  profiles:
+    #active: dev
+    active: @profiles.active@
+server:
+  undertow:
+    io-threads: 256
+    worker-threads: 2048
+  compression:
+    enabled: false
+---
+spring:
+  profiles: dev
+  application:
+    name: dy-app-user-feature-dev
+  cloud:
+    sentinel:
+      transport:
+        dashboard: 52.200.84.145:38194
+      eager: true
+logging:
+  #  config: classpath:logback-spring.xml
+  path: logs
+  file: logs/dy-app-user-feature.log
+  level:
+    root: debug
+    org.springframework: ERROR
+    sun.rmi: ERROR
+    org.apache.http: ERROR
+  pattern:
+    file: '[%d{yyyy-MM-dd HH:mm:ss.SSS}] [%thread] [%-5level] %logger{50} - %msg%n'
+app:
+  es:
+    cluster-name: esearch-aws-dy
+    socket:
+      address: 100.26.74.93:9302,100.26.77.0:9302,18.215.206.192:9302
+
+server:
+  port: 38194
+---
+spring:
+  profiles: prod
+  application:
+    name: dy-app-user-feature-prod
+  cloud:
+    sentinel:
+      transport:
+        dashboard: 172.31.44.72:38194
+        #port: 38193
+      eager: true
+logging:
+  #  config: classpath:logback-spring.xml
+  path: logs
+  file: logs/dy-app-user-feature.log
+  level:
+    root: info
+    org.springframework: ERROR
+    sun.rmi: ERROR
+    org.apache.http: ERROR
+  pattern:
+    file: '[%d{yyyy-MM-dd HH:mm:ss.SSS}] [%thread] [%-5level] %logger{50} - %msg%n'
+app:
+  es:
+    cluster-name: esearch-aws-dy
+    socket:
+      address: 172.31.47.84:9302,172.31.43.158:9302,172.31.55.231:9302
+
+server:
+  port: 38194

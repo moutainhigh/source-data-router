@@ -9,7 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>dy-app-user-feature</artifactId>
+    <artifactId>dy-goods-info</artifactId>
 
     <dependencyManagement>
         <dependencies>
