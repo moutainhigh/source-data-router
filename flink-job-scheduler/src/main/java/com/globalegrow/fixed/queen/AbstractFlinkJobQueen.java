@@ -1,6 +1,5 @@
 package com.globalegrow.fixed.queen;
 
-import lombok.Data;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 
@@ -10,7 +9,6 @@ import java.io.InputStreamReader;
 import java.util.concurrent.Delayed;
 import java.util.concurrent.TimeUnit;
 
-@Data
 @Slf4j
 @ToString
 public abstract class AbstractFlinkJobQueen implements Delayed {
@@ -18,7 +16,7 @@ public abstract class AbstractFlinkJobQueen implements Delayed {
     protected Long id;
     protected long excuteTime;//执行时间
 
-    abstract String flinkJobCommandLine();
+    protected String flinkJobCommandLine;
 
     /**
      * 是否满足可过滤条件，如 hdfs 文件是否存在等等
@@ -34,7 +32,7 @@ public abstract class AbstractFlinkJobQueen implements Delayed {
             Process process = null;
             //List<String> processList = new ArrayList<String>();
             try {
-                process = Runtime.getRuntime().exec(this.flinkJobCommandLine());
+                process = Runtime.getRuntime().exec(this.getFlinkJobCommandLine());
                 try(BufferedReader input = new BufferedReader(new InputStreamReader(process.getInputStream()))){
                     String line = "";
                     while ((line = input.readLine()) != null) {
@@ -58,8 +56,31 @@ public abstract class AbstractFlinkJobQueen implements Delayed {
 
     @Override
     public int compareTo(Delayed o) {
-        FBADFeatureMessage message = (FBADFeatureMessage) o;
+        AbstractFlinkJobQueen message = (AbstractFlinkJobQueen) o;
         return message.getId().compareTo(this.getId());
     }
 
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public long getExcuteTime() {
+        return excuteTime;
+    }
+
+    public void setExcuteTime(long excuteTime) {
+        this.excuteTime = excuteTime;
+    }
+
+    public String getFlinkJobCommandLine() {
+        return flinkJobCommandLine;
+    }
+
+    public void setFlinkJobCommandLine(String flinkJobCommandLine) {
+        this.flinkJobCommandLine = flinkJobCommandLine;
+    }
 }

@@ -3,7 +3,7 @@ package com.globalegrow.fixed.scheduler;
 import cn.hutool.core.date.DateUtil;
 import com.globalegrow.fixed.consumer.DelayQueenConsumer;
 import com.globalegrow.fixed.queen.AbstractFlinkJobQueen;
-import com.globalegrow.fixed.queen.FBADFeatureMessage;
+import com.globalegrow.fixed.queen.DyHdfsCheckExistsJobMessage;
 import com.globalegrow.hdfs.utils.HdfsUtil;
 import com.globalegrow.util.CommonTextUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -16,9 +16,7 @@ import javax.annotation.PostConstruct;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.concurrent.DelayQueue;
 
 @Slf4j
@@ -39,7 +37,7 @@ public class FBADFeatureFlinkJobByHour {
     }
 
     //private static
-    @Scheduled(cron = "${app.cron.dfad-freatrue}")
+    @Scheduled(cron = "${app.cron.fbad-freatrue}")
     public void run() {
         // 首先运行检查 hdfs 文件是否存在，如果不存在则放入延时队列中
         int thisHour = DateUtil.thisHour(true);
@@ -56,12 +54,10 @@ public class FBADFeatureFlinkJobByHour {
 
         }
         String hdfsPath = CommonTextUtils.replaceOneParameter(rootHdfsPath, "date_hour", fileDatePath);
+        String flinkRunCommandLine = CommonTextUtils.replaceOneParameter(flinkCommandLine, "hdfs_path", hdfsPath);
         log.info("检查文件 {} 是否存在", hdfsPath);
         if (HdfsUtil.dyFileExist(hdfsPath)) {
             log.info("文件 {} 存在, 执行 flink 任务", hdfsPath);
-
-            String flinkRunCommandLine = CommonTextUtils.replaceOneParameter(flinkCommandLine, "hdfs_path", hdfsPath);
-
             Process process = null;
             //List<String> processList = new ArrayList<String>();
             try {
@@ -81,7 +77,7 @@ public class FBADFeatureFlinkJobByHour {
 
         }else {
             log.info("文件 {} 不存在，将任务放入延时队列中 ", hdfsPath);
-            AbstractFlinkJobQueen jobQueen = new FBADFeatureMessage(hdfsPath, System.currentTimeMillis(), 600000L);
+            AbstractFlinkJobQueen jobQueen = new DyHdfsCheckExistsJobMessage(hdfsPath, System.currentTimeMillis(), 300000L, flinkRunCommandLine);
             this.flinkJobQueens.offer(jobQueen);
         }
     }

@@ -25,20 +25,6 @@ spring:
   profiles: dev
   application:
     name: dy-realtime-data-query-service-dev
-  hbase:
-    zkServers: btststhdp-datanode01:2181,btststhdp-datanode02:2181,btststhdp-datanode03:2181
-  elasticsearch:
-    jest:
-      uris[0]: http://100.26.74.93:9202
-      uris[1]: http://100.26.77.0:9202
-      uris[2]: http://18.215.206.192:9202
-      #uris[3]: http://50.16.25.252:9202
-      #uris[4]: http://54.144.128.124:9202
-      #uris[5]: http://18.204.149.153:9202
-      read-timeout: 5000
-      connection-timeout: 5000
-      username: esearch-ai-aws
-      password: a@ss&2@1aaAQ
   cloud:
     sentinel:
       transport:
@@ -48,25 +34,7 @@ spring:
 server:
   port: 38193
 
-app:
-  es:
-    index-prefix: dy-zf-app-
-    index-aliases: search-logs-test
-    index-type: log
-  redis:
-    readtime:
-      prefix: dy_rt_p_
-  hbase:
-    table-name: dy-user-event
-    column-family: cf
 
-redis:
-  type: sentinel
-  master: sentinel-172.31.26.237-6379
-  nodes: redis://172.31.26.152:6380,redis://172.31.26.237:6380,redis://172.31.26.162:6383
-  password: 6e1KWyC29w
-  # MASTER_SLAVE
-  read-model: MASTER_SLAVE
 ---
 spring:
   profiles: prod
@@ -77,5 +45,6 @@ server:
 
 app:
   cron:
-    dfad-freatrue: 0 30 * * * ?
+    fbad-freatrue: 0 30 * * * ?
+    zaful-app-user-fb-freatrue: 0 30 1 * * ?
 

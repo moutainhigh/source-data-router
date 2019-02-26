@@ -1,12 +1,10 @@
 package com.globalegrow.fixed.consumer;
 
 import com.globalegrow.fixed.queen.AbstractFlinkJobQueen;
-import com.globalegrow.fixed.queen.FBADFeatureMessage;
 import lombok.Data;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.BeanUtils;
 
 import java.util.concurrent.DelayQueue;
 
