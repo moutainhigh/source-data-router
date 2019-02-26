@@ -1,6 +1,7 @@
 package com.globalegrow.config;
 
 import com.globalegrow.fixed.queen.AbstractFlinkJobQueen;
+import com.globalegrow.fixed.queen.DyHdfsCheckExistsJobMessage;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -10,7 +11,7 @@ import java.util.concurrent.DelayQueue;
 public class DelayQueensConfig {
 
     @Bean
-    public DelayQueue<AbstractFlinkJobQueen> flinkJobQueens() {
+    public DelayQueue<DyHdfsCheckExistsJobMessage> flinkJobQueens() {
         return new DelayQueue<>();
     }
 

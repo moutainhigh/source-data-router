@@ -1,6 +1,7 @@
 package com.globalegrow.fixed.consumer;
 
 import com.globalegrow.fixed.queen.AbstractFlinkJobQueen;
+import com.globalegrow.fixed.queen.DyHdfsCheckExistsJobMessage;
 import lombok.Data;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -14,13 +15,13 @@ import java.util.concurrent.DelayQueue;
 public class DelayQueenConsumer implements Runnable {
 
     @NonNull
-    private DelayQueue<AbstractFlinkJobQueen> flinkJobQueens;
+    private DelayQueue<DyHdfsCheckExistsJobMessage> flinkJobQueens;
 
     @Override
     public void run() {
         while (true) {
             try {
-                AbstractFlinkJobQueen flinkJobQueen = this.flinkJobQueens.take();
+                DyHdfsCheckExistsJobMessage flinkJobQueen = this.flinkJobQueens.take();
                 if (flinkJobQueen != null) {
 
                     if (flinkJobQueen.canRun()) {
@@ -30,7 +31,8 @@ public class DelayQueenConsumer implements Runnable {
 
                     }else {
                         log.info("{} 不可运行，重新放入延时队列", flinkJobQueen);
-                        flinkJobQueens.offer(flinkJobQueen);
+                        DyHdfsCheckExistsJobMessage dyHdfsCheckExistsJobMessage = new DyHdfsCheckExistsJobMessage(flinkJobQueen.getHdfsPath(), System.currentTimeMillis(), 300000L, flinkJobQueen.getFlinkJobCommandLine());
+                        flinkJobQueens.offer(dyHdfsCheckExistsJobMessage);
 
                     }
 

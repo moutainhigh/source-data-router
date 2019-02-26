@@ -20,7 +20,7 @@ import java.util.concurrent.DelayQueue;
 public class ZafulAppUserBaseInfoAndFBADFeature {
 
     @Autowired
-    private DelayQueue<AbstractFlinkJobQueen> flinkJobQueens;
+    private DelayQueue<DyHdfsCheckExistsJobMessage> flinkJobQueens;
 
     private String hdfsPath = "hdfs:///user/wuchao/dw_zaful_recommend/zaful_app_abset_id_user_fb_cookieid_fb/add_time=${last_day}/part-00000";
 
@@ -51,7 +51,7 @@ public class ZafulAppUserBaseInfoAndFBADFeature {
 
         }else {
             log.info("文件不存在, 放入延时队列中");
-            AbstractFlinkJobQueen jobQueen = new DyHdfsCheckExistsJobMessage(hdfsPath, System.currentTimeMillis(), 300000L, yesterdayCommandLine);
+            DyHdfsCheckExistsJobMessage jobQueen = new DyHdfsCheckExistsJobMessage(hdfsPath, System.currentTimeMillis(), 300000L, yesterdayCommandLine);
             this.flinkJobQueens.offer(jobQueen);
         }
     }

@@ -24,7 +24,7 @@ import java.util.concurrent.DelayQueue;
 public class FBADFeatureFlinkJobByHour {
 
     @Autowired
-    private DelayQueue<AbstractFlinkJobQueen> flinkJobQueens;
+    private DelayQueue<DyHdfsCheckExistsJobMessage> flinkJobQueens;
 
     private static final String rootHdfsPath = "hdfs:///user/wuchao/dw_zaful_recommend/zaful_app_abset_id_user_fb_all_every_hour/add_time=${date_hour}/part-00000";
 
@@ -77,7 +77,7 @@ public class FBADFeatureFlinkJobByHour {
 
         }else {
             log.info("文件 {} 不存在，将任务放入延时队列中 ", hdfsPath);
-            AbstractFlinkJobQueen jobQueen = new DyHdfsCheckExistsJobMessage(hdfsPath, System.currentTimeMillis(), 300000L, flinkRunCommandLine);
+            DyHdfsCheckExistsJobMessage jobQueen = new DyHdfsCheckExistsJobMessage(hdfsPath, System.currentTimeMillis(), 300000L, flinkRunCommandLine);
             this.flinkJobQueens.offer(jobQueen);
         }
     }
