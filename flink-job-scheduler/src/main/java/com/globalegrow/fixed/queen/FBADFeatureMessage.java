@@ -31,17 +31,6 @@ public class FBADFeatureMessage extends AbstractFlinkJobQueen {
         return CommonTextUtils.replaceOneParameter(flinkCommandLine, HDFS_PATH_KEY, hdfsPath);
     }
 
-    @Override
-    public long getDelay(TimeUnit unit) {
-        return  unit.convert(this.excuteTime - System.nanoTime(), TimeUnit.NANOSECONDS);
-    }
-
-    @Override
-    public int compareTo(Delayed o) {
-        FBADFeatureMessage message = (FBADFeatureMessage) o;
-        return message.getId().compareTo(this.getId());
-    }
-
     /**
      * 是否满足可过滤条件，如 hdfs 文件是否存在等等
      *

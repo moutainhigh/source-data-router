@@ -8,6 +8,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.concurrent.Delayed;
+import java.util.concurrent.TimeUnit;
 
 @Data
 @Slf4j
@@ -46,6 +47,18 @@ public abstract class AbstractFlinkJobQueen implements Delayed {
             return true;
         }
         return false;
+    }
+
+
+    @Override
+    public long getDelay(TimeUnit unit) {
+        return  unit.convert(this.excuteTime - System.nanoTime(), TimeUnit.NANOSECONDS);
+    }
+
+    @Override
+    public int compareTo(Delayed o) {
+        FBADFeatureMessage message = (FBADFeatureMessage) o;
+        return message.getId().compareTo(this.getId());
     }
 
 }

@@ -2,6 +2,7 @@ package com.globalegrow.fixed.scheduler;
 
 import com.globalegrow.fixed.consumer.DelayQueenConsumer;
 import com.globalegrow.fixed.queen.AbstractFlinkJobQueen;
+import com.globalegrow.fixed.queen.FBADFeatureMessage;
 import com.globalegrow.hdfs.utils.HdfsUtil;
 import com.globalegrow.util.CommonTextUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -37,7 +38,7 @@ public class FBADFeatureFlinkJobByHour {
     }
 
     //private static
-    @Scheduled(cron = "30 1 * * *")
+    @Scheduled(cron = "${app.cron.dfad-freatrue}")
     public void run() {
         // 首先运行检查 hdfs 文件是否存在，如果不存在则放入延时队列中
         String hdfsPath = CommonTextUtils.replaceOneParameter(rootHdfsPath, "date_hour", DateFormatUtils.format(new Date(), "yyyyMMddHH"));
@@ -66,7 +67,8 @@ public class FBADFeatureFlinkJobByHour {
 
         }else {
             log.info("文件 {} 不存在，将任务放入延时队列中 ");
-
+            AbstractFlinkJobQueen jobQueen = new FBADFeatureMessage(hdfsPath, System.currentTimeMillis(), 600000L);
+            this.flinkJobQueens.offer(jobQueen);
         }
     }
 

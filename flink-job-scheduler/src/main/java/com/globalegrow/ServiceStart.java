@@ -7,7 +7,7 @@ import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication(scanBasePackages = {"com.globalegrow"})
-@EnableCaching
+//@EnableCaching
 @EnableScheduling
 @EnableAspectJAutoProxy(proxyTargetClass = true)
 //@Aspect

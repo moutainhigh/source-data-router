@@ -47,7 +47,7 @@ done
 
 STDOUT_FILE=bin/stdout.log
 #-Xmx256m
-JAVA_OPTS="-server -Xmx8g -Xmx8g -XX:OnOutOfMemoryError=bin/kill_ppid"
+JAVA_OPTS="-server -Xmx2g -Xmx2g -XX:OnOutOfMemoryError=bin/kill_ppid"
 MAIN_CLASS=com.globalegrow.ServiceStart
 
 CLASSPATH="$CONF_DIR:$DEPLOY_DIR/templates:$DEPLOY_DIR/static"
