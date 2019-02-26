@@ -41,12 +41,13 @@ public class FBADFeatureFlinkJobByHour {
     public void run() {
         // 首先运行检查 hdfs 文件是否存在，如果不存在则放入延时队列中
         int thisHour = DateUtil.thisHour(true);
+        log.info("当前小时数： {} ", thisHour);
         String fileDatePath = "";
         if (thisHour == 0) {
             log.info("{} 点跑前一天 23 点数据", thisHour);
             fileDatePath = DateUtil.yesterday().toString("yyyyMMdd") + "23";
         }else {
-            if (thisHour < 10) {
+            if ((thisHour -1) < 10) {
                 fileDatePath = DateFormatUtils.format(new Date(), "yyyyMMdd") + "0" + (thisHour - 1);
             }else {
                 fileDatePath = DateFormatUtils.format(new Date(), "yyyyMMdd") + (thisHour - 1);

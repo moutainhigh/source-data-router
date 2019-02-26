@@ -1,7 +1,6 @@
 package com.globalegrow.fixed.scheduler;
 
 import cn.hutool.core.date.DateUtil;
-import com.globalegrow.fixed.queen.AbstractFlinkJobQueen;
 import com.globalegrow.fixed.queen.DyHdfsCheckExistsJobMessage;
 import com.globalegrow.hdfs.utils.HdfsUtil;
 import com.globalegrow.util.CommonTextUtils;
