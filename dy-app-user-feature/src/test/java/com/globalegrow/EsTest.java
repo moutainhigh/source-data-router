@@ -1,35 +1,23 @@
-package com.globalegrow.dy.es;
+package com.globalegrow;
 
 import org.elasticsearch.client.transport.TransportClient;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.common.transport.InetSocketTransportAddress;
 import org.elasticsearch.transport.client.PreBuiltTransportClient;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
+import org.junit.Test;
 
 import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.List;
 
-@Configuration
-public class EsConfig {
+public class EsTest {
 
-    @Value("${app.es.socket.address}")
-    private String esServers;
 
-    @Value("${app.es.cluster-name}")
-    private String esClusterName;
-
-    @Value("${app.es.client.transport.sniff:false}")
-    private Boolean clientTransportSniff;
-
-    @Bean
     public TransportClient transportClient() {
         TransportClient client = null;
 
         List<InetSocketTransportAddress> transports = new ArrayList<>();
-        for (String s : this.esServers.split(",")) {
+        for (String s : "100.26.74.93:9302,100.26.77.0:9302,18.215.206.192:9302".split(",")) {
             try {
                 transports.add(new InetSocketTransportAddress(InetAddress.getByName(s.split(":")[0]), Integer.valueOf(s.split(":")[1])));
             } catch (Exception e) {
@@ -38,7 +26,7 @@ public class EsConfig {
         }
 
         Settings.Builder builder = Settings.builder();
-        builder.put("cluster.name", this.esClusterName).put("client.transport.sniff", this.clientTransportSniff)
+        builder.put("cluster.name", "esearch-aws-dy")/*.put("client.transport.sniff", true)*/
        /* .put("transport.type","netty4")
                 .put("http.type", "netty4")*/;
         client = new PreBuiltTransportClient(builder.build());
@@ -46,6 +34,14 @@ public class EsConfig {
         transports.forEach(transport -> finalClient.addTransportAddress(transport));
 
         return finalClient;
+    }
+
+    @Test
+    public void test() {
+        TransportClient client = transportClient();
+        client.admin().indices().prepareCreate("wzf_test_index").setSettings(Settings.builder()
+                .put("index.number_of_shards", 3)
+                .put("index.number_of_replicas", 1)).get();
     }
 
 }
