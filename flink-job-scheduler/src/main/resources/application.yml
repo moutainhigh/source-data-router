@@ -39,6 +39,9 @@ app:
     cluster-name: esearch-aws-dy
     socket:
       address: 100.26.74.93:9302,100.26.77.0:9302,18.215.206.192:9302
+  cron:
+    fbad-freatrue: 0 30 * * * ?
+    zaful-app-user-fb-freatrue: 0 30 1 * * ?
 ---
 spring:
   profiles: prod

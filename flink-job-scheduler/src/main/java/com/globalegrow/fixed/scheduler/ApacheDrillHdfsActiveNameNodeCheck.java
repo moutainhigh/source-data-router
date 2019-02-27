@@ -47,12 +47,15 @@ public class ApacheDrillHdfsActiveNameNodeCheck {
         // 大禹 hdfs 当前配置
         Map<String, Object> result = this.restTemplate.getForObject(this.apacheDrillAdress + this.dyDfsDrillConfig, Map.class);
         log.info("Apache drill 大禹 dfs 配置信息 {}", result);
-        this.currentDyActiveConfig = String.valueOf(result.get("connection"));
+        Map dymap = (Map) result.get("config");
+        this.currentDyActiveConfig = String.valueOf(dymap.get("connection"));
+
 
         // 大数据 hdfs 当前配置
         Map<String, Object> bigdataConfig = this.restTemplate.getForObject(this.apacheDrillAdress + this.bigdataDfsDrillConfig, Map.class);
         log.info("Apache drill 大数据 dfs 配置信息 {}", bigdataConfig);
-        this.currentBigdataActiveConfig = String.valueOf(bigdataConfig.get("connection"));
+        Map map = (Map) bigdataConfig.get("config");
+        this.currentBigdataActiveConfig = String.valueOf(map.get("connection"));
 
     }
 
@@ -66,14 +69,15 @@ public class ApacheDrillHdfsActiveNameNodeCheck {
         if (currentDyAddress.indexOf(this.currentDyActiveConfig) < 0) {
             log.info("大禹 hdfs 主备切换，由 {} 切换为 {}， 更新 Apache drill 配置", this.currentDyActiveConfig, currentDyAddress);
             Map<String, Object> result = this.restTemplate.getForObject(this.apacheDrillAdress + this.dyDfsDrillConfig, Map.class);
-            result.put("connection", currentDyAddress);
+            Map dymap = (Map) result.get("config");
+            dymap.put("connection", currentDyAddress);
 
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 
             MultiValueMap<String, String> map= new LinkedMultiValueMap<>();
             map.add("name", "dfs");
-            map.add("config", JacksonUtil.toJSon(result));
+            map.add("config", JacksonUtil.toJSon(dymap));
 
             HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<MultiValueMap<String, String>>(map, headers);
 
@@ -89,14 +93,15 @@ public class ApacheDrillHdfsActiveNameNodeCheck {
         if (currentBigdataAdress.indexOf(this.currentBigdataActiveConfig) < 0) {
             log.info("大数据 hdfs 主备切换，由 {} 切换为 {}， 更新 Apache drill 配置", this.currentBigdataActiveConfig, currentBigdataAdress);
             Map<String, Object> bigdataConfig = this.restTemplate.getForObject(this.apacheDrillAdress + this.bigdataDfsDrillConfig, Map.class);
-            bigdataConfig.put("connection", currentBigdataAdress);
+            Map mapConfig = (Map) bigdataConfig.get("config");
+            mapConfig.put("connection", currentBigdataAdress);
 
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 
             MultiValueMap<String, String> map= new LinkedMultiValueMap<>();
             map.add("name", "dfs_bigdata");
-            map.add("config", JacksonUtil.toJSon(bigdataConfig));
+            map.add("config", JacksonUtil.toJSon(mapConfig));
 
             HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<MultiValueMap<String, String>>(map, headers);
 

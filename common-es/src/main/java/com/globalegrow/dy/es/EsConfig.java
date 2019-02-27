@@ -35,7 +35,9 @@ public class EsConfig {
         }
 
         Settings.Builder builder = Settings.builder();
-        builder.put("cluster.name", this.esClusterName);
+        builder.put("cluster.name", this.esClusterName)
+       /* .put("transport.type","netty4")
+                .put("http.type", "netty4")*/;
         client = new PreBuiltTransportClient(builder.build());
         TransportClient finalClient = client;
         transports.forEach(transport -> finalClient.addTransportAddress(transport));
