@@ -76,7 +76,7 @@ public class ApacheDrillHdfsActiveNameNodeCheck {
             headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 
             MultiValueMap<String, String> map= new LinkedMultiValueMap<>();
-            map.add("name", "dfs");
+            map.add("name", String.valueOf(result.get("name")));
             map.add("config", JacksonUtil.toJSon(dymap));
 
             HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<MultiValueMap<String, String>>(map, headers);
@@ -100,7 +100,7 @@ public class ApacheDrillHdfsActiveNameNodeCheck {
             headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 
             MultiValueMap<String, String> map= new LinkedMultiValueMap<>();
-            map.add("name", "dfs_bigdata");
+            map.add("name", String.valueOf(bigdataConfig.get("name")));
             map.add("config", JacksonUtil.toJSon(mapConfig));
 
             HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<MultiValueMap<String, String>>(map, headers);
