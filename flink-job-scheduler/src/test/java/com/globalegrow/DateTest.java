@@ -17,4 +17,9 @@ public class DateTest {
         System.out.println(DateUtil.thisHour(true));
     }
 
+    @Test
+    public void stringTest() {
+        System.out.println("s".indexOf("s"));
+    }
+
 }

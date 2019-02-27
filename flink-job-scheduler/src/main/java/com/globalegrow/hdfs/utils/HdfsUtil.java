@@ -13,9 +13,6 @@ import java.net.InetSocketAddress;
 @Component
 public class HdfsUtil {
 
-    private static String clusterName = "glbgnameservice";
-    private static final String HADOOP_URL = "hdfs://"+clusterName;
-
     public static Configuration dyConfiguration;
     public static Configuration bigDataConfiguration;
 
@@ -29,13 +26,12 @@ public class HdfsUtil {
     }
 
     public static String getDyActiceService() {
-
         String hahdfsServer = "";
 
         try (org.apache.hadoop.fs.FileSystem fileSystem = org.apache.hadoop.fs.FileSystem.get(dyConfiguration)) {
             InetSocketAddress active = HAUtil.getAddressOfActive(fileSystem);
             InetAddress address = active.getAddress();
-            hahdfsServer = "hdfs://" + address.getHostAddress() + ":" + active.getPort();
+            hahdfsServer = "hdfs://" + address.getHostName() + ":" + active.getPort();
         } catch (IOException e) {
             e.printStackTrace();
         }

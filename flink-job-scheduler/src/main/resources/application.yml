@@ -34,7 +34,11 @@ spring:
 server:
   port: 38193
 
-
+app:
+  es:
+    cluster-name: esearch-aws-dy
+    socket:
+      address: 100.26.74.93:9302,100.26.77.0:9302,18.215.206.192:9302
 ---
 spring:
   profiles: prod
@@ -44,7 +48,10 @@ server:
   port: 38193
 
 app:
+  es:
+    cluster-name: esearch-aws-dy
+    socket:
+      address: 172.31.47.84:9302,172.31.43.158:9302,172.31.55.231:9302
   cron:
     fbad-freatrue: 0 30 * * * ?
     zaful-app-user-fb-freatrue: 0 30 1 * * ?
-
