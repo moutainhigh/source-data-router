@@ -43,6 +43,7 @@ app:
     fbad-freatrue: 0 30 * * * ?
     zaful-app-user-fb-freatrue: 0 30 1 * * ?
     bury-log-data: 0 10 1 * * ?
+    bury-log-data-flink-job: 0 15 0 * * ?
     bury-log-data-flink-job-status: 10 15 0 * * ?
 ---
 spring:

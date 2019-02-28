@@ -143,7 +143,7 @@ public class BuryLogDataSyncByDay {
     }
 
 
-    @Scheduled(cron = "app.cron.bury-log-data-flink-job")
+    @Scheduled(cron = "${app.cron.bury-log-data-flink-job}")
     public void runFlinkJob() throws InterruptedException, IOException {
         int jobCount = 0;
         wait:
