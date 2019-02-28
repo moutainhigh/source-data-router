@@ -6,7 +6,7 @@
     </formats>
     <files>
         <file>
-            <source>${project.basedir}/src/main/resources/bin/start.sh</source>
+            <source>${project.basedir}/src/main/resources/none_out_start_shell/start.sh</source>
             <fileMode>755</fileMode>
             <outputDirectory>./bin</outputDirectory>
             <lineEnding>unix</lineEnding>
@@ -29,12 +29,6 @@
             <outputDirectory>./conf</outputDirectory>
             <filtered>true</filtered>
         </file>
-        <!--<file>-->
-            <!--<source>${project.basedir}/src/main/resources/logback.xml</source>-->
-            <!--<fileMode>644</fileMode>-->
-            <!--<outputDirectory>./conf</outputDirectory>-->
-            <!--<filtered>true</filtered>-->
-        <!--</file>-->
         <!--<file>
             <source>${project.basedir}/src/main/resources/logback-spring.xml</source>
             <fileMode>644</fileMode>

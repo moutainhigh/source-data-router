@@ -143,23 +143,6 @@ public class BuryLogDataSyncByDay {
     }
 
 
-    private Thread jobStatus = new Thread(new Runnable() {
-        @Override
-        public void run() {
-
-            while (true) {
-
-                if (StringUtils.isNotEmpty(currentJobId)) {
-
-
-                }
-
-            }
-
-        }
-    });
-
-
     @Scheduled(cron = "app.cron.bury-log-data-flink-job")
     public void runFlinkJob() throws InterruptedException, IOException {
         int jobCount = 0;
