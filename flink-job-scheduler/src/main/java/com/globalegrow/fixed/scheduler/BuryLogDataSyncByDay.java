@@ -238,7 +238,7 @@ public class BuryLogDataSyncByDay {
                             break states;
                         }
                     }
-                } catch (RestClientException e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
 
