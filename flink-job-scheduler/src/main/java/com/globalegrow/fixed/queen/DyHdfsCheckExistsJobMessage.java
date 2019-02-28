@@ -13,7 +13,7 @@ public class DyHdfsCheckExistsJobMessage extends AbstractFlinkJobQueen{
     public DyHdfsCheckExistsJobMessage(String hdfsPath, Long id, Long delayTime,String flinkJobCommandLine) {
         this.hdfsPath = hdfsPath;
         this.id = id;
-        this.excuteTime = TimeUnit.NANOSECONDS.convert(delayTime, TimeUnit.MILLISECONDS) + System.nanoTime();
+        this.executeTime = TimeUnit.NANOSECONDS.convert(delayTime, TimeUnit.MILLISECONDS) + System.nanoTime();
         this.flinkJobCommandLine = flinkJobCommandLine;
     }
 

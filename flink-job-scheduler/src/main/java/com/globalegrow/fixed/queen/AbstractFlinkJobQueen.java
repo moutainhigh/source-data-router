@@ -1,5 +1,6 @@
 package com.globalegrow.fixed.queen;
 
+import lombok.Data;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 
@@ -10,11 +11,12 @@ import java.util.concurrent.Delayed;
 import java.util.concurrent.TimeUnit;
 
 @Slf4j
+@Data
 @ToString
 public abstract class AbstractFlinkJobQueen implements Delayed {
 
     protected Long id;
-    protected long excuteTime;//执行时间
+    protected long executeTime;//执行时间
 
     protected String flinkJobCommandLine;
 
@@ -51,7 +53,7 @@ public abstract class AbstractFlinkJobQueen implements Delayed {
 
     @Override
     public long getDelay(TimeUnit unit) {
-        return  unit.convert(this.excuteTime - System.nanoTime(), TimeUnit.NANOSECONDS);
+        return  unit.convert(this.executeTime - System.nanoTime(), TimeUnit.NANOSECONDS);
     }
 
     @Override
@@ -60,27 +62,4 @@ public abstract class AbstractFlinkJobQueen implements Delayed {
         return message.getId().compareTo(this.getId());
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public long getExcuteTime() {
-        return excuteTime;
-    }
-
-    public void setExcuteTime(long excuteTime) {
-        this.excuteTime = excuteTime;
-    }
-
-    public String getFlinkJobCommandLine() {
-        return flinkJobCommandLine;
-    }
-
-    public void setFlinkJobCommandLine(String flinkJobCommandLine) {
-        this.flinkJobCommandLine = flinkJobCommandLine;
-    }
 }
