@@ -18,6 +18,12 @@ public class DateTest {
     }
 
     @Test
+    public void testToday() {
+        System.out.println(DateUtil.today());
+        System.out.println(DateUtil.today());
+    }
+
+    @Test
     public void stringTest() {
         System.out.println("s".indexOf("s"));
     }
