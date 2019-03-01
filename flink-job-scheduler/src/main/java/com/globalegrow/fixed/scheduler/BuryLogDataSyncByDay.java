@@ -160,7 +160,7 @@ public class BuryLogDataSyncByDay {
                     log.info("任务 {} 执行成功，清空当前任务 id", this.getCurrentJobId());
                     this.setCurrentJobId("");
                     if (this.flinkBuryLogDataJobs.size() == 0) {
-                        log.info("所有任务执行完毕，退出任务");
+                        log.info("所有任务执行完毕，通知第三方");
                     }
                 }
             } catch (Exception e) {
