@@ -26,7 +26,7 @@ public class BuryLogDataFlinkJob {
 
     private AtomicInteger atomicInteger = new AtomicInteger(0);
 
-    @Scheduled(fixedDelay = 60000)
+    @Scheduled(fixedDelay = 10000)
     public void runFlinkJobFixed() throws InterruptedException {
         if (this.flinkBuryLogDataJobs.size() > 0 && StringUtils.isEmpty(buryLogDataSyncByDay.getCurrentJobId()) && this.atomicInteger.get() == 0) {
             this.atomicInteger.set(1);

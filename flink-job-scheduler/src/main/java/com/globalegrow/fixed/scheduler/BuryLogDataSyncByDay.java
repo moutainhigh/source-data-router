@@ -9,6 +9,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.BufferedReader;
@@ -146,7 +147,7 @@ public class BuryLogDataSyncByDay {
     }
 
     //@Scheduled(cron = "${app.cron.bury-log-data-flink-job-status}")
-    @Scheduled(fixedDelay = 70000)
+    @Scheduled(fixedDelay = 15000)
     public void jobStatusCheck() throws InterruptedException {
 
         log.info("开始检查任务执行状态");
@@ -164,7 +165,15 @@ public class BuryLogDataSyncByDay {
                     }
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                if (e instanceof HttpClientErrorException) {
+                    HttpClientErrorException httpClientErrorException = (HttpClientErrorException) e;
+                    log.info("任务状态检查结果: {}", httpClientErrorException.getStatusText());
+
+                }else {
+                    // 发送邮件
+                    log.error("任务状态检查出错", e);
+                }
+
             }
 
 
