@@ -2,11 +2,13 @@ package com.globalegrow.config;
 
 import com.globalegrow.fixed.queen.AbstractFlinkJobQueen;
 import com.globalegrow.fixed.queen.DyHdfsCheckExistsJobMessage;
+import com.globalegrow.fixed.queen.FlinkBuryLogDataJob;
 import com.globalegrow.fixed.queen.FlinkJobStatesCheck;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import java.util.concurrent.DelayQueue;
+import java.util.concurrent.LinkedBlockingDeque;
 
 @Configuration
 public class DelayQueensConfig {
@@ -19,6 +21,11 @@ public class DelayQueensConfig {
     @Bean
     public DelayQueue<FlinkJobStatesCheck> flinkJobStatesChecks() {
         return new DelayQueue<>();
+    }
+
+    @Bean
+    public LinkedBlockingDeque<FlinkBuryLogDataJob> flinkBuryLogDataJobs(){
+        return new LinkedBlockingDeque<>();
     }
 
 }

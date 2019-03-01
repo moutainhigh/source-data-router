@@ -1,5 +1,6 @@
 package com.globalegrow.fixed.thread;
 
+import cn.hutool.core.date.DateUtil;
 import com.globalegrow.hdfs.utils.HdfsUtil;
 import lombok.Data;
 import lombok.ToString;
@@ -37,7 +38,7 @@ public class FlinkJobScheduleBigDataDfsThread implements Runnable {
     @Override
     public void run() {
 
-        String currentDay = DateFormatUtils.format(new Date(), this.dateFormat);
+        String currentDay = DateUtil.yesterday().toString(this.dateFormat);
 
         String jobHdfSourcePath = HdfsUtil.getBigDataActiveNamenode() + this.hdfsPath.replace(DATE_VAR, currentDay);
 

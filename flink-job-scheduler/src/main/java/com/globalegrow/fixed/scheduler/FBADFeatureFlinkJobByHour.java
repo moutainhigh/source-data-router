@@ -70,6 +70,15 @@ public class FBADFeatureFlinkJobByHour {
                         log.info(line);
                     }
                 }
+
+                try(BufferedReader input = new BufferedReader(new InputStreamReader(process.getErrorStream()))){
+                    String line = "";
+                    while ((line = input.readLine()) != null) {
+                        //processList.add(line);
+                        log.info(line);
+                    }
+                }
+
             } catch (IOException e) {
                 e.printStackTrace();
             }
