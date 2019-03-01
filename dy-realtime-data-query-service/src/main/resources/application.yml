@@ -1,8 +1,8 @@
 spring:
   profiles:
     #active: dev
-    #active: @profiles.active@
-    active: pressure-test
+    active: @profiles.active@
+    #active: pressure-test
 logging:
   #config: classpath:logback.xml
   path: logs
