@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.util.Map;
 import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -23,6 +24,9 @@ public class BuryLogDataFlinkJob {
 
     @Autowired
     BuryLogDataSyncByDay buryLogDataSyncByDay;
+
+    @Autowired
+    Map<String, FlinkBuryLogDataJob> currentBuryLogJobs;
 
     private AtomicInteger atomicInteger = new AtomicInteger(0);
 
@@ -50,6 +54,7 @@ public class BuryLogDataFlinkJob {
                             String[] lines = line.substring(line.indexOf("Job has been submitted with JobID")).split(" ");
                             String jobId = lines[lines.length - 1];
                             log.info("{} 任务 id {}", job.getJobName(), jobId);
+                            this.currentBuryLogJobs.put(jobId, job);
                             this.buryLogDataSyncByDay.setCurrentJobId(jobId);
                             Thread.sleep(1000);
                             this.atomicInteger.set(0);

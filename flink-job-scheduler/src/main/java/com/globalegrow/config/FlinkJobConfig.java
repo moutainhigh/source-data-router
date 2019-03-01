@@ -7,11 +7,13 @@ import com.globalegrow.fixed.queen.FlinkJobStatesCheck;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.DelayQueue;
 import java.util.concurrent.LinkedBlockingDeque;
 
 @Configuration
-public class DelayQueensConfig {
+public class FlinkJobConfig {
 
     @Bean
     public DelayQueue<DyHdfsCheckExistsJobMessage> flinkJobQueens() {
@@ -26,6 +28,11 @@ public class DelayQueensConfig {
     @Bean
     public LinkedBlockingDeque<FlinkBuryLogDataJob> flinkBuryLogDataJobs(){
         return new LinkedBlockingDeque<>();
+    }
+
+    @Bean
+    public Map<String, FlinkBuryLogDataJob> currentBuryLogJobs() {
+        return new ConcurrentHashMap<>();
     }
 
 }
