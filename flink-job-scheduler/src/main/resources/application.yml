@@ -1,0 +1,66 @@
+spring:
+  profiles:
+    #active: dev
+    active: @profiles.active@
+    #active: pressure-test
+logging:
+  #config: classpath:logback.xml
+  path: logs
+  file: logs/dy-realtime-data-query-service.log
+  level:
+    root: info
+    org.springframework: ERROR
+    sun.rmi: ERROR
+    org.apache.http: ERROR
+  pattern:
+    file: '[%d{yyyy-MM-dd HH:mm:ss.SSS}] [%thread] [%-5level] %logger{50} - %msg%n'
+#server:
+#  undertow:
+#    io-threads: 256
+#    worker-threads: 2048
+#  compression:
+#    enabled: false
+---
+spring:
+  profiles: dev
+  application:
+    name: dy-realtime-data-query-service-dev
+  cloud:
+    sentinel:
+      transport:
+        dashboard: localhost:38194
+      eager: true
+
+server:
+  port: 38193
+
+app:
+  es:
+    cluster-name: esearch-aws-dy
+    socket:
+      address: 100.26.74.93:9302,100.26.77.0:9302,18.215.206.192:9302
+  cron:
+    fbad-freatrue: 0 30 * * * ?
+    zaful-app-user-fb-freatrue: 0 30 1 * * ?
+    bury-log-data: 0 10 1 * * ?
+    bury-log-data-flink-job: 0 15 0 * * ?
+    bury-log-data-flink-job-status: 10 15 0 * * ?
+---
+spring:
+  profiles: prod
+  application:
+    name: dy-realtime-data-query-service-prod
+server:
+  port: 38193
+
+app:
+  es:
+    cluster-name: esearch-aws-dy
+    socket:
+      address: 172.31.47.84:9302,172.31.43.158:9302,172.31.55.231:9302
+  cron:
+    fbad-freatrue: 0 30 * * * ?
+    zaful-app-user-fb-freatrue: 0 30 1 * * ?
+    bury-log-data: 0 10 0 * * ?
+    bury-log-data-flink-job: 0 15 0 * * ?
+    bury-log-data-flink-job-status: 10 15 0 * * ?

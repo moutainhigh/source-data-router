@@ -1,7 +1,10 @@
 package com.globalegrow.dy.dto;
 
+import lombok.Data;
+
 import java.util.Objects;
 
+@Data
 public class UserActionData implements Comparable<UserActionData>{
 
     private String workType;
@@ -12,24 +15,6 @@ public class UserActionData implements Comparable<UserActionData>{
         this.workType = workType;
         this.time = time;
     }
-
-    public String getWorkType() {
-        return workType;
-    }
-
-    public void setWorkType(String workType) {
-        this.workType = workType;
-    }
-
-    public Long getTime() {
-        return time;
-    }
-
-    public void setTime(Long time) {
-        this.time = time;
-    }
-
-
 
     @Override
     public boolean equals(Object o) {

@@ -1,5 +1,7 @@
 package com.globalegrow.dy.dto;
 
+import lombok.Data;
+import lombok.ToString;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
 
@@ -9,6 +11,8 @@ import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
+@Data
+@ToString
 public class UserActionParameterDto extends DyRequest{
 
     @NotNull(message = "cookieid 不能为空")
@@ -36,62 +40,4 @@ public class UserActionParameterDto extends DyRequest{
     @NotNull
     private Integer size = 1000;
 
-    public List<String> getType() {
-        return type;
-    }
-
-    public void setType(List<String> type) {
-        this.type = type;
-    }
-
-    public Integer getSize() {
-        return size;
-    }
-
-    public void setSize(Integer size) {
-        this.size = size;
-    }
-
-
-    public String getCookieId() {
-        return cookieId;
-    }
-
-    public void setCookieId(String cookieId) {
-        this.cookieId = cookieId;
-    }
-
-    public Long getStartDate() {
-        return startDate;
-    }
-
-    public void setStartDate(Long startDate) {
-        this.startDate = startDate;
-    }
-
-    public Long getEndDate() {
-        return endDate;
-    }
-
-    public void setEndDate(Long endDate) {
-        this.endDate = endDate;
-    }
-
-    public String getSite() {
-        return site;
-    }
-
-    public void setSite(String site) {
-        this.site = site;
-    }
-
-    @Override
-    public String toString() {
-        return "UserActionParameterDto{" +
-                ", cookieId='" + cookieId + '\'' +
-                ", type='" + type + '\'' +
-                ", startDate=" + startDate +
-                ", endDate=" + endDate +
-                '}';
-    }
 }

@@ -1,5 +1,7 @@
 package com.globalegrow.dy.dto;
 
+import lombok.Data;
+import lombok.ToString;
 import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.constraints.Max;
@@ -11,6 +13,8 @@ import java.util.List;
 /**
  * 用户基本信息参数
  */
+@Data
+@ToString
 public class UserBaseInfoRequest extends EsPageRequest {
 
     private String cookieId;
@@ -26,43 +30,4 @@ public class UserBaseInfoRequest extends EsPageRequest {
 
     private Long startDate;
 
-    public Long getStartDate() {
-        return startDate;
-    }
-
-    public void setStartDate(Long startDate) {
-        this.startDate = startDate;
-    }
-
-    public String getCookieId() {
-        return cookieId;
-    }
-
-    public void setCookieId(String cookieId) {
-        this.cookieId = cookieId;
-    }
-
-    public List<String> getPlatform() {
-        return platform;
-    }
-
-    public void setPlatform(List<String> platform) {
-        this.platform = platform;
-    }
-
-    public String getSite() {
-        return site;
-    }
-
-    public void setSite(String site) {
-        this.site = site;
-    }
-
-    public Integer getSize() {
-        return size;
-    }
-
-    public void setSize(Integer size) {
-        this.size = size;
-    }
 }

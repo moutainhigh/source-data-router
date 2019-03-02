@@ -1,0 +1,86 @@
+[2019-02-14 14:17:46.387] [main] [INFO ] com.globalegrow.EsSearchTest - Starting EsSearchTest on 3F-wangzhongfu with PID 9312 (started by wangzhongfu in E:\work\globale\git\source-data-router\dy-app-user-feature)
+[2019-02-14 14:17:46.388] [main] [DEBUG] com.globalegrow.EsSearchTest - Running with Spring Boot v1.5.14.RELEASE, Spring v4.3.18.RELEASE
+[2019-02-14 14:17:46.388] [main] [INFO ] com.globalegrow.EsSearchTest - The following profiles are active: dev
+[2019-02-14 14:17:46.880] [background-preinit] [DEBUG] org.jboss.logging - Logging Provider: org.jboss.logging.Slf4jLoggerProvider found via system property
+[2019-02-14 14:17:46.937] [background-preinit] [DEBUG] o.h.v.i.engine.resolver.DefaultTraversableResolver - Cannot find javax.persistence.Persistence on classpath. Assuming non JPA 2 environment. All properties will per default be traversable.
+[2019-02-14 14:17:48.596] [main] [DEBUG] o.h.v.i.engine.resolver.DefaultTraversableResolver - Cannot find javax.persistence.Persistence on classpath. Assuming non JPA 2 environment. All properties will per default be traversable.
+[2019-02-14 14:17:48.624] [main] [DEBUG] o.h.v.i.engine.resolver.DefaultTraversableResolver - Cannot find javax.persistence.Persistence on classpath. Assuming non JPA 2 environment. All properties will per default be traversable.
+[2019-02-14 14:17:48.629] [main] [DEBUG] o.h.validator.internal.engine.ConfigurationImpl - Setting custom MessageInterpolator of type org.springframework.validation.beanvalidation.LocaleContextMessageInterpolator
+[2019-02-14 14:17:48.630] [main] [DEBUG] o.h.validator.internal.engine.ConfigurationImpl - Setting custom ConstraintValidatorFactory of type org.springframework.validation.beanvalidation.SpringConstraintValidatorFactory
+[2019-02-14 14:17:48.631] [main] [DEBUG] o.h.validator.internal.engine.ConfigurationImpl - Setting custom ParameterNameProvider of type com.sun.proxy.$Proxy70
+[2019-02-14 14:17:48.634] [main] [DEBUG] o.h.validator.internal.xml.ValidationXmlParser - Trying to load META-INF/validation.xml for XML based Validator configuration.
+[2019-02-14 14:17:48.635] [main] [DEBUG] o.h.validator.internal.xml.ResourceLoaderHelper - Trying to load META-INF/validation.xml via user class loader
+[2019-02-14 14:17:48.636] [main] [DEBUG] o.h.validator.internal.xml.ResourceLoaderHelper - Trying to load META-INF/validation.xml via TCCL
+[2019-02-14 14:17:48.637] [main] [DEBUG] o.h.validator.internal.xml.ResourceLoaderHelper - Trying to load META-INF/validation.xml via Hibernate Validator's class loader
+[2019-02-14 14:17:48.638] [main] [DEBUG] o.h.validator.internal.xml.ValidationXmlParser - No META-INF/validation.xml found. Using annotation based configuration only.
+[2019-02-14 14:17:51.723] [main] [DEBUG] org.elasticsearch.common.inject.internal.Stopwatch - Module execution: 72ms
+[2019-02-14 14:17:51.726] [main] [DEBUG] org.elasticsearch.common.inject.internal.Stopwatch - TypeListeners creation: 3ms
+[2019-02-14 14:17:51.728] [main] [DEBUG] org.elasticsearch.common.inject.internal.Stopwatch - Scopes creation: 1ms
+[2019-02-14 14:17:51.728] [main] [DEBUG] org.elasticsearch.common.inject.internal.Stopwatch - Converters creation: 0ms
+[2019-02-14 14:17:51.733] [main] [DEBUG] org.elasticsearch.common.inject.internal.Stopwatch - Binding creation: 5ms
+[2019-02-14 14:17:51.734] [main] [DEBUG] org.elasticsearch.common.inject.internal.Stopwatch - Private environment creation: 0ms
+[2019-02-14 14:17:51.734] [main] [DEBUG] org.elasticsearch.common.inject.internal.Stopwatch - Injector construction: 0ms
+[2019-02-14 14:17:51.738] [main] [DEBUG] org.elasticsearch.common.inject.internal.Stopwatch - Binding initialization: 3ms
+[2019-02-14 14:17:51.738] [main] [DEBUG] org.elasticsearch.common.inject.internal.Stopwatch - Binding indexing: 0ms
+[2019-02-14 14:17:51.738] [main] [DEBUG] org.elasticsearch.common.inject.internal.Stopwatch - Collecting injection requests: 0ms
+[2019-02-14 14:17:51.738] [main] [DEBUG] org.elasticsearch.common.inject.internal.Stopwatch - Binding validation: 0ms
+[2019-02-14 14:17:51.738] [main] [DEBUG] org.elasticsearch.common.inject.internal.Stopwatch - Static validation: 0ms
+[2019-02-14 14:17:51.740] [main] [DEBUG] org.elasticsearch.common.inject.internal.Stopwatch - Instance member validation: 1ms
+[2019-02-14 14:17:51.741] [main] [DEBUG] org.elasticsearch.common.inject.internal.Stopwatch - Provider verification: 0ms
+[2019-02-14 14:17:51.741] [main] [DEBUG] org.elasticsearch.common.inject.internal.Stopwatch - Static member injection: 0ms
+[2019-02-14 14:17:51.742] [main] [DEBUG] org.elasticsearch.common.inject.internal.Stopwatch - Instance injection: 0ms
+[2019-02-14 14:17:51.744] [main] [DEBUG] org.elasticsearch.common.inject.internal.Stopwatch - Preloading singletons: 1ms
+[2019-02-14 14:18:00.162] [main] [DEBUG] o.h.v.i.engine.resolver.DefaultTraversableResolver - Cannot find javax.persistence.Persistence on classpath. Assuming non JPA 2 environment. All properties will per default be traversable.
+[2019-02-14 14:18:00.174] [main] [DEBUG] o.h.v.i.engine.resolver.DefaultTraversableResolver - Cannot find javax.persistence.Persistence on classpath. Assuming non JPA 2 environment. All properties will per default be traversable.
+[2019-02-14 14:18:00.174] [main] [DEBUG] o.h.validator.internal.engine.ConfigurationImpl - Setting custom MessageInterpolator of type org.springframework.validation.beanvalidation.LocaleContextMessageInterpolator
+[2019-02-14 14:18:00.175] [main] [DEBUG] o.h.validator.internal.engine.ConfigurationImpl - Setting custom ConstraintValidatorFactory of type org.springframework.validation.beanvalidation.SpringConstraintValidatorFactory
+[2019-02-14 14:18:00.175] [main] [DEBUG] o.h.validator.internal.engine.ConfigurationImpl - Setting custom ParameterNameProvider of type com.sun.proxy.$Proxy70
+[2019-02-14 14:18:00.175] [main] [DEBUG] o.h.validator.internal.xml.ValidationXmlParser - Trying to load META-INF/validation.xml for XML based Validator configuration.
+[2019-02-14 14:18:00.175] [main] [DEBUG] o.h.validator.internal.xml.ResourceLoaderHelper - Trying to load META-INF/validation.xml via user class loader
+[2019-02-14 14:18:00.176] [main] [DEBUG] o.h.validator.internal.xml.ResourceLoaderHelper - Trying to load META-INF/validation.xml via TCCL
+[2019-02-14 14:18:00.176] [main] [DEBUG] o.h.validator.internal.xml.ResourceLoaderHelper - Trying to load META-INF/validation.xml via Hibernate Validator's class loader
+[2019-02-14 14:18:00.177] [main] [DEBUG] o.h.validator.internal.xml.ValidationXmlParser - No META-INF/validation.xml found. Using annotation based configuration only.
+[2019-02-14 14:18:01.926] [main] [INFO ] com.globalegrow.EsSearchTest - Started EsSearchTest in 16.297 seconds (JVM running for 87.201)
+[2019-02-14 14:20:28.911] [main] [INFO ] com.globalegrow.EsSearchTest - Starting EsSearchTest on 3F-wangzhongfu with PID 4840 (started by wangzhongfu in E:\work\globale\git\source-data-router\dy-app-user-feature)
+[2019-02-14 14:20:28.912] [main] [DEBUG] com.globalegrow.EsSearchTest - Running with Spring Boot v1.5.14.RELEASE, Spring v4.3.18.RELEASE
+[2019-02-14 14:20:28.912] [main] [INFO ] com.globalegrow.EsSearchTest - The following profiles are active: dev
+[2019-02-14 14:20:29.363] [background-preinit] [DEBUG] org.jboss.logging - Logging Provider: org.jboss.logging.Slf4jLoggerProvider found via system property
+[2019-02-14 14:20:29.395] [background-preinit] [DEBUG] o.h.v.i.engine.resolver.DefaultTraversableResolver - Cannot find javax.persistence.Persistence on classpath. Assuming non JPA 2 environment. All properties will per default be traversable.
+[2019-02-14 14:20:30.935] [main] [DEBUG] o.h.v.i.engine.resolver.DefaultTraversableResolver - Cannot find javax.persistence.Persistence on classpath. Assuming non JPA 2 environment. All properties will per default be traversable.
+[2019-02-14 14:20:30.952] [main] [DEBUG] o.h.v.i.engine.resolver.DefaultTraversableResolver - Cannot find javax.persistence.Persistence on classpath. Assuming non JPA 2 environment. All properties will per default be traversable.
+[2019-02-14 14:20:30.958] [main] [DEBUG] o.h.validator.internal.engine.ConfigurationImpl - Setting custom MessageInterpolator of type org.springframework.validation.beanvalidation.LocaleContextMessageInterpolator
+[2019-02-14 14:20:30.959] [main] [DEBUG] o.h.validator.internal.engine.ConfigurationImpl - Setting custom ConstraintValidatorFactory of type org.springframework.validation.beanvalidation.SpringConstraintValidatorFactory
+[2019-02-14 14:20:30.961] [main] [DEBUG] o.h.validator.internal.engine.ConfigurationImpl - Setting custom ParameterNameProvider of type com.sun.proxy.$Proxy70
+[2019-02-14 14:20:30.963] [main] [DEBUG] o.h.validator.internal.xml.ValidationXmlParser - Trying to load META-INF/validation.xml for XML based Validator configuration.
+[2019-02-14 14:20:30.965] [main] [DEBUG] o.h.validator.internal.xml.ResourceLoaderHelper - Trying to load META-INF/validation.xml via user class loader
+[2019-02-14 14:20:30.967] [main] [DEBUG] o.h.validator.internal.xml.ResourceLoaderHelper - Trying to load META-INF/validation.xml via TCCL
+[2019-02-14 14:20:30.970] [main] [DEBUG] o.h.validator.internal.xml.ResourceLoaderHelper - Trying to load META-INF/validation.xml via Hibernate Validator's class loader
+[2019-02-14 14:20:30.971] [main] [DEBUG] o.h.validator.internal.xml.ValidationXmlParser - No META-INF/validation.xml found. Using annotation based configuration only.
+[2019-02-14 14:20:32.599] [main] [DEBUG] org.elasticsearch.common.inject.internal.Stopwatch - Module execution: 60ms
+[2019-02-14 14:20:32.602] [main] [DEBUG] org.elasticsearch.common.inject.internal.Stopwatch - TypeListeners creation: 2ms
+[2019-02-14 14:20:32.604] [main] [DEBUG] org.elasticsearch.common.inject.internal.Stopwatch - Scopes creation: 2ms
+[2019-02-14 14:20:32.604] [main] [DEBUG] org.elasticsearch.common.inject.internal.Stopwatch - Converters creation: 0ms
+[2019-02-14 14:20:32.609] [main] [DEBUG] org.elasticsearch.common.inject.internal.Stopwatch - Binding creation: 5ms
+[2019-02-14 14:20:32.610] [main] [DEBUG] org.elasticsearch.common.inject.internal.Stopwatch - Private environment creation: 0ms
+[2019-02-14 14:20:32.610] [main] [DEBUG] org.elasticsearch.common.inject.internal.Stopwatch - Injector construction: 0ms
+[2019-02-14 14:20:32.614] [main] [DEBUG] org.elasticsearch.common.inject.internal.Stopwatch - Binding initialization: 3ms
+[2019-02-14 14:20:32.614] [main] [DEBUG] org.elasticsearch.common.inject.internal.Stopwatch - Binding indexing: 0ms
+[2019-02-14 14:20:32.614] [main] [DEBUG] org.elasticsearch.common.inject.internal.Stopwatch - Collecting injection requests: 0ms
+[2019-02-14 14:20:32.614] [main] [DEBUG] org.elasticsearch.common.inject.internal.Stopwatch - Binding validation: 0ms
+[2019-02-14 14:20:32.614] [main] [DEBUG] org.elasticsearch.common.inject.internal.Stopwatch - Static validation: 0ms
+[2019-02-14 14:20:32.615] [main] [DEBUG] org.elasticsearch.common.inject.internal.Stopwatch - Instance member validation: 1ms
+[2019-02-14 14:20:32.616] [main] [DEBUG] org.elasticsearch.common.inject.internal.Stopwatch - Provider verification: 0ms
+[2019-02-14 14:20:32.616] [main] [DEBUG] org.elasticsearch.common.inject.internal.Stopwatch - Static member injection: 0ms
+[2019-02-14 14:20:32.617] [main] [DEBUG] org.elasticsearch.common.inject.internal.Stopwatch - Instance injection: 0ms
+[2019-02-14 14:20:32.618] [main] [DEBUG] org.elasticsearch.common.inject.internal.Stopwatch - Preloading singletons: 1ms
+[2019-02-14 14:20:40.929] [main] [DEBUG] o.h.v.i.engine.resolver.DefaultTraversableResolver - Cannot find javax.persistence.Persistence on classpath. Assuming non JPA 2 environment. All properties will per default be traversable.
+[2019-02-14 14:20:40.943] [main] [DEBUG] o.h.v.i.engine.resolver.DefaultTraversableResolver - Cannot find javax.persistence.Persistence on classpath. Assuming non JPA 2 environment. All properties will per default be traversable.
+[2019-02-14 14:20:40.944] [main] [DEBUG] o.h.validator.internal.engine.ConfigurationImpl - Setting custom MessageInterpolator of type org.springframework.validation.beanvalidation.LocaleContextMessageInterpolator
+[2019-02-14 14:20:40.944] [main] [DEBUG] o.h.validator.internal.engine.ConfigurationImpl - Setting custom ConstraintValidatorFactory of type org.springframework.validation.beanvalidation.SpringConstraintValidatorFactory
+[2019-02-14 14:20:40.945] [main] [DEBUG] o.h.validator.internal.engine.ConfigurationImpl - Setting custom ParameterNameProvider of type com.sun.proxy.$Proxy70
+[2019-02-14 14:20:40.945] [main] [DEBUG] o.h.validator.internal.xml.ValidationXmlParser - Trying to load META-INF/validation.xml for XML based Validator configuration.
+[2019-02-14 14:20:40.945] [main] [DEBUG] o.h.validator.internal.xml.ResourceLoaderHelper - Trying to load META-INF/validation.xml via user class loader
+[2019-02-14 14:20:40.946] [main] [DEBUG] o.h.validator.internal.xml.ResourceLoaderHelper - Trying to load META-INF/validation.xml via TCCL
+[2019-02-14 14:20:40.946] [main] [DEBUG] o.h.validator.internal.xml.ResourceLoaderHelper - Trying to load META-INF/validation.xml via Hibernate Validator's class loader
+[2019-02-14 14:20:40.947] [main] [DEBUG] o.h.validator.internal.xml.ValidationXmlParser - No META-INF/validation.xml found. Using annotation based configuration only.
+[2019-02-14 14:20:42.661] [main] [INFO ] com.globalegrow.EsSearchTest - Started EsSearchTest in 14.503 seconds (JVM running for 16.321)

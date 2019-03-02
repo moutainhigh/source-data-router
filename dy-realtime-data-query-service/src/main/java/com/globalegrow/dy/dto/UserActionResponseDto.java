@@ -1,9 +1,13 @@
 package com.globalegrow.dy.dto;
 
-import java.util.List;
+import lombok.Data;
+import lombok.ToString;
+
 import java.util.Map;
 import java.util.Set;
 
+@Data
+@ToString
 public class UserActionResponseDto {
 
     private boolean success = true;
@@ -16,58 +20,9 @@ public class UserActionResponseDto {
 
     private Map<String, Set<UserActionData>> data;
 
-
-    public Integer getSize() {
-        return size;
-    }
-
-    public void setSize(Integer size) {
-        this.size = size;
-    }
-
-    public String getScrollId() {
-        return scrollId;
-    }
-
-    public void setScrollId(String scrollId) {
-        this.scrollId = scrollId;
-    }
-
     /**
      * 分页ID
      */
     private String scrollId;
 
-    public boolean isSuccess() {
-        return success;
-    }
-
-    public void setSuccess(boolean success) {
-        this.success = success;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
-    public Map<String, Set<UserActionData>> getData() {
-        return data;
-    }
-
-    public void setData(Map<String, Set<UserActionData>> data) {
-        this.data = data;
-    }
-
-    @Override
-    public String toString() {
-        return "UserActionResponseDto{" +
-                "success=" + success +
-                ", message='" + message + '\'' +
-                ", data=" + data +
-                '}';
-    }
 }

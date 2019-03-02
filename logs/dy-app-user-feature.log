@@ -1,0 +1,84 @@
+[2019-02-16 10:05:22.659] [main] [INFO ] com.globalegrow.ServiceStart - Starting ServiceStart on 3F-wangzhongfu with PID 12952 (E:\work\globale\git\source-data-router\dy-app-user-feature\target\classes started by wangzhongfu in E:\work\globale\git\source-data-router)
+[2019-02-16 10:05:22.664] [main] [DEBUG] com.globalegrow.ServiceStart - Running with Spring Boot v1.5.14.RELEASE, Spring v4.3.18.RELEASE
+[2019-02-16 10:05:22.664] [main] [INFO ] com.globalegrow.ServiceStart - The following profiles are active: dev
+[2019-02-16 10:05:22.860] [background-preinit] [DEBUG] org.jboss.logging - Logging Provider: org.jboss.logging.Slf4jLoggerProvider found via system property
+[2019-02-16 10:05:22.936] [background-preinit] [DEBUG] o.h.v.i.engine.resolver.DefaultTraversableResolver - Cannot find javax.persistence.Persistence on classpath. Assuming non JPA 2 environment. All properties will per default be traversable.
+[2019-02-16 10:05:24.599] [main] [DEBUG] o.h.v.i.engine.resolver.DefaultTraversableResolver - Cannot find javax.persistence.Persistence on classpath. Assuming non JPA 2 environment. All properties will per default be traversable.
+[2019-02-16 10:05:24.622] [main] [DEBUG] o.h.v.i.engine.resolver.DefaultTraversableResolver - Cannot find javax.persistence.Persistence on classpath. Assuming non JPA 2 environment. All properties will per default be traversable.
+[2019-02-16 10:05:24.633] [main] [DEBUG] o.h.validator.internal.engine.ConfigurationImpl - Setting custom MessageInterpolator of type org.springframework.validation.beanvalidation.LocaleContextMessageInterpolator
+[2019-02-16 10:05:24.634] [main] [DEBUG] o.h.validator.internal.engine.ConfigurationImpl - Setting custom ConstraintValidatorFactory of type org.springframework.validation.beanvalidation.SpringConstraintValidatorFactory
+[2019-02-16 10:05:24.635] [main] [DEBUG] o.h.validator.internal.engine.ConfigurationImpl - Setting custom ParameterNameProvider of type com.sun.proxy.$Proxy64
+[2019-02-16 10:05:24.638] [main] [DEBUG] o.h.validator.internal.xml.ValidationXmlParser - Trying to load META-INF/validation.xml for XML based Validator configuration.
+[2019-02-16 10:05:24.639] [main] [DEBUG] o.h.validator.internal.xml.ResourceLoaderHelper - Trying to load META-INF/validation.xml via user class loader
+[2019-02-16 10:05:24.640] [main] [DEBUG] o.h.validator.internal.xml.ResourceLoaderHelper - Trying to load META-INF/validation.xml via TCCL
+[2019-02-16 10:05:24.641] [main] [DEBUG] o.h.validator.internal.xml.ResourceLoaderHelper - Trying to load META-INF/validation.xml via Hibernate Validator's class loader
+[2019-02-16 10:05:24.641] [main] [DEBUG] o.h.validator.internal.xml.ValidationXmlParser - No META-INF/validation.xml found. Using annotation based configuration only.
+[2019-02-16 10:05:25.657] [main] [INFO ] org.xnio - XNIO version 3.3.8.Final
+[2019-02-16 10:05:25.688] [main] [INFO ] org.xnio.nio - XNIO NIO Implementation Version 3.3.8.Final
+[2019-02-16 10:05:25.720] [XNIO-1 Accept] [DEBUG] org.xnio.nio - Started channel thread 'XNIO-1 Accept', selector sun.nio.ch.WindowsSelectorImpl@4bb4c61f
+[2019-02-16 10:05:25.720] [XNIO-1 I/O-1] [DEBUG] org.xnio.nio - Started channel thread 'XNIO-1 I/O-1', selector sun.nio.ch.WindowsSelectorImpl@725d00e9
+[2019-02-16 10:05:25.730] [main] [WARN ] io.undertow.websockets.jsr - UT026009: XNIO worker was not set on WebSocketDeploymentInfo, the default worker will be used
+[2019-02-16 10:05:25.730] [main] [WARN ] io.undertow.websockets.jsr - UT026010: Buffer pool was not set on WebSocketDeploymentInfo, the default pool will be used
+[2019-02-16 10:05:25.750] [main] [DEBUG] io.undertow.session - Setting default session timeout to 1800
+[2019-02-16 10:05:25.763] [main] [INFO ] io.undertow.servlet - Initializing Spring embedded WebApplicationContext
+[2019-02-16 10:05:26.201] [main] [DEBUG] io.undertow.session - Registered session listener io.undertow.servlet.core.SessionListenerBridge@4fa4f485
+[2019-02-16 10:05:26.249] [main] [DEBUG] io.undertow.session - Setting default session timeout to 1800
+[2019-02-16 10:05:28.193] [main] [DEBUG] org.elasticsearch.common.inject.internal.Stopwatch - Module execution: 57ms
+[2019-02-16 10:05:28.195] [main] [DEBUG] org.elasticsearch.common.inject.internal.Stopwatch - TypeListeners creation: 2ms
+[2019-02-16 10:05:28.196] [main] [DEBUG] org.elasticsearch.common.inject.internal.Stopwatch - Scopes creation: 1ms
+[2019-02-16 10:05:28.196] [main] [DEBUG] org.elasticsearch.common.inject.internal.Stopwatch - Converters creation: 0ms
+[2019-02-16 10:05:28.204] [main] [DEBUG] org.elasticsearch.common.inject.internal.Stopwatch - Binding creation: 7ms
+[2019-02-16 10:05:28.205] [main] [DEBUG] org.elasticsearch.common.inject.internal.Stopwatch - Private environment creation: 0ms
+[2019-02-16 10:05:28.205] [main] [DEBUG] org.elasticsearch.common.inject.internal.Stopwatch - Injector construction: 0ms
+[2019-02-16 10:05:28.210] [main] [DEBUG] org.elasticsearch.common.inject.internal.Stopwatch - Binding initialization: 4ms
+[2019-02-16 10:05:28.210] [main] [DEBUG] org.elasticsearch.common.inject.internal.Stopwatch - Binding indexing: 0ms
+[2019-02-16 10:05:28.210] [main] [DEBUG] org.elasticsearch.common.inject.internal.Stopwatch - Collecting injection requests: 0ms
+[2019-02-16 10:05:28.210] [main] [DEBUG] org.elasticsearch.common.inject.internal.Stopwatch - Binding validation: 0ms
+[2019-02-16 10:05:28.210] [main] [DEBUG] org.elasticsearch.common.inject.internal.Stopwatch - Static validation: 0ms
+[2019-02-16 10:05:28.211] [main] [DEBUG] org.elasticsearch.common.inject.internal.Stopwatch - Instance member validation: 1ms
+[2019-02-16 10:05:28.212] [main] [DEBUG] org.elasticsearch.common.inject.internal.Stopwatch - Provider verification: 0ms
+[2019-02-16 10:05:28.212] [main] [DEBUG] org.elasticsearch.common.inject.internal.Stopwatch - Static member injection: 0ms
+[2019-02-16 10:05:28.214] [main] [DEBUG] org.elasticsearch.common.inject.internal.Stopwatch - Instance injection: 1ms
+[2019-02-16 10:05:28.216] [main] [DEBUG] org.elasticsearch.common.inject.internal.Stopwatch - Preloading singletons: 2ms
+[2019-02-16 10:05:35.756] [main] [DEBUG] o.h.v.i.engine.resolver.DefaultTraversableResolver - Cannot find javax.persistence.Persistence on classpath. Assuming non JPA 2 environment. All properties will per default be traversable.
+[2019-02-16 10:05:35.767] [main] [DEBUG] o.h.v.i.engine.resolver.DefaultTraversableResolver - Cannot find javax.persistence.Persistence on classpath. Assuming non JPA 2 environment. All properties will per default be traversable.
+[2019-02-16 10:05:35.767] [main] [DEBUG] o.h.validator.internal.engine.ConfigurationImpl - Setting custom MessageInterpolator of type org.springframework.validation.beanvalidation.LocaleContextMessageInterpolator
+[2019-02-16 10:05:35.767] [main] [DEBUG] o.h.validator.internal.engine.ConfigurationImpl - Setting custom ConstraintValidatorFactory of type org.springframework.validation.beanvalidation.SpringConstraintValidatorFactory
+[2019-02-16 10:05:35.768] [main] [DEBUG] o.h.validator.internal.engine.ConfigurationImpl - Setting custom ParameterNameProvider of type com.sun.proxy.$Proxy64
+[2019-02-16 10:05:35.768] [main] [DEBUG] o.h.validator.internal.xml.ValidationXmlParser - Trying to load META-INF/validation.xml for XML based Validator configuration.
+[2019-02-16 10:05:35.768] [main] [DEBUG] o.h.validator.internal.xml.ResourceLoaderHelper - Trying to load META-INF/validation.xml via user class loader
+[2019-02-16 10:05:35.769] [main] [DEBUG] o.h.validator.internal.xml.ResourceLoaderHelper - Trying to load META-INF/validation.xml via TCCL
+[2019-02-16 10:05:35.769] [main] [DEBUG] o.h.validator.internal.xml.ResourceLoaderHelper - Trying to load META-INF/validation.xml via Hibernate Validator's class loader
+[2019-02-16 10:05:35.770] [main] [DEBUG] o.h.validator.internal.xml.ValidationXmlParser - No META-INF/validation.xml found. Using annotation based configuration only.
+[2019-02-16 10:05:39.042] [main] [DEBUG] io.undertow - starting undertow server io.undertow.Undertow@220be130
+[2019-02-16 10:05:39.077] [XNIO-2 I/O-4] [DEBUG] org.xnio.nio - Started channel thread 'XNIO-2 I/O-4', selector sun.nio.ch.WindowsSelectorImpl@5fc50df3
+[2019-02-16 10:05:39.077] [XNIO-2 I/O-1] [DEBUG] org.xnio.nio - Started channel thread 'XNIO-2 I/O-1', selector sun.nio.ch.WindowsSelectorImpl@ff36b1a
+[2019-02-16 10:05:39.077] [XNIO-2 I/O-2] [DEBUG] org.xnio.nio - Started channel thread 'XNIO-2 I/O-2', selector sun.nio.ch.WindowsSelectorImpl@688df1e8
+[2019-02-16 10:05:39.077] [main] [DEBUG] io.undertow - Configuring listener with protocol HTTP for interface 0.0.0.0 and port 38194
+[2019-02-16 10:05:39.078] [XNIO-2 Accept] [DEBUG] org.xnio.nio - Started channel thread 'XNIO-2 Accept', selector sun.nio.ch.WindowsSelectorImpl@e94f308
+[2019-02-16 10:05:39.079] [XNIO-2 I/O-3] [DEBUG] org.xnio.nio - Started channel thread 'XNIO-2 I/O-3', selector sun.nio.ch.WindowsSelectorImpl@77643a7e
+[2019-02-16 10:05:40.038] [main] [INFO ] com.globalegrow.ServiceStart - Started ServiceStart in 18.065 seconds (JVM running for 21.758)
+[2019-02-16 10:07:44.237] [XNIO-2 task-1] [DEBUG] io.undertow.request.security - Attempting to authenticate /fb-ad-user-feature, authentication required: false
+[2019-02-16 10:07:44.243] [XNIO-2 task-1] [DEBUG] io.undertow.request.security - Authentication outcome was NOT_ATTEMPTED with method io.undertow.security.impl.CachedAuthenticatedSessionMechanism@67c3be79 for /fb-ad-user-feature
+[2019-02-16 10:07:44.244] [XNIO-2 task-1] [DEBUG] io.undertow.request.security - Authentication result was ATTEMPTED for /fb-ad-user-feature
+[2019-02-16 10:07:44.251] [XNIO-2 task-1] [INFO ] io.undertow.servlet - Initializing Spring FrameworkServlet 'dispatcherServlet'
+[2019-02-16 10:07:44.765] [XNIO-2 task-1] [DEBUG] o.h.v.i.m.descriptor.ConstraintDescriptorImpl - Adding composing constraint: ConstraintDescriptorImpl{annotation=javax.validation.constraints.NotNull, payloads=[], hasComposingConstraints=true, isReportAsSingleInvalidConstraint=false, elementType=FIELD, definedOn=DEFINED_LOCALLY, groups=[interface javax.validation.groups.Default], attributes={message={javax.validation.constraints.NotNull.message}, groups=[Ljava.lang.Class;@1cc14db2, payload=[Ljava.lang.Class;@c9bb0b9}, constraintType=GENERIC}.
+[2019-02-16 10:07:44.787] [XNIO-2 task-1] [DEBUG] o.h.v.i.m.descriptor.ConstraintDescriptorImpl - Adding composing constraint: ConstraintDescriptorImpl{annotation=javax.validation.constraints.NotNull, payloads=[], hasComposingConstraints=true, isReportAsSingleInvalidConstraint=false, elementType=FIELD, definedOn=DEFINED_LOCALLY, groups=[interface javax.validation.groups.Default], attributes={message={javax.validation.constraints.NotNull.message}, groups=[Ljava.lang.Class;@54854ef5, payload=[Ljava.lang.Class;@47a9f9e6}, constraintType=GENERIC}.
+[2019-02-16 10:07:44.855] [XNIO-2 task-1] [DEBUG] o.h.v.i.m.descriptor.ConstraintDescriptorImpl - Adding composing constraint: ConstraintDescriptorImpl{annotation=javax.validation.constraints.NotNull, payloads=[], hasComposingConstraints=true, isReportAsSingleInvalidConstraint=false, elementType=FIELD, definedOn=DEFINED_IN_HIERARCHY, groups=[interface javax.validation.groups.Default], attributes={message={javax.validation.constraints.NotNull.message}, groups=[Ljava.lang.Class;@199d926b, payload=[Ljava.lang.Class;@45937f5e}, constraintType=GENERIC}.
+[2019-02-16 10:07:44.921] [XNIO-2 task-1] [DEBUG] c.g.d.z.a.u.f.s.impl.FBADUserFeatureServiceEsImpl - 广告信息 FB id: 23842890083290734
+[2019-02-16 10:08:18.271] [XNIO-2 task-2] [DEBUG] io.undertow.request.security - Attempting to authenticate /app-user-feature, authentication required: false
+[2019-02-16 10:08:18.272] [XNIO-2 task-2] [DEBUG] io.undertow.request.security - Authentication outcome was NOT_ATTEMPTED with method io.undertow.security.impl.CachedAuthenticatedSessionMechanism@67c3be79 for /app-user-feature
+[2019-02-16 10:08:18.272] [XNIO-2 task-2] [DEBUG] io.undertow.request.security - Authentication result was ATTEMPTED for /app-user-feature
+[2019-02-16 10:08:18.352] [XNIO-2 task-2] [DEBUG] o.h.v.i.m.descriptor.ConstraintDescriptorImpl - Adding composing constraint: ConstraintDescriptorImpl{annotation=javax.validation.constraints.NotNull, payloads=[], hasComposingConstraints=true, isReportAsSingleInvalidConstraint=false, elementType=FIELD, definedOn=DEFINED_LOCALLY, groups=[interface javax.validation.groups.Default], attributes={message={javax.validation.constraints.NotNull.message}, groups=[Ljava.lang.Class;@3c0eb77b, payload=[Ljava.lang.Class;@6aea8f76}, constraintType=GENERIC}.
+[2019-02-16 10:08:18.410] [XNIO-2 task-2] [DEBUG] o.h.v.i.m.descriptor.ConstraintDescriptorImpl - Adding composing constraint: ConstraintDescriptorImpl{annotation=javax.validation.constraints.NotNull, payloads=[], hasComposingConstraints=true, isReportAsSingleInvalidConstraint=false, elementType=FIELD, definedOn=DEFINED_IN_HIERARCHY, groups=[interface javax.validation.groups.Default], attributes={message={javax.validation.constraints.NotNull.message}, groups=[Ljava.lang.Class;@506585d1, payload=[Ljava.lang.Class;@3f7cc534}, constraintType=GENERIC}.
+[2019-02-16 10:08:18.454] [XNIO-2 task-2] [DEBUG] c.g.d.z.a.u.f.s.impl.AppUserFeatureServiceEsImpl - 入参请求：AppUserFeatureRequest(site=zaful, device_id=[1524046698675-1636828, 1519343258579-1080520])
+[2019-02-16 10:08:42.100] [Thread-41] [INFO ] io.undertow.servlet - Destroying Spring FrameworkServlet 'dispatcherServlet'
+[2019-02-16 10:08:42.102] [Thread-41] [DEBUG] io.undertow - stopping undertow server io.undertow.Undertow@220be130
+[2019-02-27 15:13:37.915] [main] [INFO ] com.globalegrow.ServiceStart - Starting ServiceStart on 3F-wangzhongfu with PID 14980 (E:\work\globale\git\source-data-router\dy-app-user-feature\target\classes started by wangzhongfu in E:\work\globale\git\source-data-router)
+[2019-02-27 15:13:37.941] [main] [INFO ] com.globalegrow.ServiceStart - The following profiles are active: prod
+[2019-02-27 15:13:50.695] [main] [INFO ] org.xnio - XNIO version 3.3.8.Final
+[2019-02-27 15:13:50.792] [main] [INFO ] org.xnio.nio - XNIO NIO Implementation Version 3.3.8.Final
+[2019-02-27 15:13:50.866] [main] [WARN ] io.undertow.websockets.jsr - UT026009: XNIO worker was not set on WebSocketDeploymentInfo, the default worker will be used
+[2019-02-27 15:13:50.866] [main] [WARN ] io.undertow.websockets.jsr - UT026010: Buffer pool was not set on WebSocketDeploymentInfo, the default pool will be used
+[2019-02-27 15:13:51.030] [main] [INFO ] io.undertow.servlet - Initializing Spring embedded WebApplicationContext
+[2019-02-27 15:16:06.185] [main] [INFO ] com.globalegrow.ServiceStart - Started ServiceStart in 150.017 seconds (JVM running for 158.125)

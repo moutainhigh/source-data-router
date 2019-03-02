@@ -274,12 +274,14 @@ public enum ReportBaseQuotaValues {
                         return null;
                     }
 
-                } else if ("contains_or_equal".equals(jsonLogFilter.getFilterRule())) {
+                } else
+                    // 包含或相等 a%b&&c 此过滤条件代表目标数据包含 a、b 任意一个字符或与 c 相等则满足条件
+                    if ("contains_or_equal".equals(jsonLogFilter.getFilterRule())) {
 
                     String[] values = jsonLogFilter.getValueFilter().split("&&");
-
+                    // 包含值
                     String[] orValues = values[0].split("%");
-
+                    // 相等值
                     String valueEqual = values[1];
 
                     String value = ctx.read(jsonLogFilter.getJsonPath(), String.class);
@@ -294,17 +296,19 @@ public enum ReportBaseQuotaValues {
                         return null;
                     }
 
-                } else if ("end_or_equal".equals(jsonLogFilter.getFilterRule())) {
+                } else
+                    // 以 .. 结尾或相等，a%b&&c 此过滤条件代表目标数据以 a、b 任意一个字符结尾或与 c 相等则满足条件
+                    if ("end_or_equal".equals(jsonLogFilter.getFilterRule())) {
 
                     String[] values = jsonLogFilter.getValueFilter().split("&&");
 
-                    String[] orValues = values[0].split("%");
+                    String[] endValues = values[0].split("%");
 
                     String valueEqual = values[1];
 
                     String value = ctx.read(jsonLogFilter.getJsonPath(), String.class);
 
-                    for (String orValue : orValues) {
+                    for (String orValue : endValues) {
                         if (value.endsWith(orValue)) {
                             return "not_null";
                         }

@@ -1,5 +1,10 @@
 package com.globalegrow.dy.dto;
 
+import lombok.Data;
+import lombok.ToString;
+
+@Data
+@ToString
 public abstract class EsPageResponse extends CommonResponse {
 
     /**
@@ -12,20 +17,4 @@ public abstract class EsPageResponse extends CommonResponse {
      */
     private String requestId;
 
-
-    public String getRequestId() {
-        return requestId;
-    }
-
-    public void setRequestId(String requestId) {
-        this.requestId = requestId;
-    }
-
-    public Long getTotalCount() {
-        return totalCount;
-    }
-
-    public void setTotalCount(Long totalCount) {
-        this.totalCount = totalCount;
-    }
 }

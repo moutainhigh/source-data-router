@@ -1,17 +1,12 @@
 package com.globalegrow.dy.dto;
 
+import lombok.Data;
+import lombok.ToString;
+
 import java.util.List;
 
-public class SearchWordSkusResponse extends CommonResponse {
+@Data
+@ToString
+public class SearchWordSkusResponse extends CommonPatternResponse<List<String>> {
 
-    private List<String> data;
-
-
-    public List<String> getData() {
-        return data;
-    }
-
-    public void setData(List<String> data) {
-        this.data = data;
-    }
 }

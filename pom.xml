@@ -1,102 +1,109 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
 
-	<groupId>com.globalegrow.dy</groupId>
-	<artifactId>source-data-router</artifactId>
-	<packaging>pom</packaging>
-	<version>1.0-SNAPSHOT</version>
+    <groupId>com.globalegrow.dy</groupId>
+    <artifactId>source-data-router</artifactId>
+    <packaging>pom</packaging>
+    <version>1.0-SNAPSHOT</version>
 
-	<modules>
-		<!--<module>kafka-to-hbase</module> -->
-		<!-- <module>log-data-dimensions</module> -->
-		<module>data-router-common</module>
-		<!--<module>log-data-dimensions-recommend</module> -->
-		<module>persistence-cookie-and-userid-rel</module>
-		<module>common-hbase</module>
-		<module>common-redis</module>
-		<module>mysql-binlog-handle</module>
-		<!--<module>bts-planinfo-query</module>-->
-		<!--<module>bts-recommend-report-source</module>-->
-		<!--<module>kafka-es</module>-->
-		<module>common-es</module>
-		<module>http-kylin-decorate</module>
-		<!--<module>bts-rg-report-source</module>-->
-		<!--<module>ips-data-service</module>
-		<module>ips-mq-service</module>-->
+    <modules>
+
+        <module>data-router-common</module>
+        <module>spring-common-controller</module>
+
+        <module>persistence-cookie-and-userid-rel</module>
+        <module>common-hbase</module>
+        <module>common-redis</module>
+        <module>mysql-binlog-handle</module>
+
+        <module>common-es</module>
+        <module>http-kylin-decorate</module>
+
+        <module>dy-realtime-data-query-service</module>
+
+        <module>bts-common-report</module>
+        <module>dy-app-user-feature</module>
+        <module>flink-job-scheduler</module>
+        <module>dy-goods-info</module>
+        <!--<module>kafka-to-hbase</module> -->
+        <!-- <module>log-data-dimensions</module> -->
+        <!--<module>log-data-dimensions-recommend</module> -->
+        <!--<module>bts-planinfo-query</module>-->
+        <!--<module>bts-recommend-report-source</module>-->
+        <!--<module>kafka-es</module>-->
+        <!--<module>bts-rg-report-source</module>-->
+        <!--<module>ips-data-service</module>
+        <module>ips-mq-service</module>-->
         <!--<module>bts-gb-report-source</module>-->
         <!--<module>gb-mysql-binlog-handle</module>-->
-		<!--<module>real-time-data-to-redis</module>-->
-        <module>dy-realtime-data-query-service</module>
+        <!--<module>real-time-data-to-redis</module>-->
         <!--<module>lzo-data-file-analyse</module>-->
-		<!--<module>hdfs-remote-connector</module>-->
-        <module>bts-common-report</module>
-        <module>dy-zaful-app-user-frature</module>
+        <!--<module>hdfs-remote-connector</module>-->
     </modules>
 
-	<parent>
-		<groupId>org.springframework.boot</groupId>
-		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>1.5.14.RELEASE</version>
-		<relativePath />
-	</parent>
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>1.5.14.RELEASE</version>
+        <relativePath/>
+    </parent>
 
-	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<servlet.version>4.0.1</servlet.version>
-		<java.version>1.8</java.version>
-		<hadoop.version>2.7.6</hadoop.version>
-		<hbase.version>1.3.0</hbase.version>
-	</properties>
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <servlet.version>4.0.1</servlet.version>
+        <java.version>1.8</java.version>
+        <hadoop.version>2.7.6</hadoop.version>
+        <hbase.version>1.3.0</hbase.version>
+        <elasticsearch.version>5.6.4</elasticsearch.version>
+        <lombok.version>1.18.6</lombok.version>
+        <hystrix.version>1.5.12</hystrix.version>
+        <sentinel.version>1.4.1</sentinel.version>
+    </properties>
 
-	<dependencies>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-web</artifactId>
-			<exclusions>
-				<exclusion>
-					<groupId>org.springframework.boot</groupId>
-					<artifactId>spring-boot-starter-tomcat</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-undertow</artifactId>
-		</dependency>
+    <dependencies>
 
-		<!-- <dependency> <groupId>org.springframework.boot</groupId> <artifactId>spring-boot-starter-jdbc</artifactId> 
-			</dependency> -->
-
-		<!-- https://mvnrepository.com/artifact/org.springframework.kafka/spring-kafka -->
-		<dependency>
-			<groupId>org.springframework.kafka</groupId>
-			<artifactId>spring-kafka</artifactId>
-			<version>1.3.5.RELEASE</version>
-		</dependency>
+        <!-- <dependency> <groupId>org.springframework.boot</groupId> <artifactId>spring-boot-starter-jdbc</artifactId>
+            </dependency> -->
 
 
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-aop</artifactId>
+        </dependency>
+        <!--<dependency> <groupId>com.alibaba</groupId> <artifactId>druid-spring-boot-starter</artifactId>
+            <version>1.1.10</version> </dependency> -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
 
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-aop</artifactId>
-		</dependency>
-		<!--<dependency> <groupId>com.alibaba</groupId> <artifactId>druid-spring-boot-starter</artifactId> 
-			<version>1.1.10</version> </dependency> -->
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-test</artifactId>
-			<scope>test</scope>
-		</dependency>
+        <dependency>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-all</artifactId>
+            <version>4.1.15</version>
+        </dependency>
+    </dependencies>
 
-		<dependency>
-			<groupId>org.springframework.kafka</groupId>
-			<artifactId>spring-kafka-test</artifactId>
-			<scope>test</scope>
-		</dependency>
-	</dependencies>
-
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok-maven-plugin</artifactId>
+                <version>1.18.6.0</version>
+                <executions>
+                    <execution>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>delombok</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 </project>

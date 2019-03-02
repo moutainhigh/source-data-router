@@ -87,29 +87,13 @@
             <artifactId>redisson</artifactId>
             <version>3.8.2</version>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/com.netflix.hystrix/hystrix-core -->
 
-        <dependency>
-            <groupId>commons-io</groupId>
-            <artifactId>commons-io</artifactId>
-            <version>2.6</version>
-        </dependency>
-        <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-lang3 -->
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
-            <version>3.7</version>
-        </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-text</artifactId>
             <version>1.4</version>
         </dependency>
-        <dependency>
-            <groupId>commons-beanutils</groupId>
-            <artifactId>commons-beanutils</artifactId>
-            <version>1.9.3</version>
-        </dependency>
+
         <!-- https://mvnrepository.com/artifact/com.alibaba.csp/sentinel-core -->
         <dependency>
             <groupId>com.alibaba.csp</groupId>
@@ -129,6 +113,28 @@
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-alibaba-sentinel</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>${lombok.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-tomcat</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-undertow</artifactId>
         </dependency>
 
     </dependencies>
@@ -254,7 +260,7 @@
                 <configuration>
                     <descriptors>
                         <!--D:\WORK\lakala\git\dqs\dqs-data-import\src\main\resources-->
-                        <descriptor>src/main/resources/distribution/assembly.xml</descriptor>
+                        <descriptor>src/main/resources/${profiles.active}/distribution/assembly.xml</descriptor>
                     </descriptors>
                     <!-- <descriptorRefs>
                          <descriptorRef>jar-with-dependencies</descriptorRef>

@@ -10,6 +10,8 @@ import io.searchbox.client.JestResult;
 import io.searchbox.core.Search;
 import io.searchbox.core.SearchScroll;
 import io.searchbox.params.Parameters;
+import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
@@ -29,10 +31,10 @@ import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
+@Data
+@Slf4j
 @Service
 public class UserActionQueryAllServiceEsImpl implements UserActionQueryAllService {
-
-    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
     //@Qualifier("myJestClient")
@@ -58,7 +60,7 @@ public class UserActionQueryAllServiceEsImpl implements UserActionQueryAllServic
         Long startDate = request.getStartDate();
 
         if (startDate < (currentTime - this.oneDay * this.maxEarliestDays)) {
-            this.logger.info("输入时间超过{}天，设置为 {} 天", this.maxEarliestDays, this.defaultEarliestDsys);
+            log.info("输入时间超过{}天，设置为 {} 天", this.maxEarliestDays, this.defaultEarliestDsys);
             startDate = this.oneDay * this.defaultEarliestDsys;
         }
 
@@ -132,7 +134,7 @@ public class UserActionQueryAllServiceEsImpl implements UserActionQueryAllServic
         searchSourceBuilder.sort(sortBuilder);
         Search.Builder builder = new Search.Builder(searchSourceBuilder.toString());
 
-        this.logger.debug("elasticsearch 搜索条件: {}", searchSourceBuilder.toString());
+        log.debug("elasticsearch 搜索条件: {}", searchSourceBuilder.toString());
 
         builder.addIndex(esIndex + "-" + eventName);
         Search search = builder
@@ -154,14 +156,14 @@ public class UserActionQueryAllServiceEsImpl implements UserActionQueryAllServic
 
                 if (jsonElement != null) {
                     String scrollId = jsonElement.getAsString();
-                    this.logger.debug("用户基本信息：scroll_id {}", scrollId);
+                    log.debug("用户基本信息：scroll_id {}", scrollId);
                     this.handleUserActionScroll(userActionData, scrollId);
                 }
 
             }
 
         } catch (IOException e) {
-            logger.error("查询用户全部事件信息query es error ,params: {}", searchSourceBuilder.toString(), e);
+            log.error("查询用户全部事件信息query es error ,params: {}", searchSourceBuilder.toString(), e);
         }
 
 
@@ -189,27 +191,4 @@ public class UserActionQueryAllServiceEsImpl implements UserActionQueryAllServic
 
     }
 
-    public Integer getMaxEarliestDays() {
-        return maxEarliestDays;
-    }
-
-    public void setMaxEarliestDays(Integer maxEarliestDays) {
-        this.maxEarliestDays = maxEarliestDays;
-    }
-
-    public Integer getDefaultEarliestDsys() {
-        return defaultEarliestDsys;
-    }
-
-    public void setDefaultEarliestDsys(Integer defaultEarliestDsys) {
-        this.defaultEarliestDsys = defaultEarliestDsys;
-    }
-
-    public String getScrollTime() {
-        return scrollTime;
-    }
-
-    public void setScrollTime(String scrollTime) {
-        this.scrollTime = scrollTime;
-    }
 }

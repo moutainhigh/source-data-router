@@ -1,0 +1,880 @@
+[2019-02-27 14:44:08.476] [main] [INFO ] com.globalegrow.ServiceStart - Starting ServiceStart on 3F-wangzhongfu with PID 15640 (E:\work\globale\git\source-data-router\flink-job-scheduler\target\classes started by wangzhongfu in E:\work\globale\git\source-data-router)
+[2019-02-27 14:44:08.479] [main] [INFO ] com.globalegrow.ServiceStart - The following profiles are active: dev
+[2019-02-27 14:44:10.862] [main] [WARN ] o.h.v.m.ParameterMessageInterpolator - HV000184: ParameterMessageInterpolator has been chosen, EL interpolation will not be supported
+[2019-02-27 14:44:11.273] [main] [INFO ] org.xnio - XNIO version 3.3.8.Final
+[2019-02-27 14:44:11.322] [main] [INFO ] org.xnio.nio - XNIO NIO Implementation Version 3.3.8.Final
+[2019-02-27 14:44:11.370] [main] [WARN ] io.undertow.websockets.jsr - UT026009: XNIO worker was not set on WebSocketDeploymentInfo, the default worker will be used
+[2019-02-27 14:44:11.370] [main] [WARN ] io.undertow.websockets.jsr - UT026010: Buffer pool was not set on WebSocketDeploymentInfo, the default pool will be used
+[2019-02-27 14:44:11.402] [main] [ERROR] org.springframework.boot.SpringApplication - Application startup failed
+org.springframework.context.ApplicationContextException: Unable to start embedded container; nested exception is java.lang.NoSuchMethodError: javax.servlet.ServletContext.getClassLoader()Ljava/lang/ClassLoader;
+	at org.springframework.boot.context.embedded.EmbeddedWebApplicationContext.onRefresh(EmbeddedWebApplicationContext.java:137)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:537)
+	at org.springframework.boot.context.embedded.EmbeddedWebApplicationContext.refresh(EmbeddedWebApplicationContext.java:122)
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:693)
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:360)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:303)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1118)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1107)
+	at com.globalegrow.ServiceStart.main(ServiceStart.java:17)
+Caused by: java.lang.NoSuchMethodError: javax.servlet.ServletContext.getClassLoader()Ljava/lang/ClassLoader;
+	at io.undertow.websockets.jsr.Bootstrap.handleDeployment(Bootstrap.java:92)
+	at io.undertow.servlet.core.DeploymentManagerImpl.handleExtensions(DeploymentManagerImpl.java:263)
+	at io.undertow.servlet.core.DeploymentManagerImpl.deploy(DeploymentManagerImpl.java:153)
+	at org.springframework.boot.context.embedded.undertow.UndertowEmbeddedServletContainerFactory.createDeploymentManager(UndertowEmbeddedServletContainerFactory.java:412)
+	at org.springframework.boot.context.embedded.undertow.UndertowEmbeddedServletContainerFactory.getEmbeddedServletContainer(UndertowEmbeddedServletContainerFactory.java:234)
+	at org.springframework.boot.context.embedded.EmbeddedWebApplicationContext.createEmbeddedServletContainer(EmbeddedWebApplicationContext.java:164)
+	at org.springframework.boot.context.embedded.EmbeddedWebApplicationContext.onRefresh(EmbeddedWebApplicationContext.java:134)
+	... 8 common frames omitted
+[2019-02-27 14:53:16.946] [main] [INFO ] com.globalegrow.ServiceStart - Starting ServiceStart on 3F-wangzhongfu with PID 15236 (E:\work\globale\git\source-data-router\flink-job-scheduler\target\classes started by wangzhongfu in E:\work\globale\git\source-data-router)
+[2019-02-27 14:53:16.965] [main] [INFO ] com.globalegrow.ServiceStart - The following profiles are active: dev
+[2019-02-27 14:53:22.148] [main] [INFO ] org.eclipse.jetty.util.log - Logging initialized @16735ms to org.eclipse.jetty.util.log.Slf4jLog
+[2019-02-27 14:53:24.935] [main] [INFO ] org.eclipse.jetty.server.Server - jetty-9.4.11.v20180605; built: 2018-06-05T18:24:03.829Z; git: d5fc0523cfa96bfebfbda19606cad384d772f04c; jvm 1.8.0_171-b11
+[2019-02-27 14:53:25.765] [main] [INFO ] org.eclipse.jetty.server.session - DefaultSessionIdManager workerName=node0
+[2019-02-27 14:53:25.766] [main] [INFO ] org.eclipse.jetty.server.session - No SessionScavenger set, using defaults
+[2019-02-27 14:53:25.780] [main] [INFO ] org.eclipse.jetty.server.session - node0 Scavenging every 600000ms
+[2019-02-27 14:53:25.867] [main] [INFO ] o.e.j.server.handler.ContextHandler.application - Initializing Spring embedded WebApplicationContext
+[2019-02-27 14:53:26.077] [main] [INFO ] org.eclipse.jetty.server.handler.ContextHandler - Started o.s.b.c.e.j.JettyEmbeddedWebAppContext@5767b2af{application,/,[file:///C:/Users/wangzhongfu/AppData/Local/Temp/jetty-docbase.4594109877505012869.38193/],AVAILABLE}
+[2019-02-27 14:53:26.077] [main] [INFO ] org.eclipse.jetty.server.Server - Started @20711ms
+[2019-02-27 14:53:26.844] [main] [INFO ] c.g.f.scheduler.ApacheDrillHdfsActiveNameNodeCheck - Apache drill 大禹 dfs 配置信息 {name=dfs, config={type=file, connection=hdfs://bts-masterbak:8020, config=null, workspaces={zaful={location=/user/hadoop/bumblebee/web/zaful, writable=false, defaultInputFormat=avro, allowAccessOutsideWorkspace=true}, tmp={location=/tmp, writable=true, defaultInputFormat=null, allowAccessOutsideWorkspace=false}, root={location=/, writable=false, defaultInputFormat=null, allowAccessOutsideWorkspace=false}, hadoop={location=/user/hadoop/log/m/zaful/clean/, writable=false, defaultInputFormat=json, allowAccessOutsideWorkspace=true}, bumblebee={location=/user/hadoop/bumblebee/, writable=false, defaultInputFormat=avro, allowAccessOutsideWorkspace=true}, json_test={location=/user/hadoop/apache_drill_json_test, writable=false, defaultInputFormat=json, allowAccessOutsideWorkspace=true}}, formats={psv={type=text, extensions=[tbl], delimiter=|}, csv={type=text, extensions=[csv], delimiter=,}, tsv={type=text, extensions=[tsv], delimiter=	}, httpd={type=httpd, logFormat=%h %t "%r" %>s %b "%{Referer}i"}, parquet={type=parquet}, json={type=json, extensions=[json]}, pcap={type=pcap}, pcapng={type=pcapng, extensions=[pcapng]}, avro={type=avro}, sequencefile={type=sequencefile, extensions=[seq]}, csvh={type=text, extensions=[csvh], extractHeader=true, delimiter=,}, image={type=image, extensions=[jpg, jpeg, jpe, tif, tiff, dng, psd, png, bmp, gif, ico, pcx, wav, wave, avi, webp, mov, mp4, m4a, m4p, m4b, m4r, m4v, 3gp, 3g2, eps, epsf, epsi, ai, arw, crw, cr2, nef, orf, raf, rw2, rwl, srw, x3f]}}, enabled=true}}
+[2019-02-27 14:55:29.096] [main] [INFO ] c.g.f.scheduler.ApacheDrillHdfsActiveNameNodeCheck - Apache drill 大数据 dfs 配置信息 {name=dfs_bigdata, config={type=file, connection=hdfs://172.31.20.96:8020/, config=null, workspaces={bigdata={location=/bigdata/ods/, writable=false, defaultInputFormat=csv, allowAccessOutsideWorkspace=false}}, formats={psv={type=text, extensions=[tbl], delimiter=|}, csv={type=text, extensions=[csv], delimiter=}, tsv={type=text, extensions=[tsv], delimiter=	}, httpd={type=httpd, logFormat=%h %t "%r" %>s %b "%{Referer}i"}, parquet={type=parquet}, json={type=json, extensions=[json]}, pcap={type=pcap}, pcapng={type=pcapng, extensions=[pcapng]}, avro={type=avro}, sequencefile={type=sequencefile, extensions=[seq]}, csvh={type=text, extensions=[csvh], extractHeader=true, delimiter=,}, image={type=image, extensions=[jpg, jpeg, jpe, tif, tiff, dng, psd, png, bmp, gif, ico, pcx, wav, wave, avi, webp, mov, mp4, m4a, m4p, m4b, m4r, m4v, 3gp, 3g2, eps, epsf, epsi, ai, arw, crw, cr2, nef, orf, raf, rw2, rwl, srw, x3f]}}, enabled=true}}
+[2019-02-27 14:55:29.161] [main] [INFO ] org.eclipse.jetty.server.session - node0 Stopped scavenging
+[2019-02-27 14:55:29.165] [main] [INFO ] org.eclipse.jetty.server.handler.ContextHandler - Stopped o.s.b.c.e.j.JettyEmbeddedWebAppContext@5767b2af{application,/,[file:///C:/Users/wangzhongfu/AppData/Local/Temp/jetty-docbase.4594109877505012869.38193/],UNAVAILABLE}
+[2019-02-27 14:55:29.210] [main] [ERROR] org.springframework.boot.SpringApplication - Application startup failed
+org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'FBADFeatureFlinkJobByHour' defined in file [E:\work\globale\git\source-data-router\flink-job-scheduler\target\classes\com\globalegrow\fixed\scheduler\FBADFeatureFlinkJobByHour.class]: Initialization of bean failed; nested exception is java.lang.IllegalStateException: Encountered invalid @Scheduled method 'run': Could not resolve placeholder 'app.cron.fbad-freatrue' in value "${app.cron.fbad-freatrue}"
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:564)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:483)
+	at org.springframework.beans.factory.support.AbstractBeanFactory$1.getObject(AbstractBeanFactory.java:312)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:230)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:308)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:197)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:761)
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:867)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:543)
+	at org.springframework.boot.context.embedded.EmbeddedWebApplicationContext.refresh(EmbeddedWebApplicationContext.java:122)
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:693)
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:360)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:303)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1118)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1107)
+	at com.globalegrow.ServiceStart.main(ServiceStart.java:17)
+Caused by: java.lang.IllegalStateException: Encountered invalid @Scheduled method 'run': Could not resolve placeholder 'app.cron.fbad-freatrue' in value "${app.cron.fbad-freatrue}"
+	at org.springframework.scheduling.annotation.ScheduledAnnotationBeanPostProcessor.processScheduled(ScheduledAnnotationBeanPostProcessor.java:462)
+	at org.springframework.scheduling.annotation.ScheduledAnnotationBeanPostProcessor.postProcessAfterInitialization(ScheduledAnnotationBeanPostProcessor.java:332)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.applyBeanPostProcessorsAfterInitialization(AbstractAutowireCapableBeanFactory.java:423)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1638)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:555)
+	... 15 common frames omitted
+[2019-02-27 14:56:10.250] [main] [INFO ] com.globalegrow.ServiceStart - Starting ServiceStart on 3F-wangzhongfu with PID 5172 (E:\work\globale\git\source-data-router\flink-job-scheduler\target\classes started by wangzhongfu in E:\work\globale\git\source-data-router)
+[2019-02-27 14:56:10.255] [main] [INFO ] com.globalegrow.ServiceStart - The following profiles are active: dev
+[2019-02-27 14:56:12.245] [main] [INFO ] org.eclipse.jetty.util.log - Logging initialized @3469ms to org.eclipse.jetty.util.log.Slf4jLog
+[2019-02-27 14:56:12.322] [main] [INFO ] org.eclipse.jetty.server.Server - jetty-9.4.11.v20180605; built: 2018-06-05T18:24:03.829Z; git: d5fc0523cfa96bfebfbda19606cad384d772f04c; jvm 1.8.0_171-b11
+[2019-02-27 14:56:12.433] [main] [INFO ] org.eclipse.jetty.server.session - DefaultSessionIdManager workerName=node0
+[2019-02-27 14:56:12.433] [main] [INFO ] org.eclipse.jetty.server.session - No SessionScavenger set, using defaults
+[2019-02-27 14:56:12.434] [main] [INFO ] org.eclipse.jetty.server.session - node0 Scavenging every 660000ms
+[2019-02-27 14:56:12.439] [main] [INFO ] o.e.j.server.handler.ContextHandler.application - Initializing Spring embedded WebApplicationContext
+[2019-02-27 14:56:12.632] [main] [INFO ] org.eclipse.jetty.server.handler.ContextHandler - Started o.s.b.c.e.j.JettyEmbeddedWebAppContext@33a630fa{application,/,[file:///C:/Users/wangzhongfu/AppData/Local/Temp/jetty-docbase.7182963119733986196.38193/],AVAILABLE}
+[2019-02-27 14:56:12.633] [main] [INFO ] org.eclipse.jetty.server.Server - Started @3857ms
+[2019-02-27 14:56:13.226] [main] [INFO ] c.g.f.scheduler.ApacheDrillHdfsActiveNameNodeCheck - Apache drill 大禹 dfs 配置信息 {name=dfs, config={type=file, connection=hdfs://bts-masterbak:8020, config=null, workspaces={zaful={location=/user/hadoop/bumblebee/web/zaful, writable=false, defaultInputFormat=avro, allowAccessOutsideWorkspace=true}, tmp={location=/tmp, writable=true, defaultInputFormat=null, allowAccessOutsideWorkspace=false}, root={location=/, writable=false, defaultInputFormat=null, allowAccessOutsideWorkspace=false}, hadoop={location=/user/hadoop/log/m/zaful/clean/, writable=false, defaultInputFormat=json, allowAccessOutsideWorkspace=true}, bumblebee={location=/user/hadoop/bumblebee/, writable=false, defaultInputFormat=avro, allowAccessOutsideWorkspace=true}, json_test={location=/user/hadoop/apache_drill_json_test, writable=false, defaultInputFormat=json, allowAccessOutsideWorkspace=true}}, formats={psv={type=text, extensions=[tbl], delimiter=|}, csv={type=text, extensions=[csv], delimiter=,}, tsv={type=text, extensions=[tsv], delimiter=	}, httpd={type=httpd, logFormat=%h %t "%r" %>s %b "%{Referer}i"}, parquet={type=parquet}, json={type=json, extensions=[json]}, pcap={type=pcap}, pcapng={type=pcapng, extensions=[pcapng]}, avro={type=avro}, sequencefile={type=sequencefile, extensions=[seq]}, csvh={type=text, extensions=[csvh], extractHeader=true, delimiter=,}, image={type=image, extensions=[jpg, jpeg, jpe, tif, tiff, dng, psd, png, bmp, gif, ico, pcx, wav, wave, avi, webp, mov, mp4, m4a, m4p, m4b, m4r, m4v, 3gp, 3g2, eps, epsf, epsi, ai, arw, crw, cr2, nef, orf, raf, rw2, rwl, srw, x3f]}}, enabled=true}}
+[2019-02-27 14:56:13.449] [main] [INFO ] c.g.f.scheduler.ApacheDrillHdfsActiveNameNodeCheck - Apache drill 大数据 dfs 配置信息 {name=dfs_bigdata, config={type=file, connection=hdfs://172.31.20.96:8020/, config=null, workspaces={bigdata={location=/bigdata/ods/, writable=false, defaultInputFormat=csv, allowAccessOutsideWorkspace=false}}, formats={psv={type=text, extensions=[tbl], delimiter=|}, csv={type=text, extensions=[csv], delimiter=}, tsv={type=text, extensions=[tsv], delimiter=	}, httpd={type=httpd, logFormat=%h %t "%r" %>s %b "%{Referer}i"}, parquet={type=parquet}, json={type=json, extensions=[json]}, pcap={type=pcap}, pcapng={type=pcapng, extensions=[pcapng]}, avro={type=avro}, sequencefile={type=sequencefile, extensions=[seq]}, csvh={type=text, extensions=[csvh], extractHeader=true, delimiter=,}, image={type=image, extensions=[jpg, jpeg, jpe, tif, tiff, dng, psd, png, bmp, gif, ico, pcx, wav, wave, avi, webp, mov, mp4, m4a, m4p, m4b, m4r, m4v, 3gp, 3g2, eps, epsf, epsi, ai, arw, crw, cr2, nef, orf, raf, rw2, rwl, srw, x3f]}}, enabled=true}}
+[2019-02-27 14:56:23.837] [main] [INFO ] org.eclipse.jetty.server.session - node0 Stopped scavenging
+[2019-02-27 14:56:23.840] [main] [INFO ] org.eclipse.jetty.server.handler.ContextHandler - Stopped o.s.b.c.e.j.JettyEmbeddedWebAppContext@33a630fa{application,/,[file:///C:/Users/wangzhongfu/AppData/Local/Temp/jetty-docbase.7182963119733986196.38193/],UNAVAILABLE}
+[2019-02-27 14:56:23.855] [main] [ERROR] org.springframework.boot.SpringApplication - Application startup failed
+org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'elasticSearchRepository': Unsatisfied dependency expressed through field 'client'; nested exception is org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'transportClient' defined in class path resource [com/globalegrow/dy/es/EsConfig.class]: Bean instantiation via factory method failed; nested exception is org.springframework.beans.BeanInstantiationException: Failed to instantiate [org.elasticsearch.client.transport.TransportClient]: Factory method 'transportClient' threw exception; nested exception is java.lang.NoSuchMethodError: io.netty.buffer.CompositeByteBuf.addComponents(ZLjava/lang/Iterable;)Lio/netty/buffer/CompositeByteBuf;
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredFieldElement.inject(AutowiredAnnotationBeanPostProcessor.java:588)
+	at org.springframework.beans.factory.annotation.InjectionMetadata.inject(InjectionMetadata.java:88)
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor.postProcessPropertyValues(AutowiredAnnotationBeanPostProcessor.java:366)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.populateBean(AbstractAutowireCapableBeanFactory.java:1272)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:553)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:483)
+	at org.springframework.beans.factory.support.AbstractBeanFactory$1.getObject(AbstractBeanFactory.java:312)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:230)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:308)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:197)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:761)
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:867)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:543)
+	at org.springframework.boot.context.embedded.EmbeddedWebApplicationContext.refresh(EmbeddedWebApplicationContext.java:122)
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:693)
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:360)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:303)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1118)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1107)
+	at com.globalegrow.ServiceStart.main(ServiceStart.java:17)
+Caused by: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'transportClient' defined in class path resource [com/globalegrow/dy/es/EsConfig.class]: Bean instantiation via factory method failed; nested exception is org.springframework.beans.BeanInstantiationException: Failed to instantiate [org.elasticsearch.client.transport.TransportClient]: Factory method 'transportClient' threw exception; nested exception is java.lang.NoSuchMethodError: io.netty.buffer.CompositeByteBuf.addComponents(ZLjava/lang/Iterable;)Lio/netty/buffer/CompositeByteBuf;
+	at org.springframework.beans.factory.support.ConstructorResolver.instantiateUsingFactoryMethod(ConstructorResolver.java:599)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.instantiateUsingFactoryMethod(AbstractAutowireCapableBeanFactory.java:1181)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1075)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:513)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:483)
+	at org.springframework.beans.factory.support.AbstractBeanFactory$1.getObject(AbstractBeanFactory.java:312)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:230)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:308)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:202)
+	at org.springframework.beans.factory.config.DependencyDescriptor.resolveCandidate(DependencyDescriptor.java:208)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1138)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1066)
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredFieldElement.inject(AutowiredAnnotationBeanPostProcessor.java:585)
+	... 19 common frames omitted
+Caused by: org.springframework.beans.BeanInstantiationException: Failed to instantiate [org.elasticsearch.client.transport.TransportClient]: Factory method 'transportClient' threw exception; nested exception is java.lang.NoSuchMethodError: io.netty.buffer.CompositeByteBuf.addComponents(ZLjava/lang/Iterable;)Lio/netty/buffer/CompositeByteBuf;
+	at org.springframework.beans.factory.support.SimpleInstantiationStrategy.instantiate(SimpleInstantiationStrategy.java:189)
+	at org.springframework.beans.factory.support.ConstructorResolver.instantiateUsingFactoryMethod(ConstructorResolver.java:588)
+	... 31 common frames omitted
+Caused by: java.lang.NoSuchMethodError: io.netty.buffer.CompositeByteBuf.addComponents(ZLjava/lang/Iterable;)Lio/netty/buffer/CompositeByteBuf;
+	at org.elasticsearch.transport.netty4.Netty4Utils.toByteBuf(Netty4Utils.java:122)
+	at org.elasticsearch.transport.netty4.Netty4Transport.sendMessage(Netty4Transport.java:396)
+	at org.elasticsearch.transport.netty4.Netty4Transport.sendMessage(Netty4Transport.java:95)
+	at org.elasticsearch.transport.TcpTransport.internalSendMessage(TcpTransport.java:1135)
+	at org.elasticsearch.transport.TcpTransport.sendRequestToChannel(TcpTransport.java:1124)
+	at org.elasticsearch.transport.TcpTransport.executeHandshake(TcpTransport.java:1620)
+	at org.elasticsearch.transport.TcpTransport.openConnection(TcpTransport.java:577)
+	at org.elasticsearch.transport.TcpTransport.openConnection(TcpTransport.java:117)
+	at org.elasticsearch.transport.TransportService.openConnection(TransportService.java:361)
+	at org.elasticsearch.client.transport.TransportClientNodesService$SimpleNodeSampler.doSample(TransportClientNodesService.java:407)
+	at org.elasticsearch.client.transport.TransportClientNodesService$NodeSampler.sample(TransportClientNodesService.java:357)
+	at org.elasticsearch.client.transport.TransportClientNodesService.addTransportAddresses(TransportClientNodesService.java:198)
+	at org.elasticsearch.client.transport.TransportClient.addTransportAddress(TransportClient.java:319)
+	at com.globalegrow.dy.es.EsConfig.lambda$transportClient$0(EsConfig.java:41)
+	at java.util.ArrayList.forEach(ArrayList.java:1257)
+	at com.globalegrow.dy.es.EsConfig.transportClient(EsConfig.java:41)
+	at com.globalegrow.dy.es.EsConfig$$EnhancerBySpringCGLIB$$eb495b6a.CGLIB$transportClient$0(<generated>)
+	at com.globalegrow.dy.es.EsConfig$$EnhancerBySpringCGLIB$$eb495b6a$$FastClassBySpringCGLIB$$4e56c2b6.invoke(<generated>)
+	at org.springframework.cglib.proxy.MethodProxy.invokeSuper(MethodProxy.java:228)
+	at org.springframework.context.annotation.ConfigurationClassEnhancer$BeanMethodInterceptor.intercept(ConfigurationClassEnhancer.java:358)
+	at com.globalegrow.dy.es.EsConfig$$EnhancerBySpringCGLIB$$eb495b6a.transportClient(<generated>)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at org.springframework.beans.factory.support.SimpleInstantiationStrategy.instantiate(SimpleInstantiationStrategy.java:162)
+	... 32 common frames omitted
+[2019-02-27 14:58:53.373] [main] [INFO ] com.globalegrow.ServiceStart - Starting ServiceStart on 3F-wangzhongfu with PID 4856 (E:\work\globale\git\source-data-router\flink-job-scheduler\target\classes started by wangzhongfu in E:\work\globale\git\source-data-router)
+[2019-02-27 14:58:53.376] [main] [INFO ] com.globalegrow.ServiceStart - The following profiles are active: dev
+[2019-02-27 14:58:55.119] [main] [INFO ] org.eclipse.jetty.util.log - Logging initialized @3159ms to org.eclipse.jetty.util.log.Slf4jLog
+[2019-02-27 14:58:55.201] [main] [INFO ] org.eclipse.jetty.server.Server - jetty-9.4.11.v20180605; built: 2018-06-05T18:24:03.829Z; git: d5fc0523cfa96bfebfbda19606cad384d772f04c; jvm 1.8.0_171-b11
+[2019-02-27 14:58:55.306] [main] [INFO ] org.eclipse.jetty.server.session - DefaultSessionIdManager workerName=node0
+[2019-02-27 14:58:55.307] [main] [INFO ] org.eclipse.jetty.server.session - No SessionScavenger set, using defaults
+[2019-02-27 14:58:55.308] [main] [INFO ] org.eclipse.jetty.server.session - node0 Scavenging every 660000ms
+[2019-02-27 14:58:55.314] [main] [INFO ] o.e.j.server.handler.ContextHandler.application - Initializing Spring embedded WebApplicationContext
+[2019-02-27 14:58:55.467] [main] [INFO ] org.eclipse.jetty.server.handler.ContextHandler - Started o.s.b.c.e.j.JettyEmbeddedWebAppContext@2228db21{application,/,[file:///C:/Users/wangzhongfu/AppData/Local/Temp/jetty-docbase.4347083769070041985.38193/],AVAILABLE}
+[2019-02-27 14:58:55.468] [main] [INFO ] org.eclipse.jetty.server.Server - Started @3508ms
+[2019-02-27 14:58:56.030] [main] [INFO ] c.g.f.scheduler.ApacheDrillHdfsActiveNameNodeCheck - Apache drill 大禹 dfs 配置信息 {name=dfs, config={type=file, connection=hdfs://bts-masterbak:8020, config=null, workspaces={zaful={location=/user/hadoop/bumblebee/web/zaful, writable=false, defaultInputFormat=avro, allowAccessOutsideWorkspace=true}, tmp={location=/tmp, writable=true, defaultInputFormat=null, allowAccessOutsideWorkspace=false}, root={location=/, writable=false, defaultInputFormat=null, allowAccessOutsideWorkspace=false}, hadoop={location=/user/hadoop/log/m/zaful/clean/, writable=false, defaultInputFormat=json, allowAccessOutsideWorkspace=true}, bumblebee={location=/user/hadoop/bumblebee/, writable=false, defaultInputFormat=avro, allowAccessOutsideWorkspace=true}, json_test={location=/user/hadoop/apache_drill_json_test, writable=false, defaultInputFormat=json, allowAccessOutsideWorkspace=true}}, formats={psv={type=text, extensions=[tbl], delimiter=|}, csv={type=text, extensions=[csv], delimiter=,}, tsv={type=text, extensions=[tsv], delimiter=	}, httpd={type=httpd, logFormat=%h %t "%r" %>s %b "%{Referer}i"}, parquet={type=parquet}, json={type=json, extensions=[json]}, pcap={type=pcap}, pcapng={type=pcapng, extensions=[pcapng]}, avro={type=avro}, sequencefile={type=sequencefile, extensions=[seq]}, csvh={type=text, extensions=[csvh], extractHeader=true, delimiter=,}, image={type=image, extensions=[jpg, jpeg, jpe, tif, tiff, dng, psd, png, bmp, gif, ico, pcx, wav, wave, avi, webp, mov, mp4, m4a, m4p, m4b, m4r, m4v, 3gp, 3g2, eps, epsf, epsi, ai, arw, crw, cr2, nef, orf, raf, rw2, rwl, srw, x3f]}}, enabled=true}}
+[2019-02-27 14:58:56.248] [main] [INFO ] c.g.f.scheduler.ApacheDrillHdfsActiveNameNodeCheck - Apache drill 大数据 dfs 配置信息 {name=dfs_bigdata, config={type=file, connection=hdfs://172.31.20.96:8020/, config=null, workspaces={bigdata={location=/bigdata/ods/, writable=false, defaultInputFormat=csv, allowAccessOutsideWorkspace=false}}, formats={psv={type=text, extensions=[tbl], delimiter=|}, csv={type=text, extensions=[csv], delimiter=}, tsv={type=text, extensions=[tsv], delimiter=	}, httpd={type=httpd, logFormat=%h %t "%r" %>s %b "%{Referer}i"}, parquet={type=parquet}, json={type=json, extensions=[json]}, pcap={type=pcap}, pcapng={type=pcapng, extensions=[pcapng]}, avro={type=avro}, sequencefile={type=sequencefile, extensions=[seq]}, csvh={type=text, extensions=[csvh], extractHeader=true, delimiter=,}, image={type=image, extensions=[jpg, jpeg, jpe, tif, tiff, dng, psd, png, bmp, gif, ico, pcx, wav, wave, avi, webp, mov, mp4, m4a, m4p, m4b, m4r, m4v, 3gp, 3g2, eps, epsf, epsi, ai, arw, crw, cr2, nef, orf, raf, rw2, rwl, srw, x3f]}}, enabled=true}}
+[2019-02-27 14:58:56.616] [main] [INFO ] org.eclipse.jetty.server.session - node0 Stopped scavenging
+[2019-02-27 14:58:56.620] [main] [INFO ] org.eclipse.jetty.server.handler.ContextHandler - Stopped o.s.b.c.e.j.JettyEmbeddedWebAppContext@2228db21{application,/,[file:///C:/Users/wangzhongfu/AppData/Local/Temp/jetty-docbase.4347083769070041985.38193/],UNAVAILABLE}
+[2019-02-27 14:58:56.648] [main] [ERROR] org.springframework.boot.SpringApplication - Application startup failed
+org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'elasticSearchRepository': Unsatisfied dependency expressed through field 'client'; nested exception is org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'transportClient' defined in class path resource [com/globalegrow/dy/es/EsConfig.class]: Bean instantiation via factory method failed; nested exception is org.springframework.beans.BeanInstantiationException: Failed to instantiate [org.elasticsearch.client.transport.TransportClient]: Factory method 'transportClient' threw exception; nested exception is java.lang.NoClassDefFoundError: org/jboss/netty/util/ThreadNameDeterminer
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredFieldElement.inject(AutowiredAnnotationBeanPostProcessor.java:588)
+	at org.springframework.beans.factory.annotation.InjectionMetadata.inject(InjectionMetadata.java:88)
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor.postProcessPropertyValues(AutowiredAnnotationBeanPostProcessor.java:366)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.populateBean(AbstractAutowireCapableBeanFactory.java:1272)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:553)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:483)
+	at org.springframework.beans.factory.support.AbstractBeanFactory$1.getObject(AbstractBeanFactory.java:312)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:230)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:308)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:197)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:761)
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:867)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:543)
+	at org.springframework.boot.context.embedded.EmbeddedWebApplicationContext.refresh(EmbeddedWebApplicationContext.java:122)
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:693)
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:360)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:303)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1118)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1107)
+	at com.globalegrow.ServiceStart.main(ServiceStart.java:17)
+Caused by: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'transportClient' defined in class path resource [com/globalegrow/dy/es/EsConfig.class]: Bean instantiation via factory method failed; nested exception is org.springframework.beans.BeanInstantiationException: Failed to instantiate [org.elasticsearch.client.transport.TransportClient]: Factory method 'transportClient' threw exception; nested exception is java.lang.NoClassDefFoundError: org/jboss/netty/util/ThreadNameDeterminer
+	at org.springframework.beans.factory.support.ConstructorResolver.instantiateUsingFactoryMethod(ConstructorResolver.java:599)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.instantiateUsingFactoryMethod(AbstractAutowireCapableBeanFactory.java:1181)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1075)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:513)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:483)
+	at org.springframework.beans.factory.support.AbstractBeanFactory$1.getObject(AbstractBeanFactory.java:312)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:230)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:308)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:202)
+	at org.springframework.beans.factory.config.DependencyDescriptor.resolveCandidate(DependencyDescriptor.java:208)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1138)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1066)
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredFieldElement.inject(AutowiredAnnotationBeanPostProcessor.java:585)
+	... 19 common frames omitted
+Caused by: org.springframework.beans.BeanInstantiationException: Failed to instantiate [org.elasticsearch.client.transport.TransportClient]: Factory method 'transportClient' threw exception; nested exception is java.lang.NoClassDefFoundError: org/jboss/netty/util/ThreadNameDeterminer
+	at org.springframework.beans.factory.support.SimpleInstantiationStrategy.instantiate(SimpleInstantiationStrategy.java:189)
+	at org.springframework.beans.factory.support.ConstructorResolver.instantiateUsingFactoryMethod(ConstructorResolver.java:588)
+	... 31 common frames omitted
+Caused by: java.lang.NoClassDefFoundError: org/jboss/netty/util/ThreadNameDeterminer
+	at java.lang.ClassLoader.defineClass1(Native Method)
+	at java.lang.ClassLoader.defineClass(ClassLoader.java:763)
+	at java.security.SecureClassLoader.defineClass(SecureClassLoader.java:142)
+	at java.net.URLClassLoader.defineClass(URLClassLoader.java:467)
+	at java.net.URLClassLoader.access$100(URLClassLoader.java:73)
+	at java.net.URLClassLoader$1.run(URLClassLoader.java:368)
+	at java.net.URLClassLoader$1.run(URLClassLoader.java:362)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at java.net.URLClassLoader.findClass(URLClassLoader.java:361)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:424)
+	at sun.misc.Launcher$AppClassLoader.loadClass(Launcher.java:349)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:357)
+	at org.elasticsearch.transport.netty3.Netty3Utils.<clinit>(Netty3Utils.java:104)
+	at org.elasticsearch.transport.Netty3Plugin.<clinit>(Netty3Plugin.java:46)
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:62)
+	at sun.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45)
+	at java.lang.reflect.Constructor.newInstance(Constructor.java:423)
+	at org.elasticsearch.plugins.PluginsService.loadPlugin(PluginsService.java:430)
+	at org.elasticsearch.plugins.PluginsService.<init>(PluginsService.java:104)
+	at org.elasticsearch.client.transport.TransportClient.newPluginService(TransportClient.java:101)
+	at org.elasticsearch.client.transport.TransportClient.buildTemplate(TransportClient.java:126)
+	at org.elasticsearch.client.transport.TransportClient.<init>(TransportClient.java:265)
+	at org.elasticsearch.transport.client.PreBuiltTransportClient.<init>(PreBuiltTransportClient.java:130)
+	at org.elasticsearch.transport.client.PreBuiltTransportClient.<init>(PreBuiltTransportClient.java:116)
+	at org.elasticsearch.transport.client.PreBuiltTransportClient.<init>(PreBuiltTransportClient.java:106)
+	at com.globalegrow.dy.es.EsConfig.transportClient(EsConfig.java:39)
+	at com.globalegrow.dy.es.EsConfig$$EnhancerBySpringCGLIB$$379627b6.CGLIB$transportClient$0(<generated>)
+	at com.globalegrow.dy.es.EsConfig$$EnhancerBySpringCGLIB$$379627b6$$FastClassBySpringCGLIB$$2a0c0676.invoke(<generated>)
+	at org.springframework.cglib.proxy.MethodProxy.invokeSuper(MethodProxy.java:228)
+	at org.springframework.context.annotation.ConfigurationClassEnhancer$BeanMethodInterceptor.intercept(ConfigurationClassEnhancer.java:358)
+	at com.globalegrow.dy.es.EsConfig$$EnhancerBySpringCGLIB$$379627b6.transportClient(<generated>)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at org.springframework.beans.factory.support.SimpleInstantiationStrategy.instantiate(SimpleInstantiationStrategy.java:162)
+	... 32 common frames omitted
+Caused by: java.lang.ClassNotFoundException: org.jboss.netty.util.ThreadNameDeterminer
+	at java.net.URLClassLoader.findClass(URLClassLoader.java:381)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:424)
+	at sun.misc.Launcher$AppClassLoader.loadClass(Launcher.java:349)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:357)
+	... 69 common frames omitted
+[2019-02-27 15:07:43.659] [main] [INFO ] com.globalegrow.ServiceStart - Starting ServiceStart on 3F-wangzhongfu with PID 12908 (E:\work\globale\git\source-data-router\flink-job-scheduler\target\classes started by wangzhongfu in E:\work\globale\git\source-data-router)
+[2019-02-27 15:07:43.675] [main] [INFO ] com.globalegrow.ServiceStart - The following profiles are active: dev
+[2019-02-27 15:07:45.914] [main] [INFO ] org.eclipse.jetty.util.log - Logging initialized @4063ms to org.eclipse.jetty.util.log.Slf4jLog
+[2019-02-27 15:07:46.153] [main] [INFO ] org.eclipse.jetty.server.Server - jetty-9.4.11.v20180605; built: 2018-06-05T18:24:03.829Z; git: d5fc0523cfa96bfebfbda19606cad384d772f04c; jvm 1.8.0_171-b11
+[2019-02-27 15:07:46.628] [main] [INFO ] org.eclipse.jetty.server.session - DefaultSessionIdManager workerName=node0
+[2019-02-27 15:07:46.628] [main] [INFO ] org.eclipse.jetty.server.session - No SessionScavenger set, using defaults
+[2019-02-27 15:07:46.630] [main] [INFO ] org.eclipse.jetty.server.session - node0 Scavenging every 600000ms
+[2019-02-27 15:07:46.682] [main] [INFO ] o.e.j.server.handler.ContextHandler.application - Initializing Spring embedded WebApplicationContext
+[2019-02-27 15:07:46.941] [main] [INFO ] org.eclipse.jetty.server.handler.ContextHandler - Started o.s.b.c.e.j.JettyEmbeddedWebAppContext@4fe01805{application,/,[file:///C:/Users/wangzhongfu/AppData/Local/Temp/jetty-docbase.4401242270166263188.38193/],AVAILABLE}
+[2019-02-27 15:07:46.942] [main] [INFO ] org.eclipse.jetty.server.Server - Started @5099ms
+[2019-02-27 15:07:47.529] [main] [INFO ] c.g.f.scheduler.ApacheDrillHdfsActiveNameNodeCheck - Apache drill 大禹 dfs 配置信息 {name=dfs, config={type=file, connection=hdfs://bts-masterbak:8020, config=null, workspaces={zaful={location=/user/hadoop/bumblebee/web/zaful, writable=false, defaultInputFormat=avro, allowAccessOutsideWorkspace=true}, tmp={location=/tmp, writable=true, defaultInputFormat=null, allowAccessOutsideWorkspace=false}, root={location=/, writable=false, defaultInputFormat=null, allowAccessOutsideWorkspace=false}, hadoop={location=/user/hadoop/log/m/zaful/clean/, writable=false, defaultInputFormat=json, allowAccessOutsideWorkspace=true}, bumblebee={location=/user/hadoop/bumblebee/, writable=false, defaultInputFormat=avro, allowAccessOutsideWorkspace=true}, json_test={location=/user/hadoop/apache_drill_json_test, writable=false, defaultInputFormat=json, allowAccessOutsideWorkspace=true}}, formats={psv={type=text, extensions=[tbl], delimiter=|}, csv={type=text, extensions=[csv], delimiter=,}, tsv={type=text, extensions=[tsv], delimiter=	}, httpd={type=httpd, logFormat=%h %t "%r" %>s %b "%{Referer}i"}, parquet={type=parquet}, json={type=json, extensions=[json]}, pcap={type=pcap}, pcapng={type=pcapng, extensions=[pcapng]}, avro={type=avro}, sequencefile={type=sequencefile, extensions=[seq]}, csvh={type=text, extensions=[csvh], extractHeader=true, delimiter=,}, image={type=image, extensions=[jpg, jpeg, jpe, tif, tiff, dng, psd, png, bmp, gif, ico, pcx, wav, wave, avi, webp, mov, mp4, m4a, m4p, m4b, m4r, m4v, 3gp, 3g2, eps, epsf, epsi, ai, arw, crw, cr2, nef, orf, raf, rw2, rwl, srw, x3f]}}, enabled=true}}
+[2019-02-27 15:07:47.773] [main] [INFO ] c.g.f.scheduler.ApacheDrillHdfsActiveNameNodeCheck - Apache drill 大数据 dfs 配置信息 {name=dfs_bigdata, config={type=file, connection=hdfs://172.31.20.96:8020/, config=null, workspaces={bigdata={location=/bigdata/ods/, writable=false, defaultInputFormat=csv, allowAccessOutsideWorkspace=false}}, formats={psv={type=text, extensions=[tbl], delimiter=|}, csv={type=text, extensions=[csv], delimiter=}, tsv={type=text, extensions=[tsv], delimiter=	}, httpd={type=httpd, logFormat=%h %t "%r" %>s %b "%{Referer}i"}, parquet={type=parquet}, json={type=json, extensions=[json]}, pcap={type=pcap}, pcapng={type=pcapng, extensions=[pcapng]}, avro={type=avro}, sequencefile={type=sequencefile, extensions=[seq]}, csvh={type=text, extensions=[csvh], extractHeader=true, delimiter=,}, image={type=image, extensions=[jpg, jpeg, jpe, tif, tiff, dng, psd, png, bmp, gif, ico, pcx, wav, wave, avi, webp, mov, mp4, m4a, m4p, m4b, m4r, m4v, 3gp, 3g2, eps, epsf, epsi, ai, arw, crw, cr2, nef, orf, raf, rw2, rwl, srw, x3f]}}, enabled=true}}
+[2019-02-27 15:07:50.047] [main] [INFO ] org.eclipse.jetty.server.session - node0 Stopped scavenging
+[2019-02-27 15:07:50.055] [main] [INFO ] org.eclipse.jetty.server.handler.ContextHandler - Stopped o.s.b.c.e.j.JettyEmbeddedWebAppContext@4fe01805{application,/,[file:///C:/Users/wangzhongfu/AppData/Local/Temp/jetty-docbase.4401242270166263188.38193/],UNAVAILABLE}
+[2019-02-27 15:07:50.089] [main] [ERROR] org.springframework.boot.SpringApplication - Application startup failed
+org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'elasticSearchRepository': Unsatisfied dependency expressed through field 'client'; nested exception is org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'transportClient' defined in class path resource [com/globalegrow/dy/es/EsConfig.class]: Bean instantiation via factory method failed; nested exception is org.springframework.beans.BeanInstantiationException: Failed to instantiate [org.elasticsearch.client.transport.TransportClient]: Factory method 'transportClient' threw exception; nested exception is java.lang.NoSuchMethodError: io.netty.buffer.CompositeByteBuf.addComponents(ZLjava/lang/Iterable;)Lio/netty/buffer/CompositeByteBuf;
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredFieldElement.inject(AutowiredAnnotationBeanPostProcessor.java:588)
+	at org.springframework.beans.factory.annotation.InjectionMetadata.inject(InjectionMetadata.java:88)
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor.postProcessPropertyValues(AutowiredAnnotationBeanPostProcessor.java:366)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.populateBean(AbstractAutowireCapableBeanFactory.java:1272)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:553)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:483)
+	at org.springframework.beans.factory.support.AbstractBeanFactory$1.getObject(AbstractBeanFactory.java:312)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:230)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:308)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:197)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:761)
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:867)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:543)
+	at org.springframework.boot.context.embedded.EmbeddedWebApplicationContext.refresh(EmbeddedWebApplicationContext.java:122)
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:693)
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:360)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:303)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1118)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1107)
+	at com.globalegrow.ServiceStart.main(ServiceStart.java:17)
+Caused by: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'transportClient' defined in class path resource [com/globalegrow/dy/es/EsConfig.class]: Bean instantiation via factory method failed; nested exception is org.springframework.beans.BeanInstantiationException: Failed to instantiate [org.elasticsearch.client.transport.TransportClient]: Factory method 'transportClient' threw exception; nested exception is java.lang.NoSuchMethodError: io.netty.buffer.CompositeByteBuf.addComponents(ZLjava/lang/Iterable;)Lio/netty/buffer/CompositeByteBuf;
+	at org.springframework.beans.factory.support.ConstructorResolver.instantiateUsingFactoryMethod(ConstructorResolver.java:599)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.instantiateUsingFactoryMethod(AbstractAutowireCapableBeanFactory.java:1181)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1075)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:513)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:483)
+	at org.springframework.beans.factory.support.AbstractBeanFactory$1.getObject(AbstractBeanFactory.java:312)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:230)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:308)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:202)
+	at org.springframework.beans.factory.config.DependencyDescriptor.resolveCandidate(DependencyDescriptor.java:208)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1138)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1066)
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredFieldElement.inject(AutowiredAnnotationBeanPostProcessor.java:585)
+	... 19 common frames omitted
+Caused by: org.springframework.beans.BeanInstantiationException: Failed to instantiate [org.elasticsearch.client.transport.TransportClient]: Factory method 'transportClient' threw exception; nested exception is java.lang.NoSuchMethodError: io.netty.buffer.CompositeByteBuf.addComponents(ZLjava/lang/Iterable;)Lio/netty/buffer/CompositeByteBuf;
+	at org.springframework.beans.factory.support.SimpleInstantiationStrategy.instantiate(SimpleInstantiationStrategy.java:189)
+	at org.springframework.beans.factory.support.ConstructorResolver.instantiateUsingFactoryMethod(ConstructorResolver.java:588)
+	... 31 common frames omitted
+Caused by: java.lang.NoSuchMethodError: io.netty.buffer.CompositeByteBuf.addComponents(ZLjava/lang/Iterable;)Lio/netty/buffer/CompositeByteBuf;
+	at org.elasticsearch.transport.netty4.Netty4Utils.toByteBuf(Netty4Utils.java:122)
+	at org.elasticsearch.transport.netty4.Netty4Transport.sendMessage(Netty4Transport.java:396)
+	at org.elasticsearch.transport.netty4.Netty4Transport.sendMessage(Netty4Transport.java:95)
+	at org.elasticsearch.transport.TcpTransport.internalSendMessage(TcpTransport.java:1135)
+	at org.elasticsearch.transport.TcpTransport.sendRequestToChannel(TcpTransport.java:1124)
+	at org.elasticsearch.transport.TcpTransport.executeHandshake(TcpTransport.java:1620)
+	at org.elasticsearch.transport.TcpTransport.openConnection(TcpTransport.java:577)
+	at org.elasticsearch.transport.TcpTransport.openConnection(TcpTransport.java:117)
+	at org.elasticsearch.transport.TransportService.openConnection(TransportService.java:361)
+	at org.elasticsearch.client.transport.TransportClientNodesService$SimpleNodeSampler.doSample(TransportClientNodesService.java:407)
+	at org.elasticsearch.client.transport.TransportClientNodesService$NodeSampler.sample(TransportClientNodesService.java:357)
+	at org.elasticsearch.client.transport.TransportClientNodesService.addTransportAddresses(TransportClientNodesService.java:198)
+	at org.elasticsearch.client.transport.TransportClient.addTransportAddress(TransportClient.java:319)
+	at com.globalegrow.dy.es.EsConfig.lambda$transportClient$0(EsConfig.java:41)
+	at java.util.ArrayList.forEach(ArrayList.java:1257)
+	at com.globalegrow.dy.es.EsConfig.transportClient(EsConfig.java:41)
+	at com.globalegrow.dy.es.EsConfig$$EnhancerBySpringCGLIB$$73add764.CGLIB$transportClient$0(<generated>)
+	at com.globalegrow.dy.es.EsConfig$$EnhancerBySpringCGLIB$$73add764$$FastClassBySpringCGLIB$$3cd8942c.invoke(<generated>)
+	at org.springframework.cglib.proxy.MethodProxy.invokeSuper(MethodProxy.java:228)
+	at org.springframework.context.annotation.ConfigurationClassEnhancer$BeanMethodInterceptor.intercept(ConfigurationClassEnhancer.java:358)
+	at com.globalegrow.dy.es.EsConfig$$EnhancerBySpringCGLIB$$73add764.transportClient(<generated>)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at org.springframework.beans.factory.support.SimpleInstantiationStrategy.instantiate(SimpleInstantiationStrategy.java:162)
+	... 32 common frames omitted
+[2019-02-27 15:10:44.799] [main] [INFO ] com.globalegrow.ServiceStart - Starting ServiceStart on 3F-wangzhongfu with PID 11544 (E:\work\globale\git\source-data-router\flink-job-scheduler\target\classes started by wangzhongfu in E:\work\globale\git\source-data-router)
+[2019-02-27 15:10:44.830] [main] [INFO ] com.globalegrow.ServiceStart - The following profiles are active: dev
+[2019-02-27 15:10:50.148] [main] [INFO ] org.eclipse.jetty.util.log - Logging initialized @10124ms to org.eclipse.jetty.util.log.Slf4jLog
+[2019-02-27 15:10:53.445] [main] [INFO ] org.eclipse.jetty.server.Server - jetty-9.4.11.v20180605; built: 2018-06-05T18:24:03.829Z; git: d5fc0523cfa96bfebfbda19606cad384d772f04c; jvm 1.8.0_171-b11
+[2019-02-27 15:10:53.930] [main] [INFO ] org.eclipse.jetty.server.session - DefaultSessionIdManager workerName=node0
+[2019-02-27 15:10:53.930] [main] [INFO ] org.eclipse.jetty.server.session - No SessionScavenger set, using defaults
+[2019-02-27 15:10:53.932] [main] [INFO ] org.eclipse.jetty.server.session - node0 Scavenging every 600000ms
+[2019-02-27 15:10:53.936] [main] [INFO ] o.e.j.server.handler.ContextHandler.application - Initializing Spring embedded WebApplicationContext
+[2019-02-27 15:10:54.054] [main] [INFO ] org.eclipse.jetty.server.handler.ContextHandler - Started o.s.b.c.e.j.JettyEmbeddedWebAppContext@48b0e701{application,/,[file:///C:/Users/wangzhongfu/AppData/Local/Temp/jetty-docbase.1092177435960071172.38193/],AVAILABLE}
+[2019-02-27 15:10:54.055] [main] [INFO ] org.eclipse.jetty.server.Server - Started @14032ms
+[2019-02-27 15:10:54.951] [main] [INFO ] c.g.f.scheduler.ApacheDrillHdfsActiveNameNodeCheck - Apache drill 大禹 dfs 配置信息 {name=dfs, config={type=file, connection=hdfs://bts-masterbak:8020, config=null, workspaces={zaful={location=/user/hadoop/bumblebee/web/zaful, writable=false, defaultInputFormat=avro, allowAccessOutsideWorkspace=true}, tmp={location=/tmp, writable=true, defaultInputFormat=null, allowAccessOutsideWorkspace=false}, root={location=/, writable=false, defaultInputFormat=null, allowAccessOutsideWorkspace=false}, hadoop={location=/user/hadoop/log/m/zaful/clean/, writable=false, defaultInputFormat=json, allowAccessOutsideWorkspace=true}, bumblebee={location=/user/hadoop/bumblebee/, writable=false, defaultInputFormat=avro, allowAccessOutsideWorkspace=true}, json_test={location=/user/hadoop/apache_drill_json_test, writable=false, defaultInputFormat=json, allowAccessOutsideWorkspace=true}}, formats={psv={type=text, extensions=[tbl], delimiter=|}, csv={type=text, extensions=[csv], delimiter=,}, tsv={type=text, extensions=[tsv], delimiter=	}, httpd={type=httpd, logFormat=%h %t "%r" %>s %b "%{Referer}i"}, parquet={type=parquet}, json={type=json, extensions=[json]}, pcap={type=pcap}, pcapng={type=pcapng, extensions=[pcapng]}, avro={type=avro}, sequencefile={type=sequencefile, extensions=[seq]}, csvh={type=text, extensions=[csvh], extractHeader=true, delimiter=,}, image={type=image, extensions=[jpg, jpeg, jpe, tif, tiff, dng, psd, png, bmp, gif, ico, pcx, wav, wave, avi, webp, mov, mp4, m4a, m4p, m4b, m4r, m4v, 3gp, 3g2, eps, epsf, epsi, ai, arw, crw, cr2, nef, orf, raf, rw2, rwl, srw, x3f]}}, enabled=true}}
+[2019-02-27 15:11:27.009] [main] [INFO ] c.g.f.scheduler.ApacheDrillHdfsActiveNameNodeCheck - Apache drill 大数据 dfs 配置信息 {name=dfs_bigdata, config={type=file, connection=hdfs://172.31.20.96:8020/, config=null, workspaces={bigdata={location=/bigdata/ods/, writable=false, defaultInputFormat=csv, allowAccessOutsideWorkspace=false}}, formats={psv={type=text, extensions=[tbl], delimiter=|}, csv={type=text, extensions=[csv], delimiter=}, tsv={type=text, extensions=[tsv], delimiter=	}, httpd={type=httpd, logFormat=%h %t "%r" %>s %b "%{Referer}i"}, parquet={type=parquet}, json={type=json, extensions=[json]}, pcap={type=pcap}, pcapng={type=pcapng, extensions=[pcapng]}, avro={type=avro}, sequencefile={type=sequencefile, extensions=[seq]}, csvh={type=text, extensions=[csvh], extractHeader=true, delimiter=,}, image={type=image, extensions=[jpg, jpeg, jpe, tif, tiff, dng, psd, png, bmp, gif, ico, pcx, wav, wave, avi, webp, mov, mp4, m4a, m4p, m4b, m4r, m4v, 3gp, 3g2, eps, epsf, epsi, ai, arw, crw, cr2, nef, orf, raf, rw2, rwl, srw, x3f]}}, enabled=true}}
+[2019-02-27 15:11:27.262] [main] [INFO ] org.eclipse.jetty.server.session - node0 Stopped scavenging
+[2019-02-27 15:11:27.265] [main] [INFO ] org.eclipse.jetty.server.handler.ContextHandler - Stopped o.s.b.c.e.j.JettyEmbeddedWebAppContext@48b0e701{application,/,[file:///C:/Users/wangzhongfu/AppData/Local/Temp/jetty-docbase.1092177435960071172.38193/],UNAVAILABLE}
+[2019-02-27 15:11:27.276] [main] [ERROR] org.springframework.boot.SpringApplication - Application startup failed
+org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'elasticSearchRepository': Unsatisfied dependency expressed through field 'client'; nested exception is org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'transportClient' defined in class path resource [com/globalegrow/dy/es/EsConfig.class]: Bean instantiation via factory method failed; nested exception is org.springframework.beans.BeanInstantiationException: Failed to instantiate [org.elasticsearch.client.transport.TransportClient]: Factory method 'transportClient' threw exception; nested exception is java.lang.NoClassDefFoundError: org/elasticsearch/transport/Netty3Plugin
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredFieldElement.inject(AutowiredAnnotationBeanPostProcessor.java:588)
+	at org.springframework.beans.factory.annotation.InjectionMetadata.inject(InjectionMetadata.java:88)
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor.postProcessPropertyValues(AutowiredAnnotationBeanPostProcessor.java:366)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.populateBean(AbstractAutowireCapableBeanFactory.java:1272)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:553)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:483)
+	at org.springframework.beans.factory.support.AbstractBeanFactory$1.getObject(AbstractBeanFactory.java:312)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:230)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:308)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:197)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:761)
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:867)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:543)
+	at org.springframework.boot.context.embedded.EmbeddedWebApplicationContext.refresh(EmbeddedWebApplicationContext.java:122)
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:693)
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:360)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:303)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1118)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1107)
+	at com.globalegrow.ServiceStart.main(ServiceStart.java:17)
+Caused by: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'transportClient' defined in class path resource [com/globalegrow/dy/es/EsConfig.class]: Bean instantiation via factory method failed; nested exception is org.springframework.beans.BeanInstantiationException: Failed to instantiate [org.elasticsearch.client.transport.TransportClient]: Factory method 'transportClient' threw exception; nested exception is java.lang.NoClassDefFoundError: org/elasticsearch/transport/Netty3Plugin
+	at org.springframework.beans.factory.support.ConstructorResolver.instantiateUsingFactoryMethod(ConstructorResolver.java:599)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.instantiateUsingFactoryMethod(AbstractAutowireCapableBeanFactory.java:1181)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1075)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:513)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:483)
+	at org.springframework.beans.factory.support.AbstractBeanFactory$1.getObject(AbstractBeanFactory.java:312)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:230)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:308)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:202)
+	at org.springframework.beans.factory.config.DependencyDescriptor.resolveCandidate(DependencyDescriptor.java:208)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1138)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1066)
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredFieldElement.inject(AutowiredAnnotationBeanPostProcessor.java:585)
+	... 19 common frames omitted
+Caused by: org.springframework.beans.BeanInstantiationException: Failed to instantiate [org.elasticsearch.client.transport.TransportClient]: Factory method 'transportClient' threw exception; nested exception is java.lang.NoClassDefFoundError: org/elasticsearch/transport/Netty3Plugin
+	at org.springframework.beans.factory.support.SimpleInstantiationStrategy.instantiate(SimpleInstantiationStrategy.java:189)
+	at org.springframework.beans.factory.support.ConstructorResolver.instantiateUsingFactoryMethod(ConstructorResolver.java:588)
+	... 31 common frames omitted
+Caused by: java.lang.NoClassDefFoundError: org/elasticsearch/transport/Netty3Plugin
+	at org.elasticsearch.transport.client.PreBuiltTransportClient.<clinit>(PreBuiltTransportClient.java:88)
+	at com.globalegrow.dy.es.EsConfig.transportClient(EsConfig.java:39)
+	at com.globalegrow.dy.es.EsConfig$$EnhancerBySpringCGLIB$$6eaa5271.CGLIB$transportClient$0(<generated>)
+	at com.globalegrow.dy.es.EsConfig$$EnhancerBySpringCGLIB$$6eaa5271$$FastClassBySpringCGLIB$$29af4362.invoke(<generated>)
+	at org.springframework.cglib.proxy.MethodProxy.invokeSuper(MethodProxy.java:228)
+	at org.springframework.context.annotation.ConfigurationClassEnhancer$BeanMethodInterceptor.intercept(ConfigurationClassEnhancer.java:358)
+	at com.globalegrow.dy.es.EsConfig$$EnhancerBySpringCGLIB$$6eaa5271.transportClient(<generated>)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at org.springframework.beans.factory.support.SimpleInstantiationStrategy.instantiate(SimpleInstantiationStrategy.java:162)
+	... 32 common frames omitted
+Caused by: java.lang.ClassNotFoundException: org.elasticsearch.transport.Netty3Plugin
+	at java.net.URLClassLoader.findClass(URLClassLoader.java:381)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:424)
+	at sun.misc.Launcher$AppClassLoader.loadClass(Launcher.java:349)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:357)
+	... 44 common frames omitted
+[2019-02-27 15:17:14.439] [main] [INFO ] com.globalegrow.ServiceStart - Starting ServiceStart on 3F-wangzhongfu with PID 14616 (E:\work\globale\git\source-data-router\flink-job-scheduler\target\classes started by wangzhongfu in E:\work\globale\git\source-data-router)
+[2019-02-27 15:17:14.446] [main] [INFO ] com.globalegrow.ServiceStart - The following profiles are active: dev
+[2019-02-27 15:18:00.502] [main] [INFO ] com.globalegrow.ServiceStart - Starting ServiceStart on 3F-wangzhongfu with PID 17388 (E:\work\globale\git\source-data-router\flink-job-scheduler\target\classes started by wangzhongfu in E:\work\globale\git\source-data-router)
+[2019-02-27 15:18:00.505] [main] [INFO ] com.globalegrow.ServiceStart - The following profiles are active: dev
+[2019-02-27 15:18:01.711] [main] [INFO ] org.eclipse.jetty.util.log - Logging initialized @3041ms to org.eclipse.jetty.util.log.Slf4jLog
+[2019-02-27 15:18:02.042] [main] [INFO ] org.eclipse.jetty.server.Server - jetty-9.4.11.v20180605; built: 2018-06-05T18:24:03.829Z; git: d5fc0523cfa96bfebfbda19606cad384d772f04c; jvm 1.8.0_171-b11
+[2019-02-27 15:18:02.519] [main] [INFO ] org.eclipse.jetty.server.session - DefaultSessionIdManager workerName=node0
+[2019-02-27 15:18:02.519] [main] [INFO ] org.eclipse.jetty.server.session - No SessionScavenger set, using defaults
+[2019-02-27 15:18:02.522] [main] [INFO ] org.eclipse.jetty.server.session - node0 Scavenging every 600000ms
+[2019-02-27 15:18:02.545] [main] [INFO ] o.e.j.server.handler.ContextHandler.application - Initializing Spring embedded WebApplicationContext
+[2019-02-27 15:18:02.681] [main] [INFO ] org.eclipse.jetty.server.handler.ContextHandler - Started o.s.b.c.e.j.JettyEmbeddedWebAppContext@1286528d{application,/,[file:///C:/Users/wangzhongfu/AppData/Local/Temp/jetty-docbase.3618518370686813604.38193/],AVAILABLE}
+[2019-02-27 15:18:02.681] [main] [INFO ] org.eclipse.jetty.server.Server - Started @4012ms
+[2019-02-27 15:18:03.320] [main] [INFO ] c.g.f.scheduler.ApacheDrillHdfsActiveNameNodeCheck - Apache drill 大禹 dfs 配置信息 {name=dfs, config={type=file, connection=hdfs://bts-masterbak:8020, config=null, workspaces={zaful={location=/user/hadoop/bumblebee/web/zaful, writable=false, defaultInputFormat=avro, allowAccessOutsideWorkspace=true}, tmp={location=/tmp, writable=true, defaultInputFormat=null, allowAccessOutsideWorkspace=false}, root={location=/, writable=false, defaultInputFormat=null, allowAccessOutsideWorkspace=false}, hadoop={location=/user/hadoop/log/m/zaful/clean/, writable=false, defaultInputFormat=json, allowAccessOutsideWorkspace=true}, bumblebee={location=/user/hadoop/bumblebee/, writable=false, defaultInputFormat=avro, allowAccessOutsideWorkspace=true}, json_test={location=/user/hadoop/apache_drill_json_test, writable=false, defaultInputFormat=json, allowAccessOutsideWorkspace=true}}, formats={psv={type=text, extensions=[tbl], delimiter=|}, csv={type=text, extensions=[csv], delimiter=,}, tsv={type=text, extensions=[tsv], delimiter=	}, httpd={type=httpd, logFormat=%h %t "%r" %>s %b "%{Referer}i"}, parquet={type=parquet}, json={type=json, extensions=[json]}, pcap={type=pcap}, pcapng={type=pcapng, extensions=[pcapng]}, avro={type=avro}, sequencefile={type=sequencefile, extensions=[seq]}, csvh={type=text, extensions=[csvh], extractHeader=true, delimiter=,}, image={type=image, extensions=[jpg, jpeg, jpe, tif, tiff, dng, psd, png, bmp, gif, ico, pcx, wav, wave, avi, webp, mov, mp4, m4a, m4p, m4b, m4r, m4v, 3gp, 3g2, eps, epsf, epsi, ai, arw, crw, cr2, nef, orf, raf, rw2, rwl, srw, x3f]}}, enabled=true}}
+[2019-02-27 15:18:03.544] [main] [INFO ] c.g.f.scheduler.ApacheDrillHdfsActiveNameNodeCheck - Apache drill 大数据 dfs 配置信息 {name=dfs_bigdata, config={type=file, connection=hdfs://172.31.20.96:8020/, config=null, workspaces={bigdata={location=/bigdata/ods/, writable=false, defaultInputFormat=csv, allowAccessOutsideWorkspace=false}}, formats={psv={type=text, extensions=[tbl], delimiter=|}, csv={type=text, extensions=[csv], delimiter=}, tsv={type=text, extensions=[tsv], delimiter=	}, httpd={type=httpd, logFormat=%h %t "%r" %>s %b "%{Referer}i"}, parquet={type=parquet}, json={type=json, extensions=[json]}, pcap={type=pcap}, pcapng={type=pcapng, extensions=[pcapng]}, avro={type=avro}, sequencefile={type=sequencefile, extensions=[seq]}, csvh={type=text, extensions=[csvh], extractHeader=true, delimiter=,}, image={type=image, extensions=[jpg, jpeg, jpe, tif, tiff, dng, psd, png, bmp, gif, ico, pcx, wav, wave, avi, webp, mov, mp4, m4a, m4p, m4b, m4r, m4v, 3gp, 3g2, eps, epsf, epsi, ai, arw, crw, cr2, nef, orf, raf, rw2, rwl, srw, x3f]}}, enabled=true}}
+[2019-02-27 15:18:05.351] [main] [INFO ] org.eclipse.jetty.server.session - node0 Stopped scavenging
+[2019-02-27 15:18:05.355] [main] [INFO ] org.eclipse.jetty.server.handler.ContextHandler - Stopped o.s.b.c.e.j.JettyEmbeddedWebAppContext@1286528d{application,/,[file:///C:/Users/wangzhongfu/AppData/Local/Temp/jetty-docbase.3618518370686813604.38193/],UNAVAILABLE}
+[2019-02-27 15:18:05.396] [main] [ERROR] org.springframework.boot.SpringApplication - Application startup failed
+org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'elasticSearchRepository': Unsatisfied dependency expressed through field 'client'; nested exception is org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'transportClient' defined in class path resource [com/globalegrow/dy/es/EsConfig.class]: Bean instantiation via factory method failed; nested exception is org.springframework.beans.BeanInstantiationException: Failed to instantiate [org.elasticsearch.client.transport.TransportClient]: Factory method 'transportClient' threw exception; nested exception is java.lang.NoSuchMethodError: io.netty.buffer.CompositeByteBuf.addComponents(ZLjava/lang/Iterable;)Lio/netty/buffer/CompositeByteBuf;
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredFieldElement.inject(AutowiredAnnotationBeanPostProcessor.java:588)
+	at org.springframework.beans.factory.annotation.InjectionMetadata.inject(InjectionMetadata.java:88)
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor.postProcessPropertyValues(AutowiredAnnotationBeanPostProcessor.java:366)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.populateBean(AbstractAutowireCapableBeanFactory.java:1272)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:553)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:483)
+	at org.springframework.beans.factory.support.AbstractBeanFactory$1.getObject(AbstractBeanFactory.java:312)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:230)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:308)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:197)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:761)
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:867)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:543)
+	at org.springframework.boot.context.embedded.EmbeddedWebApplicationContext.refresh(EmbeddedWebApplicationContext.java:122)
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:693)
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:360)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:303)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1118)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1107)
+	at com.globalegrow.ServiceStart.main(ServiceStart.java:17)
+Caused by: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'transportClient' defined in class path resource [com/globalegrow/dy/es/EsConfig.class]: Bean instantiation via factory method failed; nested exception is org.springframework.beans.BeanInstantiationException: Failed to instantiate [org.elasticsearch.client.transport.TransportClient]: Factory method 'transportClient' threw exception; nested exception is java.lang.NoSuchMethodError: io.netty.buffer.CompositeByteBuf.addComponents(ZLjava/lang/Iterable;)Lio/netty/buffer/CompositeByteBuf;
+	at org.springframework.beans.factory.support.ConstructorResolver.instantiateUsingFactoryMethod(ConstructorResolver.java:599)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.instantiateUsingFactoryMethod(AbstractAutowireCapableBeanFactory.java:1181)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1075)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:513)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:483)
+	at org.springframework.beans.factory.support.AbstractBeanFactory$1.getObject(AbstractBeanFactory.java:312)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:230)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:308)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:202)
+	at org.springframework.beans.factory.config.DependencyDescriptor.resolveCandidate(DependencyDescriptor.java:208)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1138)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1066)
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredFieldElement.inject(AutowiredAnnotationBeanPostProcessor.java:585)
+	... 19 common frames omitted
+Caused by: org.springframework.beans.BeanInstantiationException: Failed to instantiate [org.elasticsearch.client.transport.TransportClient]: Factory method 'transportClient' threw exception; nested exception is java.lang.NoSuchMethodError: io.netty.buffer.CompositeByteBuf.addComponents(ZLjava/lang/Iterable;)Lio/netty/buffer/CompositeByteBuf;
+	at org.springframework.beans.factory.support.SimpleInstantiationStrategy.instantiate(SimpleInstantiationStrategy.java:189)
+	at org.springframework.beans.factory.support.ConstructorResolver.instantiateUsingFactoryMethod(ConstructorResolver.java:588)
+	... 31 common frames omitted
+Caused by: java.lang.NoSuchMethodError: io.netty.buffer.CompositeByteBuf.addComponents(ZLjava/lang/Iterable;)Lio/netty/buffer/CompositeByteBuf;
+	at org.elasticsearch.transport.netty4.Netty4Utils.toByteBuf(Netty4Utils.java:122)
+	at org.elasticsearch.transport.netty4.Netty4Transport.sendMessage(Netty4Transport.java:396)
+	at org.elasticsearch.transport.netty4.Netty4Transport.sendMessage(Netty4Transport.java:95)
+	at org.elasticsearch.transport.TcpTransport.internalSendMessage(TcpTransport.java:1135)
+	at org.elasticsearch.transport.TcpTransport.sendRequestToChannel(TcpTransport.java:1124)
+	at org.elasticsearch.transport.TcpTransport.executeHandshake(TcpTransport.java:1620)
+	at org.elasticsearch.transport.TcpTransport.openConnection(TcpTransport.java:577)
+	at org.elasticsearch.transport.TcpTransport.openConnection(TcpTransport.java:117)
+	at org.elasticsearch.transport.TransportService.openConnection(TransportService.java:361)
+	at org.elasticsearch.client.transport.TransportClientNodesService$SimpleNodeSampler.doSample(TransportClientNodesService.java:407)
+	at org.elasticsearch.client.transport.TransportClientNodesService$NodeSampler.sample(TransportClientNodesService.java:357)
+	at org.elasticsearch.client.transport.TransportClientNodesService.addTransportAddresses(TransportClientNodesService.java:198)
+	at org.elasticsearch.client.transport.TransportClient.addTransportAddress(TransportClient.java:319)
+	at com.globalegrow.dy.es.EsConfig.lambda$transportClient$0(EsConfig.java:41)
+	at java.util.ArrayList.forEach(ArrayList.java:1257)
+	at com.globalegrow.dy.es.EsConfig.transportClient(EsConfig.java:41)
+	at com.globalegrow.dy.es.EsConfig$$EnhancerBySpringCGLIB$$811b2579.CGLIB$transportClient$0(<generated>)
+	at com.globalegrow.dy.es.EsConfig$$EnhancerBySpringCGLIB$$811b2579$$FastClassBySpringCGLIB$$e8d1bbcb.invoke(<generated>)
+	at org.springframework.cglib.proxy.MethodProxy.invokeSuper(MethodProxy.java:228)
+	at org.springframework.context.annotation.ConfigurationClassEnhancer$BeanMethodInterceptor.intercept(ConfigurationClassEnhancer.java:358)
+	at com.globalegrow.dy.es.EsConfig$$EnhancerBySpringCGLIB$$811b2579.transportClient(<generated>)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at org.springframework.beans.factory.support.SimpleInstantiationStrategy.instantiate(SimpleInstantiationStrategy.java:162)
+	... 32 common frames omitted
+[2019-02-27 15:24:33.764] [main] [INFO ] com.globalegrow.ServiceStart - Starting ServiceStart on 3F-wangzhongfu with PID 5476 (E:\work\globale\git\source-data-router\flink-job-scheduler\target\classes started by wangzhongfu in E:\work\globale\git\source-data-router)
+[2019-02-27 15:24:33.775] [main] [INFO ] com.globalegrow.ServiceStart - The following profiles are active: dev
+[2019-02-27 15:24:35.481] [main] [INFO ] org.eclipse.jetty.util.log - Logging initialized @3453ms to org.eclipse.jetty.util.log.Slf4jLog
+[2019-02-27 15:24:35.589] [main] [INFO ] org.eclipse.jetty.server.Server - jetty-9.4.11.v20180605; built: 2018-06-05T18:24:03.829Z; git: d5fc0523cfa96bfebfbda19606cad384d772f04c; jvm 1.8.0_171-b11
+[2019-02-27 15:24:35.733] [main] [INFO ] org.eclipse.jetty.server.session - DefaultSessionIdManager workerName=node0
+[2019-02-27 15:24:35.733] [main] [INFO ] org.eclipse.jetty.server.session - No SessionScavenger set, using defaults
+[2019-02-27 15:24:35.734] [main] [INFO ] org.eclipse.jetty.server.session - node0 Scavenging every 660000ms
+[2019-02-27 15:24:35.739] [main] [INFO ] o.e.j.server.handler.ContextHandler.application - Initializing Spring embedded WebApplicationContext
+[2019-02-27 15:24:35.856] [main] [INFO ] org.eclipse.jetty.server.handler.ContextHandler - Started o.s.b.c.e.j.JettyEmbeddedWebAppContext@5649ec46{application,/,[file:///C:/Users/wangzhongfu/AppData/Local/Temp/jetty-docbase.4415335112584528703.38193/],AVAILABLE}
+[2019-02-27 15:24:35.856] [main] [INFO ] org.eclipse.jetty.server.Server - Started @3830ms
+[2019-02-27 15:24:36.494] [main] [INFO ] c.g.f.scheduler.ApacheDrillHdfsActiveNameNodeCheck - Apache drill 大禹 dfs 配置信息 {name=dfs, config={type=file, connection=hdfs://bts-masterbak:8020, config=null, workspaces={zaful={location=/user/hadoop/bumblebee/web/zaful, writable=false, defaultInputFormat=avro, allowAccessOutsideWorkspace=true}, tmp={location=/tmp, writable=true, defaultInputFormat=null, allowAccessOutsideWorkspace=false}, root={location=/, writable=false, defaultInputFormat=null, allowAccessOutsideWorkspace=false}, hadoop={location=/user/hadoop/log/m/zaful/clean/, writable=false, defaultInputFormat=json, allowAccessOutsideWorkspace=true}, bumblebee={location=/user/hadoop/bumblebee/, writable=false, defaultInputFormat=avro, allowAccessOutsideWorkspace=true}, json_test={location=/user/hadoop/apache_drill_json_test, writable=false, defaultInputFormat=json, allowAccessOutsideWorkspace=true}}, formats={psv={type=text, extensions=[tbl], delimiter=|}, csv={type=text, extensions=[csv], delimiter=,}, tsv={type=text, extensions=[tsv], delimiter=	}, httpd={type=httpd, logFormat=%h %t "%r" %>s %b "%{Referer}i"}, parquet={type=parquet}, json={type=json, extensions=[json]}, pcap={type=pcap}, pcapng={type=pcapng, extensions=[pcapng]}, avro={type=avro}, sequencefile={type=sequencefile, extensions=[seq]}, csvh={type=text, extensions=[csvh], extractHeader=true, delimiter=,}, image={type=image, extensions=[jpg, jpeg, jpe, tif, tiff, dng, psd, png, bmp, gif, ico, pcx, wav, wave, avi, webp, mov, mp4, m4a, m4p, m4b, m4r, m4v, 3gp, 3g2, eps, epsf, epsi, ai, arw, crw, cr2, nef, orf, raf, rw2, rwl, srw, x3f]}}, enabled=true}}
+[2019-02-27 15:24:36.722] [main] [INFO ] c.g.f.scheduler.ApacheDrillHdfsActiveNameNodeCheck - Apache drill 大数据 dfs 配置信息 {name=dfs_bigdata, config={type=file, connection=hdfs://172.31.20.96:8020/, config=null, workspaces={bigdata={location=/bigdata/ods/, writable=false, defaultInputFormat=csv, allowAccessOutsideWorkspace=false}}, formats={psv={type=text, extensions=[tbl], delimiter=|}, csv={type=text, extensions=[csv], delimiter=}, tsv={type=text, extensions=[tsv], delimiter=	}, httpd={type=httpd, logFormat=%h %t "%r" %>s %b "%{Referer}i"}, parquet={type=parquet}, json={type=json, extensions=[json]}, pcap={type=pcap}, pcapng={type=pcapng, extensions=[pcapng]}, avro={type=avro}, sequencefile={type=sequencefile, extensions=[seq]}, csvh={type=text, extensions=[csvh], extractHeader=true, delimiter=,}, image={type=image, extensions=[jpg, jpeg, jpe, tif, tiff, dng, psd, png, bmp, gif, ico, pcx, wav, wave, avi, webp, mov, mp4, m4a, m4p, m4b, m4r, m4v, 3gp, 3g2, eps, epsf, epsi, ai, arw, crw, cr2, nef, orf, raf, rw2, rwl, srw, x3f]}}, enabled=true}}
+[2019-02-27 15:24:38.518] [main] [INFO ] org.eclipse.jetty.server.session - node0 Stopped scavenging
+[2019-02-27 15:24:38.520] [main] [INFO ] org.eclipse.jetty.server.handler.ContextHandler - Stopped o.s.b.c.e.j.JettyEmbeddedWebAppContext@5649ec46{application,/,[file:///C:/Users/wangzhongfu/AppData/Local/Temp/jetty-docbase.4415335112584528703.38193/],UNAVAILABLE}
+[2019-02-27 15:24:38.532] [main] [ERROR] org.springframework.boot.SpringApplication - Application startup failed
+org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'elasticSearchRepository': Unsatisfied dependency expressed through field 'client'; nested exception is org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'transportClient' defined in class path resource [com/globalegrow/dy/es/EsConfig.class]: Bean instantiation via factory method failed; nested exception is org.springframework.beans.BeanInstantiationException: Failed to instantiate [org.elasticsearch.client.transport.TransportClient]: Factory method 'transportClient' threw exception; nested exception is java.lang.NoSuchMethodError: io.netty.buffer.CompositeByteBuf.addComponents(ZLjava/lang/Iterable;)Lio/netty/buffer/CompositeByteBuf;
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredFieldElement.inject(AutowiredAnnotationBeanPostProcessor.java:588)
+	at org.springframework.beans.factory.annotation.InjectionMetadata.inject(InjectionMetadata.java:88)
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor.postProcessPropertyValues(AutowiredAnnotationBeanPostProcessor.java:366)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.populateBean(AbstractAutowireCapableBeanFactory.java:1272)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:553)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:483)
+	at org.springframework.beans.factory.support.AbstractBeanFactory$1.getObject(AbstractBeanFactory.java:312)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:230)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:308)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:197)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:761)
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:867)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:543)
+	at org.springframework.boot.context.embedded.EmbeddedWebApplicationContext.refresh(EmbeddedWebApplicationContext.java:122)
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:693)
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:360)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:303)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1118)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1107)
+	at com.globalegrow.ServiceStart.main(ServiceStart.java:17)
+Caused by: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'transportClient' defined in class path resource [com/globalegrow/dy/es/EsConfig.class]: Bean instantiation via factory method failed; nested exception is org.springframework.beans.BeanInstantiationException: Failed to instantiate [org.elasticsearch.client.transport.TransportClient]: Factory method 'transportClient' threw exception; nested exception is java.lang.NoSuchMethodError: io.netty.buffer.CompositeByteBuf.addComponents(ZLjava/lang/Iterable;)Lio/netty/buffer/CompositeByteBuf;
+	at org.springframework.beans.factory.support.ConstructorResolver.instantiateUsingFactoryMethod(ConstructorResolver.java:599)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.instantiateUsingFactoryMethod(AbstractAutowireCapableBeanFactory.java:1181)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1075)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:513)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:483)
+	at org.springframework.beans.factory.support.AbstractBeanFactory$1.getObject(AbstractBeanFactory.java:312)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:230)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:308)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:202)
+	at org.springframework.beans.factory.config.DependencyDescriptor.resolveCandidate(DependencyDescriptor.java:208)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1138)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1066)
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredFieldElement.inject(AutowiredAnnotationBeanPostProcessor.java:585)
+	... 19 common frames omitted
+Caused by: org.springframework.beans.BeanInstantiationException: Failed to instantiate [org.elasticsearch.client.transport.TransportClient]: Factory method 'transportClient' threw exception; nested exception is java.lang.NoSuchMethodError: io.netty.buffer.CompositeByteBuf.addComponents(ZLjava/lang/Iterable;)Lio/netty/buffer/CompositeByteBuf;
+	at org.springframework.beans.factory.support.SimpleInstantiationStrategy.instantiate(SimpleInstantiationStrategy.java:189)
+	at org.springframework.beans.factory.support.ConstructorResolver.instantiateUsingFactoryMethod(ConstructorResolver.java:588)
+	... 31 common frames omitted
+Caused by: java.lang.NoSuchMethodError: io.netty.buffer.CompositeByteBuf.addComponents(ZLjava/lang/Iterable;)Lio/netty/buffer/CompositeByteBuf;
+	at org.elasticsearch.transport.netty4.Netty4Utils.toByteBuf(Netty4Utils.java:122)
+	at org.elasticsearch.transport.netty4.Netty4Transport.sendMessage(Netty4Transport.java:396)
+	at org.elasticsearch.transport.netty4.Netty4Transport.sendMessage(Netty4Transport.java:95)
+	at org.elasticsearch.transport.TcpTransport.internalSendMessage(TcpTransport.java:1135)
+	at org.elasticsearch.transport.TcpTransport.sendRequestToChannel(TcpTransport.java:1124)
+	at org.elasticsearch.transport.TcpTransport.executeHandshake(TcpTransport.java:1620)
+	at org.elasticsearch.transport.TcpTransport.openConnection(TcpTransport.java:577)
+	at org.elasticsearch.transport.TcpTransport.openConnection(TcpTransport.java:117)
+	at org.elasticsearch.transport.TransportService.openConnection(TransportService.java:361)
+	at org.elasticsearch.client.transport.TransportClientNodesService$SimpleNodeSampler.doSample(TransportClientNodesService.java:407)
+	at org.elasticsearch.client.transport.TransportClientNodesService$NodeSampler.sample(TransportClientNodesService.java:357)
+	at org.elasticsearch.client.transport.TransportClientNodesService.addTransportAddresses(TransportClientNodesService.java:198)
+	at org.elasticsearch.client.transport.TransportClient.addTransportAddress(TransportClient.java:319)
+	at com.globalegrow.dy.es.EsConfig.lambda$transportClient$0(EsConfig.java:43)
+	at java.util.ArrayList.forEach(ArrayList.java:1257)
+	at com.globalegrow.dy.es.EsConfig.transportClient(EsConfig.java:43)
+	at com.globalegrow.dy.es.EsConfig$$EnhancerBySpringCGLIB$$bfb95c86.CGLIB$transportClient$0(<generated>)
+	at com.globalegrow.dy.es.EsConfig$$EnhancerBySpringCGLIB$$bfb95c86$$FastClassBySpringCGLIB$$38cb1983.invoke(<generated>)
+	at org.springframework.cglib.proxy.MethodProxy.invokeSuper(MethodProxy.java:228)
+	at org.springframework.context.annotation.ConfigurationClassEnhancer$BeanMethodInterceptor.intercept(ConfigurationClassEnhancer.java:358)
+	at com.globalegrow.dy.es.EsConfig$$EnhancerBySpringCGLIB$$bfb95c86.transportClient(<generated>)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at org.springframework.beans.factory.support.SimpleInstantiationStrategy.instantiate(SimpleInstantiationStrategy.java:162)
+	... 32 common frames omitted
+[2019-02-27 15:24:56.288] [main] [INFO ] com.globalegrow.ServiceStart - Starting ServiceStart on 3F-wangzhongfu with PID 9324 (E:\work\globale\git\source-data-router\flink-job-scheduler\target\classes started by wangzhongfu in E:\work\globale\git\source-data-router)
+[2019-02-27 15:24:56.311] [main] [INFO ] com.globalegrow.ServiceStart - The following profiles are active: dev
+[2019-02-27 15:24:58.237] [main] [INFO ] org.eclipse.jetty.util.log - Logging initialized @3605ms to org.eclipse.jetty.util.log.Slf4jLog
+[2019-02-27 15:24:58.342] [main] [INFO ] org.eclipse.jetty.server.Server - jetty-9.4.11.v20180605; built: 2018-06-05T18:24:03.829Z; git: d5fc0523cfa96bfebfbda19606cad384d772f04c; jvm 1.8.0_171-b11
+[2019-02-27 15:24:58.501] [main] [INFO ] org.eclipse.jetty.server.session - DefaultSessionIdManager workerName=node0
+[2019-02-27 15:24:58.501] [main] [INFO ] org.eclipse.jetty.server.session - No SessionScavenger set, using defaults
+[2019-02-27 15:24:58.502] [main] [INFO ] org.eclipse.jetty.server.session - node0 Scavenging every 660000ms
+[2019-02-27 15:24:58.507] [main] [INFO ] o.e.j.server.handler.ContextHandler.application - Initializing Spring embedded WebApplicationContext
+[2019-02-27 15:24:58.639] [main] [INFO ] org.eclipse.jetty.server.handler.ContextHandler - Started o.s.b.c.e.j.JettyEmbeddedWebAppContext@241a0c3a{application,/,[file:///C:/Users/wangzhongfu/AppData/Local/Temp/jetty-docbase.2325608610642365936.38193/],AVAILABLE}
+[2019-02-27 15:24:58.639] [main] [INFO ] org.eclipse.jetty.server.Server - Started @4008ms
+[2019-02-27 15:24:59.213] [main] [INFO ] c.g.f.scheduler.ApacheDrillHdfsActiveNameNodeCheck - Apache drill 大禹 dfs 配置信息 {name=dfs, config={type=file, connection=hdfs://bts-masterbak:8020, config=null, workspaces={zaful={location=/user/hadoop/bumblebee/web/zaful, writable=false, defaultInputFormat=avro, allowAccessOutsideWorkspace=true}, tmp={location=/tmp, writable=true, defaultInputFormat=null, allowAccessOutsideWorkspace=false}, root={location=/, writable=false, defaultInputFormat=null, allowAccessOutsideWorkspace=false}, hadoop={location=/user/hadoop/log/m/zaful/clean/, writable=false, defaultInputFormat=json, allowAccessOutsideWorkspace=true}, bumblebee={location=/user/hadoop/bumblebee/, writable=false, defaultInputFormat=avro, allowAccessOutsideWorkspace=true}, json_test={location=/user/hadoop/apache_drill_json_test, writable=false, defaultInputFormat=json, allowAccessOutsideWorkspace=true}}, formats={psv={type=text, extensions=[tbl], delimiter=|}, csv={type=text, extensions=[csv], delimiter=,}, tsv={type=text, extensions=[tsv], delimiter=	}, httpd={type=httpd, logFormat=%h %t "%r" %>s %b "%{Referer}i"}, parquet={type=parquet}, json={type=json, extensions=[json]}, pcap={type=pcap}, pcapng={type=pcapng, extensions=[pcapng]}, avro={type=avro}, sequencefile={type=sequencefile, extensions=[seq]}, csvh={type=text, extensions=[csvh], extractHeader=true, delimiter=,}, image={type=image, extensions=[jpg, jpeg, jpe, tif, tiff, dng, psd, png, bmp, gif, ico, pcx, wav, wave, avi, webp, mov, mp4, m4a, m4p, m4b, m4r, m4v, 3gp, 3g2, eps, epsf, epsi, ai, arw, crw, cr2, nef, orf, raf, rw2, rwl, srw, x3f]}}, enabled=true}}
+[2019-02-27 15:24:59.424] [main] [INFO ] c.g.f.scheduler.ApacheDrillHdfsActiveNameNodeCheck - Apache drill 大数据 dfs 配置信息 {name=dfs_bigdata, config={type=file, connection=hdfs://172.31.20.96:8020/, config=null, workspaces={bigdata={location=/bigdata/ods/, writable=false, defaultInputFormat=csv, allowAccessOutsideWorkspace=false}}, formats={psv={type=text, extensions=[tbl], delimiter=|}, csv={type=text, extensions=[csv], delimiter=}, tsv={type=text, extensions=[tsv], delimiter=	}, httpd={type=httpd, logFormat=%h %t "%r" %>s %b "%{Referer}i"}, parquet={type=parquet}, json={type=json, extensions=[json]}, pcap={type=pcap}, pcapng={type=pcapng, extensions=[pcapng]}, avro={type=avro}, sequencefile={type=sequencefile, extensions=[seq]}, csvh={type=text, extensions=[csvh], extractHeader=true, delimiter=,}, image={type=image, extensions=[jpg, jpeg, jpe, tif, tiff, dng, psd, png, bmp, gif, ico, pcx, wav, wave, avi, webp, mov, mp4, m4a, m4p, m4b, m4r, m4v, 3gp, 3g2, eps, epsf, epsi, ai, arw, crw, cr2, nef, orf, raf, rw2, rwl, srw, x3f]}}, enabled=true}}
+[2019-02-27 15:25:08.222] [main] [INFO ] o.e.j.server.handler.ContextHandler.application - Initializing Spring FrameworkServlet 'dispatcherServlet'
+[2019-02-27 15:25:08.337] [main] [INFO ] org.eclipse.jetty.server.AbstractConnector - Started ServerConnector@547c04c4{HTTP/1.1,[http/1.1]}{0.0.0.0:38193}
+[2019-02-27 15:25:08.377] [main] [INFO ] com.globalegrow.ServiceStart - Started ServiceStart in 12.907 seconds (JVM running for 13.746)
+[2019-02-27 15:25:54.029] [main] [INFO ] com.globalegrow.ServiceStart - Starting ServiceStart on 3F-wangzhongfu with PID 11956 (E:\work\globale\git\source-data-router\flink-job-scheduler\target\classes started by wangzhongfu in E:\work\globale\git\source-data-router)
+[2019-02-27 15:25:54.032] [main] [INFO ] com.globalegrow.ServiceStart - The following profiles are active: dev
+[2019-02-27 15:25:56.448] [main] [INFO ] org.eclipse.jetty.util.log - Logging initialized @4348ms to org.eclipse.jetty.util.log.Slf4jLog
+[2019-02-27 15:25:56.579] [main] [INFO ] org.eclipse.jetty.server.Server - jetty-9.4.11.v20180605; built: 2018-06-05T18:24:03.829Z; git: d5fc0523cfa96bfebfbda19606cad384d772f04c; jvm 1.8.0_171-b11
+[2019-02-27 15:25:56.722] [main] [INFO ] org.eclipse.jetty.server.session - DefaultSessionIdManager workerName=node0
+[2019-02-27 15:25:56.722] [main] [INFO ] org.eclipse.jetty.server.session - No SessionScavenger set, using defaults
+[2019-02-27 15:25:56.724] [main] [INFO ] org.eclipse.jetty.server.session - node0 Scavenging every 600000ms
+[2019-02-27 15:25:56.728] [main] [INFO ] o.e.j.server.handler.ContextHandler.application - Initializing Spring embedded WebApplicationContext
+[2019-02-27 15:25:56.869] [main] [INFO ] org.eclipse.jetty.server.handler.ContextHandler - Started o.s.b.c.e.j.JettyEmbeddedWebAppContext@547c04c4{application,/,[file:///C:/Users/wangzhongfu/AppData/Local/Temp/jetty-docbase.1598957834491044109.38193/],AVAILABLE}
+[2019-02-27 15:25:56.870] [main] [INFO ] org.eclipse.jetty.server.Server - Started @4771ms
+[2019-02-27 15:25:57.463] [main] [INFO ] c.g.f.scheduler.ApacheDrillHdfsActiveNameNodeCheck - Apache drill 大禹 dfs 配置信息 {name=dfs, config={type=file, connection=hdfs://bts-masterbak:8020, config=null, workspaces={zaful={location=/user/hadoop/bumblebee/web/zaful, writable=false, defaultInputFormat=avro, allowAccessOutsideWorkspace=true}, tmp={location=/tmp, writable=true, defaultInputFormat=null, allowAccessOutsideWorkspace=false}, root={location=/, writable=false, defaultInputFormat=null, allowAccessOutsideWorkspace=false}, hadoop={location=/user/hadoop/log/m/zaful/clean/, writable=false, defaultInputFormat=json, allowAccessOutsideWorkspace=true}, bumblebee={location=/user/hadoop/bumblebee/, writable=false, defaultInputFormat=avro, allowAccessOutsideWorkspace=true}, json_test={location=/user/hadoop/apache_drill_json_test, writable=false, defaultInputFormat=json, allowAccessOutsideWorkspace=true}}, formats={psv={type=text, extensions=[tbl], delimiter=|}, csv={type=text, extensions=[csv], delimiter=,}, tsv={type=text, extensions=[tsv], delimiter=	}, httpd={type=httpd, logFormat=%h %t "%r" %>s %b "%{Referer}i"}, parquet={type=parquet}, json={type=json, extensions=[json]}, pcap={type=pcap}, pcapng={type=pcapng, extensions=[pcapng]}, avro={type=avro}, sequencefile={type=sequencefile, extensions=[seq]}, csvh={type=text, extensions=[csvh], extractHeader=true, delimiter=,}, image={type=image, extensions=[jpg, jpeg, jpe, tif, tiff, dng, psd, png, bmp, gif, ico, pcx, wav, wave, avi, webp, mov, mp4, m4a, m4p, m4b, m4r, m4v, 3gp, 3g2, eps, epsf, epsi, ai, arw, crw, cr2, nef, orf, raf, rw2, rwl, srw, x3f]}}, enabled=true}}
+[2019-02-27 15:25:57.683] [main] [INFO ] c.g.f.scheduler.ApacheDrillHdfsActiveNameNodeCheck - Apache drill 大数据 dfs 配置信息 {name=dfs_bigdata, config={type=file, connection=hdfs://172.31.20.96:8020/, config=null, workspaces={bigdata={location=/bigdata/ods/, writable=false, defaultInputFormat=csv, allowAccessOutsideWorkspace=false}}, formats={psv={type=text, extensions=[tbl], delimiter=|}, csv={type=text, extensions=[csv], delimiter=}, tsv={type=text, extensions=[tsv], delimiter=	}, httpd={type=httpd, logFormat=%h %t "%r" %>s %b "%{Referer}i"}, parquet={type=parquet}, json={type=json, extensions=[json]}, pcap={type=pcap}, pcapng={type=pcapng, extensions=[pcapng]}, avro={type=avro}, sequencefile={type=sequencefile, extensions=[seq]}, csvh={type=text, extensions=[csvh], extractHeader=true, delimiter=,}, image={type=image, extensions=[jpg, jpeg, jpe, tif, tiff, dng, psd, png, bmp, gif, ico, pcx, wav, wave, avi, webp, mov, mp4, m4a, m4p, m4b, m4r, m4v, 3gp, 3g2, eps, epsf, epsi, ai, arw, crw, cr2, nef, orf, raf, rw2, rwl, srw, x3f]}}, enabled=true}}
+[2019-02-27 15:25:59.547] [main] [INFO ] org.eclipse.jetty.server.session - node0 Stopped scavenging
+[2019-02-27 15:25:59.549] [main] [INFO ] org.eclipse.jetty.server.handler.ContextHandler - Stopped o.s.b.c.e.j.JettyEmbeddedWebAppContext@547c04c4{application,/,[file:///C:/Users/wangzhongfu/AppData/Local/Temp/jetty-docbase.1598957834491044109.38193/],UNAVAILABLE}
+[2019-02-27 15:25:59.565] [main] [ERROR] org.springframework.boot.SpringApplication - Application startup failed
+org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'elasticSearchRepository': Unsatisfied dependency expressed through field 'client'; nested exception is org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'transportClient' defined in class path resource [com/globalegrow/dy/es/EsConfig.class]: Bean instantiation via factory method failed; nested exception is org.springframework.beans.BeanInstantiationException: Failed to instantiate [org.elasticsearch.client.transport.TransportClient]: Factory method 'transportClient' threw exception; nested exception is java.lang.NoSuchMethodError: io.netty.buffer.CompositeByteBuf.addComponents(ZLjava/lang/Iterable;)Lio/netty/buffer/CompositeByteBuf;
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredFieldElement.inject(AutowiredAnnotationBeanPostProcessor.java:588)
+	at org.springframework.beans.factory.annotation.InjectionMetadata.inject(InjectionMetadata.java:88)
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor.postProcessPropertyValues(AutowiredAnnotationBeanPostProcessor.java:366)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.populateBean(AbstractAutowireCapableBeanFactory.java:1272)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:553)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:483)
+	at org.springframework.beans.factory.support.AbstractBeanFactory$1.getObject(AbstractBeanFactory.java:312)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:230)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:308)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:197)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:761)
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:867)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:543)
+	at org.springframework.boot.context.embedded.EmbeddedWebApplicationContext.refresh(EmbeddedWebApplicationContext.java:122)
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:693)
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:360)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:303)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1118)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1107)
+	at com.globalegrow.ServiceStart.main(ServiceStart.java:17)
+Caused by: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'transportClient' defined in class path resource [com/globalegrow/dy/es/EsConfig.class]: Bean instantiation via factory method failed; nested exception is org.springframework.beans.BeanInstantiationException: Failed to instantiate [org.elasticsearch.client.transport.TransportClient]: Factory method 'transportClient' threw exception; nested exception is java.lang.NoSuchMethodError: io.netty.buffer.CompositeByteBuf.addComponents(ZLjava/lang/Iterable;)Lio/netty/buffer/CompositeByteBuf;
+	at org.springframework.beans.factory.support.ConstructorResolver.instantiateUsingFactoryMethod(ConstructorResolver.java:599)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.instantiateUsingFactoryMethod(AbstractAutowireCapableBeanFactory.java:1181)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1075)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:513)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:483)
+	at org.springframework.beans.factory.support.AbstractBeanFactory$1.getObject(AbstractBeanFactory.java:312)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:230)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:308)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:202)
+	at org.springframework.beans.factory.config.DependencyDescriptor.resolveCandidate(DependencyDescriptor.java:208)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1138)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1066)
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredFieldElement.inject(AutowiredAnnotationBeanPostProcessor.java:585)
+	... 19 common frames omitted
+Caused by: org.springframework.beans.BeanInstantiationException: Failed to instantiate [org.elasticsearch.client.transport.TransportClient]: Factory method 'transportClient' threw exception; nested exception is java.lang.NoSuchMethodError: io.netty.buffer.CompositeByteBuf.addComponents(ZLjava/lang/Iterable;)Lio/netty/buffer/CompositeByteBuf;
+	at org.springframework.beans.factory.support.SimpleInstantiationStrategy.instantiate(SimpleInstantiationStrategy.java:189)
+	at org.springframework.beans.factory.support.ConstructorResolver.instantiateUsingFactoryMethod(ConstructorResolver.java:588)
+	... 31 common frames omitted
+Caused by: java.lang.NoSuchMethodError: io.netty.buffer.CompositeByteBuf.addComponents(ZLjava/lang/Iterable;)Lio/netty/buffer/CompositeByteBuf;
+	at org.elasticsearch.transport.netty4.Netty4Utils.toByteBuf(Netty4Utils.java:122)
+	at org.elasticsearch.transport.netty4.Netty4Transport.sendMessage(Netty4Transport.java:396)
+	at org.elasticsearch.transport.netty4.Netty4Transport.sendMessage(Netty4Transport.java:95)
+	at org.elasticsearch.transport.TcpTransport.internalSendMessage(TcpTransport.java:1135)
+	at org.elasticsearch.transport.TcpTransport.sendRequestToChannel(TcpTransport.java:1124)
+	at org.elasticsearch.transport.TcpTransport.executeHandshake(TcpTransport.java:1620)
+	at org.elasticsearch.transport.TcpTransport.openConnection(TcpTransport.java:577)
+	at org.elasticsearch.transport.TcpTransport.openConnection(TcpTransport.java:117)
+	at org.elasticsearch.transport.TransportService.openConnection(TransportService.java:361)
+	at org.elasticsearch.client.transport.TransportClientNodesService$SimpleNodeSampler.doSample(TransportClientNodesService.java:407)
+	at org.elasticsearch.client.transport.TransportClientNodesService$NodeSampler.sample(TransportClientNodesService.java:357)
+	at org.elasticsearch.client.transport.TransportClientNodesService.addTransportAddresses(TransportClientNodesService.java:198)
+	at org.elasticsearch.client.transport.TransportClient.addTransportAddress(TransportClient.java:319)
+	at com.globalegrow.dy.es.EsConfig.lambda$transportClient$0(EsConfig.java:43)
+	at java.util.ArrayList.forEach(ArrayList.java:1257)
+	at com.globalegrow.dy.es.EsConfig.transportClient(EsConfig.java:43)
+	at com.globalegrow.dy.es.EsConfig$$EnhancerBySpringCGLIB$$2bb95450.CGLIB$transportClient$0(<generated>)
+	at com.globalegrow.dy.es.EsConfig$$EnhancerBySpringCGLIB$$2bb95450$$FastClassBySpringCGLIB$$eaf911dd.invoke(<generated>)
+	at org.springframework.cglib.proxy.MethodProxy.invokeSuper(MethodProxy.java:228)
+	at org.springframework.context.annotation.ConfigurationClassEnhancer$BeanMethodInterceptor.intercept(ConfigurationClassEnhancer.java:358)
+	at com.globalegrow.dy.es.EsConfig$$EnhancerBySpringCGLIB$$2bb95450.transportClient(<generated>)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at org.springframework.beans.factory.support.SimpleInstantiationStrategy.instantiate(SimpleInstantiationStrategy.java:162)
+	... 32 common frames omitted
+[2019-02-27 15:30:04.449] [main] [INFO ] com.globalegrow.ServiceStart - Starting ServiceStart on 3F-wangzhongfu with PID 14560 (E:\work\globale\git\source-data-router\flink-job-scheduler\target\classes started by wangzhongfu in E:\work\globale\git\source-data-router)
+[2019-02-27 15:30:04.451] [main] [INFO ] com.globalegrow.ServiceStart - The following profiles are active: dev
+[2019-02-27 15:30:05.985] [main] [INFO ] org.eclipse.jetty.util.log - Logging initialized @4288ms to org.eclipse.jetty.util.log.Slf4jLog
+[2019-02-27 15:30:07.629] [main] [INFO ] org.eclipse.jetty.server.Server - jetty-9.4.11.v20180605; built: 2018-06-05T18:24:03.829Z; git: d5fc0523cfa96bfebfbda19606cad384d772f04c; jvm 1.8.0_171-b11
+[2019-02-27 15:30:07.756] [main] [INFO ] org.eclipse.jetty.server.session - DefaultSessionIdManager workerName=node0
+[2019-02-27 15:30:07.756] [main] [INFO ] org.eclipse.jetty.server.session - No SessionScavenger set, using defaults
+[2019-02-27 15:30:07.757] [main] [INFO ] org.eclipse.jetty.server.session - node0 Scavenging every 600000ms
+[2019-02-27 15:30:07.762] [main] [INFO ] o.e.j.server.handler.ContextHandler.application - Initializing Spring embedded WebApplicationContext
+[2019-02-27 15:30:07.892] [main] [INFO ] org.eclipse.jetty.server.handler.ContextHandler - Started o.s.b.c.e.j.JettyEmbeddedWebAppContext@26a529dc{application,/,[file:///C:/Users/wangzhongfu/AppData/Local/Temp/jetty-docbase.8263770433825047805.38193/],AVAILABLE}
+[2019-02-27 15:30:07.893] [main] [INFO ] org.eclipse.jetty.server.Server - Started @6197ms
+[2019-02-27 15:30:08.475] [main] [INFO ] c.g.f.scheduler.ApacheDrillHdfsActiveNameNodeCheck - Apache drill 大禹 dfs 配置信息 {name=dfs, config={type=file, connection=hdfs://bts-masterbak:8020, config=null, workspaces={zaful={location=/user/hadoop/bumblebee/web/zaful, writable=false, defaultInputFormat=avro, allowAccessOutsideWorkspace=true}, tmp={location=/tmp, writable=true, defaultInputFormat=null, allowAccessOutsideWorkspace=false}, root={location=/, writable=false, defaultInputFormat=null, allowAccessOutsideWorkspace=false}, hadoop={location=/user/hadoop/log/m/zaful/clean/, writable=false, defaultInputFormat=json, allowAccessOutsideWorkspace=true}, bumblebee={location=/user/hadoop/bumblebee/, writable=false, defaultInputFormat=avro, allowAccessOutsideWorkspace=true}, json_test={location=/user/hadoop/apache_drill_json_test, writable=false, defaultInputFormat=json, allowAccessOutsideWorkspace=true}}, formats={psv={type=text, extensions=[tbl], delimiter=|}, csv={type=text, extensions=[csv], delimiter=,}, tsv={type=text, extensions=[tsv], delimiter=	}, httpd={type=httpd, logFormat=%h %t "%r" %>s %b "%{Referer}i"}, parquet={type=parquet}, json={type=json, extensions=[json]}, pcap={type=pcap}, pcapng={type=pcapng, extensions=[pcapng]}, avro={type=avro}, sequencefile={type=sequencefile, extensions=[seq]}, csvh={type=text, extensions=[csvh], extractHeader=true, delimiter=,}, image={type=image, extensions=[jpg, jpeg, jpe, tif, tiff, dng, psd, png, bmp, gif, ico, pcx, wav, wave, avi, webp, mov, mp4, m4a, m4p, m4b, m4r, m4v, 3gp, 3g2, eps, epsf, epsi, ai, arw, crw, cr2, nef, orf, raf, rw2, rwl, srw, x3f]}}, enabled=true}}
+[2019-02-27 15:30:10.568] [main] [INFO ] c.g.f.scheduler.ApacheDrillHdfsActiveNameNodeCheck - Apache drill 大数据 dfs 配置信息 {name=dfs_bigdata, config={type=file, connection=hdfs://172.31.20.96:8020/, config=null, workspaces={bigdata={location=/bigdata/ods/, writable=false, defaultInputFormat=csv, allowAccessOutsideWorkspace=false}}, formats={psv={type=text, extensions=[tbl], delimiter=|}, csv={type=text, extensions=[csv], delimiter=}, tsv={type=text, extensions=[tsv], delimiter=	}, httpd={type=httpd, logFormat=%h %t "%r" %>s %b "%{Referer}i"}, parquet={type=parquet}, json={type=json, extensions=[json]}, pcap={type=pcap}, pcapng={type=pcapng, extensions=[pcapng]}, avro={type=avro}, sequencefile={type=sequencefile, extensions=[seq]}, csvh={type=text, extensions=[csvh], extractHeader=true, delimiter=,}, image={type=image, extensions=[jpg, jpeg, jpe, tif, tiff, dng, psd, png, bmp, gif, ico, pcx, wav, wave, avi, webp, mov, mp4, m4a, m4p, m4b, m4r, m4v, 3gp, 3g2, eps, epsf, epsi, ai, arw, crw, cr2, nef, orf, raf, rw2, rwl, srw, x3f]}}, enabled=true}}
+[2019-02-27 15:30:10.756] [main] [INFO ] org.eclipse.jetty.server.session - node0 Stopped scavenging
+[2019-02-27 15:30:10.758] [main] [INFO ] org.eclipse.jetty.server.handler.ContextHandler - Stopped o.s.b.c.e.j.JettyEmbeddedWebAppContext@26a529dc{application,/,[file:///C:/Users/wangzhongfu/AppData/Local/Temp/jetty-docbase.8263770433825047805.38193/],UNAVAILABLE}
+[2019-02-27 15:30:10.772] [main] [ERROR] org.springframework.boot.SpringApplication - Application startup failed
+org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'elasticSearchRepository': Unsatisfied dependency expressed through field 'client'; nested exception is org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'transportClient' defined in class path resource [com/globalegrow/dy/es/EsConfig.class]: Bean instantiation via factory method failed; nested exception is org.springframework.beans.BeanInstantiationException: Failed to instantiate [org.elasticsearch.client.transport.TransportClient]: Factory method 'transportClient' threw exception; nested exception is java.lang.NoClassDefFoundError: org/elasticsearch/transport/Netty3Plugin
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredFieldElement.inject(AutowiredAnnotationBeanPostProcessor.java:588)
+	at org.springframework.beans.factory.annotation.InjectionMetadata.inject(InjectionMetadata.java:88)
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor.postProcessPropertyValues(AutowiredAnnotationBeanPostProcessor.java:366)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.populateBean(AbstractAutowireCapableBeanFactory.java:1272)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:553)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:483)
+	at org.springframework.beans.factory.support.AbstractBeanFactory$1.getObject(AbstractBeanFactory.java:312)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:230)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:308)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:197)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:761)
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:867)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:543)
+	at org.springframework.boot.context.embedded.EmbeddedWebApplicationContext.refresh(EmbeddedWebApplicationContext.java:122)
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:693)
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:360)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:303)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1118)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1107)
+	at com.globalegrow.ServiceStart.main(ServiceStart.java:17)
+Caused by: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'transportClient' defined in class path resource [com/globalegrow/dy/es/EsConfig.class]: Bean instantiation via factory method failed; nested exception is org.springframework.beans.BeanInstantiationException: Failed to instantiate [org.elasticsearch.client.transport.TransportClient]: Factory method 'transportClient' threw exception; nested exception is java.lang.NoClassDefFoundError: org/elasticsearch/transport/Netty3Plugin
+	at org.springframework.beans.factory.support.ConstructorResolver.instantiateUsingFactoryMethod(ConstructorResolver.java:599)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.instantiateUsingFactoryMethod(AbstractAutowireCapableBeanFactory.java:1181)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1075)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:513)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:483)
+	at org.springframework.beans.factory.support.AbstractBeanFactory$1.getObject(AbstractBeanFactory.java:312)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:230)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:308)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:202)
+	at org.springframework.beans.factory.config.DependencyDescriptor.resolveCandidate(DependencyDescriptor.java:208)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1138)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1066)
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredFieldElement.inject(AutowiredAnnotationBeanPostProcessor.java:585)
+	... 19 common frames omitted
+Caused by: org.springframework.beans.BeanInstantiationException: Failed to instantiate [org.elasticsearch.client.transport.TransportClient]: Factory method 'transportClient' threw exception; nested exception is java.lang.NoClassDefFoundError: org/elasticsearch/transport/Netty3Plugin
+	at org.springframework.beans.factory.support.SimpleInstantiationStrategy.instantiate(SimpleInstantiationStrategy.java:189)
+	at org.springframework.beans.factory.support.ConstructorResolver.instantiateUsingFactoryMethod(ConstructorResolver.java:588)
+	... 31 common frames omitted
+Caused by: java.lang.NoClassDefFoundError: org/elasticsearch/transport/Netty3Plugin
+	at org.elasticsearch.transport.client.PreBuiltTransportClient.<clinit>(PreBuiltTransportClient.java:88)
+	at com.globalegrow.dy.es.EsConfig.transportClient(EsConfig.java:41)
+	at com.globalegrow.dy.es.EsConfig$$EnhancerBySpringCGLIB$$4be948ed.CGLIB$transportClient$0(<generated>)
+	at com.globalegrow.dy.es.EsConfig$$EnhancerBySpringCGLIB$$4be948ed$$FastClassBySpringCGLIB$$bfd99621.invoke(<generated>)
+	at org.springframework.cglib.proxy.MethodProxy.invokeSuper(MethodProxy.java:228)
+	at org.springframework.context.annotation.ConfigurationClassEnhancer$BeanMethodInterceptor.intercept(ConfigurationClassEnhancer.java:358)
+	at com.globalegrow.dy.es.EsConfig$$EnhancerBySpringCGLIB$$4be948ed.transportClient(<generated>)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at org.springframework.beans.factory.support.SimpleInstantiationStrategy.instantiate(SimpleInstantiationStrategy.java:162)
+	... 32 common frames omitted
+Caused by: java.lang.ClassNotFoundException: org.elasticsearch.transport.Netty3Plugin
+	at java.net.URLClassLoader.findClass(URLClassLoader.java:381)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:424)
+	at sun.misc.Launcher$AppClassLoader.loadClass(Launcher.java:349)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:357)
+	... 44 common frames omitted
+[2019-02-27 15:30:57.956] [main] [INFO ] com.globalegrow.ServiceStart - Starting ServiceStart on 3F-wangzhongfu with PID 10756 (E:\work\globale\git\source-data-router\flink-job-scheduler\target\classes started by wangzhongfu in E:\work\globale\git\source-data-router)
+[2019-02-27 15:30:57.959] [main] [INFO ] com.globalegrow.ServiceStart - The following profiles are active: dev
+[2019-02-27 15:30:59.300] [main] [INFO ] org.eclipse.jetty.util.log - Logging initialized @2629ms to org.eclipse.jetty.util.log.Slf4jLog
+[2019-02-27 15:30:59.383] [main] [INFO ] org.eclipse.jetty.server.Server - jetty-9.4.11.v20180605; built: 2018-06-05T18:24:03.829Z; git: d5fc0523cfa96bfebfbda19606cad384d772f04c; jvm 1.8.0_171-b11
+[2019-02-27 15:30:59.487] [main] [INFO ] org.eclipse.jetty.server.session - DefaultSessionIdManager workerName=node0
+[2019-02-27 15:30:59.488] [main] [INFO ] org.eclipse.jetty.server.session - No SessionScavenger set, using defaults
+[2019-02-27 15:30:59.489] [main] [INFO ] org.eclipse.jetty.server.session - node0 Scavenging every 660000ms
+[2019-02-27 15:30:59.493] [main] [INFO ] o.e.j.server.handler.ContextHandler.application - Initializing Spring embedded WebApplicationContext
+[2019-02-27 15:30:59.664] [main] [INFO ] org.eclipse.jetty.server.handler.ContextHandler - Started o.s.b.c.e.j.JettyEmbeddedWebAppContext@3cc20577{application,/,[file:///C:/Users/wangzhongfu/AppData/Local/Temp/jetty-docbase.5587175519945839755.38193/],AVAILABLE}
+[2019-02-27 15:30:59.665] [main] [INFO ] org.eclipse.jetty.server.Server - Started @2995ms
+[2019-02-27 15:31:00.204] [main] [INFO ] c.g.f.scheduler.ApacheDrillHdfsActiveNameNodeCheck - Apache drill 大禹 dfs 配置信息 {name=dfs, config={type=file, connection=hdfs://bts-masterbak:8020, config=null, workspaces={zaful={location=/user/hadoop/bumblebee/web/zaful, writable=false, defaultInputFormat=avro, allowAccessOutsideWorkspace=true}, tmp={location=/tmp, writable=true, defaultInputFormat=null, allowAccessOutsideWorkspace=false}, root={location=/, writable=false, defaultInputFormat=null, allowAccessOutsideWorkspace=false}, hadoop={location=/user/hadoop/log/m/zaful/clean/, writable=false, defaultInputFormat=json, allowAccessOutsideWorkspace=true}, bumblebee={location=/user/hadoop/bumblebee/, writable=false, defaultInputFormat=avro, allowAccessOutsideWorkspace=true}, json_test={location=/user/hadoop/apache_drill_json_test, writable=false, defaultInputFormat=json, allowAccessOutsideWorkspace=true}}, formats={psv={type=text, extensions=[tbl], delimiter=|}, csv={type=text, extensions=[csv], delimiter=,}, tsv={type=text, extensions=[tsv], delimiter=	}, httpd={type=httpd, logFormat=%h %t "%r" %>s %b "%{Referer}i"}, parquet={type=parquet}, json={type=json, extensions=[json]}, pcap={type=pcap}, pcapng={type=pcapng, extensions=[pcapng]}, avro={type=avro}, sequencefile={type=sequencefile, extensions=[seq]}, csvh={type=text, extensions=[csvh], extractHeader=true, delimiter=,}, image={type=image, extensions=[jpg, jpeg, jpe, tif, tiff, dng, psd, png, bmp, gif, ico, pcx, wav, wave, avi, webp, mov, mp4, m4a, m4p, m4b, m4r, m4v, 3gp, 3g2, eps, epsf, epsi, ai, arw, crw, cr2, nef, orf, raf, rw2, rwl, srw, x3f]}}, enabled=true}}
+[2019-02-27 15:31:00.418] [main] [INFO ] c.g.f.scheduler.ApacheDrillHdfsActiveNameNodeCheck - Apache drill 大数据 dfs 配置信息 {name=dfs_bigdata, config={type=file, connection=hdfs://172.31.20.96:8020/, config=null, workspaces={bigdata={location=/bigdata/ods/, writable=false, defaultInputFormat=csv, allowAccessOutsideWorkspace=false}}, formats={psv={type=text, extensions=[tbl], delimiter=|}, csv={type=text, extensions=[csv], delimiter=}, tsv={type=text, extensions=[tsv], delimiter=	}, httpd={type=httpd, logFormat=%h %t "%r" %>s %b "%{Referer}i"}, parquet={type=parquet}, json={type=json, extensions=[json]}, pcap={type=pcap}, pcapng={type=pcapng, extensions=[pcapng]}, avro={type=avro}, sequencefile={type=sequencefile, extensions=[seq]}, csvh={type=text, extensions=[csvh], extractHeader=true, delimiter=,}, image={type=image, extensions=[jpg, jpeg, jpe, tif, tiff, dng, psd, png, bmp, gif, ico, pcx, wav, wave, avi, webp, mov, mp4, m4a, m4p, m4b, m4r, m4v, 3gp, 3g2, eps, epsf, epsi, ai, arw, crw, cr2, nef, orf, raf, rw2, rwl, srw, x3f]}}, enabled=true}}
+[2019-02-27 15:31:09.909] [main] [INFO ] o.e.j.server.handler.ContextHandler.application - Initializing Spring FrameworkServlet 'dispatcherServlet'
+[2019-02-27 15:31:10.147] [main] [INFO ] org.eclipse.jetty.server.AbstractConnector - Started ServerConnector@33a630fa{HTTP/1.1,[http/1.1]}{0.0.0.0:38193}
+[2019-02-27 15:31:10.204] [main] [INFO ] com.globalegrow.ServiceStart - Started ServiceStart in 12.755 seconds (JVM running for 13.535)
+[2019-02-28 14:23:25.492] [main] [INFO ] com.globalegrow.ServiceStart - Starting ServiceStart on 3F-wangzhongfu with PID 15484 (E:\work\globale\git\source-data-router\flink-job-scheduler\target\classes started by wangzhongfu in E:\work\globale\git\source-data-router)
+[2019-02-28 14:23:25.546] [main] [INFO ] com.globalegrow.ServiceStart - The following profiles are active: dev
+[2019-02-28 14:23:31.105] [main] [INFO ] org.eclipse.jetty.util.log - Logging initialized @13945ms to org.eclipse.jetty.util.log.Slf4jLog
+[2019-02-28 14:23:32.149] [main] [INFO ] org.eclipse.jetty.server.Server - jetty-9.4.11.v20180605; built: 2018-06-05T18:24:03.829Z; git: d5fc0523cfa96bfebfbda19606cad384d772f04c; jvm 1.8.0_171-b11
+[2019-02-28 14:23:33.035] [main] [INFO ] org.eclipse.jetty.server.session - DefaultSessionIdManager workerName=node0
+[2019-02-28 14:23:33.036] [main] [INFO ] org.eclipse.jetty.server.session - No SessionScavenger set, using defaults
+[2019-02-28 14:23:33.059] [main] [INFO ] org.eclipse.jetty.server.session - node0 Scavenging every 660000ms
+[2019-02-28 14:23:33.133] [main] [INFO ] o.e.j.server.handler.ContextHandler.application - Initializing Spring embedded WebApplicationContext
+[2019-02-28 14:23:33.358] [main] [INFO ] org.eclipse.jetty.server.handler.ContextHandler - Started o.s.b.c.e.j.JettyEmbeddedWebAppContext@6b9c69a9{application,/,[file:///C:/Users/wangzhongfu/AppData/Local/Temp/jetty-docbase.2608887423590704664.38193/],AVAILABLE}
+[2019-02-28 14:23:33.358] [main] [INFO ] org.eclipse.jetty.server.Server - Started @16237ms
+[2019-02-28 14:23:34.243] [main] [INFO ] c.g.f.scheduler.ApacheDrillHdfsActiveNameNodeCheck - Apache drill 大禹 dfs 配置信息 {name=dfs, config={type=file, connection=hdfs://bts-masterbak:8020, config=null, workspaces={zaful={location=/user/hadoop/bumblebee/web/zaful, writable=false, defaultInputFormat=avro, allowAccessOutsideWorkspace=true}, tmp={location=/tmp, writable=true, defaultInputFormat=null, allowAccessOutsideWorkspace=false}, root={location=/, writable=false, defaultInputFormat=null, allowAccessOutsideWorkspace=false}, hadoop={location=/user/hadoop/log/m/zaful/clean/, writable=false, defaultInputFormat=json, allowAccessOutsideWorkspace=true}, bumblebee={location=/user/hadoop/bumblebee/, writable=false, defaultInputFormat=avro, allowAccessOutsideWorkspace=true}, json_test={location=/user/hadoop/apache_drill_json_test, writable=false, defaultInputFormat=json, allowAccessOutsideWorkspace=true}}, formats={psv={type=text, extensions=[tbl], delimiter=|}, csv={type=text, extensions=[csv], delimiter=,}, tsv={type=text, extensions=[tsv], delimiter=	}, httpd={type=httpd, logFormat=%h %t "%r" %>s %b "%{Referer}i"}, parquet={type=parquet}, json={type=json, extensions=[json]}, pcap={type=pcap}, pcapng={type=pcapng, extensions=[pcapng]}, avro={type=avro}, sequencefile={type=sequencefile, extensions=[seq]}, csvh={type=text, extensions=[csvh], extractHeader=true, delimiter=,}, image={type=image, extensions=[jpg, jpeg, jpe, tif, tiff, dng, psd, png, bmp, gif, ico, pcx, wav, wave, avi, webp, mov, mp4, m4a, m4p, m4b, m4r, m4v, 3gp, 3g2, eps, epsf, epsi, ai, arw, crw, cr2, nef, orf, raf, rw2, rwl, srw, x3f]}}, enabled=true}}
+[2019-02-28 14:23:36.834] [main] [INFO ] c.g.f.scheduler.ApacheDrillHdfsActiveNameNodeCheck - Apache drill 大数据 dfs 配置信息 {name=dfs_bigdata, config={type=file, connection=hdfs://172.31.20.96:8020, config=null, workspaces={bigdata={location=/bigdata/ods/, writable=false, defaultInputFormat=csv, allowAccessOutsideWorkspace=false}}, formats={psv={type=text, extensions=[tbl], delimiter=|}, csv={type=text, extensions=[csv], delimiter=}, tsv={type=text, extensions=[tsv], delimiter=	}, httpd={type=httpd, logFormat=%h %t "%r" %>s %b "%{Referer}i"}, parquet={type=parquet}, json={type=json, extensions=[json]}, pcap={type=pcap}, pcapng={type=pcapng, extensions=[pcapng]}, avro={type=avro}, sequencefile={type=sequencefile, extensions=[seq]}, csvh={type=text, extensions=[csvh], extractHeader=true, delimiter=,}, image={type=image, extensions=[jpg, jpeg, jpe, tif, tiff, dng, psd, png, bmp, gif, ico, pcx, wav, wave, avi, webp, mov, mp4, m4a, m4p, m4b, m4r, m4v, 3gp, 3g2, eps, epsf, epsi, ai, arw, crw, cr2, nef, orf, raf, rw2, rwl, srw, x3f]}}, enabled=true}}
+[2019-02-28 14:23:36.876] [main] [INFO ] org.eclipse.jetty.server.session - node0 Stopped scavenging
+[2019-02-28 14:23:36.879] [main] [INFO ] org.eclipse.jetty.server.handler.ContextHandler - Stopped o.s.b.c.e.j.JettyEmbeddedWebAppContext@6b9c69a9{application,/,[file:///C:/Users/wangzhongfu/AppData/Local/Temp/jetty-docbase.2608887423590704664.38193/],UNAVAILABLE}
+[2019-02-28 14:23:36.920] [main] [ERROR] org.springframework.boot.SpringApplication - Application startup failed
+org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'buryLogDataSyncByDay' defined in file [E:\work\globale\git\source-data-router\flink-job-scheduler\target\classes\com\globalegrow\fixed\scheduler\BuryLogDataSyncByDay.class]: Initialization of bean failed; nested exception is java.lang.IllegalStateException: Encountered invalid @Scheduled method 'runFlinkJob': Cron expression must consist of 6 fields (found 1 in "app.cron.bury-log-data-flink-job")
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:564)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:483)
+	at org.springframework.beans.factory.support.AbstractBeanFactory$1.getObject(AbstractBeanFactory.java:312)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:230)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:308)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:197)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:761)
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:867)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:543)
+	at org.springframework.boot.context.embedded.EmbeddedWebApplicationContext.refresh(EmbeddedWebApplicationContext.java:122)
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:693)
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:360)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:303)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1118)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1107)
+	at com.globalegrow.ServiceStart.main(ServiceStart.java:17)
+Caused by: java.lang.IllegalStateException: Encountered invalid @Scheduled method 'runFlinkJob': Cron expression must consist of 6 fields (found 1 in "app.cron.bury-log-data-flink-job")
+	at org.springframework.scheduling.annotation.ScheduledAnnotationBeanPostProcessor.processScheduled(ScheduledAnnotationBeanPostProcessor.java:462)
+	at org.springframework.scheduling.annotation.ScheduledAnnotationBeanPostProcessor.postProcessAfterInitialization(ScheduledAnnotationBeanPostProcessor.java:332)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.applyBeanPostProcessorsAfterInitialization(AbstractAutowireCapableBeanFactory.java:423)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1638)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:555)
+	... 15 common frames omitted
+[2019-02-28 14:24:35.631] [main] [INFO ] com.globalegrow.ServiceStart - Starting ServiceStart on 3F-wangzhongfu with PID 11712 (E:\work\globale\git\source-data-router\flink-job-scheduler\target\classes started by wangzhongfu in E:\work\globale\git\source-data-router)
+[2019-02-28 14:24:35.633] [main] [INFO ] com.globalegrow.ServiceStart - The following profiles are active: dev
+[2019-02-28 14:24:37.249] [main] [INFO ] org.eclipse.jetty.util.log - Logging initialized @2977ms to org.eclipse.jetty.util.log.Slf4jLog
+[2019-02-28 14:24:37.355] [main] [INFO ] org.eclipse.jetty.server.Server - jetty-9.4.11.v20180605; built: 2018-06-05T18:24:03.829Z; git: d5fc0523cfa96bfebfbda19606cad384d772f04c; jvm 1.8.0_171-b11
+[2019-02-28 14:24:37.478] [main] [INFO ] org.eclipse.jetty.server.session - DefaultSessionIdManager workerName=node0
+[2019-02-28 14:24:37.478] [main] [INFO ] org.eclipse.jetty.server.session - No SessionScavenger set, using defaults
+[2019-02-28 14:24:37.479] [main] [INFO ] org.eclipse.jetty.server.session - node0 Scavenging every 660000ms
+[2019-02-28 14:24:37.484] [main] [INFO ] o.e.j.server.handler.ContextHandler.application - Initializing Spring embedded WebApplicationContext
+[2019-02-28 14:24:37.619] [main] [INFO ] org.eclipse.jetty.server.handler.ContextHandler - Started o.s.b.c.e.j.JettyEmbeddedWebAppContext@2e6ba49a{application,/,[file:///C:/Users/wangzhongfu/AppData/Local/Temp/jetty-docbase.488653816917977062.38193/],AVAILABLE}
+[2019-02-28 14:24:37.619] [main] [INFO ] org.eclipse.jetty.server.Server - Started @3349ms
+[2019-02-28 14:24:38.193] [main] [INFO ] c.g.f.scheduler.ApacheDrillHdfsActiveNameNodeCheck - Apache drill 大禹 dfs 配置信息 {name=dfs, config={type=file, connection=hdfs://bts-masterbak:8020, config=null, workspaces={zaful={location=/user/hadoop/bumblebee/web/zaful, writable=false, defaultInputFormat=avro, allowAccessOutsideWorkspace=true}, tmp={location=/tmp, writable=true, defaultInputFormat=null, allowAccessOutsideWorkspace=false}, root={location=/, writable=false, defaultInputFormat=null, allowAccessOutsideWorkspace=false}, hadoop={location=/user/hadoop/log/m/zaful/clean/, writable=false, defaultInputFormat=json, allowAccessOutsideWorkspace=true}, bumblebee={location=/user/hadoop/bumblebee/, writable=false, defaultInputFormat=avro, allowAccessOutsideWorkspace=true}, json_test={location=/user/hadoop/apache_drill_json_test, writable=false, defaultInputFormat=json, allowAccessOutsideWorkspace=true}}, formats={psv={type=text, extensions=[tbl], delimiter=|}, csv={type=text, extensions=[csv], delimiter=,}, tsv={type=text, extensions=[tsv], delimiter=	}, httpd={type=httpd, logFormat=%h %t "%r" %>s %b "%{Referer}i"}, parquet={type=parquet}, json={type=json, extensions=[json]}, pcap={type=pcap}, pcapng={type=pcapng, extensions=[pcapng]}, avro={type=avro}, sequencefile={type=sequencefile, extensions=[seq]}, csvh={type=text, extensions=[csvh], extractHeader=true, delimiter=,}, image={type=image, extensions=[jpg, jpeg, jpe, tif, tiff, dng, psd, png, bmp, gif, ico, pcx, wav, wave, avi, webp, mov, mp4, m4a, m4p, m4b, m4r, m4v, 3gp, 3g2, eps, epsf, epsi, ai, arw, crw, cr2, nef, orf, raf, rw2, rwl, srw, x3f]}}, enabled=true}}
+[2019-02-28 14:24:38.409] [main] [INFO ] c.g.f.scheduler.ApacheDrillHdfsActiveNameNodeCheck - Apache drill 大数据 dfs 配置信息 {name=dfs_bigdata, config={type=file, connection=hdfs://172.31.20.96:8020, config=null, workspaces={bigdata={location=/bigdata/ods/, writable=false, defaultInputFormat=csv, allowAccessOutsideWorkspace=false}}, formats={psv={type=text, extensions=[tbl], delimiter=|}, csv={type=text, extensions=[csv], delimiter=}, tsv={type=text, extensions=[tsv], delimiter=	}, httpd={type=httpd, logFormat=%h %t "%r" %>s %b "%{Referer}i"}, parquet={type=parquet}, json={type=json, extensions=[json]}, pcap={type=pcap}, pcapng={type=pcapng, extensions=[pcapng]}, avro={type=avro}, sequencefile={type=sequencefile, extensions=[seq]}, csvh={type=text, extensions=[csvh], extractHeader=true, delimiter=,}, image={type=image, extensions=[jpg, jpeg, jpe, tif, tiff, dng, psd, png, bmp, gif, ico, pcx, wav, wave, avi, webp, mov, mp4, m4a, m4p, m4b, m4r, m4v, 3gp, 3g2, eps, epsf, epsi, ai, arw, crw, cr2, nef, orf, raf, rw2, rwl, srw, x3f]}}, enabled=true}}
+[2019-02-28 14:24:38.427] [main] [INFO ] org.eclipse.jetty.server.session - node0 Stopped scavenging
+[2019-02-28 14:24:38.430] [main] [INFO ] org.eclipse.jetty.server.handler.ContextHandler - Stopped o.s.b.c.e.j.JettyEmbeddedWebAppContext@2e6ba49a{application,/,[file:///C:/Users/wangzhongfu/AppData/Local/Temp/jetty-docbase.488653816917977062.38193/],UNAVAILABLE}
+[2019-02-28 14:24:38.446] [main] [ERROR] org.springframework.boot.SpringApplication - Application startup failed
+org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'buryLogDataSyncByDay' defined in file [E:\work\globale\git\source-data-router\flink-job-scheduler\target\classes\com\globalegrow\fixed\scheduler\BuryLogDataSyncByDay.class]: Initialization of bean failed; nested exception is java.lang.IllegalStateException: Encountered invalid @Scheduled method 'runFlinkJob': Cron expression must consist of 6 fields (found 1 in "app.cron.bury-log-data-flink-job")
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:564)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:483)
+	at org.springframework.beans.factory.support.AbstractBeanFactory$1.getObject(AbstractBeanFactory.java:312)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:230)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:308)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:197)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:761)
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:867)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:543)
+	at org.springframework.boot.context.embedded.EmbeddedWebApplicationContext.refresh(EmbeddedWebApplicationContext.java:122)
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:693)
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:360)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:303)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1118)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1107)
+	at com.globalegrow.ServiceStart.main(ServiceStart.java:17)
+Caused by: java.lang.IllegalStateException: Encountered invalid @Scheduled method 'runFlinkJob': Cron expression must consist of 6 fields (found 1 in "app.cron.bury-log-data-flink-job")
+	at org.springframework.scheduling.annotation.ScheduledAnnotationBeanPostProcessor.processScheduled(ScheduledAnnotationBeanPostProcessor.java:462)
+	at org.springframework.scheduling.annotation.ScheduledAnnotationBeanPostProcessor.postProcessAfterInitialization(ScheduledAnnotationBeanPostProcessor.java:332)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.applyBeanPostProcessorsAfterInitialization(AbstractAutowireCapableBeanFactory.java:423)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1638)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:555)
+	... 15 common frames omitted
+[2019-02-28 14:26:08.398] [main] [INFO ] com.globalegrow.ServiceStart - Starting ServiceStart on 3F-wangzhongfu with PID 8012 (E:\work\globale\git\source-data-router\flink-job-scheduler\target\classes started by wangzhongfu in E:\work\globale\git\source-data-router)
+[2019-02-28 14:26:08.401] [main] [INFO ] com.globalegrow.ServiceStart - The following profiles are active: dev
+[2019-02-28 14:26:10.049] [main] [INFO ] org.eclipse.jetty.util.log - Logging initialized @3147ms to org.eclipse.jetty.util.log.Slf4jLog
+[2019-02-28 14:26:10.161] [main] [INFO ] org.eclipse.jetty.server.Server - jetty-9.4.11.v20180605; built: 2018-06-05T18:24:03.829Z; git: d5fc0523cfa96bfebfbda19606cad384d772f04c; jvm 1.8.0_171-b11
+[2019-02-28 14:26:10.350] [main] [INFO ] org.eclipse.jetty.server.session - DefaultSessionIdManager workerName=node0
+[2019-02-28 14:26:10.350] [main] [INFO ] org.eclipse.jetty.server.session - No SessionScavenger set, using defaults
+[2019-02-28 14:26:10.352] [main] [INFO ] org.eclipse.jetty.server.session - node0 Scavenging every 600000ms
+[2019-02-28 14:26:10.358] [main] [INFO ] o.e.j.server.handler.ContextHandler.application - Initializing Spring embedded WebApplicationContext
+[2019-02-28 14:26:10.560] [main] [INFO ] org.eclipse.jetty.server.handler.ContextHandler - Started o.s.b.c.e.j.JettyEmbeddedWebAppContext@58faa93b{application,/,[file:///C:/Users/wangzhongfu/AppData/Local/Temp/jetty-docbase.7138417324522674873.38193/],AVAILABLE}
+[2019-02-28 14:26:10.561] [main] [INFO ] org.eclipse.jetty.server.Server - Started @3659ms
+[2019-02-28 14:26:11.214] [main] [INFO ] c.g.f.scheduler.ApacheDrillHdfsActiveNameNodeCheck - Apache drill 大禹 dfs 配置信息 {name=dfs, config={type=file, connection=hdfs://bts-masterbak:8020, config=null, workspaces={zaful={location=/user/hadoop/bumblebee/web/zaful, writable=false, defaultInputFormat=avro, allowAccessOutsideWorkspace=true}, tmp={location=/tmp, writable=true, defaultInputFormat=null, allowAccessOutsideWorkspace=false}, root={location=/, writable=false, defaultInputFormat=null, allowAccessOutsideWorkspace=false}, hadoop={location=/user/hadoop/log/m/zaful/clean/, writable=false, defaultInputFormat=json, allowAccessOutsideWorkspace=true}, bumblebee={location=/user/hadoop/bumblebee/, writable=false, defaultInputFormat=avro, allowAccessOutsideWorkspace=true}, json_test={location=/user/hadoop/apache_drill_json_test, writable=false, defaultInputFormat=json, allowAccessOutsideWorkspace=true}}, formats={psv={type=text, extensions=[tbl], delimiter=|}, csv={type=text, extensions=[csv], delimiter=,}, tsv={type=text, extensions=[tsv], delimiter=	}, httpd={type=httpd, logFormat=%h %t "%r" %>s %b "%{Referer}i"}, parquet={type=parquet}, json={type=json, extensions=[json]}, pcap={type=pcap}, pcapng={type=pcapng, extensions=[pcapng]}, avro={type=avro}, sequencefile={type=sequencefile, extensions=[seq]}, csvh={type=text, extensions=[csvh], extractHeader=true, delimiter=,}, image={type=image, extensions=[jpg, jpeg, jpe, tif, tiff, dng, psd, png, bmp, gif, ico, pcx, wav, wave, avi, webp, mov, mp4, m4a, m4p, m4b, m4r, m4v, 3gp, 3g2, eps, epsf, epsi, ai, arw, crw, cr2, nef, orf, raf, rw2, rwl, srw, x3f]}}, enabled=true}}
+[2019-02-28 14:26:11.444] [main] [INFO ] c.g.f.scheduler.ApacheDrillHdfsActiveNameNodeCheck - Apache drill 大数据 dfs 配置信息 {name=dfs_bigdata, config={type=file, connection=hdfs://172.31.20.96:8020, config=null, workspaces={bigdata={location=/bigdata/ods/, writable=false, defaultInputFormat=csv, allowAccessOutsideWorkspace=false}}, formats={psv={type=text, extensions=[tbl], delimiter=|}, csv={type=text, extensions=[csv], delimiter=}, tsv={type=text, extensions=[tsv], delimiter=	}, httpd={type=httpd, logFormat=%h %t "%r" %>s %b "%{Referer}i"}, parquet={type=parquet}, json={type=json, extensions=[json]}, pcap={type=pcap}, pcapng={type=pcapng, extensions=[pcapng]}, avro={type=avro}, sequencefile={type=sequencefile, extensions=[seq]}, csvh={type=text, extensions=[csvh], extractHeader=true, delimiter=,}, image={type=image, extensions=[jpg, jpeg, jpe, tif, tiff, dng, psd, png, bmp, gif, ico, pcx, wav, wave, avi, webp, mov, mp4, m4a, m4p, m4b, m4r, m4v, 3gp, 3g2, eps, epsf, epsi, ai, arw, crw, cr2, nef, orf, raf, rw2, rwl, srw, x3f]}}, enabled=true}}
+[2019-02-28 14:26:11.470] [main] [INFO ] org.eclipse.jetty.server.session - node0 Stopped scavenging
+[2019-02-28 14:26:11.473] [main] [INFO ] org.eclipse.jetty.server.handler.ContextHandler - Stopped o.s.b.c.e.j.JettyEmbeddedWebAppContext@58faa93b{application,/,[file:///C:/Users/wangzhongfu/AppData/Local/Temp/jetty-docbase.7138417324522674873.38193/],UNAVAILABLE}
+[2019-02-28 14:26:11.485] [main] [ERROR] org.springframework.boot.SpringApplication - Application startup failed
+org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'buryLogDataSyncByDay' defined in file [E:\work\globale\git\source-data-router\flink-job-scheduler\target\classes\com\globalegrow\fixed\scheduler\BuryLogDataSyncByDay.class]: Initialization of bean failed; nested exception is java.lang.IllegalStateException: Encountered invalid @Scheduled method 'runFlinkJob': Cron expression must consist of 6 fields (found 1 in "app.cron.bury-log-data-flink-job")
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:564)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:483)
+	at org.springframework.beans.factory.support.AbstractBeanFactory$1.getObject(AbstractBeanFactory.java:312)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:230)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:308)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:197)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:761)
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:867)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:543)
+	at org.springframework.boot.context.embedded.EmbeddedWebApplicationContext.refresh(EmbeddedWebApplicationContext.java:122)
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:693)
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:360)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:303)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1118)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1107)
+	at com.globalegrow.ServiceStart.main(ServiceStart.java:17)
+Caused by: java.lang.IllegalStateException: Encountered invalid @Scheduled method 'runFlinkJob': Cron expression must consist of 6 fields (found 1 in "app.cron.bury-log-data-flink-job")
+	at org.springframework.scheduling.annotation.ScheduledAnnotationBeanPostProcessor.processScheduled(ScheduledAnnotationBeanPostProcessor.java:462)
+	at org.springframework.scheduling.annotation.ScheduledAnnotationBeanPostProcessor.postProcessAfterInitialization(ScheduledAnnotationBeanPostProcessor.java:332)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.applyBeanPostProcessorsAfterInitialization(AbstractAutowireCapableBeanFactory.java:423)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1638)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:555)
+	... 15 common frames omitted

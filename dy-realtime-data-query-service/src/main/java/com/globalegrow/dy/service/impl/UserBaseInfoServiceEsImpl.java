@@ -11,6 +11,8 @@ import io.searchbox.client.JestResult;
 import io.searchbox.core.Search;
 import io.searchbox.core.SearchScroll;
 import io.searchbox.params.Parameters;
+import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilder;
@@ -27,11 +29,10 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-
+@Data
+@Slf4j
 @Service
 public class UserBaseInfoServiceEsImpl implements UserBaseInfoService {
-
-    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
     //@Qualifier("myJestClient")
@@ -51,7 +52,7 @@ public class UserBaseInfoServiceEsImpl implements UserBaseInfoService {
             try {
                 handleUserBaseInfoResponse(response, jestClient.execute(scroll));
             } catch (Exception e) {
-                logger.error("用户基本信息查询 es 出错", e);
+                log.error("用户基本信息查询 es 出错", e);
                 response.setSuccess(false);
             }
 
@@ -86,7 +87,7 @@ public class UserBaseInfoServiceEsImpl implements UserBaseInfoService {
             searchSourceBuilder.sort(sortBuilder);
             Search.Builder builder = new Search.Builder(searchSourceBuilder.toString());
 
-            this.logger.debug("elasticsearch 搜索条件: {}", searchSourceBuilder.toString());
+            log.debug("elasticsearch 搜索条件: {}", searchSourceBuilder.toString());
 
             builder.addIndex(esIndex);
             Search search = builder
@@ -95,7 +96,7 @@ public class UserBaseInfoServiceEsImpl implements UserBaseInfoService {
             try {
                 handleUserBaseInfoResponse(response, jestClient.execute(search));
             } catch (IOException e) {
-                logger.error("用户基本信息query es error ,params: {}", searchSourceBuilder.toString(), e);
+                log.error("用户基本信息query es error ,params: {}", searchSourceBuilder.toString(), e);
             }
 
         }
@@ -109,17 +110,10 @@ public class UserBaseInfoServiceEsImpl implements UserBaseInfoService {
         JsonElement jsonElement = jsonObject.get("_scroll_id");
         if (jsonElement != null) {
             String scrollId = jsonElement.getAsString();
-            this.logger.debug("用户基本信息：scroll_id {}", scrollId);
+            log.debug("用户基本信息：scroll_id {}", scrollId);
             response.setRequestId(scrollId);
         }
         response.setTotalCount(jsonObject.get("hits").getAsJsonObject().get("total").getAsLong());
     }
 
-    public String getScrollTime() {
-        return scrollTime;
-    }
-
-    public void setScrollTime(String scrollTime) {
-        this.scrollTime = scrollTime;
-    }
 }
