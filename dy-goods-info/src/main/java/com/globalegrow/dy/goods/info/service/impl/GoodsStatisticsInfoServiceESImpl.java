@@ -58,46 +58,53 @@ public class GoodsStatisticsInfoServiceESImpl implements GoodsStatisticsInfoServ
 
         List<Map<String, Object>> mapList = new ArrayList<>();
 
-        String indexName = this.goodsStatisticsIndex;
-        if (StringUtils.isNotEmpty(request.getCountry())) {
-            indexName = this.countryGoodsStatisticsIndex;
+        if (StringUtils.isNotEmpty(request.getRequestId())) {
+
+            this.esSearch(response, mapList, this.client.prepareSearchScroll(request.getRequestId()).setScroll(new TimeValue(60000)).execute().actionGet());
+
+        }else {
+            String indexName = this.goodsStatisticsIndex;
+            if (StringUtils.isNotEmpty(request.getCountry())) {
+                indexName = this.countryGoodsStatisticsIndex;
+            }
+
+            if (request.getDimension() == 1) {
+                indexName = indexName.replace("site", request.getSite().toLowerCase()).replace("$dimension", request.getDimension() + "");
+            } else {
+                //greater_than_1
+                indexName = indexName.replace("site", request.getSite().toLowerCase()).replace("$dimension", "greater_than_1");
+            }
+
+
+
+            // 分页查询
+            SearchRequestBuilder searchRequestBuilder = this.client.prepareSearch(indexName)
+                    .addSort(FieldSortBuilder.DOC_FIELD_NAME, SortOrder.ASC)
+                    .setScroll(new TimeValue(60000)).setQuery(QueryBuilders.termQuery("platform", request.getPlatform()))
+                    //.setQuery(qb)
+                    .setSize(request.getSize());
+
+            if (StringUtils.isNotEmpty(request.getCountry())) {
+                searchRequestBuilder.setQuery(QueryBuilders.termQuery("country", request.getCountry())).get();
+            }
+
+            if (request.getDimension() == 1) {
+
+                searchRequestBuilder
+                        .setQuery(QueryBuilders.termsQuery("day", request.getDays()));
+
+            } else {
+
+                searchRequestBuilder.setQuery(QueryBuilders.termQuery("dimension", request.getDimension())).setQuery(QueryBuilders.termQuery("update_day", DateUtil.yesterday().toString("yyyy-MM-dd")));
+
+            }
+
+
+            SearchResponse scrollResp = searchRequestBuilder.get();
+
+            this.esSearch(response, mapList, scrollResp);
+
         }
-
-        if (request.getDimension() == 1) {
-            indexName = indexName.replace("site", request.getSite().toLowerCase()).replace("$dimension", request.getDimension() + "");
-        } else {
-            //greater_than_1
-            indexName = indexName.replace("site", request.getSite().toLowerCase()).replace("$dimension", "greater_than_1");
-        }
-
-
-        // 分页查询
-        SearchRequestBuilder searchRequestBuilder = client.prepareSearch(indexName)
-                .addSort(FieldSortBuilder.DOC_FIELD_NAME, SortOrder.ASC)
-                .setScroll(new TimeValue(60000)).setQuery(QueryBuilders.termQuery("platform", request.getPlatform()))
-                //.setQuery(qb)
-                .setSize(request.getSize());
-
-        if (StringUtils.isNotEmpty(request.getCountry())) {
-            searchRequestBuilder.setQuery(QueryBuilders.termQuery("country", request.getCountry())).get();
-        }
-
-        if (request.getDimension() == 1) {
-
-            searchRequestBuilder
-                    .setQuery(QueryBuilders.termsQuery("day", request.getDays()));
-
-        } else {
-
-            searchRequestBuilder.setQuery(QueryBuilders.termQuery("dimension", request.getDimension())).setQuery(QueryBuilders.termQuery("update_day", DateUtil.yesterday().toString("yyyy-MM-dd")));
-
-        }
-
-
-        SearchResponse scrollResp = searchRequestBuilder.get();
-
-        this.esSearch(response, mapList, scrollResp);
-
 
         response.setData(mapList);
         return response;
