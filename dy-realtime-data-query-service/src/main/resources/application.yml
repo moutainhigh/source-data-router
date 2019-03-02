@@ -14,12 +14,12 @@ logging:
     org.apache.http: ERROR
   pattern:
     file: '[%d{yyyy-MM-dd HH:mm:ss.SSS}] [%thread] [%-5level] %logger{50} - %msg%n'
-server:
-  undertow:
-    io-threads: 256
-    worker-threads: 2048
-  compression:
-    enabled: false
+#server:
+#  undertow:
+#    io-threads: 256
+#    worker-threads: 2048
+#  compression:
+#    enabled: false
 ---
 spring:
   profiles: dev
