@@ -1,7 +1,5 @@
 package com.globalegrow.bts.report;
 
-import com.globalegrow.bts.model.BtsReport;
-
 /**
  * app分类页推荐报表指标字段
  */
