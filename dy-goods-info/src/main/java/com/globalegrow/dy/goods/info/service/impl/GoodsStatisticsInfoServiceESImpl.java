@@ -66,7 +66,7 @@ public class GoodsStatisticsInfoServiceESImpl implements GoodsStatisticsInfoServ
                 .addSort(FieldSortBuilder.DOC_FIELD_NAME, SortOrder.ASC)
                 .setScroll(new TimeValue(60000))
                 //.setQuery(qb)
-                .setSize(100).get();
+                .setSize(request.getSize()).get();
 
         Arrays.stream(scrollResp.getHits().getHits()).forEach(searchHitFields -> mapList.add(searchHitFields.getSourceAsMap()));
 
