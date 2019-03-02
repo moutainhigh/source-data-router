@@ -72,10 +72,7 @@ public class GoodsStatisticsInfoServiceESImpl implements GoodsStatisticsInfoServ
                     .setQuery(QueryBuilders.termsQuery("day", request.getDays()))
                     .setSize(request.getSize()).get();
 
-            Arrays.stream(scrollResp.getHits().getHits()).forEach(searchHitFields -> mapList.add(searchHitFields.getSourceAsMap()));
-
-            response.setRequestId(scrollResp.getScrollId());
-            response.setTotal(scrollResp.getHits().getTotalHits());
+            this.esSearch(response, mapList, scrollResp);
 
         }else {
 
@@ -85,15 +82,19 @@ public class GoodsStatisticsInfoServiceESImpl implements GoodsStatisticsInfoServ
                     //.setQuery(qb)
                     .setSize(request.getSize()).get();
 
-            Arrays.stream(scrollResp.getHits().getHits()).forEach(searchHitFields -> mapList.add(searchHitFields.getSourceAsMap()));
-
-            response.setRequestId(scrollResp.getScrollId());
-            response.setTotal(scrollResp.getHits().getTotalHits());
+            this.esSearch(response, mapList, scrollResp);
 
         }
 
 
         response.setData(mapList);
         return response;
+    }
+
+    private void esSearch(CommonListMapESPageResponse response, List<Map<String, Object>> mapList, SearchResponse scrollResp) {
+        Arrays.stream(scrollResp.getHits().getHits()).forEach(searchHitFields -> mapList.add(searchHitFields.getSourceAsMap()));
+
+        response.setRequestId(scrollResp.getScrollId());
+        response.setTotal(scrollResp.getHits().getTotalHits());
     }
 }
