@@ -69,7 +69,9 @@ public class GoodsStatisticsInfoServiceESImpl implements GoodsStatisticsInfoServ
             }
 
             if (request.getDimension() == 1) {
+
                 indexName = indexName.replace("site", request.getSite().toLowerCase()).replace("$dimension", request.getDimension() + "");
+
             } else {
                 //greater_than_1
                 indexName = indexName.replace("site", request.getSite().toLowerCase()).replace("$dimension", "greater_than_1");
