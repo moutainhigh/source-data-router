@@ -6,10 +6,20 @@ import com.globalegrow.dy.goods.info.dto.GoodsStatisticsRequest;
 import com.globalegrow.dy.goods.info.service.GoodsStatisticsInfoService;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
+import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.transport.TransportClient;
+import org.elasticsearch.common.unit.TimeValue;
+import org.elasticsearch.search.sort.FieldSortBuilder;
+import org.elasticsearch.search.sort.SortOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 
 @Data
 @Service
@@ -29,6 +39,9 @@ public class GoodsStatisticsInfoServiceESImpl implements GoodsStatisticsInfoServ
     @Value("${app.es.goods-statistics-index:dy_site_country_goods_statistics_$dimension}")
     private String countryGoodsStatisticsIndex;
 
+    @Value("${app.es.goods-statistics-index-type:goods}")
+    private String indexType;
+
     /**
      * 分页请求
      * @param request
@@ -38,6 +51,28 @@ public class GoodsStatisticsInfoServiceESImpl implements GoodsStatisticsInfoServ
     public CommonListMapESPageResponse goodsStatisticsInfo(GoodsStatisticsRequest request) {
         CommonListMapESPageResponse response = new CommonListMapESPageResponse();
 
+        List<Map<String, Object>> mapList = new ArrayList<>();
+
+        String indexName = this.goodsStatisticsIndex;
+
+        if (StringUtils.isNotEmpty(request.getCountry())) {
+            indexName = this.countryGoodsStatisticsIndex;
+        }
+
+        indexName = indexName.replace("site", request.getSite().toLowerCase()).replace("$dimension", request.getDimension() + "");
+
+        // 分页查询
+        SearchResponse scrollResp = client.prepareSearch(indexName)
+                .addSort(FieldSortBuilder.DOC_FIELD_NAME, SortOrder.ASC)
+                .setScroll(new TimeValue(60000))
+                //.setQuery(qb)
+                .setSize(100).get();
+
+        Arrays.stream(scrollResp.getHits().getHits()).forEach(searchHitFields -> mapList.add(searchHitFields.getSourceAsMap()));
+
+        response.setRequestId(scrollResp.getScrollId());
+        response.setTotal(scrollResp.getHits().getTotalHits());
+        response.setData(mapList);
         return response;
     }
 }

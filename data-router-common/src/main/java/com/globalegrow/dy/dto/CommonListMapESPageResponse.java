@@ -9,4 +9,7 @@ import java.util.Map;
 @Data
 @ToString
 public class CommonListMapESPageResponse extends CommonPatternResponse<List<Map<String,Object>>>{
+
+    private String requestId;
+
 }
