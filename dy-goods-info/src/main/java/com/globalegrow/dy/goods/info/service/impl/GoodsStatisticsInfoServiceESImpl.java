@@ -6,6 +6,7 @@ import com.globalegrow.dy.goods.info.dto.GoodsStatisticsRequest;
 import com.globalegrow.dy.goods.info.service.GoodsStatisticsInfoService;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import org.elasticsearch.client.transport.TransportClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -16,17 +17,27 @@ import org.springframework.stereotype.Service;
 public class GoodsStatisticsInfoServiceESImpl implements GoodsStatisticsInfoService {
 
     @Autowired
+    private TransportClient client;
+
+    @Autowired
     private ElasticSearchRepository elasticSearchRepository;
 
     // 索引名，site dimension 根据入参进行替换
-    @Value("${app.es.goods-statistics-index:dy_site_goods_statistics_dimension}")
+    @Value("${app.es.goods-statistics-index:dy_site_goods_statistics_$dimension}")
     private String goodsStatisticsIndex;
-    // 索引名 site dimension 根据入参进行替换
-    @Value("${app.es.goods-statistics-index:dy_site_country_goods_statistics_dimension}")
+    // 索引名 site dimension 根据入参进行替换，国家统计维度
+    @Value("${app.es.goods-statistics-index:dy_site_country_goods_statistics_$dimension}")
     private String countryGoodsStatisticsIndex;
 
+    /**
+     * 分页请求
+     * @param request
+     * @return
+     */
     @Override
     public CommonListMapESPageResponse goodsStatisticsInfo(GoodsStatisticsRequest request) {
-        return null;
+        CommonListMapESPageResponse response = new CommonListMapESPageResponse();
+
+        return response;
     }
 }
