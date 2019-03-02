@@ -1,5 +1,6 @@
 package com.globalegrow.dy.goods.info.service.impl;
 
+import cn.hutool.core.date.DateUtil;
 import com.globalegrow.dy.dto.CommonListMapESPageResponse;
 import com.globalegrow.dy.es.ElasticSearchRepository;
 import com.globalegrow.dy.goods.info.dto.GoodsStatisticsRequest;
@@ -88,32 +89,12 @@ public class GoodsStatisticsInfoServiceESImpl implements GoodsStatisticsInfoServ
 
         } else {
 
-            searchRequestBuilder.setQuery(QueryBuilders.termQuery("dimension", request.getDimension()));
+            searchRequestBuilder.setQuery(QueryBuilders.termQuery("dimension", request.getDimension())).setQuery(QueryBuilders.termQuery("update_day", DateUtil.yesterday().toString("yyyy-MM-dd")));
 
         }
+
+
         SearchResponse scrollResp = searchRequestBuilder.get();
-
-        this.esSearch(response, mapList, scrollResp);
-
-
-        if (request.getDimension() > 1) {
-
-            scrollResp = client.prepareSearch(indexName)
-                    .addSort(FieldSortBuilder.DOC_FIELD_NAME, SortOrder.ASC)
-                    .setScroll(new TimeValue(60000))
-                    //.setQuery(qb)
-                    .setSize(request.getSize()).get();
-
-        } else {
-
-            scrollResp = client.prepareSearch(indexName)
-                    .addSort(FieldSortBuilder.DOC_FIELD_NAME, SortOrder.ASC)
-                    .setScroll(new TimeValue(60000))
-                    //.setQuery(qb)
-                    .setSize(request.getSize()).get();
-
-        }
-
 
         this.esSearch(response, mapList, scrollResp);
 
