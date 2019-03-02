@@ -10,6 +10,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.transport.TransportClient;
 import org.elasticsearch.common.unit.TimeValue;
+import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.sort.FieldSortBuilder;
 import org.elasticsearch.search.sort.SortOrder;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,24 +55,44 @@ public class GoodsStatisticsInfoServiceESImpl implements GoodsStatisticsInfoServ
         List<Map<String, Object>> mapList = new ArrayList<>();
 
         String indexName = this.goodsStatisticsIndex;
-
+        boolean termQuery = true;
         if (StringUtils.isNotEmpty(request.getCountry())) {
             indexName = this.countryGoodsStatisticsIndex;
+            termQuery = false;
         }
 
         indexName = indexName.replace("site", request.getSite().toLowerCase()).replace("$dimension", request.getDimension() + "");
 
         // 分页查询
-        SearchResponse scrollResp = client.prepareSearch(indexName)
-                .addSort(FieldSortBuilder.DOC_FIELD_NAME, SortOrder.ASC)
-                .setScroll(new TimeValue(60000))
-                //.setQuery(qb)
-                .setSize(request.getSize()).get();
+        if (termQuery) {
 
-        Arrays.stream(scrollResp.getHits().getHits()).forEach(searchHitFields -> mapList.add(searchHitFields.getSourceAsMap()));
+            SearchResponse scrollResp = client.prepareSearch(indexName)
+                    .addSort(FieldSortBuilder.DOC_FIELD_NAME, SortOrder.ASC)
+                    .setScroll(new TimeValue(60000))
+                    .setQuery(QueryBuilders.termsQuery("day", request.getDays()))
+                    .setSize(request.getSize()).get();
 
-        response.setRequestId(scrollResp.getScrollId());
-        response.setTotal(scrollResp.getHits().getTotalHits());
+            Arrays.stream(scrollResp.getHits().getHits()).forEach(searchHitFields -> mapList.add(searchHitFields.getSourceAsMap()));
+
+            response.setRequestId(scrollResp.getScrollId());
+            response.setTotal(scrollResp.getHits().getTotalHits());
+
+        }else {
+
+            SearchResponse scrollResp = client.prepareSearch(indexName)
+                    .addSort(FieldSortBuilder.DOC_FIELD_NAME, SortOrder.ASC)
+                    .setScroll(new TimeValue(60000))
+                    //.setQuery(qb)
+                    .setSize(request.getSize()).get();
+
+            Arrays.stream(scrollResp.getHits().getHits()).forEach(searchHitFields -> mapList.add(searchHitFields.getSourceAsMap()));
+
+            response.setRequestId(scrollResp.getScrollId());
+            response.setTotal(scrollResp.getHits().getTotalHits());
+
+        }
+
+
         response.setData(mapList);
         return response;
     }
