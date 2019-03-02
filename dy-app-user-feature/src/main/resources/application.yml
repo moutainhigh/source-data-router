@@ -2,12 +2,12 @@ spring:
   profiles:
     #active: dev
     active: @profiles.active@
-server:
-  undertow:
-    io-threads: 256
-    worker-threads: 2048
-  compression:
-    enabled: false
+#server:
+#  undertow:
+#    io-threads: 256
+#    worker-threads: 2048
+#  compression:
+#    enabled: false
 ---
 spring:
   profiles: dev
