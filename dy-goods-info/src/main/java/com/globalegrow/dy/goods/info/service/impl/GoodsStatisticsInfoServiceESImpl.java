@@ -7,9 +7,11 @@ import com.globalegrow.dy.goods.info.service.GoodsStatisticsInfoService;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.elasticsearch.action.search.SearchRequestBuilder;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.transport.TransportClient;
 import org.elasticsearch.common.unit.TimeValue;
+import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.sort.FieldSortBuilder;
 import org.elasticsearch.search.sort.SortOrder;
@@ -45,6 +47,7 @@ public class GoodsStatisticsInfoServiceESImpl implements GoodsStatisticsInfoServ
 
     /**
      * 分页请求
+     *
      * @param request
      * @return
      */
@@ -55,36 +58,64 @@ public class GoodsStatisticsInfoServiceESImpl implements GoodsStatisticsInfoServ
         List<Map<String, Object>> mapList = new ArrayList<>();
 
         String indexName = this.goodsStatisticsIndex;
-        boolean termQuery = true;
         if (StringUtils.isNotEmpty(request.getCountry())) {
             indexName = this.countryGoodsStatisticsIndex;
-            termQuery = false;
         }
 
-        indexName = indexName.replace("site", request.getSite().toLowerCase()).replace("$dimension", request.getDimension() + "");
+        if (request.getDimension() == 1) {
+            indexName = indexName.replace("site", request.getSite().toLowerCase()).replace("$dimension", request.getDimension() + "");
+        } else {
+            //greater_than_1
+            indexName = indexName.replace("site", request.getSite().toLowerCase()).replace("$dimension", "greater_than_1");
+        }
+
 
         // 分页查询
-        if (termQuery) {
+        SearchRequestBuilder searchRequestBuilder = client.prepareSearch(indexName)
+                .addSort(FieldSortBuilder.DOC_FIELD_NAME, SortOrder.ASC)
+                .setScroll(new TimeValue(60000)).setQuery(QueryBuilders.termQuery("platform", request.getPlatform()))
+                //.setQuery(qb)
+                .setSize(request.getSize());
 
-            SearchResponse scrollResp = client.prepareSearch(indexName)
-                    .addSort(FieldSortBuilder.DOC_FIELD_NAME, SortOrder.ASC)
-                    .setScroll(new TimeValue(60000))
-                    .setQuery(QueryBuilders.termsQuery("day", request.getDays()))
-                    .setSize(request.getSize()).get();
+        if (StringUtils.isNotEmpty(request.getCountry())) {
+            searchRequestBuilder.setQuery(QueryBuilders.termQuery("country", request.getCountry())).get();
+        }
 
-            this.esSearch(response, mapList, scrollResp);
+        if (request.getDimension() == 1) {
 
-        }else {
+            searchRequestBuilder
+                    .setQuery(QueryBuilders.termsQuery("day", request.getDays()));
 
-            SearchResponse scrollResp = client.prepareSearch(indexName)
+        } else {
+
+            searchRequestBuilder.setQuery(QueryBuilders.termQuery("dimension", request.getDimension()));
+
+        }
+        SearchResponse scrollResp = searchRequestBuilder.get();
+
+        this.esSearch(response, mapList, scrollResp);
+
+
+        if (request.getDimension() > 1) {
+
+            scrollResp = client.prepareSearch(indexName)
                     .addSort(FieldSortBuilder.DOC_FIELD_NAME, SortOrder.ASC)
                     .setScroll(new TimeValue(60000))
                     //.setQuery(qb)
                     .setSize(request.getSize()).get();
 
-            this.esSearch(response, mapList, scrollResp);
+        } else {
+
+            scrollResp = client.prepareSearch(indexName)
+                    .addSort(FieldSortBuilder.DOC_FIELD_NAME, SortOrder.ASC)
+                    .setScroll(new TimeValue(60000))
+                    //.setQuery(qb)
+                    .setSize(request.getSize()).get();
 
         }
+
+
+        this.esSearch(response, mapList, scrollResp);
 
 
         response.setData(mapList);
