@@ -10,6 +10,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class ZafulGoodsInfoByDay {
 
+    private String goodsInfoFlinkJobByDay = "/usr/local/services/flink/flink-yarn/flink-1.5.0/bin/flink run -d -m yarn-cluster -yn 1 -yjm 1024 -ytm 1024 /usr/local/services/flink/zaful-goods-base-info-es-0.1.jar";
+
     @Autowired
     private ElasticSearchRepository elasticSearchRepository;
 

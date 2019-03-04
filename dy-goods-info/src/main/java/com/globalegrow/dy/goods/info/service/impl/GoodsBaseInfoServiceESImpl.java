@@ -26,7 +26,7 @@ public class GoodsBaseInfoServiceESImpl implements GoodsBaseInfoService {
     @Value("${app.es.goods-info-index:dy_site_goods_info}")
     private String goodsInfoIndex;
 
-    @Value("${app.es.goods-info-index-type:goods}")
+    @Value("${app.es.goods-info-index-type:goods_info}")
     private String goodsIndexType;
 
     /**

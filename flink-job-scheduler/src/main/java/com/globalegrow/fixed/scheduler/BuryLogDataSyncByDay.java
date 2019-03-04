@@ -170,6 +170,8 @@ public class BuryLogDataSyncByDay {
                     if ("FAILED".equals(status)) {
                         log.error("{} 任务执行失败，重新放入队列执行", this.currentBuryLogJobs.get(this.getCurrentJobId()));
                         this.flinkBuryLogDataJobs.offer(this.currentBuryLogJobs.get(this.getCurrentJobId()));
+                        this.currentBuryLogJobs.remove(this.getCurrentJobId());
+                        this.setCurrentJobId("");
                     }
                     if (this.flinkBuryLogDataJobs.size() == 0) {
                         log.info("所有任务执行完毕，通知第三方");

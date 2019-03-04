@@ -43,7 +43,7 @@ public class GoodsStatisticsInfoServiceESImpl implements GoodsStatisticsInfoServ
     @Value("${app.es.goods-statistics-index:dy_site_country_goods_statistics_$dimension}")
     private String countryGoodsStatisticsIndex;
 
-    @Value("${app.es.goods-statistics-index-type:goods}")
+    @Value("${app.es.goods-statistics-index-type:goods_info}")
     private String indexType;
 
     /**
@@ -93,7 +93,7 @@ public class GoodsStatisticsInfoServiceESImpl implements GoodsStatisticsInfoServ
             if (request.getDimension() == 1) {
 
                 searchRequestBuilder
-                        .setQuery(QueryBuilders.termsQuery("day", request.getDays()));
+                        .setQuery(QueryBuilders.termsQuery("update_day", request.getDays()));
 
             } else {
 
