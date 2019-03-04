@@ -31,6 +31,13 @@ public class GoodsInfoController {
             response.setMessage("统计维度为 1 时，查询天为必填");
             return response;
         }
+        if (request.getDimension() == 1 && request.getDays().size() > 30) {
+            CommonListMapESPageResponse response = new CommonListMapESPageResponse();
+            response.setSuccess(false);
+            response.setMessage("统计维度为 1 时，查询天最多为 30 天");
+            return response;
+        }
+
         return this.goodsStatisticsInfoService.goodsStatisticsInfo(request);
     }
 
