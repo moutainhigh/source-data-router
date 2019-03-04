@@ -1,8 +1,7 @@
 package com.globalegrow.config;
 
-import com.globalegrow.fixed.queen.AbstractFlinkJobQueen;
 import com.globalegrow.fixed.queen.DyHdfsCheckExistsJobMessage;
-import com.globalegrow.fixed.queen.FlinkBuryLogDataJob;
+import com.globalegrow.fixed.queen.FlinkBashJob;
 import com.globalegrow.fixed.queen.FlinkJobStatesCheck;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -26,12 +25,12 @@ public class FlinkJobConfig {
     }
 
     @Bean
-    public LinkedBlockingDeque<FlinkBuryLogDataJob> flinkBuryLogDataJobs(){
+    public LinkedBlockingDeque<FlinkBashJob> flinkBuryLogDataJobs(){
         return new LinkedBlockingDeque<>();
     }
 
     @Bean
-    public Map<String, FlinkBuryLogDataJob> currentBuryLogJobs() {
+    public Map<String, FlinkBashJob> currentBuryLogJobs() {
         return new ConcurrentHashMap<>();
     }
 

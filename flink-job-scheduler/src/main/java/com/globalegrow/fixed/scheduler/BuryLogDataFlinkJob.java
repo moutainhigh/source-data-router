@@ -1,6 +1,6 @@
 package com.globalegrow.fixed.scheduler;
 
-import com.globalegrow.fixed.queen.FlinkBuryLogDataJob;
+import com.globalegrow.fixed.queen.FlinkBashJob;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -20,22 +20,22 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class BuryLogDataFlinkJob {
 
     @Autowired
-    private LinkedBlockingDeque<FlinkBuryLogDataJob> flinkBuryLogDataJobs;
+    private LinkedBlockingDeque<FlinkBashJob> flinkBashJobs;
 
     @Autowired
     BuryLogDataSyncByDay buryLogDataSyncByDay;
 
     @Autowired
-    Map<String, FlinkBuryLogDataJob> currentBuryLogJobs;
+    Map<String, FlinkBashJob> currentBuryLogJobs;
 
     private AtomicInteger atomicInteger = new AtomicInteger(0);
 
     @Scheduled(fixedDelay = 10000)
     public void runFlinkJobFixed() throws InterruptedException {
-        if (this.flinkBuryLogDataJobs.size() > 0 && StringUtils.isEmpty(buryLogDataSyncByDay.getCurrentJobId()) && this.atomicInteger.get() == 0) {
+        if (this.flinkBashJobs.size() > 0 && StringUtils.isEmpty(buryLogDataSyncByDay.getCurrentJobId()) && this.atomicInteger.get() == 0) {
             this.atomicInteger.set(1);
             log.info("当前任务 id 为空，提交新任务");
-            FlinkBuryLogDataJob job = this.flinkBuryLogDataJobs.take();
+            FlinkBashJob job = this.flinkBashJobs.take();
             log.info("任务信息:{}", job);
             Process process = null;
             //List<String> processList = new ArrayList<String>();
