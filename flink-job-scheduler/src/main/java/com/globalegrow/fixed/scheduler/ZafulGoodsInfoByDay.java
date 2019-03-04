@@ -52,7 +52,7 @@ public class ZafulGoodsInfoByDay {
     private RestTemplate restTemplate;
 
 
-    @Value("${app.cron.zaful-goods-info:0 15 5 * * ?}")
+    @Scheduled(cron = "${app.cron.zaful-goods-info:0 15 5 * * ?}")
     public void run() throws InterruptedException {
 
         String yesterday = DateUtil.yesterday().toString("yyyy-MM-dd");

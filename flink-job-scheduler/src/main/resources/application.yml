@@ -6,7 +6,7 @@ spring:
 logging:
   #config: classpath:logback.xml
   path: logs
-  file: logs/dy-realtime-data-query-service.log
+  file: logs/flink-job-scheduler.log
   level:
     root: info
     org.springframework: ERROR
@@ -24,7 +24,7 @@ logging:
 spring:
   profiles: dev
   application:
-    name: dy-realtime-data-query-service-dev
+    name: flink-job-scheduler-dev
   cloud:
     sentinel:
       transport:
@@ -49,7 +49,7 @@ app:
 spring:
   profiles: prod
   application:
-    name: dy-realtime-data-query-service-prod
+    name: flink-job-scheduler-prod
 server:
   port: 38193
 
