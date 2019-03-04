@@ -97,7 +97,7 @@ public class GoodsStatisticsInfoServiceESImpl implements GoodsStatisticsInfoServ
 
             } else {
 
-                searchRequestBuilder.setQuery(QueryBuilders.termQuery("dimension", request.getDimension())).setQuery(QueryBuilders.termQuery("update_day", DateUtil.yesterday().toString("yyyy-MM-dd")));
+                searchRequestBuilder.setQuery(QueryBuilders.termQuery("dimension", request.getDimension()))/*.setQuery(QueryBuilders.termQuery("update_day", DateUtil.yesterday().toString("yyyy-MM-dd")))*/;
 
             }
 

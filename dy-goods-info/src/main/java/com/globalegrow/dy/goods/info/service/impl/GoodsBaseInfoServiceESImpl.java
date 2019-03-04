@@ -23,7 +23,7 @@ public class GoodsBaseInfoServiceESImpl implements GoodsBaseInfoService {
     @Autowired
     private TransportClient client;
 
-    @Value("${app.es.goods-info-index:dy_site_goods_info}")
+    @Value("${app.es.goods-info-index:dy_&&_goods_info}")
     private String goodsInfoIndex;
 
     @Value("${app.es.goods-info-index-type:goods_info}")
