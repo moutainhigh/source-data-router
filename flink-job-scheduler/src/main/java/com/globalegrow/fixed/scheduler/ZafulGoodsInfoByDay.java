@@ -211,7 +211,7 @@ public class ZafulGoodsInfoByDay {
 
         while (!HdfsUtil.bigDataFileExist(checkPath)) {
 
-            log.info("{} 不存在，等待 5 分钟");
+            log.info("{} 不存在，等待 5 分钟", checkPath);
             Thread.sleep(300000);
 
         }
