@@ -26,16 +26,16 @@ public class GoodsStatisticsRequest extends EsPageRequest {
 
     private String country;
 
-    @Max(1000)
-    @Min(1)
-    @NotNull
+    @Max(value = 1000, message = "size 最大为 1000")
+    @Min(value = 1, message = "size 最小为 1")
+    @NotNull(message = "size 不能为空")
     private Integer size = 1000;
     /**
      * 业务参数逻辑校验，必须为 1、3、7、15、30
      */
-    @Max(30)
-    @Min(1)
-    @NotNull
+    @Max(value = 30, message = "维度最大为 30")
+    @Min(value = 1, message = "维度最小为 1")
+    @NotNull(message = "维度不能为空")
     private Integer dimension = 1;
     /**
      * 按 1 天维度查询时传参

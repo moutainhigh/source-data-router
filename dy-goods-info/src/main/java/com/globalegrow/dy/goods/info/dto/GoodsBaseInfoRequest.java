@@ -17,7 +17,7 @@ public class GoodsBaseInfoRequest extends DyRequest {
     @Length(min = 1, max = 256, message = "站点名长度必须在 0-256 之间")
     private String site;
 
-    @Size(min = 1, max = 2000, message = "sku 数量必须在 1-2000")
+    @Size(min = 1, max = 1000, message = "sku 数量必须在 1-1000")
     private List<String> item_ids;
 
 
