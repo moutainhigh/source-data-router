@@ -79,7 +79,10 @@ public class BtsReportConfigServiceImpl implements BtsReportConfigService {
      */
     @Override
     public BtsReportKylinConfig configMixedQuery(BtsReportParameterDto btsReportParameterDto) {
-        BtsReportKylinConfig btsReportKylinConfig = this.getBtsReportKylinConfig(btsReportParameterDto.getPlanId(), btsReportParameterDto.getProductLineCode(), btsReportParameterDto.getType());
+        BtsReportKylinConfig btsReportKylinConfig = null;
+        if (btsReportParameterDto.getPlanId() != null) {
+            btsReportKylinConfig = this.getBtsReportKylinConfig(btsReportParameterDto.getPlanId(), btsReportParameterDto.getProductLineCode(), btsReportParameterDto.getType());
+        }
         if (btsReportKylinConfig != null) {
             return btsReportKylinConfig;
         }

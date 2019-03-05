@@ -100,7 +100,9 @@ public class BtsReportServiceImpl implements BtsReportService {
             String sourceSql = btsReportKylinConfig.getKylinQuerySql();
             Map valuesMap = new HashMap();
             this.logger.debug("处理分组");
-            valuesMap.put(QueryConditions.groupByFields.name(), this.groupFields(btsReportParameterDto, btsReportKylinConfig));
+            if (btsReportParameterDto.getGroupByFields() != null && btsReportParameterDto.getGroupByFields().size() > 0) {
+                valuesMap.put(QueryConditions.groupByFields.name(), this.groupFields(btsReportParameterDto, btsReportKylinConfig));
+            }
             this.logger.debug("处理 where 条件");
             valuesMap.put(QueryConditions.whereFields.name(), this.whereFields(btsReportParameterDto, btsReportKylinConfig));
 

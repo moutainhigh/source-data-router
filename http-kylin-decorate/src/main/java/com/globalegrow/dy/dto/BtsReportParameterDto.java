@@ -21,7 +21,7 @@ public class BtsReportParameterDto implements Serializable {
     // 排序字段，默认 day_start 降序
     private Map<String, String> orderFields = new HashMap<>();
     // 起始页，默认 1 ，传 0 为不分页
-    private Integer startPage = 1;
+    private Integer startPage = 0;
     // 分页时，每页数据量
     private Integer pageSize = 10;
     // 类型，query/export 查询 or 导出源数据
