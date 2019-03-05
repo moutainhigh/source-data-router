@@ -277,6 +277,14 @@ public class BtsReportServiceImpl implements BtsReportService {
                     } else {
                         where.append(" " + entry.getKey() + "= date '" + entry.getValue() + "' ");
                     }
+                }else if("MINUTE_START".equals(entry.getKey())){
+                    //TIMESTAMP
+                    this.logger.debug("between 日期类型处理");
+                    if (StringUtils.isNotEmpty(where.toString())) {
+                        where.append(" and " + entry.getKey() + "= TIMESTAMP '" + entry.getValue() + "' ");
+                    } else {
+                        where.append(" " + entry.getKey() + "= TIMESTAMP '" + entry.getValue() + "' ");
+                    }
                 } else {
                     if (StringUtils.isNotEmpty(where.toString())) {
                         where.append(" and " + this.compatibilityBtsFields(entry.getKey(), btsReportKylinConfig) + "= '" + entry.getValue() + "' ");
