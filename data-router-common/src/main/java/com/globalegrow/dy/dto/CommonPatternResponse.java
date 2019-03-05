@@ -9,6 +9,4 @@ public abstract class CommonPatternResponse<T> extends CommonResponse {
 
     private T data;
 
-    private Long total;
-
 }

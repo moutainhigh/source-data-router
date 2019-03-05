@@ -12,4 +12,6 @@ public class CommonListMapESPageResponse extends CommonPatternResponse<List<Map<
 
     private String requestId;
 
+    private Long total;
+
 }
