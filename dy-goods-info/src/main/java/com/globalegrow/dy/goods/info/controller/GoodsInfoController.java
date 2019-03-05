@@ -1,5 +1,6 @@
 package com.globalegrow.dy.goods.info.controller;
 
+import com.globalegrow.dy.controller.CommonController;
 import com.globalegrow.dy.dto.CommonListMapESPageResponse;
 import com.globalegrow.dy.dto.CommonListMapResponse;
 import com.globalegrow.dy.goods.info.dto.GoodsBaseInfoRequest;
@@ -15,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("goods")
-public class GoodsInfoController {
+public class GoodsInfoController extends CommonController {
 
     @Autowired
     private GoodsBaseInfoService goodsBaseInfoService;
