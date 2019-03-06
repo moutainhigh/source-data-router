@@ -1,6 +1,5 @@
 package com.globalegrow.dy.goods.info.service.impl;
 
-import cn.hutool.core.date.DateUtil;
 import com.globalegrow.dy.dto.CommonListMapESPageResponse;
 import com.globalegrow.dy.es.ElasticSearchRepository;
 import com.globalegrow.dy.goods.info.dto.GoodsStatisticsRequest;
@@ -8,14 +7,11 @@ import com.globalegrow.dy.goods.info.service.GoodsStatisticsInfoService;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.elasticsearch.action.search.MultiSearchRequestBuilder;
-import org.elasticsearch.action.search.MultiSearchResponse;
 import org.elasticsearch.action.search.SearchRequestBuilder;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.transport.TransportClient;
 import org.elasticsearch.common.unit.TimeValue;
 import org.elasticsearch.index.query.BoolQueryBuilder;
-import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.sort.FieldSortBuilder;
 import org.elasticsearch.search.sort.SortOrder;
@@ -104,13 +100,13 @@ public class GoodsStatisticsInfoServiceESImpl implements GoodsStatisticsInfoServ
 
             } else {
                 boolQueryBuilder.must(
-                       QueryBuilders.termQuery("dimension", request.getDimension())/*.setQuery(QueryBuilders.termQuery("update_day", DateUtil.yesterday().toString("yyyy-MM-dd")))*/
+                        QueryBuilders.termQuery("dimension", request.getDimension())/*.setQuery(QueryBuilders.termQuery("update_day", DateUtil.yesterday().toString("yyyy-MM-dd")))*/
                 );
             }
 
             log.debug("搜索条件,final {}", searchRequestBuilder.toString());
             searchRequestBuilder.setQuery(boolQueryBuilder);
-            SearchResponse  scrollResp = searchRequestBuilder.get();
+            SearchResponse scrollResp = searchRequestBuilder.get();
 
             this.esSearch(response, mapList, scrollResp);
 

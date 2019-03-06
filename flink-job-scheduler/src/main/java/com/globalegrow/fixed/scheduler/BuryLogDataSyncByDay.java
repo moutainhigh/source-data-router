@@ -124,7 +124,7 @@ public class BuryLogDataSyncByDay {
             }
         }
         String phpCommandLine = this.jobCommandLinePHP1.replace(BIGDATA_PATH_VAR, this.rootPHPPath.replace("current_day", currentDay))
-                .replace(DY_PATH_VAR, this.dyDfsPcRootPath.replace("php_burry_log", "").replace("current_day", currentDay)).replace(JOB_NAME_VAR, "php_burry_log");
+                .replace(DY_PATH_VAR, this.dyDfsPcRootPath.replace("site", "php_burry_log").replace("current_day", currentDay)).replace(JOB_NAME_VAR, "php_burry_log");
         this.flinkBashJobs.offer(new FlinkBashJob("php_log_" + currentDay, phpCommandLine));
 
         log.info("任务初始化完成，任务队列 {}, 任务数 {}", this.flinkBashJobs, this.flinkBashJobs.size());
