@@ -8,10 +8,13 @@ import com.globalegrow.dy.goods.info.service.GoodsStatisticsInfoService;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.elasticsearch.action.search.MultiSearchRequestBuilder;
+import org.elasticsearch.action.search.MultiSearchResponse;
 import org.elasticsearch.action.search.SearchRequestBuilder;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.transport.TransportClient;
 import org.elasticsearch.common.unit.TimeValue;
+import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.sort.FieldSortBuilder;
@@ -54,6 +57,7 @@ public class GoodsStatisticsInfoServiceESImpl implements GoodsStatisticsInfoServ
      */
     @Override
     public CommonListMapESPageResponse goodsStatisticsInfo(GoodsStatisticsRequest request) {
+        log.debug("输入参数 {}", request);
         CommonListMapESPageResponse response = new CommonListMapESPageResponse();
 
         List<Map<String, Object>> mapList = new ArrayList<>();
@@ -62,7 +66,7 @@ public class GoodsStatisticsInfoServiceESImpl implements GoodsStatisticsInfoServ
 
             this.esSearch(response, mapList, this.client.prepareSearchScroll(request.getRequestId()).setScroll(new TimeValue(60000)).execute().actionGet());
 
-        }else {
+        } else {
             String indexName = this.goodsStatisticsIndex;
             if (StringUtils.isNotEmpty(request.getCountry())) {
                 indexName = this.countryGoodsStatisticsIndex;
@@ -78,31 +82,35 @@ public class GoodsStatisticsInfoServiceESImpl implements GoodsStatisticsInfoServ
             }
 
 
-
             // 分页查询
             SearchRequestBuilder searchRequestBuilder = this.client.prepareSearch(indexName)
                     .addSort(FieldSortBuilder.DOC_FIELD_NAME, SortOrder.ASC)
-                    .setScroll(new TimeValue(60000)).setQuery(QueryBuilders.termQuery("platform", request.getPlatform()))
+                    .setScroll(new TimeValue(60000))
                     //.setQuery(qb)
                     .setSize(request.getSize());
 
+            log.debug("搜索条件 {}", searchRequestBuilder.toString());
+
+            BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery().must(QueryBuilders.termQuery("platform", request.getPlatform()));
+
             if (StringUtils.isNotEmpty(request.getCountry())) {
-                searchRequestBuilder.setQuery(QueryBuilders.termQuery("country", request.getCountry())).get();
+                boolQueryBuilder.must(QueryBuilders.termQuery("country", request.getCountry()));
             }
 
             if (request.getDimension() == 1) {
-
-                searchRequestBuilder
-                        .setQuery(QueryBuilders.termsQuery("update_day", request.getDays()));
+                boolQueryBuilder.must(
+                        QueryBuilders.termsQuery("update_day", request.getDays())
+                );
 
             } else {
-
-                searchRequestBuilder.setQuery(QueryBuilders.termQuery("dimension", request.getDimension()))/*.setQuery(QueryBuilders.termQuery("update_day", DateUtil.yesterday().toString("yyyy-MM-dd")))*/;
-
+                boolQueryBuilder.must(
+                       QueryBuilders.termQuery("dimension", request.getDimension())/*.setQuery(QueryBuilders.termQuery("update_day", DateUtil.yesterday().toString("yyyy-MM-dd")))*/
+                );
             }
 
-
-            SearchResponse scrollResp = searchRequestBuilder.get();
+            log.debug("搜索条件,final {}", searchRequestBuilder.toString());
+            searchRequestBuilder.setQuery(boolQueryBuilder);
+            SearchResponse  scrollResp = searchRequestBuilder.get();
 
             this.esSearch(response, mapList, scrollResp);
 
