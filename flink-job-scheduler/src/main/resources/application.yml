@@ -64,3 +64,5 @@ app:
     bury-log-data: 0 10 0 * * ?
     bury-log-data-flink-job: 0 15 0 * * ?
     bury-log-data-flink-job-status: 10 15 0 * * ?
+    drill:
+      storage: http://bts-flink01:8047/storage/
