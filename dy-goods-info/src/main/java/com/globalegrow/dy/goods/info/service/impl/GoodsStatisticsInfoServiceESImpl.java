@@ -77,7 +77,7 @@ public class GoodsStatisticsInfoServiceESImpl implements GoodsStatisticsInfoServ
                 indexName = indexName.replace("site", request.getSite().toLowerCase()).replace("$dimension", "greater_than_1");
             }
 
-
+            log.debug("索引名称 {}", indexName);
             // 分页查询
             SearchRequestBuilder searchRequestBuilder = this.client.prepareSearch(indexName)
                     .addSort(FieldSortBuilder.DOC_FIELD_NAME, SortOrder.ASC)
@@ -87,10 +87,10 @@ public class GoodsStatisticsInfoServiceESImpl implements GoodsStatisticsInfoServ
 
             log.debug("搜索条件 {}", searchRequestBuilder.toString());
 
-            BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery().must(QueryBuilders.termQuery("platform", request.getPlatform()));
+            BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery().must(QueryBuilders.termQuery("platform.keyword", request.getPlatform()));
 
             if (StringUtils.isNotEmpty(request.getCountry())) {
-                boolQueryBuilder.must(QueryBuilders.termQuery("country", request.getCountry()));
+                boolQueryBuilder.must(QueryBuilders.termQuery("country.keyword", request.getCountry()));
             }
 
             if (request.getDimension() == 1) {
@@ -104,8 +104,9 @@ public class GoodsStatisticsInfoServiceESImpl implements GoodsStatisticsInfoServ
                 );
             }
 
-            log.debug("搜索条件,final {}", searchRequestBuilder.toString());
+            log.debug("搜索条件,final {}", boolQueryBuilder.toString());
             searchRequestBuilder.setQuery(boolQueryBuilder);
+            log.debug("搜索条件, search final {}", searchRequestBuilder.toString());
             SearchResponse scrollResp = searchRequestBuilder.get();
 
             this.esSearch(response, mapList, scrollResp);
