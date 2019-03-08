@@ -34,7 +34,12 @@ public class NginxLogTest {
 
     @Test
     public void testJsonArray() throws Exception {
-        System.out.println(JacksonUtil.toJSon(NginxLogConvertUtil.getNginxLogParameters(s)));
+       int i = 0;
+        while (i < 100){
+            s = s + "  " + 1;
+            i++;
+            NginxLogConvertUtil.getNginxLogParameters(s);
+        }
     }
 
     @Test

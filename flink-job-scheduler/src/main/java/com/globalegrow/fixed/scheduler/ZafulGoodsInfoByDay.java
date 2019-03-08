@@ -110,6 +110,12 @@ public class ZafulGoodsInfoByDay {
         this.checkHdfsPath(gdstatCountry30);
         this.flinkBashJobs.offer(new FlinkBashJob("zaful_goods_stat_30", "/usr/local/services/flink/flink-yarn/flink-1.5.0/bin/flink run -d -m yarn-cluster -yqu root.flink -yn 1 -yjm 1024 -ytm 1024 /usr/local/services/flink/zaful-goods-statistics-es-0.1.jar --filePath /user/hive/warehouse/dw_zaful_recommend.db/feature_items_country_v2_2_ods_info_thirty_days/ --good.dimension 30 --index-name dy_zaful_country_goods_statistics_greater_than_1 --es.source.fields item_id,country,pv_cnt,pv_uv,pv_per_cnt,ipv_cnt,ipv_uv,ipv_per_cnt,bag_cnt,bag_uv,bag_per_cnt,favorite_cnt,favorite_uv,favorite_per_cnt,order_item_cnt,order_uv,order_per_cnt,cvr,uv_cvr,order_cnt,order_income,ctr,uv_ctr,platform --job-name zaful-goods-country-statistics-es_30_"));
 
+        String goodsTendency = "hdfs://glbgnameservice" + "/user/hive/warehouse/dw_zaful_recommend.db/feature_items_v2_2_ods_info_new_label/" + pathDate;
+        this.checkHdfsPath(goodsTendency);
+        this.flinkBashJobs.offer(new FlinkBashJob("zaful-goods-statistics-es_tendency", "/usr/local/services/flink/flink-yarn/flink-1.5.0/bin/flink run -yqu root.ai.offline -d -m yarn-cluster -yn 1 -yjm 1024 -ytm 1024 /usr/local/services/flink/zaful-goods-statistics-es-0.1.jar --filePath /user/hive/warehouse/dw_zaful_recommend.db/feature_items_v2_2_ods_info_new_label/ --good.dimension -1 --index-name dy_zaful_goods_statistics_tendency --es.source.fields item_id,ctr_rising_tendency,cvr_rising_tendency,ctr_stability_index,cvr_stability_index,heat_index,platform --job-name zaful-goods-statistics-es_tendency"));
+        String goodsTendencyCountry = "hdfs://glbgnameservice" + "/user/hive/warehouse/dw_zaful_recommend.db/feature_items_v2_2_ods_info_new_label_country/" + pathDate;
+        this.checkHdfsPath(goodsTendencyCountry);
+        this.flinkBashJobs.offer(new FlinkBashJob("zaful-goods-statistics-tendency_country", "/usr/local/services/flink/flink-yarn/flink-1.5.0/bin/flink run -yqu root.ai.offline -d -m yarn-cluster -yn 1 -yjm 1024 -ytm 1024 /usr/local/services/flink/zaful-goods-statistics-es-0.1.jar --filePath /user/hive/warehouse/dw_zaful_recommend.db/feature_items_v2_2_ods_info_new_label_country/ --good.dimension -1 --index-name dy_zaful_goods_statistics_tendency_country --es.source.fields item_id,ctr_rising_tendency,cvr_rising_tendency,ctr_stability_index,cvr_stability_index,heat_index,country,platform --job-name zaful-goods-statistics-tendency_country"));
     }
 
     @Scheduled(fixedDelay = 60000)

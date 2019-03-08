@@ -71,6 +71,7 @@ public class NginxLogConvertUtil {
      * @return
      */
     public static Map<String, Object> getNginxLogParameters(String log) {
+        //long start = System.currentTimeMillis();
         Matcher m = p.matcher(log);
         String requestStr = "";
 
@@ -95,6 +96,7 @@ public class NginxLogConvertUtil {
         }
 
         Map<String, Object> result = AppLogConvertUtil.getStringObjectMap(log, requestStr, TIMESTAMP_KEY);
+        //System.out.println(System.currentTimeMillis() - start);
         if (result != null) return result;
         return null;
     }
