@@ -63,8 +63,41 @@ public class BuryLogDataSyncByDay {
 
         String currentDayPcPath = this.rootPcPath.replace("current_day", currentDay);
 
-        String hdfsPath = HdfsUtil.getBigDataActiveNamenode() + currentDayPcPath;
+        //String hdfsPath = HdfsUtil.getBigDataActiveNamenode() + currentDayPcPath;
         String checkPath = "hdfs://glbgnameservice" + currentDayPcPath;
+        checkBuryDataExist(checkPath + " /_SUCCESS");
+        // 组装 pc 埋点表任务
+        // zaful pc 站
+        this.flinkBashJobs.offer(this.flinkPcBuryLogDataJob(currentDayPcPath, currentDay, "zaful", "zaful_pc_bury_log_", this.jobCommandLinePc24));
+        this.flinkBashJobs.offer(this.flinkPcBuryLogDataJob(currentDayPcPath, currentDay, "gearbest", "gearbest_pc_bury_log_", this.jobCommandLinePc24));
+        this.flinkBashJobs.offer(this.flinkPcBuryLogDataJob(currentDayPcPath, currentDay, "rosegal", "rosegal_pc_bury_log_", this.jobCommandLinePc24));
+        this.flinkBashJobs.offer(this.flinkPcBuryLogDataJob(currentDayPcPath, currentDay, "rosewholesale", "rosewholesale_pc_bury_log_", this.jobCommandLinePc8));
+        this.flinkBashJobs.offer(this.flinkPcBuryLogDataJob(currentDayPcPath, currentDay, "dresslily", "dresslily_pc_bury_log_", this.jobCommandLinePc24));
+
+        // app 埋点数据
+        String currentDayAppPath = this.rootAppPath.replace("current_day", currentDay);
+        //String appPath = HdfsUtil.getBigDataActiveNamenode() + currentDayAppPath;
+        String checkAppPath = "hdfs://glbgnameservice" + currentDayAppPath;
+        checkBuryDataExist(checkAppPath + " /_SUCCESS");
+
+        this.flinkBashJobs.offer(this.flinkAppBuryLogDataJob(currentDayAppPath, currentDay, "zaful", "zaful_zpp_", this.jobCommandLineApp24));
+        this.flinkBashJobs.offer(this.flinkAppBuryLogDataJob(currentDayAppPath, currentDay, "gearbest", "gearbest_app_", this.jobCommandLineApp24));
+        this.flinkBashJobs.offer(this.flinkAppBuryLogDataJob(currentDayAppPath, currentDay, "rosegal", "rosegal_app_", this.jobCommandLineApp24));
+        this.flinkBashJobs.offer(this.flinkAppBuryLogDataJob(currentDayAppPath, currentDay, "dresslily", "dresslily_app_", this.jobCommandLineApp24));
+
+        // php 埋点数据
+        //String php = HdfsUtil.getBigDataActiveNamenode() + this.rootPHPPath.replace("current_day", currentDay);
+        String checkPhpPath = "hdfs://glbgnameservice" + this.rootPHPPath.replace("current_day", currentDay);
+        //String phpPath = HdfsUtil.getBigDataActiveNamenode() + currentDayAppPath;
+        checkBuryDataExist(checkPhpPath + " /_SUCCESS");
+        String phpCommandLine = this.jobCommandLinePHP1.replace(BIGDATA_PATH_VAR, this.rootPHPPath.replace("current_day", currentDay))
+                .replace(DY_PATH_VAR, this.dyDfsPcRootPath.replace("site", "php_burry_log").replace("current_day", currentDay)).replace(JOB_NAME_VAR, "php_burry_log");
+        this.flinkBashJobs.offer(new FlinkBashJob("php_log_" + currentDay, phpCommandLine));
+
+        log.info("任务初始化完成，任务队列 {}, 任务数 {}", this.flinkBashJobs, this.flinkBashJobs.size());
+    }
+
+    private void checkBuryDataExist(String checkPath) throws InterruptedException {
         if (HdfsUtil.bigDataFileExist(checkPath)) {
             log.info("埋点文件目录 {} 存在，开始组装任务", checkPath);
         } else {
@@ -77,57 +110,18 @@ public class BuryLogDataSyncByDay {
                 Thread.sleep(360000);
             }
         }
-        // 组装 pc 埋点表任务
-        // zaful pc 站
-        this.flinkBashJobs.offer(this.flinkPcBuryLogDataJob(currentDayPcPath, currentDay, "zaful", "zaful_pc_bury_log_", this.jobCommandLinePc24));
-        this.flinkBashJobs.offer(this.flinkPcBuryLogDataJob(currentDayPcPath, currentDay, "gearbest", "gearbest_pc_bury_log_", this.jobCommandLinePc24));
-        this.flinkBashJobs.offer(this.flinkPcBuryLogDataJob(currentDayPcPath, currentDay, "rosegal", "rosegal_pc_bury_log_", this.jobCommandLinePc24));
-        this.flinkBashJobs.offer(this.flinkPcBuryLogDataJob(currentDayPcPath, currentDay, "rosewholesale", "rosewholesale_pc_bury_log_", this.jobCommandLinePc8));
-        this.flinkBashJobs.offer(this.flinkPcBuryLogDataJob(currentDayPcPath, currentDay, "dresslily", "dresslily_pc_bury_log_", this.jobCommandLinePc24));
+    }
 
-        // app 埋点数据
-        String currentDayAppPath = this.rootAppPath.replace("current_day", currentDay);
-        String appPath = HdfsUtil.getBigDataActiveNamenode() + currentDayAppPath;
-        String checkAppPath = "hdfs://glbgnameservice" + currentDayAppPath;
-        if (HdfsUtil.bigDataFileExist(checkAppPath)) {
-            log.info("埋点文件目录 {} 存在，开始组装任务", checkAppPath);
-        } else {
-            log.info("埋点文件目录 {} 不存在, 开始每 5 分钟的检查", checkAppPath);
-            int pcCount = 1;
-            Thread.sleep(360000);
-            while (!HdfsUtil.bigDataFileExist(appPath)) {
-                pcCount++;
-                log.info("埋点文件目录 {} 不存在, 开始每 5 分钟的检查 {}", checkAppPath, pcCount);
-                Thread.sleep(360000);
+    private void checkHdfsPath(String checkPath) throws InterruptedException {
 
-            }
+        while (!HdfsUtil.bigDataFileExist(checkPath)) {
+
+            log.info("{} 不存在，等待 10 分钟", checkPath);
+            Thread.sleep(600000);
+
         }
+        log.info("{} 存在 ,提交 flink 任务", checkPath);
 
-        this.flinkBashJobs.offer(this.flinkAppBuryLogDataJob(currentDayAppPath, currentDay, "zaful", "zaful_zpp_", this.jobCommandLineApp24));
-        this.flinkBashJobs.offer(this.flinkAppBuryLogDataJob(currentDayAppPath, currentDay, "gearbest", "gearbest_zpp_", this.jobCommandLineApp24));
-
-        // php 埋点数据
-        String php = HdfsUtil.getBigDataActiveNamenode() + this.rootPHPPath.replace("current_day", currentDay);
-        String checkPhpPath = "hdfs://glbgnameservice" + this.rootPHPPath.replace("current_day", currentDay);
-        //String phpPath = HdfsUtil.getBigDataActiveNamenode() + currentDayAppPath;
-        if (HdfsUtil.bigDataFileExist(checkPhpPath)) {
-            log.info("埋点文件目录 {} 存在，开始组装任务", checkPhpPath);
-        } else {
-            log.info("埋点文件目录 {} 不存在, 开始每 5 分钟的检查", checkPhpPath);
-            int pcCount = 1;
-            Thread.sleep(360000);
-            while (!HdfsUtil.bigDataFileExist(checkPhpPath)) {
-                pcCount++;
-                log.info("埋点文件目录 {} 不存在, 开始每 5 分钟的检查 {}", checkPhpPath, pcCount);
-                Thread.sleep(360000);
-
-            }
-        }
-        String phpCommandLine = this.jobCommandLinePHP1.replace(BIGDATA_PATH_VAR, this.rootPHPPath.replace("current_day", currentDay))
-                .replace(DY_PATH_VAR, this.dyDfsPcRootPath.replace("site", "php_burry_log").replace("current_day", currentDay)).replace(JOB_NAME_VAR, "php_burry_log");
-        this.flinkBashJobs.offer(new FlinkBashJob("php_log_" + currentDay, phpCommandLine));
-
-        log.info("任务初始化完成，任务队列 {}, 任务数 {}", this.flinkBashJobs, this.flinkBashJobs.size());
     }
 
     private FlinkBashJob flinkPcBuryLogDataJob(String currentDayPcPath, String currentDay, String site, String jobName, String baseCommandLine) {
