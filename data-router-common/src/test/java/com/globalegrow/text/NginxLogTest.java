@@ -33,6 +33,14 @@ public class NginxLogTest {
     String s = "https://s.logsss.com/_ubc.gif?glb_t=ie&glb_w=10836&glb_tm=1538027308072&glb_pm=md&glb_ubcta=[{%22price%22:%2216.78%22,%22mrlc%22:%22T_3%22,%22sku%22:%22263726502%22,%22rank%22:%221%22},{%22price%22:%2215.99%22,%22mrlc%22:%22T_3%22,%22sku%22:%22342979002%22,%22rank%22:%222%22},{%22price%22:%2216.84%22,%22mrlc%22:%22T_3%22,%22sku%22:%22288786602%22,%22rank%22:%223%22},{%22price%22:%2220.37%22,%22mrlc%22:%22T_3%22,%22sku%22:%22264558702%22,%22rank%22:%224%22},{%22price%22:%2220.31%22,%22mrlc%22:%22T_3%22,%22sku%22:%22342395302%22,%22rank%22:%225%22}]&glb_pl=https%3A%2F%2Fwww.zaful.com%2Factivewear-e_78%2F%3Fodr%3Dhot%26policy_key%3D1&glb_plf=pc&glb_bts=[{%22versionid%22:%221103%22,%22bucketid%22:%228%22,%22planid%22:%22366%22}]&glb_plf=pc&glb_oi=m5gi5dd08kg8iqrtpekmggbo46&glb_d=10013&glb_b=a&glb_k=sz01&glb_dc=1301&glb_od=100131527644242901364134&glb_osr_referrer=originalurl&glb_osr_landing=https%3A%2F%2Fwww.zaful.com%2F&glb_cl=https%3A%2F%2Fwww.zaful.com%2F HTTP/1.1\"^A^200^A^372^A^\"https://www.rosegal.com/%7Bjjgj/shop/\"^A^\"Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.102 Safari/537.36\"^A^s.logsss.com^A^189.234.54.93, 10.247.163.71, 189.247.163.85, 10.223.52.104, 173.223.52.109^A^189.234.54.93^A^MX^A^Mexico^A^es-ES,es;q=0.9^A^1542831362";
 
     @Test
+    public void testJsonArray1() throws Exception {
+        Map<String,Object> map = NginxLogConvertUtil.getNginxLogParameters(s);
+        System.out.println(map.get("glb_ubcta").getClass());
+        List list = JacksonUtil.readValue((String) map.get("glb_ubcta"), List.class);
+        list.forEach(ubc -> System.out.println(ubc.getClass()));
+    }
+
+    @Test
     public void testJsonArray() throws Exception {
        int i = 0;
         while (i < 100){
