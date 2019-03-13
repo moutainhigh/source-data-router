@@ -52,6 +52,9 @@ public class BuryLogDataSyncByDay {
     private Integer jobCountCylins = 10;
 
     @Autowired
+    private ZafulRecommendReport zafulRecommendReport;
+
+    @Autowired
     private RestTemplate restTemplate;
 
     @Scheduled(cron = "${app.cron.bury-log-data}")
@@ -74,6 +77,7 @@ public class BuryLogDataSyncByDay {
         this.flinkBashJobs.offer(this.flinkPcBuryLogDataJob(currentDayPcPath, currentDay, "rosewholesale", "rosewholesale_pc_bury_log_", this.jobCommandLinePc8));
         this.flinkBashJobs.offer(this.flinkPcBuryLogDataJob(currentDayPcPath, currentDay, "dresslily", "dresslily_pc_bury_log_", this.jobCommandLinePc24));
 
+
         // app 埋点数据
         String currentDayAppPath = this.rootAppPath.replace("current_day", currentDay);
         //String appPath = HdfsUtil.getBigDataActiveNamenode() + currentDayAppPath;
@@ -93,6 +97,9 @@ public class BuryLogDataSyncByDay {
         String phpCommandLine = this.jobCommandLinePHP1.replace(BIGDATA_PATH_VAR, this.rootPHPPath.replace("current_day", currentDay))
                 .replace(DY_PATH_VAR, this.dyDfsPcRootPath.replace("site", "php_burry_log").replace("current_day", currentDay)).replace(JOB_NAME_VAR, "php_burry_log");
         this.flinkBashJobs.offer(new FlinkBashJob("php_log_" + currentDay, phpCommandLine));
+
+        // zaful pc bts flatten
+        this.flinkBashJobs.offer(new FlinkBashJob("flatten_bts_zaful_pc", "/usr/local/services/flink/flink-yarn/flink-1.5.0/bin/flink run -d -m yarn-cluster -yqu root.flink -yjm 8192 -ytm 1024 /usr/local/services/flink/bts_flatten_test-0.1.jar --job.parallelism 4 --bury.date " + currentDay));
 
         log.info("任务初始化完成，任务队列 {}, 任务数 {}", this.flinkBashJobs, this.flinkBashJobs.size());
     }
@@ -155,6 +162,14 @@ public class BuryLogDataSyncByDay {
                     String status = (String) result.get("state");
                     if ("FINISHED".equals(status)) {
                         log.info("任务 {} 执行成功，清空当前任务 id", this.getCurrentJobId());
+                        FlinkBashJob currentJob = this.currentBuryLogJobs.get(this.getCurrentJobId());
+                        if ("flatten_bts_zaful_pc".equals(currentJob.getJobName())) {
+                            log.info("zaful pc 端 bts 信息 flatt 完成, 提交 zaful 推荐报表计算任务");
+                            this.zafulRecommendReport.getFlinkBashJobs().offer(new FlinkBashJob("dy_ai_zaful_app_recommend_report", "/usr/local/services/flink/flink-yarn/flink-1.5.0/bin/flink run -d -m yarn-cluster -yqu root.flink -yjm 2048 -ytm 8192 /usr/local/services/flink/dy_ai_recommend_report-0.1.jar --bury.platform app " +
+                                    "--bury.date " + DateUtil.yesterday().toString("yyyy/MM/dd") +" --order.date " +  DateUtil.yesterday().toString("yyyy-MM-dd") + "  --order.table.date " + DateUtil.yesterday().toString("yyyyMMdd") +" --site zaful --job.parallelism 1"));
+                            this.zafulRecommendReport.getFlinkBashJobs().offer(new FlinkBashJob("dy_ai_zaful_pc_recommend_report", "/usr/local/services/flink/flink-yarn/flink-1.5.0/bin/flink run -d -m yarn-cluster -yqu root.flink -yjm 2048 -ytm 8192 /usr/local/services/flink/dy_ai_recommend_report-0.1.jar --bury.platform pc " +
+                                    "--bury.date " + DateUtil.yesterday().toString("yyyy/MM/dd") +" --order.date " +  DateUtil.yesterday().toString("yyyy-MM-dd") + "  --order.table.date " + DateUtil.yesterday().toString("yyyyMMdd") +" --site zaful --job.parallelism 1"));
+                        }
                         this.currentBuryLogJobs.remove(this.getCurrentJobId());
                         this.setCurrentJobId("");
                     }

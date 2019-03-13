@@ -17,10 +17,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingDeque;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Slf4j
 @Data
-public abstract class AbstractFlinkJobScheduler {
+public abstract class AbstractFlinkJobSerialScheduler {
 
     private LinkedBlockingDeque<FlinkBashJob> flinkBashJobs = new LinkedBlockingDeque<>();
 
@@ -28,54 +29,61 @@ public abstract class AbstractFlinkJobScheduler {
 
     private String flinkJobHistoryServer = "http://bts-master:8082/jobs/";
 
+    private AtomicInteger atomicInteger = new AtomicInteger(0);
+
     @Autowired
     private RestTemplate restTemplate;
 
-    abstract void run();
+    abstract void run() throws InterruptedException;
 
-    @Scheduled(fixedDelay = 60000)
+    //@Scheduled(fixedDelay = 60000)
     public void runFlinkJob() throws InterruptedException {
 
-        FlinkBashJob job = this.flinkBashJobs.take();
+        if (atomicInteger.get() == 0 && this.flinkBashJobs.size() > 0) {
 
-        Process process;
-        String jobId;
-        //List<String> processList = new ArrayList<String>();
-        try {
-            process = Runtime.getRuntime().exec(job.getFlinkCommandLine());
-            //process.waitFor();
+            FlinkBashJob job = this.flinkBashJobs.take();
 
-            try (BufferedReader input = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
-                String line = "";
-                while ((line = input.readLine()) != null) {
-                    //processList.add(line);
-                    log.info("任务信息:{}", line);
+            Process process;
+            String jobId;
+            //List<String> processList = new ArrayList<String>();
+            try {
+                process = Runtime.getRuntime().exec(job.getFlinkCommandLine());
+                //process.waitFor();
 
-                    //log.info("任务提交状态: {}", line.indexOf("Job has been submitted with JobID"));
-                    if (line.indexOf("Job has been submitted with JobID") >= 0) {
-                        String[] lines = line.substring(line.indexOf("Job has been submitted with JobID")).split(" ");
-                        jobId = lines[lines.length - 1];
-                        log.info("{} 任务 id {}", job.getJobName(), jobId);
-                        this.currentBuryLogJobs.put(jobId, job);
-                        Thread.sleep(1000);
+                try (BufferedReader input = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
+                    String line = "";
+                    while ((line = input.readLine()) != null) {
+                        //processList.add(line);
+                        log.info("任务信息:{}", line);
+
+                        //log.info("任务提交状态: {}", line.indexOf("Job has been submitted with JobID"));
+                        if (line.indexOf("Job has been submitted with JobID") >= 0) {
+                            String[] lines = line.substring(line.indexOf("Job has been submitted with JobID")).split(" ");
+                            jobId = lines[lines.length - 1];
+                            log.info("{} 任务 id {}", job.getJobName(), jobId);
+                            this.currentBuryLogJobs.put(jobId, job);
+                            this.atomicInteger.set(1);
+                            Thread.sleep(1000);
+                        }
+
                     }
-
                 }
+
+                StringBuilder error = new StringBuilder();
+                try (BufferedReader input = new BufferedReader(new InputStreamReader(process.getErrorStream()))) {
+                    String line = "";
+                    while ((line = input.readLine()) != null) {
+                        //processList.add(line);
+                        log.info("任务错误信息: {}", line);
+
+                        error.append(line);
+                    }
+                }
+
+            } catch (Exception e) {
+                log.error("flink 任务出错", e);
             }
 
-            StringBuilder error = new StringBuilder();
-            try (BufferedReader input = new BufferedReader(new InputStreamReader(process.getErrorStream()))) {
-                String line = "";
-                while ((line = input.readLine()) != null) {
-                    //processList.add(line);
-                    log.info("任务错误信息: {}", line);
-
-                    error.append(line);
-                }
-            }
-
-        } catch (Exception e) {
-            log.error("flink 任务出错", e);
         }
 
 
@@ -98,6 +106,7 @@ public abstract class AbstractFlinkJobScheduler {
                     if ("FINISHED".equals(status)) {
                         log.info("任务 {} 执行成功，清空当前任务 id", stringFlinkBashJobEntry.getKey());
                         finished.add(stringFlinkBashJobEntry.getKey());
+                        this.atomicInteger.set(0);
                     }
                     if ("FAILED".equals(status)) {
                         log.error("{} 任务执行失败，重新放入队列执行", this.currentBuryLogJobs.get(stringFlinkBashJobEntry.getKey()));
@@ -113,7 +122,7 @@ public abstract class AbstractFlinkJobScheduler {
                     HttpClientErrorException httpClientErrorException = (HttpClientErrorException) e;
                     log.info("任务状态检查结果: {}", httpClientErrorException.getStatusText());
 
-                }else {
+                } else {
                     // 发送邮件
                     log.error("任务状态检查出错", e);
                 }
@@ -125,7 +134,6 @@ public abstract class AbstractFlinkJobScheduler {
         finished.forEach(s -> currentBuryLogJobs.remove(s));
 
     }
-
 
 
     private void checkHdfsPath(String checkPath) throws InterruptedException {
