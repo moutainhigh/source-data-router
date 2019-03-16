@@ -2,6 +2,7 @@ package com.globalegrow.dy.goods.info.dto;
 
 import lombok.Data;
 import lombok.ToString;
+import org.apache.commons.lang3.StringUtils;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
 
@@ -37,7 +38,12 @@ public class GoodsTendencyRequest {
 
     public List<String> getIds() {
         List<String> list = new ArrayList<>();
-        this.item_ids.stream().forEach(s -> list.add(s + "_" + this.platform));
+        if (StringUtils.isNotEmpty(this.country)) {
+            this.item_ids.stream().forEach(s -> list.add(s + "_" + this.platform + this.country));
+        } else {
+            this.item_ids.stream().forEach(s -> list.add(s + "_" + this.platform));
+        }
+
         return list;
     }
 
