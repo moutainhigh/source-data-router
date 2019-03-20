@@ -25,7 +25,7 @@ import java.util.Map;
 public class ApacheDrillHdfsActiveNameNodeCheck {
 
     @Value("${app.drill.storage}")
-    private String apacheDrillAdress = "http://bts-datanode08:8047/storage/";
+    private String apacheDrillAdress = "http://bts-datanode05:8047/storage/";
 
     private String bigdataDfsDrillConfig = "dfs_bigdata.json";
     private String dyDfsDrillConfig = "dfs.json";
@@ -43,6 +43,7 @@ public class ApacheDrillHdfsActiveNameNodeCheck {
 
     /**
      * 初始化查询 Apache drill 当前配置
+     * SELECT hostname FROM sys.drillbits WHERE `current` = true;
      */
     @PostConstruct
     public void init() {

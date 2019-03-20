@@ -7,11 +7,19 @@ import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.LinkedBlockingDeque;
 
@@ -32,6 +40,9 @@ public class BuryLogDataSyncByDay {
     @Autowired
     Map<String, FlinkBashJob> currentBuryLogJobs;
 
+    @Value("${app.notice.url:http://172.31.33.39/targetConfig/sysn/notice}")
+    private String noticeUrl;
+
     private String dyDfsPcRootPath = "hdfs:///user/hadoop/bumblebee/web/site/current_day/";
     private String dyDfsAppRootPath = "hdfs:///user/hadoop/bumblebee/app/site/current_day/";
 
@@ -48,6 +59,8 @@ public class BuryLogDataSyncByDay {
     private static final String DY_PATH_VAR = "dy_hdfs_path";
     private static final String JOB_NAME_VAR = "bury_log_site";
 
+    public static final String SUCCESS_FULL_FILE = "_SUCCESS";
+
     // 等待大数据取数临界点
     private Integer jobCountCylins = 10;
 
@@ -60,7 +73,20 @@ public class BuryLogDataSyncByDay {
     @Scheduled(cron = "${app.cron.bury-log-data}")
     public void run() throws InterruptedException {
 
+
+        this.pc();
+
+        this.app();
+
+        // zaful pc bts flatten
+        //this.flinkBashJobs.offer(new FlinkBashJob("flatten_bts_zaful_pc", "/usr/local/services/flink/flink-yarn/flink-1.5.0/bin/flink run -d -m yarn-cluster -yqu root.flink -yjm 8192 -ytm 1024 /usr/local/services/flink/bts_flatten_test-0.1.jar --job.parallelism 4 --bury.date " + currentDay));
+
+        log.info("任务初始化完成，任务队列 {}, 任务数 {}", this.flinkBashJobs, this.flinkBashJobs.size());
+    }
+
+    public void pc() throws InterruptedException {
         String currentDay = DateUtil.yesterday().toString("yyyy/MM/dd");
+        String currentDay1 = DateUtil.yesterday().toString("yyyy-MM-dd");
         log.info("组装任务 Map");
         log.info("开始同步埋点数据，检查当天 pc 埋点目录是否存在");
 
@@ -68,40 +94,49 @@ public class BuryLogDataSyncByDay {
 
         //String hdfsPath = HdfsUtil.getBigDataActiveNamenode() + currentDayPcPath;
         String checkPath = "hdfs://glbgnameservice" + currentDayPcPath;
-        checkBuryDataExist(checkPath + " /_SUCCESS");
+        checkBuryDataExist(checkPath + SUCCESS_FULL_FILE);
         // 组装 pc 埋点表任务
         // zaful pc 站
-        this.flinkBashJobs.offer(this.flinkPcBuryLogDataJob(currentDayPcPath, currentDay, "zaful", "zaful_pc_bury_log_", this.jobCommandLinePc24));
-        this.flinkBashJobs.offer(this.flinkPcBuryLogDataJob(currentDayPcPath, currentDay, "gearbest", "gearbest_pc_bury_log_", this.jobCommandLinePc24));
-        this.flinkBashJobs.offer(this.flinkPcBuryLogDataJob(currentDayPcPath, currentDay, "rosegal", "rosegal_pc_bury_log_", this.jobCommandLinePc24));
-        this.flinkBashJobs.offer(this.flinkPcBuryLogDataJob(currentDayPcPath, currentDay, "rosewholesale", "rosewholesale_pc_bury_log_", this.jobCommandLinePc8));
-        this.flinkBashJobs.offer(this.flinkPcBuryLogDataJob(currentDayPcPath, currentDay, "dresslily", "dresslily_pc_bury_log_", this.jobCommandLinePc24));
-
-
-        // app 埋点数据
-        String currentDayAppPath = this.rootAppPath.replace("current_day", currentDay);
-        //String appPath = HdfsUtil.getBigDataActiveNamenode() + currentDayAppPath;
-        String checkAppPath = "hdfs://glbgnameservice" + currentDayAppPath;
-        checkBuryDataExist(checkAppPath + " /_SUCCESS");
-
-        this.flinkBashJobs.offer(this.flinkAppBuryLogDataJob(currentDayAppPath, currentDay, "zaful", "zaful_zpp_", this.jobCommandLineApp24));
-        this.flinkBashJobs.offer(this.flinkAppBuryLogDataJob(currentDayAppPath, currentDay, "gearbest", "gearbest_app_", this.jobCommandLineApp24));
-        this.flinkBashJobs.offer(this.flinkAppBuryLogDataJob(currentDayAppPath, currentDay, "rosegal", "rosegal_app_", this.jobCommandLineApp24));
-        this.flinkBashJobs.offer(this.flinkAppBuryLogDataJob(currentDayAppPath, currentDay, "dresslily", "dresslily_app_", this.jobCommandLineApp24));
+        this.flinkBashJobs.offer(this.flinkPcBuryLogDataJob(currentDayPcPath, currentDay, "zaful", "zaful_pc_bury_log_", this.jobCommandLinePc24, currentDay1));
+        this.flinkBashJobs.offer(this.flinkPcBuryLogDataJob(currentDayPcPath, currentDay, "gearbest", "gearbest_pc_bury_log_", this.jobCommandLinePc24, currentDay1));
+        this.flinkBashJobs.offer(this.flinkPcBuryLogDataJob(currentDayPcPath, currentDay, "rosegal", "rosegal_pc_bury_log_", this.jobCommandLinePc24, currentDay1));
+        this.flinkBashJobs.offer(this.flinkPcBuryLogDataJob(currentDayPcPath, currentDay, "rosewholesale", "rosewholesale_pc_bury_log_", this.jobCommandLinePc8, currentDay1));
+        this.flinkBashJobs.offer(this.flinkPcBuryLogDataJob(currentDayPcPath, currentDay, "dresslily", "dresslily_pc_bury_log_", this.jobCommandLinePc24, currentDay1));
 
         // php 埋点数据
         //String php = HdfsUtil.getBigDataActiveNamenode() + this.rootPHPPath.replace("current_day", currentDay);
         String checkPhpPath = "hdfs://glbgnameservice" + this.rootPHPPath.replace("current_day", currentDay);
         //String phpPath = HdfsUtil.getBigDataActiveNamenode() + currentDayAppPath;
-        checkBuryDataExist(checkPhpPath + " /_SUCCESS");
+        checkBuryDataExist(checkPhpPath + SUCCESS_FULL_FILE);
         String phpCommandLine = this.jobCommandLinePHP1.replace(BIGDATA_PATH_VAR, this.rootPHPPath.replace("current_day", currentDay))
                 .replace(DY_PATH_VAR, this.dyDfsPcRootPath.replace("site", "php_burry_log").replace("current_day", currentDay)).replace(JOB_NAME_VAR, "php_burry_log");
-        this.flinkBashJobs.offer(new FlinkBashJob("php_log_" + currentDay, phpCommandLine));
+        this.flinkBashJobs.offer(new FlinkBashJob("php_log_" + currentDay, phpCommandLine, currentDay1));
+    }
 
-        // zaful pc bts flatten
-        this.flinkBashJobs.offer(new FlinkBashJob("flatten_bts_zaful_pc", "/usr/local/services/flink/flink-yarn/flink-1.5.0/bin/flink run -d -m yarn-cluster -yqu root.flink -yjm 8192 -ytm 1024 /usr/local/services/flink/bts_flatten_test-0.1.jar --job.parallelism 4 --bury.date " + currentDay));
+    public void app() throws InterruptedException {
 
-        log.info("任务初始化完成，任务队列 {}, 任务数 {}", this.flinkBashJobs, this.flinkBashJobs.size());
+        String currentDay = DateUtil.yesterday().toString("yyyy/MM/dd");
+        String currentDay1 = DateUtil.yesterday().toString("yyyy-MM-dd");
+        log.info("组装任务 Map");
+        log.info("开始同步埋点数据，检查当天 pc 埋点目录是否存在");
+
+        String currentDayPcPath = this.rootPcPath.replace("current_day", currentDay);
+
+        //String hdfsPath = HdfsUtil.getBigDataActiveNamenode() + currentDayPcPath;
+        String checkPath = "hdfs://glbgnameservice" + currentDayPcPath;
+        checkBuryDataExist(checkPath + SUCCESS_FULL_FILE);
+
+        // app 埋点数据
+        String currentDayAppPath = this.rootAppPath.replace("current_day", currentDay);
+        //String appPath = HdfsUtil.getBigDataActiveNamenode() + currentDayAppPath;
+        String checkAppPath = "hdfs://glbgnameservice" + currentDayAppPath;
+        checkBuryDataExist(checkAppPath + SUCCESS_FULL_FILE);
+
+        this.flinkBashJobs.offer(this.flinkAppBuryLogDataJob(currentDayAppPath, currentDay, "zaful", "zaful_zpp_", this.jobCommandLineApp24, currentDay1));
+        this.flinkBashJobs.offer(this.flinkAppBuryLogDataJob(currentDayAppPath, currentDay, "gearbest", "gearbest_app_", this.jobCommandLineApp24, currentDay1));
+        this.flinkBashJobs.offer(this.flinkAppBuryLogDataJob(currentDayAppPath, currentDay, "rosegal", "rosegal_app_", this.jobCommandLineApp24, currentDay1));
+        this.flinkBashJobs.offer(this.flinkAppBuryLogDataJob(currentDayAppPath, currentDay, "dresslily", "dresslily_app_", this.jobCommandLineApp24, currentDay1));
+
     }
 
     private void checkBuryDataExist(String checkPath) throws InterruptedException {
@@ -131,19 +166,19 @@ public class BuryLogDataSyncByDay {
 
     }
 
-    private FlinkBashJob flinkPcBuryLogDataJob(String currentDayPcPath, String currentDay, String site, String jobName, String baseCommandLine) {
+    private FlinkBashJob flinkPcBuryLogDataJob(String currentDayPcPath, String currentDay, String site, String jobName, String baseCommandLine, String noticeDate) {
         String dfsPcZaful = currentDayPcPath + site;
         String dyOutPathPcZaful = this.dyDfsPcRootPath.replace("site", site).replace("current_day", currentDay);
         String zafulPcComandLine = baseCommandLine.replace(BIGDATA_PATH_VAR, dfsPcZaful).replace(DY_PATH_VAR, dyOutPathPcZaful).replace(JOB_NAME_VAR, site);
-        FlinkBashJob pcZaful = new FlinkBashJob(jobName + currentDay, zafulPcComandLine);
+        FlinkBashJob pcZaful = new FlinkBashJob(jobName + currentDay, zafulPcComandLine, noticeDate);
         return pcZaful;
     }
 
-    private FlinkBashJob flinkAppBuryLogDataJob(String currentDayAppPath, String currentDay, String site, String jobName, String baseCommandLine) {
+    private FlinkBashJob flinkAppBuryLogDataJob(String currentDayAppPath, String currentDay, String site, String jobName, String baseCommandLine, String noticeDate) {
         String dfsPcZaful = currentDayAppPath + site;
         String dyOutPathPcZaful = this.dyDfsAppRootPath.replace("site", site).replace("current_day", currentDay);
         String zafulPcComandLine = baseCommandLine.replace(BIGDATA_PATH_VAR, dfsPcZaful).replace(DY_PATH_VAR, dyOutPathPcZaful).replace(JOB_NAME_VAR, site);
-        FlinkBashJob pcZaful = new FlinkBashJob(jobName + currentDay, zafulPcComandLine);
+        FlinkBashJob pcZaful = new FlinkBashJob(jobName + currentDay, zafulPcComandLine, noticeDate);
         return pcZaful;
     }
 
@@ -162,14 +197,32 @@ public class BuryLogDataSyncByDay {
                     String status = (String) result.get("state");
                     if ("FINISHED".equals(status)) {
                         log.info("任务 {} 执行成功，清空当前任务 id", this.getCurrentJobId());
-                        FlinkBashJob currentJob = this.currentBuryLogJobs.get(this.getCurrentJobId());
-                        if ("flatten_bts_zaful_pc".equals(currentJob.getJobName())) {
-                            log.info("zaful pc 端 bts 信息 flatt 完成, 提交 zaful 推荐报表计算任务");
-                            this.zafulRecommendReport.getFlinkBashJobs().offer(new FlinkBashJob("dy_ai_zaful_app_recommend_report", "/usr/local/services/flink/flink-yarn/flink-1.5.0/bin/flink run -d -m yarn-cluster -yqu root.flink -yjm 2048 -ytm 8192 /usr/local/services/flink/dy_ai_recommend_report-0.1.jar --bury.platform app " +
-                                    "--bury.date " + DateUtil.yesterday().toString("yyyy/MM/dd") +" --order.date " +  DateUtil.yesterday().toString("yyyy-MM-dd") + "  --order.table.date " + DateUtil.yesterday().toString("yyyyMMdd") +" --site zaful --job.parallelism 1"));
-                            this.zafulRecommendReport.getFlinkBashJobs().offer(new FlinkBashJob("dy_ai_zaful_pc_recommend_report", "/usr/local/services/flink/flink-yarn/flink-1.5.0/bin/flink run -d -m yarn-cluster -yqu root.flink -yjm 2048 -ytm 8192 /usr/local/services/flink/dy_ai_recommend_report-0.1.jar --bury.platform pc " +
-                                    "--bury.date " + DateUtil.yesterday().toString("yyyy/MM/dd") +" --order.date " +  DateUtil.yesterday().toString("yyyy-MM-dd") + "  --order.table.date " + DateUtil.yesterday().toString("yyyyMMdd") +" --site zaful --job.parallelism 1"));
+                        FlinkBashJob job = this.currentBuryLogJobs.get(this.getCurrentJobId());
+                        // 通知 bts 接口计算
+                        log.info("通知报表配置");
+                        String[] names = job.getJobName().split("_");
+                        HttpHeaders headers = new HttpHeaders();
+                        //headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+
+                        headers.add("Content-Type", "application/json;charset=UTF-8");
+
+                        Map<String,Object> parameters = new HashMap<>();
+                        parameters.put("productLineCode", names[1]);
+                        parameters.put("date", job.getDate());
+
+                        if ("pc".equals(names[0])) {
+                            parameters.put("platform", 0);
                         }
+                        if ("app".equals(names[0])) {
+                            parameters.put("platform", 1);
+                        }
+
+                        HttpEntity<Map> request = new HttpEntity<>(parameters, headers);
+
+                        ResponseEntity<String> response = restTemplate.postForEntity(this.noticeUrl, request, String.class);
+
+                        log.info("通知结果 {} ", response.getBody());
+
                         this.currentBuryLogJobs.remove(this.getCurrentJobId());
                         this.setCurrentJobId("");
                     }
@@ -180,7 +233,13 @@ public class BuryLogDataSyncByDay {
                         this.setCurrentJobId("");
                     }
                     if (this.flinkBashJobs.size() == 0) {
-                        log.info("所有任务执行完毕，通知第三方");
+                        log.info("所有任务执行完毕，通知第三方，执行推荐报表任务");
+                        log.info("zaful pc 端 bts 信息 flatt 完成, 提交 zaful 推荐报表计算任务");
+//                        this.zafulRecommendReport.getFlinkBashJobs().offer(new FlinkBashJob("dy_ai_zaful_app_recommend_report", "/usr/local/services/flink/flink-yarn/flink-1.5.0/bin/flink run -d -m yarn-cluster -yqu root.flink -yjm 2048 -ytm 8192 /usr/local/services/flink/dy_ai_recommend_report-0.1.jar --bury.platform app " +
+//                                "--bury.date " + DateUtil.yesterday().toString("yyyy/MM/dd") + " --order.date " + DateUtil.yesterday().toString("yyyy-MM-dd") + "  --order.table.date " + DateUtil.yesterday().toString("yyyyMMdd") + " --site zaful --job.parallelism 1"));
+//                        this.zafulRecommendReport.getFlinkBashJobs().offer(new FlinkBashJob("dy_ai_zaful_pc_recommend_report", "/usr/local/services/flink/flink-yarn/flink-1.5.0/bin/flink run -d -m yarn-cluster -yqu root.flink -yjm 2048 -ytm 8192 /usr/local/services/flink/dy_ai_recommend_report-0.1.jar --bury.platform pc " +
+//                               "--bury.date " + DateUtil.yesterday().toString("yyyy/MM/dd") + " --order.date " + DateUtil.yesterday().toString("yyyy-MM-dd") + "  --order.table.date " + DateUtil.yesterday().toString("yyyyMMdd") + " --site zaful --job.parallelism 1"));
+
                     }
                 }
             } catch (Exception e) {
@@ -188,7 +247,7 @@ public class BuryLogDataSyncByDay {
                     HttpClientErrorException httpClientErrorException = (HttpClientErrorException) e;
                     log.info("任务状态检查结果: {}", httpClientErrorException.getStatusText());
 
-                }else {
+                } else {
                     // 发送邮件
                     log.error("任务状态检查出错", e);
                 }

@@ -19,6 +19,13 @@ public class FlinkBashJob {
 
     @NonNull
     private String flinkCommandLine;
+    private String date;
+
+    public FlinkBashJob(@NonNull String jobName, @NonNull String flinkCommandLine, String date) {
+        this.jobName = jobName;
+        this.flinkCommandLine = flinkCommandLine;
+        this.date = date;
+    }
 
     private int runTimes = 1;
 
