@@ -53,7 +53,7 @@ logging:
   path: logs
   file: logs/dy-app-user-feature.log
   level:
-    root: debug
+    root: info
     org.springframework: ERROR
     sun.rmi: ERROR
     org.apache.http: ERROR
