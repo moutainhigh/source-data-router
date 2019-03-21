@@ -61,7 +61,7 @@ public class GoodsTendencyEsServiceImpl implements GoodsTendencyService {
             SearchRequestBuilder searchRequestBuilder = this.client.prepareSearch(indexName)
                     .addSort(FieldSortBuilder.DOC_FIELD_NAME, SortOrder.ASC)
                     .setQuery(boolQueryBuilder)
-                    .setSize(request.getSize());
+                    .setSize(request.getItem_ids().size());
 
             log.debug("搜索条件 {}", searchRequestBuilder.toString());
 

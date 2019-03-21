@@ -120,7 +120,7 @@ public class BuryLogDataSyncByDay {
         log.info("组装任务 Map");
         log.info("开始同步埋点数据，检查当天 pc 埋点目录是否存在");
 
-        String currentDayPcPath = this.rootPcPath.replace("current_day", currentDay);
+        String currentDayPcPath = this.rootAppPath.replace("current_day", currentDay);
 
         //String hdfsPath = HdfsUtil.getBigDataActiveNamenode() + currentDayPcPath;
         String checkPath = "hdfs://glbgnameservice" + currentDayPcPath;

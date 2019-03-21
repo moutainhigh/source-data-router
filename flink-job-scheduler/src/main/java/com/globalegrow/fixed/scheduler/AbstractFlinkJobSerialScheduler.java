@@ -23,6 +23,11 @@ import java.util.concurrent.atomic.AtomicInteger;
 @Data
 public abstract class AbstractFlinkJobSerialScheduler {
 
+    protected String rootPcPath = "/bigdata/ods/log_clean/ods_pc_burial_log/current_day/";
+    protected String rootAppPath = "/bigdata/ods/log_clean/ods_app_burial_log/current_day/";
+
+    public static final String SUCCESS_FULL_FILE = "_SUCCESS";
+
     private LinkedBlockingDeque<FlinkBashJob> flinkBashJobs = new LinkedBlockingDeque<>();
 
     Map<String, FlinkBashJob> currentBuryLogJobs = new ConcurrentHashMap<>();
@@ -136,7 +141,7 @@ public abstract class AbstractFlinkJobSerialScheduler {
     }
 
 
-    private void checkHdfsPath(String checkPath) throws InterruptedException {
+    public void checkHdfsPath(String checkPath) throws InterruptedException {
 
         while (!HdfsUtil.bigDataFileExist(checkPath)) {
 
