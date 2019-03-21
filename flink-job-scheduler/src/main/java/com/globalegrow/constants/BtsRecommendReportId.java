@@ -1,7 +1,7 @@
 package com.globalegrow.constants;
 
 public enum  BtsRecommendReportId {
-    planIdPc("hdfs:///user/hadoop/bts/plan_id_pc_m"),planIdApp("hdfs:///user/hadoop/bts/plan_id_app")
+    planIdPc("hdfs://glbgnameservice/user/hadoop/bts/plan_id_pc_m"),planIdApp("hdfs://glbgnameservice/user/hadoop/bts/plan_id_app")
     ;
     private String filePath;
 

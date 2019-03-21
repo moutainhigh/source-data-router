@@ -8,6 +8,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.BufferedReader;
@@ -32,12 +33,12 @@ public abstract class AbstractFlinkJobSerialScheduler {
 
     Map<String, FlinkBashJob> currentBuryLogJobs = new ConcurrentHashMap<>();
 
-    private String flinkJobHistoryServer = "http://bts-master:8082/jobs/";
+    protected String flinkJobHistoryServer = "http://bts-master:8082/jobs/";
 
     private AtomicInteger atomicInteger = new AtomicInteger(0);
 
     @Autowired
-    private RestTemplate restTemplate;
+    protected RestTemplate restTemplate;
 
     abstract void run() throws InterruptedException;
 
@@ -45,53 +46,55 @@ public abstract class AbstractFlinkJobSerialScheduler {
     public void runFlinkJob() throws InterruptedException {
 
         if (atomicInteger.get() == 0 && this.flinkBashJobs.size() > 0) {
-
             FlinkBashJob job = this.flinkBashJobs.take();
-
-            Process process;
-            String jobId;
-            //List<String> processList = new ArrayList<String>();
-            try {
-                process = Runtime.getRuntime().exec(job.getFlinkCommandLine());
-                //process.waitFor();
-
-                try (BufferedReader input = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
-                    String line = "";
-                    while ((line = input.readLine()) != null) {
-                        //processList.add(line);
-                        log.info("任务信息:{}", line);
-
-                        //log.info("任务提交状态: {}", line.indexOf("Job has been submitted with JobID"));
-                        if (line.indexOf("Job has been submitted with JobID") >= 0) {
-                            String[] lines = line.substring(line.indexOf("Job has been submitted with JobID")).split(" ");
-                            jobId = lines[lines.length - 1];
-                            log.info("{} 任务 id {}", job.getJobName(), jobId);
-                            this.currentBuryLogJobs.put(jobId, job);
-                            this.atomicInteger.set(1);
-                            Thread.sleep(1000);
-                        }
-
-                    }
-                }
-
-                StringBuilder error = new StringBuilder();
-                try (BufferedReader input = new BufferedReader(new InputStreamReader(process.getErrorStream()))) {
-                    String line = "";
-                    while ((line = input.readLine()) != null) {
-                        //processList.add(line);
-                        log.info("任务错误信息: {}", line);
-
-                        error.append(line);
-                    }
-                }
-
-            } catch (Exception e) {
-                log.error("flink 任务出错", e);
-            }
-
+            String jobId = this.execFlinkJob(job);
+            this.currentBuryLogJobs.put(jobId, job);
+            this.atomicInteger.set(1);
+            Thread.sleep(1000);
         }
 
 
+    }
+
+    public String execFlinkJob(FlinkBashJob job) {
+        Process process;
+        String jobId = null;
+        //List<String> processList = new ArrayList<String>();
+        try {
+            process = Runtime.getRuntime().exec(job.getFlinkCommandLine());
+            //process.waitFor();
+
+            try (BufferedReader input = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
+                String line = "";
+                while ((line = input.readLine()) != null) {
+                    //processList.add(line);
+                    log.info("任务信息:{}", line);
+
+                    //log.info("任务提交状态: {}", line.indexOf("Job has been submitted with JobID"));
+                    if (line.indexOf("Job has been submitted with JobID") >= 0) {
+                        String[] lines = line.substring(line.indexOf("Job has been submitted with JobID")).split(" ");
+                        jobId = lines[lines.length - 1];
+                        log.info("{} 任务 id {}", job.getJobName(), jobId);
+                    }
+
+                }
+            }
+
+            StringBuilder error = new StringBuilder();
+            try (BufferedReader input = new BufferedReader(new InputStreamReader(process.getErrorStream()))) {
+                String line = "";
+                while ((line = input.readLine()) != null) {
+                    //processList.add(line);
+                    log.info("任务错误信息: {}", line);
+
+                    error.append(line);
+                }
+            }
+
+        } catch (Exception e) {
+            log.error("flink 任务出错", e);
+        }
+        return jobId;
     }
 
     @Scheduled(fixedDelay = 15000)
@@ -138,6 +141,18 @@ public abstract class AbstractFlinkJobSerialScheduler {
 
         finished.forEach(s -> currentBuryLogJobs.remove(s));
 
+    }
+
+    public String checkJobStatus(String jobId) {
+        try {
+            Map<String, Object> result = this.restTemplate.getForObject(this.flinkJobHistoryServer + jobId, Map.class);
+            if (result != null && StringUtils.isNotEmpty((String) result.get("state"))) {
+                return (String) result.get("state");
+            }
+        } catch (RestClientException e) {
+            e.printStackTrace();
+        }
+        return "";
     }
 
 
