@@ -86,7 +86,7 @@ spring:
   cloud:
     sentinel:
       transport:
-        dashboard: 172.31.44.72:38194
+        dashboard: 172.31.44.72:48194
         #port: 38193
       eager: true
 server:
@@ -130,7 +130,7 @@ spring:
   cloud:
     sentinel:
       transport:
-        dashboard: 172.31.44.72:38194
+        dashboard: 172.31.44.72:48194
         #port: 38193
       eager: true
 server:
