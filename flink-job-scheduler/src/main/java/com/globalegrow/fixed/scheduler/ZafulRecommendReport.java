@@ -37,7 +37,7 @@ public class ZafulRecommendReport extends AbstractFlinkJobSerialScheduler {
     private String zafulOrderInfoPath = "hdfs://glbgnameservice/bigdata/ods/zaful/ods_m_zaful_eload_order_info/dt=";
     private String zafulOrderGoodsInfoPath = "hdfs://glbgnameservice/bigdata/ods/zaful/ods_m_zaful_eload_order_goods/dt=";
 
-    private String baseCommand = "/usr/local/services/flink/flink-yarn/flink-1.5.0/bin/flink run -d -m yarn-cluster -yqu root.flink -yjm 1024 -ytm 8192 /usr/local/services/flink/dy_ai_recommend_report-0.1.jar --bury.platform ";
+    private String baseCommand = "/usr/local/services/flink/flink-yarn/flink-1.5.0/bin/flink run -d -m yarn-cluster -yqu root.flink -yjm 1024 -ytm 4096 /usr/local/services/flink/dy_ai_recommend_report-0.1.jar --bury.platform ";
 
     private String baseParameterCommand = " --bury.date _bury_date --order.table.date _order_table_date --site zaful --job.parallelism 1 ";
 
@@ -159,30 +159,36 @@ public class ZafulRecommendReport extends AbstractFlinkJobSerialScheduler {
 
         for (String day : last6Days(buryDate)) {
 
-            FlinkBashJob orderRecountJob = new FlinkBashJob("zaful_order_recount_" + day, this.pcAndAppOrderRecountCommand.replace("_bury_date", buryDate).replace("_order_table_date", buryDate.replaceAll("/", "")));
-            this.execFlinkJob(orderRecountJob);
+            if (HdfsUtil.dyFileExist("hdfs://glbgnameservice/user/hadoop/report/app/" + day)
+                    && HdfsUtil.dyFileExist("hdfs://glbgnameservice/user/hadoop/report/pc/" + day)) {
+                FlinkBashJob orderRecountJob = new FlinkBashJob("zaful_order_recount_" + day, this.pcAndAppOrderRecountCommand.replace("_bury_date", buryDate).replace("_order_table_date", buryDate.replaceAll("/", "")));
+                this.execFlinkJob(orderRecountJob);
 
-            // bts 订单重计算
-            String pcPlanId = HdfsUtil.getDyFileContentString(BtsRecommendReportId.planIdPc.getFilePath());
-            if (StringUtils.isNotEmpty(pcPlanId)) {
-                for (String s : pcPlanId.split(",")) {
-                    if (StringUtils.isNotEmpty(s)) {
-                        FlinkBashJob job = new FlinkBashJob("zaful_pc_bts_report_" + pcPlanId, this.pcBtsOrderRecountCommand.replace("_bury_date", day).replace("_order_table_date", buryDate) + s);
-                        this.recountOrderBtsJobs.offer(job);
+                // bts 订单重计算
+                String pcPlanId = HdfsUtil.getDyFileContentString(BtsRecommendReportId.planIdPc.getFilePath());
+                if (StringUtils.isNotEmpty(pcPlanId)) {
+                    for (String s : pcPlanId.split(",")) {
+                        if (StringUtils.isNotEmpty(s)) {
+                            FlinkBashJob job = new FlinkBashJob("zaful_pc_bts_report_" + s, this.pcBtsOrderRecountCommand.replace("_bury_date", day).replace("_order_table_date", buryDate) + s);
+                            this.recountOrderBtsJobs.offer(job);
+                        }
+
                     }
-
                 }
-            }
-            String appPlanId = HdfsUtil.getDyFileContentString(BtsRecommendReportId.planIdApp.getFilePath());
-            if (StringUtils.isNotEmpty(appPlanId)) {
-                for (String s : appPlanId.split(",")) {
-                    if (StringUtils.isNotEmpty(s)) {
-                        FlinkBashJob job = new FlinkBashJob("zaful_pc_bts_report_" + pcPlanId, this.appBtsOrderRecountCommand.replace("_bury_date", day).replace("_order_table_date", buryDate) + s);
-                        this.recountOrderBtsJobs.offer(job);
+
+                String appPlanId = HdfsUtil.getDyFileContentString(BtsRecommendReportId.planIdApp.getFilePath());
+                if (StringUtils.isNotEmpty(appPlanId)) {
+                    for (String s : appPlanId.split(",")) {
+                        if (StringUtils.isNotEmpty(s)) {
+                            FlinkBashJob job = new FlinkBashJob("zaful_pc_bts_report_" + s, this.appBtsOrderRecountCommand.replace("_bury_date", day).replace("_order_table_date", buryDate) + s);
+                            this.recountOrderBtsJobs.offer(job);
+                        }
+
                     }
-
                 }
+
             }
+
 
         }
 

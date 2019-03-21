@@ -9,6 +9,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 @RestController
 @RequestMapping("bts-report")
 @Data
@@ -25,14 +31,14 @@ public class BtsReportController {
                 if (StringUtils.isNotEmpty(content)) {
                     stringBuilder.append(content);
                 }
-                HdfsUtil.updateDyHdfsFile(BtsRecommendReportId.planIdPc.getFilePath(), stringBuilder.toString());
+                HdfsUtil.updateDyHdfsFile(BtsRecommendReportId.planIdPc.getFilePath(), stringBuilder.toString().replaceAll(",,",","));
             }
             if ("app".equals(platform)) {
                 String content = HdfsUtil.getDyFileContentString(BtsRecommendReportId.planIdApp.getFilePath());
                 if (StringUtils.isNotEmpty(content)) {
                     stringBuilder.append(content);
                 }
-                HdfsUtil.updateDyHdfsFile(BtsRecommendReportId.planIdApp.getFilePath(), stringBuilder.toString());
+                HdfsUtil.updateDyHdfsFile(BtsRecommendReportId.planIdApp.getFilePath(), stringBuilder.toString().replaceAll(",,",","));
             }
         }else {
             return "failed";
@@ -64,6 +70,16 @@ public class BtsReportController {
             return "failed";
         }
         return "success";
+    }
+
+    @GetMapping("ids")
+    public Map<String, List<String>> getAllCurrentBtsId() {
+        Map<String, List<String>> map = new HashMap<>();
+        String contentPc = HdfsUtil.getDyFileContentString(BtsRecommendReportId.planIdPc.getFilePath());
+        String contentApp = HdfsUtil.getDyFileContentString(BtsRecommendReportId.planIdApp.getFilePath());
+        map.put("pc", Arrays.stream(contentPc.split(",")).filter(s -> StringUtils.isNotEmpty(s)).collect(Collectors.toList()));
+        map.put("app", Arrays.stream(contentApp.split(",")).filter(s -> StringUtils.isNotEmpty(s)).collect(Collectors.toList()));
+        return map;
     }
 
 
