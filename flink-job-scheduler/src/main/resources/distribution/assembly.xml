@@ -9,6 +9,10 @@
             <directory>${project.basedir}/src/main/resources/templates/</directory>
             <outputDirectory>/conf/templates</outputDirectory>
         </fileSet>
+        <fileSet>
+            <directory>${project.basedir}/src/main/resources/static/</directory>
+            <outputDirectory>/conf/static</outputDirectory>
+        </fileSet>
     </fileSets>
     <files>
         <file>
