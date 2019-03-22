@@ -40,7 +40,7 @@ public abstract class AbstractFlinkJobSerialScheduler {
     @Autowired
     protected RestTemplate restTemplate;
 
-    abstract void run() throws InterruptedException;
+    public abstract void run() throws InterruptedException;
 
     //@Scheduled(fixedDelay = 60000)
     public void runFlinkJob() throws InterruptedException {

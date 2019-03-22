@@ -239,7 +239,7 @@ public class ZafulRecommendReport extends AbstractFlinkJobSerialScheduler {
 
         String[] yestodays = yestoday.split("/");
 
-        while (this.allQuoteJobs.size() > 0 && this.allQuoteBtsJobs.size() > 0 && this.recountOrderBtsJobs.size() > 0) {
+        while (this.allQuoteJobs.size() > 0 && this.allQuoteBtsJobs.size() > 0 && this.recountOrderBtsJobs.size() > 0 && this.getCurrentBuryLogJobs().size() == 0) {
             log.info("任务未完成，等待十分钟，当前任务数，全量指标：{}，bts 全量指标：{}，bts 前 7 天订单重算：{}", this.allQuoteJobs.size(), this.allQuoteBtsJobs.size(), this.recountOrderBtsJobs.size());
             Thread.sleep(600000);
         }
@@ -281,17 +281,38 @@ public class ZafulRecommendReport extends AbstractFlinkJobSerialScheduler {
 
     }
 
+    /**
+     * 失败的任务放到基类当前任务中，按顺序执行
+     * @throws InterruptedException
+     */
+    @Scheduled(fixedDelay = 10000)
+    public void runAllQuoteAndBtsQuote() throws InterruptedException {
+
+        if (this.allQuoteJobs.size() > 0) {
+            FlinkBashJob allQuoteJob = this.allQuoteJobs.take();
+            String jobId = this.execFlinkJob(allQuoteJob);
+            this.getCurrentBuryLogJobs().put(jobId, allQuoteJob);
+        }
+
+        if (this.allQuoteBtsJobs.size() > 0) {
+            FlinkBashJob allQuoteJob = this.allQuoteBtsJobs.take();
+            String jobId = this.execFlinkJob(allQuoteJob);
+            this.getCurrentBuryLogJobs().put(jobId, allQuoteJob);
+        }
+
+    }
+
     private void checkOrderInfo() throws InterruptedException {
         String ytd = DateUtil.yesterday().toString("yyyy/MM/dd");
         this.checkHdfsPath(this.zafulOrderInfoPath + ytd + "/" + SUCCESS_FULL_FILE);
         this.checkHdfsPath(this.zafulOrderGoodsInfoPath + ytd + "/" + SUCCESS_FULL_FILE);
     }
 
-    //@Scheduled(fixedDelay = 10000)
+    @Scheduled(fixedDelay = 10000)
     @Override
-    void run() throws InterruptedException {
+    public void run() throws InterruptedException {
 
-        //this.runFlinkJob();
+        this.runFlinkJob();
 
     }
 
