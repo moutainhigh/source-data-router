@@ -28,28 +28,31 @@ public class BtsReportController {
             StringBuilder stringBuilder = new StringBuilder();
             if ("pc".equals(platform)) {
                 String content = HdfsUtil.getDyFileContentString(BtsRecommendReportId.planIdPc.getFilePath());
-                if (StringUtils.isNotEmpty(content)) {
-                    stringBuilder.append(content);
-                }
-                if (!content.contains(planId)) {
-                    stringBuilder.append("," + planId);
-                }
-                HdfsUtil.updateDyHdfsFile(BtsRecommendReportId.planIdPc.getFilePath(), stringBuilder.toString().replaceAll(",,",","));
+                appendPlanId(planId, stringBuilder, content);
+
+                HdfsUtil.updateDyHdfsFile(BtsRecommendReportId.planIdPc.getFilePath(), stringBuilder.toString().replaceAll(",,", ","));
             }
             if ("app".equals(platform)) {
                 String content = HdfsUtil.getDyFileContentString(BtsRecommendReportId.planIdApp.getFilePath());
-                if (StringUtils.isNotEmpty(content)) {
-                    stringBuilder.append(content);
-                }
-                if (!content.contains(planId)) {
-                    stringBuilder.append("," + planId);
-                }
-                HdfsUtil.updateDyHdfsFile(BtsRecommendReportId.planIdApp.getFilePath(), stringBuilder.toString().replaceAll(",,",","));
+                appendPlanId(planId, stringBuilder, content);
+
+                HdfsUtil.updateDyHdfsFile(BtsRecommendReportId.planIdApp.getFilePath(), stringBuilder.toString().replaceAll(",,", ","));
             }
-        }else {
+        } else {
             return "failed";
         }
         return "success";
+    }
+
+    private void appendPlanId(String planId, StringBuilder stringBuilder, String content) {
+        if (StringUtils.isNotEmpty(content)) {
+            stringBuilder.append(content);
+            if (!content.contains(planId)) {
+                stringBuilder.append("," + planId);
+            }
+        } else {
+            stringBuilder.append(planId);
+        }
     }
 
     @GetMapping("remove")
@@ -59,7 +62,7 @@ public class BtsReportController {
             if ("pc".equals(platform)) {
                 String content = HdfsUtil.getDyFileContentString(BtsRecommendReportId.planIdPc.getFilePath());
                 if (StringUtils.isNotEmpty(content)) {
-                    content = content.replace(planId, "").replaceAll(",,",",");
+                    content = content.replace(planId, "").replaceAll(",,", ",");
                     stringBuilder.append(content);
                 }
                 HdfsUtil.updateDyHdfsFile(BtsRecommendReportId.planIdPc.getFilePath(), stringBuilder.toString());
@@ -67,12 +70,12 @@ public class BtsReportController {
             if ("app".equals(platform)) {
                 String content = HdfsUtil.getDyFileContentString(BtsRecommendReportId.planIdApp.getFilePath());
                 if (StringUtils.isNotEmpty(content)) {
-                    content = content.replace(planId, "").replaceAll(",,",",");
+                    content = content.replace(planId, "").replaceAll(",,", ",");
                     stringBuilder.append(content);
                 }
                 HdfsUtil.updateDyHdfsFile(BtsRecommendReportId.planIdApp.getFilePath(), stringBuilder.toString());
             }
-        }else {
+        } else {
             return "failed";
         }
         return "success";

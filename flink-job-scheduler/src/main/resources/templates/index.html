@@ -29,7 +29,7 @@
             <td>
                 <form class="ui form" method="post" action="/zaful-rec-bts-page/add">
                     <div class="ui input">
-                        <input type="text" placeholder="请输入 pc m 端 bts 实验 id" name="planId" th:required="required"/>
+                        <input type="number" placeholder="请输入 pc m 端 bts 实验 id" name="planId" th:required="required"/>
                     </div>
                     <input type="hidden" name="platform" value="pc"/>
                     <input class="ui green button" type="submit" value="保存"/>
@@ -38,7 +38,7 @@
             <td>
                 <form class="ui form" method="post" action="/zaful-rec-bts-page/add">
                     <div class="ui input">
-                        <input type="text" placeholder="请输入 app 端 bts 实验 id" name="planId" th:required="required"/>
+                        <input type="number" placeholder="请输入 app 端 bts 实验 id" name="planId" th:required="required"/>
                     </div>
                     <input type="hidden" name="platform" value="app"/>
                     <input class="ui green button" type="submit" value="保存"/>
