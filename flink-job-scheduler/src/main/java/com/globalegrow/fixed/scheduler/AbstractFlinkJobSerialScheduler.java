@@ -108,9 +108,7 @@ public abstract class AbstractFlinkJobSerialScheduler {
 
             log.info("检查 flink job {} 的状态", stringFlinkBashJobEntry.getKey());
             try {
-                Map<String, Object> result = this.restTemplate.getForObject(this.flinkJobHistoryServer + stringFlinkBashJobEntry.getKey(), Map.class);
-                if (result != null && StringUtils.isNotEmpty((String) result.get("state"))) {
-                    String status = (String) result.get("state");
+                    String status = checkJobStatus(stringFlinkBashJobEntry.getKey());
                     if ("FINISHED".equals(status)) {
                         log.info("任务 {} 执行成功，清空当前任务 id", stringFlinkBashJobEntry.getKey());
                         finished.add(stringFlinkBashJobEntry.getKey());
@@ -124,7 +122,7 @@ public abstract class AbstractFlinkJobSerialScheduler {
                     if (this.flinkBashJobs.size() == 0) {
                         log.info("所有任务执行完毕，通知第三方");
                     }
-                }
+
             } catch (Exception e) {
                 if (e instanceof HttpClientErrorException) {
                     HttpClientErrorException httpClientErrorException = (HttpClientErrorException) e;

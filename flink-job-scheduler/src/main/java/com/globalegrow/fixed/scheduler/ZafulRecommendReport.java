@@ -299,8 +299,9 @@ public class ZafulRecommendReport extends AbstractFlinkJobSerialScheduler {
 
         if (this.allQuoteBtsJobs.size() > 0) {
             FlinkBashJob allQuoteJob = this.allQuoteBtsJobs.take();
-            String jobId = this.execFlinkJob(allQuoteJob);
-            this.getCurrentBuryLogJobs().put(jobId, allQuoteJob);
+//            String jobId = this.execFlinkJob(allQuoteJob);
+//            this.getCurrentBuryLogJobs().put(jobId, allQuoteJob);
+            super.getFlinkBashJobs().offer(allQuoteJob);
         }
 
     }
@@ -332,9 +333,6 @@ public class ZafulRecommendReport extends AbstractFlinkJobSerialScheduler {
         }
         return list;
     }
-
-
-    // 检查所有队列任务是否完成
 
 
 }
