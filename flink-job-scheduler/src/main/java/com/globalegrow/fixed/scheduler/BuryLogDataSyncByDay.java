@@ -190,7 +190,7 @@ public class BuryLogDataSyncByDay {
 
 
         if (StringUtils.isNotEmpty(this.getCurrentJobId())) {
-            log.info("检查 flink job {} 的状态", this.getCurrentJobId());
+            //log.info("检查 flink job {} 的状态", this.getCurrentJobId());
             try {
                 Map<String, Object> result = this.restTemplate.getForObject(this.flinkJobHistoryServer + this.getCurrentJobId(), Map.class);
                 if (result != null && StringUtils.isNotEmpty((String) result.get("state"))) {
@@ -207,13 +207,13 @@ public class BuryLogDataSyncByDay {
                         headers.add("Content-Type", "application/json;charset=UTF-8");
 
                         Map<String,Object> parameters = new HashMap<>();
-                        parameters.put("productLineCode", names[1]);
+                        parameters.put("productLineCode", names[0]);
                         parameters.put("date", job.getDate());
 
-                        if ("pc".equals(names[0])) {
+                        if ("pc".equals(names[1])) {
                             parameters.put("platform", 0);
                         }
-                        if ("app".equals(names[0])) {
+                        if ("app".equals(names[1])) {
                             parameters.put("platform", 1);
                         }
 
@@ -244,8 +244,8 @@ public class BuryLogDataSyncByDay {
                 }
             } catch (Exception e) {
                 if (e instanceof HttpClientErrorException) {
-                    HttpClientErrorException httpClientErrorException = (HttpClientErrorException) e;
-                    log.info("任务状态检查结果: {}", httpClientErrorException.getStatusText());
+//                    HttpClientErrorException httpClientErrorException = (HttpClientErrorException) e;
+//                    log.info("任务状态检查结果: {}", httpClientErrorException.getStatusText());
 
                 } else {
                     // 发送邮件

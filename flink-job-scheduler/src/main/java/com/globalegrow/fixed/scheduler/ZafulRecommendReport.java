@@ -239,7 +239,7 @@ public class ZafulRecommendReport extends AbstractFlinkJobSerialScheduler {
 
         String[] yestodays = yestoday.split("/");
 
-        while (this.allQuoteJobs.size() > 0 && this.allQuoteBtsJobs.size() > 0 && this.recountOrderBtsJobs.size() > 0 && this.getCurrentBuryLogJobs().size() == 0) {
+        while (this.allQuoteJobs.size() > 0 && this.allQuoteBtsJobs.size() > 0 && this.recountOrderBtsJobs.size() > 0 && this.getCurrentBuryLogJobs().size() >= 0) {
             log.info("任务未完成，等待十分钟，当前任务数，全量指标：{}，bts 全量指标：{}，bts 前 7 天订单重算：{}", this.allQuoteJobs.size(), this.allQuoteBtsJobs.size(), this.recountOrderBtsJobs.size());
             Thread.sleep(600000);
         }
