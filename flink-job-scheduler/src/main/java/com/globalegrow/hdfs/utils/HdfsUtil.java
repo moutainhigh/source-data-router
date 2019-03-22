@@ -80,15 +80,18 @@ public class HdfsUtil {
 
     public static String getDyFileContentString(String filePath) {
         try (org.apache.hadoop.fs.FileSystem fileSystem = org.apache.hadoop.fs.FileSystem.get(dyConfiguration)) {
-            FSDataInputStream hdfsInStream = fileSystem.open(new Path(filePath));
-            InputStreamReader isr = new InputStreamReader(hdfsInStream, "utf-8");
-            BufferedReader br = new BufferedReader(isr);
-            StringBuilder stringBuilder = new StringBuilder();
-            String line;
-            while ((line = br.readLine()) != null) {
-                stringBuilder.append(line);
+
+            try (FSDataInputStream hdfsInStream = fileSystem.open(new Path(filePath));
+                 InputStreamReader isr = new InputStreamReader(hdfsInStream, "utf-8");
+                 BufferedReader br = new BufferedReader(isr);) {
+                StringBuilder stringBuilder = new StringBuilder();
+                String line;
+                while ((line = br.readLine()) != null) {
+                    stringBuilder.append(line);
+                }
+                return stringBuilder.toString();
             }
-            return stringBuilder.toString();
+
         } catch (IOException e) {
             log.error("读取 hdfs 文件失败 {}", filePath, e);
         }
@@ -101,7 +104,7 @@ public class HdfsUtil {
             InputStreamReader isr = new InputStreamReader(hdfsInStream, "utf-8");
 
             try (FSDataOutputStream hdfsOutStream = fileSystem.create(new Path(filePath))) {
-                byte [] str = content.getBytes("UTF-8");
+                byte[] str = content.getBytes("UTF-8");
                 hdfsOutStream.write(str);
             }
 

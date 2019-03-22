@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.Arrays;
@@ -25,22 +26,22 @@ public class BtsReportPlanIdPage {
     @Autowired
     private BtsReportController btsReportController;
 
-    @GetMapping("add")
+    @PostMapping("add")
     public String addBtsPlanId(String planId, String platform, Model model) {
         if (StringUtils.isNotEmpty(planId) && StringUtils.isNotEmpty(platform)) {
             this.btsReportController.addBtsPlanId(planId, platform);
         }
         model.addAllAttributes(this.btsIds());
-        return "index";
+        return "redirect:/zaful-rec-bts-page/ids";
     }
 
-    @GetMapping("remove")
+    @PostMapping("remove")
     public String removeBtsPlanId(String planId, String platform, Model model) {
         if (StringUtils.isNotEmpty(planId) && StringUtils.isNotEmpty(platform)) {
             this.btsReportController.removeBtsPlanId(planId, platform);
         }
         model.addAllAttributes(this.btsIds());
-        return "index";
+        return "redirect:/zaful-rec-bts-page/ids";
     }
 
     @GetMapping("ids")

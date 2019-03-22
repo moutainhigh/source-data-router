@@ -4,8 +4,8 @@
     <title>zaful bts 推荐报表管理</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <link rel="stylesheet" type="text/css" th:href="@{/semantic.min.css}" href="../static/semantic.min.css"/>
-    <script th:src="@{/jquery-3.3.1.min.js}" src="../static/jquery-3.3.1.min.js"/>
-    <script th:src="@{/semantic.min.js}" src="../static/semantic.min.js"/>
+    <script th:src="@{/jquery-3.3.1.min.js}" src="../static/jquery-3.3.1.min.js"></script>
+    <script th:src="@{/semantic.min.js}" src="../static/semantic.min.js"></script>
 </head>
 <body>
 <div class="ui fixed inverted menu">
@@ -14,7 +14,7 @@
             <img class="logo" th:src="@{/20190322171301.png}" src="../static/20190322171301.png"/>
              推荐位实验报表管理
         </a>
-        <a href="#" class="item">Home</a>
+        <a href="http://bts.gw-ec.com/main" class="item" target="_blank">BTS North star</a>
     </div>
 </div>
 <br/>
@@ -27,7 +27,7 @@
         <tbody>
         <tr>
             <td>
-                <form class="ui form" method="get" action="/zaful-rec-bts-page/add">
+                <form class="ui form" method="post" action="/zaful-rec-bts-page/add">
                     <div class="ui input">
                         <input type="text" placeholder="请输入 pc m 端 bts 实验 id" name="planId" th:required="required"/>
                     </div>
@@ -36,7 +36,7 @@
                 </form>
             </td>
             <td>
-                <form class="ui form" method="get" action="/zaful-rec-bts-page/add">
+                <form class="ui form" method="post" action="/zaful-rec-bts-page/add">
                     <div class="ui input">
                         <input type="text" placeholder="请输入 app 端 bts 实验 id" name="planId" th:required="required"/>
                     </div>
@@ -47,7 +47,7 @@
         </tr>
         <tr>
             <td>
-                <form class="ui form" method="get" action="/zaful-rec-bts-page/remove">
+                <form class="ui form" method="post" action="/zaful-rec-bts-page/remove">
                     <div class="ui input">
                         <input type="text" placeholder="请输入要删除的 pc m 端 bts 实验 id" name="planId" th:required="required"/>
                     </div>
@@ -56,7 +56,7 @@
                 </form>
             </td>
             <td>
-                <form class="ui form" method="get" action="/zaful-rec-bts-page/remove">
+                <form class="ui form" method="post" action="/zaful-rec-bts-page/remove">
                     <div class="ui input">
                         <input type="text" placeholder="请输入 app 端 bts 实验 id" name="planId" th:required="required"/>
                     </div>
@@ -66,8 +66,8 @@
             </td>
         </tr>
         <tr title="已添加的实验 id">
-            <td>pc、m 实验id: &nbsp;&nbsp;<p th:text="${pc}">12345623423</p></td>
-            <td>app 实验 id: &nbsp;&nbsp;<p th:text="${app}">12343543234</p></td>
+            <td title="pc m 端推荐位实验 id"><i class="desktop icon"></i>:  &nbsp;&nbsp;<div class="ui label" th:text="${pc}">12345623423</div></td>
+            <td title="app 端推荐位实验 id"><i class="mobile icon"></i>: &nbsp;&nbsp;<div class="ui label" th:text="${app}">12343543234</div></td>
         </tr>
         </tbody>
     </table>
