@@ -77,6 +77,9 @@ public class ZafulRecommendReport extends AbstractFlinkJobSerialScheduler {
         String currentDay = DateUtil.yesterday().toString("yyyy/MM/dd");
         checkHdfsPath("hdfs://glbgnameservice" + this.rootPcPath.replace("current_day", currentDay) + SUCCESS_FULL_FILE);
         checkHdfsPath("hdfs://glbgnameservice" + this.rootAppPath.replace("current_day", currentDay) + SUCCESS_FULL_FILE);
+        //  cookie 与 用户 id 关联关系是否更新完成
+        checkHdfsPath("hdfs://glbgnameservice" + "/user/hive/warehouse/dw_proj.db/cookieid_userid_ods_zf_gb_rg_dl/add_time=" + currentDay.replaceAll("/", "") + SUCCESS_FULL_FILE);
+
         String commandLine = this.cart14JobCommand.replaceAll("_bury_date", currentDay);
 
         FlinkBashJob flinkBashJob = new FlinkBashJob("zaful_cart14", commandLine);
