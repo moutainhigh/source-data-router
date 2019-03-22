@@ -4,6 +4,12 @@
         <format>zip</format>
        <!-- <format>tar.gz</format>-->
     </formats>
+    <fileSets>
+        <fileSet>
+            <directory>${project.basedir}/src/main/resources/templates/</directory>
+            <outputDirectory>/conf/templates</outputDirectory>
+        </fileSet>
+    </fileSets>
     <files>
         <file>
             <source>${project.basedir}/src/main/resources/bin/start.sh</source>
@@ -29,40 +35,7 @@
             <outputDirectory>./conf</outputDirectory>
             <filtered>true</filtered>
         </file>
-        <!--<fileSets>
-            <fileSet>
-                <directory>${project.basedir}/src/main/resources/templates/</directory>
-                <outputDirectory>/conf/templates</outputDirectory>
-                &lt;!&ndash;<includes>
-                    <include>*:jar</include>
-                </includes>&ndash;&gt;
-                &lt;!&ndash;<excludes>
-                    <exclude>%regex[(?!.*src/).*target.*]</exclude>
-                </excludes>&ndash;&gt;
-            </fileSet>
-            <fileSet>
-                <directory>${project.basedir}/src/main/resources/static/</directory>
-                <outputDirectory>/conf/static</outputDirectory>
-                &lt;!&ndash;<includes>
-                    <include>*:jar</include>
-                </includes>&ndash;&gt;
-                &lt;!&ndash;<excludes>
-                    <exclude>%regex[(?!.*src/).*target.*]</exclude>
-                </excludes>&ndash;&gt;
-            </fileSet>
-        </fileSets>-->
-        <!--<file>-->
-            <!--<source>${project.basedir}/src/main/resources/logback.xml</source>-->
-            <!--<fileMode>644</fileMode>-->
-            <!--<outputDirectory>./conf</outputDirectory>-->
-            <!--<filtered>true</filtered>-->
-        <!--</file>-->
-        <!--<file>
-            <source>${project.basedir}/src/main/resources/logback-spring.xml</source>
-            <fileMode>644</fileMode>
-            <outputDirectory>./conf</outputDirectory>
-            <filtered>true</filtered>
-        </file>-->
+
     </files>
     <dependencySets>
         <dependencySet>

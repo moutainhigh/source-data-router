@@ -1,0 +1,53 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>zaful bts 推荐报表管理</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+<h2>zaful 推荐位实验报表管理 </h2>
+<table border="5">
+    <thead>
+
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+                <form method="get" action="/zaful-rec-bts-page/add">
+                    <input type="text" placeholder="请输入 pc m 端 bts 实验 id" name="planId" th:required="required"/>
+                    <input type="hidden" name="platform" value="pc"/>
+                    <input type="submit" value="保存"/>
+                </form>
+            </td>
+            <td>
+                <form method="get" action="/zaful-rec-bts-page/add">
+                    <input type="text" placeholder="请输入 app 端 bts 实验 id" name="planId" th:required="required"/>
+                    <input type="hidden" name="platform" value="app"/>
+                    <input type="submit" value="保存"/>
+                </form>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <form method="get" action="/zaful-rec-bts-page/remove">
+                    <input type="text" placeholder="请输入要删除的 pc m 端 bts 实验 id" name="planId" th:required="required"/>
+                    <input type="hidden" name="platform" value="pc"></input>
+                    <input type="submit" value="删除"></input>
+                </form>
+            </td>
+            <td>
+                <form method="get" action="/zaful-rec-bts-page/remove">
+                    <input type="text" placeholder="请输入 app 端 bts 实验 id" name="planId" th:required="required"/>
+                    <input type="hidden" name="platform" value="app"/>
+                    <input type="submit" value="删除"/>
+                </form>
+            </td>
+        </tr>
+        <tr title="已添加的实验 id">
+            <td>pc、m 实验id: &nbsp;&nbsp;<p th:text="${pc}">12345623423</p></td>
+            <td>app 实验 id:  &nbsp;&nbsp;<p th:text="${app}">12343543234</p></td>
+        </tr>
+    </tbody>
+</table>
+</body>
+</html>

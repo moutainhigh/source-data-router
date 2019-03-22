@@ -25,11 +25,14 @@ public class BtsReportController {
     @GetMapping("add")
     public String addBtsPlanId(String planId, String platform) {
         if (StringUtils.isNotEmpty(planId) && StringUtils.isNotEmpty(platform)) {
-            StringBuilder stringBuilder = new StringBuilder(planId + ",");
+            StringBuilder stringBuilder = new StringBuilder();
             if ("pc".equals(platform)) {
                 String content = HdfsUtil.getDyFileContentString(BtsRecommendReportId.planIdPc.getFilePath());
                 if (StringUtils.isNotEmpty(content)) {
                     stringBuilder.append(content);
+                }
+                if (!content.contains(planId)) {
+                    stringBuilder.append("," + planId);
                 }
                 HdfsUtil.updateDyHdfsFile(BtsRecommendReportId.planIdPc.getFilePath(), stringBuilder.toString().replaceAll(",,",","));
             }
@@ -37,6 +40,9 @@ public class BtsReportController {
                 String content = HdfsUtil.getDyFileContentString(BtsRecommendReportId.planIdApp.getFilePath());
                 if (StringUtils.isNotEmpty(content)) {
                     stringBuilder.append(content);
+                }
+                if (!content.contains(planId)) {
+                    stringBuilder.append("," + planId);
                 }
                 HdfsUtil.updateDyHdfsFile(BtsRecommendReportId.planIdApp.getFilePath(), stringBuilder.toString().replaceAll(",,",","));
             }
