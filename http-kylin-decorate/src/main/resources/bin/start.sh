@@ -44,7 +44,8 @@ do
     LIB_JARS="$LIB_JARS:$JAR"
 done
 
-STDOUT_FILE=bin/stdout.log
+#STDOUT_FILE=bin/stdout.log
+STDOUT_FILE=/dev/null
 #-Xmx256m
 JAVA_OPTS="-server -XX:OnOutOfMemoryError=bin/kill_ppid"
 MAIN_CLASS=com.globalegrow.ServiceStart

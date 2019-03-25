@@ -78,7 +78,7 @@ public class ZafulRecommendReport extends AbstractFlinkJobSerialScheduler {
         checkHdfsPath("hdfs://glbgnameservice" + this.rootPcPath.replace("current_day", currentDay) + SUCCESS_FULL_FILE);
         checkHdfsPath("hdfs://glbgnameservice" + this.rootAppPath.replace("current_day", currentDay) + SUCCESS_FULL_FILE);
         //  cookie 与 用户 id 关联关系是否更新完成
-        checkHdfsPath("hdfs://glbgnameservice" + "/user/hive/warehouse/dw_proj.db/cookieid_userid_ods_zf_gb_rg_dl/add_time=" + currentDay.replaceAll("/", "") + SUCCESS_FULL_FILE);
+        checkHdfsPath("hdfs://glbgnameservice" + "/user/hive/warehouse/dw_proj.db/cookieid_userid_ods_zf_gb_rg_dl/add_time=" + currentDay.replaceAll("/", ""));
 
         String commandLine = this.cart14JobCommand.replaceAll("_bury_date", currentDay);
 
@@ -307,7 +307,7 @@ public class ZafulRecommendReport extends AbstractFlinkJobSerialScheduler {
     }
 
     private void checkOrderInfo() throws InterruptedException {
-        String ytd = DateUtil.yesterday().toString("yyyy/MM/dd");
+        String ytd = DateUtil.yesterday().toString("yyyy/MM/dd").replaceAll("/", "");
         this.checkHdfsPath(this.zafulOrderInfoPath + ytd + "/" + SUCCESS_FULL_FILE);
         this.checkHdfsPath(this.zafulOrderGoodsInfoPath + ytd + "/" + SUCCESS_FULL_FILE);
     }
