@@ -74,6 +74,12 @@ public class DLoginReportConfigGerenate {
         btsValueversionidNotNullFilter.setFilterRule("not_null");
         globaleFilters.add(btsValueversionidNotNullFilter);
 
+        //终端
+//        JsonLogFilter btsPlatformNotNullFilter = new JsonLogFilter();
+//        btsPlatformNotNullFilter.setJsonPath("$.glb_plf");
+//        btsPlatformNotNullFilter.setFilterRule("not_null");
+//        globaleFilters.add(btsPlatformNotNullFilter);
+
 //        JsonLogFilter btsValuebucketidNotNullFilter = new JsonLogFilter();
 //        btsValuebucketidNotNullFilter.setJsonPath("$.glb_bts.bucketid");
 //        btsValuebucketidNotNullFilter.setFilterRule("not_null");
@@ -86,8 +92,8 @@ public class DLoginReportConfigGerenate {
 
         rule.setGlobaleJsonFilters(globaleFilters);
 
-        rule.setReportName("BTS_DL_PC_QUICK_LOGIN");
-        rule.setDescription("D网 PC 快速登录AB测试报表取数指标配置");
+        rule.setReportName("BTS_DL_QUICK_REGISTER_LOGIN");
+        rule.setDescription("D网 PC+M+IPAD 快速登录AB测试报表取数指标配置");
         DQuickLoginReportQuotaModel quickLoginReportQuotaModel=new DQuickLoginReportQuotaModel();
 
         rule.setReportDefaultValues(DyBeanUtils.objToMap(quickLoginReportQuotaModel));
@@ -181,37 +187,36 @@ public class DLoginReportConfigGerenate {
         reportQuotaFieldConfigs.add(shoppingCarPv);
 
         // check out点击PV
-//        ReportQuotaFieldConfig checkOutPv = new ReportQuotaFieldConfig();
-//        checkOutPv.setQuotaFieldName("check_out_pv");
-//        checkOutPv.setDefaultValue(0);
-//        checkOutPv.setExtractValueJsonPath("$.glb_od");
-//        checkOutPv.setValueEnum("countOneWithFilter");
+        ReportQuotaFieldConfig checkOutPv = new ReportQuotaFieldConfig();
+        checkOutPv.setQuotaFieldName("check_out_pv");
+        checkOutPv.setDefaultValue(0);
+        checkOutPv.setExtractValueJsonPath("$.glb_od");
+        checkOutPv.setValueEnum("countOneWithFilter");
         //过滤条件 glb_t=ic，glb_x=checkout,glb_s=d01,glb_plf=pc,计算glb_od的数量
-//        List<JsonLogFilter> checkOutPvFilter = new ArrayList<>();
+        List<JsonLogFilter> checkOutPvFilter = new ArrayList<>();
         JsonLogFilter glbTypeIc = new JsonLogFilter();
         glbTypeIc.setJsonPath("$.glb_t");
         glbTypeIc.setValueFilter("ic");
-//
-//        JsonLogFilter eventInfo = new JsonLogFilter();
-//        eventInfo.setJsonPath("$.glb_x");
-//        eventInfo.setValueFilter("checkout");
-//        checkOutPvFilter.add(glbTypeIc);
-//        checkOutPvFilter.add(pageSubType);
-//        checkOutPvFilter.add(platform);
-//        checkOutPvFilter.add(eventInfo);
-//
-//        checkOutPv.setJsonLogFilters(checkOutPvFilter);
-//        reportQuotaFieldConfigs.add(checkOutPv);
+
+        JsonLogFilter eventInfo = new JsonLogFilter();
+        eventInfo.setJsonPath("$.glb_x");
+        eventInfo.setValueFilter("checkout");
+        checkOutPvFilter.add(glbTypeIc);
+        checkOutPvFilter.add(pageSubType);
+        checkOutPvFilter.add(eventInfo);
+
+        checkOutPv.setJsonLogFilters(checkOutPvFilter);
+        reportQuotaFieldConfigs.add(checkOutPv);
 
         // check out点击UV
-//        ReportQuotaFieldConfig checkOutUv = new ReportQuotaFieldConfig();
-//        checkOutUv.setQuotaFieldName("check_out_uv");
-//        checkOutUv.setDefaultValue("_skip");
-//        checkOutUv.setExtractValueJsonPath("$.glb_od");
-//        checkOutUv.setValueEnum("quotaStringValueExtractFromLog");
+        ReportQuotaFieldConfig checkOutUv = new ReportQuotaFieldConfig();
+        checkOutUv.setQuotaFieldName("check_out_uv");
+        checkOutUv.setDefaultValue("_skip");
+        checkOutUv.setExtractValueJsonPath("$.glb_od");
+        checkOutUv.setValueEnum("quotaStringValueExtractFromLog");
         //glb_t=ic，glb_x=checkout,glb_s=d01,glb_plf=pc,计算glb_od的去重后的数量
-//        checkOutUv.setJsonLogFilters(checkOutPvFilter);
-//        reportQuotaFieldConfigs.add(checkOutUv);
+        checkOutUv.setJsonLogFilters(checkOutPvFilter);
+        reportQuotaFieldConfigs.add(checkOutUv);
 
 
         // 购物车登录点击PV
@@ -220,7 +225,7 @@ public class DLoginReportConfigGerenate {
         carLoginPv.setDefaultValue(0);
         carLoginPv.setExtractValueJsonPath("$.glb_od");
         carLoginPv.setValueEnum("countOneWithFilter");
-        //glb_t=ic，glb_x=SIGNIN_CART,glb_s=d01计算glb_od的数量
+        //glb_t=ic，glb_x=SIGNIN_CART,glb_s=d01,glb_plf=pc,计算glb_od的数量
         List<JsonLogFilter> carLoginPvFilter = new ArrayList<>();
         JsonLogFilter subEventInfoCart = new JsonLogFilter();
         subEventInfoCart.setJsonPath("$.glb_x");
@@ -261,7 +266,6 @@ public class DLoginReportConfigGerenate {
         pageSubTypeF.setValueFilter("f01");
         loginPvFilter.add(pageSubTypeF);
 
-        //loginPvFilter.add(platform);
         loginPv.setJsonLogFilters(loginPvFilter);
         reportQuotaFieldConfigs.add(loginPv);
 
@@ -318,10 +322,6 @@ public class DLoginReportConfigGerenate {
         eventRegister.setJsonPath("$.glb_x");
         eventRegister.setValueFilter("REGISTER");
         registerPvFilter.add(eventRegister);
-
-//        JsonLogFilter pageSubTypeF2 = new JsonLogFilter();
-//        pageSubTypeF2.setJsonPath("$.glb_s");
-//        pageSubTypeF2.setValueFilter("f02");
         registerPvFilter.add(pageSubTypeF);
         //registerPvFilter.add(platform);
 
@@ -514,64 +514,63 @@ public class DLoginReportConfigGerenate {
         reportQuotaFieldConfigs.add(forgotPwdUv);
 
         //订单确认页PV
-//        ReportQuotaFieldConfig orderConfirmPv = new ReportQuotaFieldConfig();
-//        orderConfirmPv.setQuotaFieldName("order_confirm_pv");
-//        orderConfirmPv.setDefaultValue(0);
-//        orderConfirmPv.setExtractValueJsonPath("$.glb_od");
-//        orderConfirmPv.setValueEnum("countOneWithFilter");
-        //过滤条件 glb_t=ie，glb_s=d03,glb_plf=pc,计算glb_od的数量
-//        List<JsonLogFilter> orderConfirmPvFilter = new ArrayList<>();
-//        orderConfirmPvFilter.add(glbType);
-//        JsonLogFilter pageMainType3 = new JsonLogFilter();
-//        pageMainType3.setJsonPath("$.glb_b");
-//        pageMainType3.setValueFilter("d03");
-//        orderConfirmPvFilter.add(pageMainType3);
-//        orderConfirmPvFilter.add(platform);
-//
-//        orderConfirmPv.setJsonLogFilters(orderConfirmPvFilter);
-//        reportQuotaFieldConfigs.add(orderConfirmPv);
+        ReportQuotaFieldConfig orderConfirmPv = new ReportQuotaFieldConfig();
+        orderConfirmPv.setQuotaFieldName("order_confirm_pv");
+        orderConfirmPv.setDefaultValue(0);
+        orderConfirmPv.setExtractValueJsonPath("$.glb_od");
+        orderConfirmPv.setValueEnum("countOneWithFilter");
+        //过滤条件 glb_t=ie，glb_s=d05,glb_plf=pc,计算glb_od的数量
+        List<JsonLogFilter> orderConfirmPvFilter = new ArrayList<>();
+        orderConfirmPvFilter.add(glbType);
+        JsonLogFilter pageMainType3 = new JsonLogFilter();
+        pageMainType3.setJsonPath("$.glb_s");
+        pageMainType3.setValueFilter("d05");
+        orderConfirmPvFilter.add(pageMainType3);
+       // orderConfirmPvFilter.add(platform);
+        orderConfirmPv.setJsonLogFilters(orderConfirmPvFilter);
+        reportQuotaFieldConfigs.add(orderConfirmPv);
 
         // 订单确认页UV
-//        ReportQuotaFieldConfig orderConfirmUv = new ReportQuotaFieldConfig();
-//        orderConfirmUv.setQuotaFieldName("order_confirm_uv");
-//        orderConfirmUv.setDefaultValue("_skip");
-//        orderConfirmUv.setExtractValueJsonPath("$.glb_od");
-//        orderConfirmUv.setValueEnum("quotaStringValueExtractFromLog");
-//        //过滤条件 glb_t=ie，glb_s=d03,glb_plf=pc,计算glb_od的去重后的数量
-//        orderConfirmUv.setJsonLogFilters(orderConfirmPvFilter);
-//        reportQuotaFieldConfigs.add(orderConfirmUv);
+        ReportQuotaFieldConfig orderConfirmUv = new ReportQuotaFieldConfig();
+        orderConfirmUv.setQuotaFieldName("order_confirm_uv");
+        orderConfirmUv.setDefaultValue("_skip");
+        orderConfirmUv.setExtractValueJsonPath("$.glb_od");
+        orderConfirmUv.setValueEnum("quotaStringValueExtractFromLog");
+        //过滤条件 glb_t=ie，glb_s=d05,glb_plf=pc,计算glb_od的去重后的数量
+        orderConfirmUv.setJsonLogFilters(orderConfirmPvFilter);
+        reportQuotaFieldConfigs.add(orderConfirmUv);
 
 
         //place your order按钮点击PV
-//        ReportQuotaFieldConfig placeOrderPv = new ReportQuotaFieldConfig();
-//        placeOrderPv.setQuotaFieldName("placeorder_pv");
-//        placeOrderPv.setDefaultValue(0);
-//        placeOrderPv.setExtractValueJsonPath("$.glb_od");
-//        placeOrderPv.setValueEnum("countOneWithFilter");
-        //过滤条件 glb_t=ic，glb_s=d03,glb_x=placeorder,glb_plf=pc,计算glb_od的数量
-//        List<JsonLogFilter> placeOrderPvFilter = new ArrayList<>();
-//        placeOrderPvFilter.add(glbTypeIc);
-//        placeOrderPvFilter.add(pageMainType3);
-//
-//        JsonLogFilter placeorderEvent = new JsonLogFilter();
-//        placeorderEvent.setJsonPath("$.glb_x");
-//        placeorderEvent.setValueFilter("placeorder");
-//        placeOrderPvFilter.add(placeorderEvent);
+        ReportQuotaFieldConfig placeOrderPv = new ReportQuotaFieldConfig();
+        placeOrderPv.setQuotaFieldName("placeorder_pv");
+        placeOrderPv.setDefaultValue(0);
+        placeOrderPv.setExtractValueJsonPath("$.glb_od");
+        placeOrderPv.setValueEnum("countOneWithFilter");
+        //过滤条件 glb_t=ic，glb_s=d05,glb_x=placeorder,glb_plf=pc,计算glb_od的数量
+        List<JsonLogFilter> placeOrderPvFilter = new ArrayList<>();
+        placeOrderPvFilter.add(glbTypeIc);
+        placeOrderPvFilter.add(pageMainType3);
+
+        JsonLogFilter placeorderEvent = new JsonLogFilter();
+        placeorderEvent.setJsonPath("$.glb_x");
+        placeorderEvent.setValueFilter("placeorder");
+        placeOrderPvFilter.add(placeorderEvent);
 //        placeOrderPvFilter.add(platform);
-//        placeOrderPv.setJsonLogFilters(placeOrderPvFilter);
-//        reportQuotaFieldConfigs.add(placeOrderPv);
+        placeOrderPv.setJsonLogFilters(placeOrderPvFilter);
+        reportQuotaFieldConfigs.add(placeOrderPv);
 
 
         //placeorder按钮点击UV 原始版本
-//        ReportQuotaFieldConfig placeOrderUv = new ReportQuotaFieldConfig();
-//        placeOrderUv.setQuotaFieldName("placeorder_uv");
-//        placeOrderUv.setDefaultValue("_skip");
-//        placeOrderUv.setExtractValueJsonPath("$.glb_od");
-//        placeOrderUv.setValueEnum("quotaStringValueExtractFromLog");
-//
-//        //过滤条件 glb_t=ic，glb_s=d03,glb_x=placeorder,glb_plf=pc,计算glb_od的去重后的数量
-//        placeOrderUv.setJsonLogFilters(placeOrderPvFilter);
-//        reportQuotaFieldConfigs.add(placeOrderUv);
+        ReportQuotaFieldConfig placeOrderUv = new ReportQuotaFieldConfig();
+        placeOrderUv.setQuotaFieldName("placeorder_uv");
+        placeOrderUv.setDefaultValue("_skip");
+        placeOrderUv.setExtractValueJsonPath("$.glb_od");
+        placeOrderUv.setValueEnum("quotaStringValueExtractFromLog");
+
+        //过滤条件 glb_t=ic，glb_s=d05,glb_x=placeorder,glb_plf=pc,计算glb_od的去重后的数量
+        placeOrderUv.setJsonLogFilters(placeOrderPvFilter);
+        reportQuotaFieldConfigs.add(placeOrderUv);
 
 
         ReportQuotaFieldConfig btsQuota = new ReportQuotaFieldConfig();
@@ -580,8 +579,14 @@ public class DLoginReportConfigGerenate {
         btsQuota.setExtractValueJsonPath("$.glb_bts");
         //PC端extractBtsMapValueFromLog   APP端:extractMapValueFromLog
         btsQuota.setValueEnum("extractBtsMapValueFromLog");
-
         reportQuotaFieldConfigs.add(btsQuota);
+
+        ReportQuotaFieldConfig platform=new ReportQuotaFieldConfig();
+        platform.setQuotaFieldName("platform");
+        platform.setDefaultValue("_skip");
+        platform.setExtractValueJsonPath("$.glb_plf");
+        platform.setValueEnum("quotaStringValueExtractFromLog");
+        reportQuotaFieldConfigs.add(platform);
 
         // 时间戳字段
         ReportQuotaFieldConfig timestamp = new ReportQuotaFieldConfig();
