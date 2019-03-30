@@ -64,11 +64,11 @@ public class AppListRecommendBaseQuotaConfigJson {
 
         rule.setGlobaleJsonFilters(globaleFilters);
 
-        rule.setReportName("BTS_ZAFUL_LIST_RECOMMEND_APP");
+        rule.setReportName("BTS_ZAFUL_LIST_RECOMMEND_APP_NEW");
         rule.setDescription("zaful APP 分类页推荐报表");
 
         // 默认值
-        BtsAppListRecommendReportQuota searchRecommendReportQuotaModel = new BtsAppListRecommendReportQuota();
+        BtsGBAppIndexRecommendReportQuota searchRecommendReportQuotaModel = new BtsGBAppIndexRecommendReportQuota();
         searchRecommendReportQuotaModel.setBts(bts);
         rule.setReportDefaultValues(DyBeanUtils.objToMap(searchRecommendReportQuotaModel));
 
@@ -76,9 +76,9 @@ public class AppListRecommendBaseQuotaConfigJson {
         ReportKafkaConfig reportKafkaConfig = new ReportKafkaConfig();
         reportKafkaConfig.setBootstrapServers("172.31.35.194:9092,172.31.50.250:9092,172.31.63.112:9092");
         reportKafkaConfig.setDataSourceTopic("glbg-analitic");
-        reportKafkaConfig.setBootstrapGroupId("dy_bts_app_list_recommend_report");
+        reportKafkaConfig.setBootstrapGroupId("dy_bts_app_list_recommend_report_new");
         reportKafkaConfig.setReportStrapServers("172.31.35.194:9092,172.31.50.250:9092,172.31.63.112:9092");
-        reportKafkaConfig.setReportDataTopic("dy_bts_app_list_recommend_report");
+        reportKafkaConfig.setReportDataTopic("dy_bts_app_list_recommend_report_new");
 
         rule.setReportFromKafka(reportKafkaConfig);
 
@@ -100,6 +100,12 @@ public class AppListRecommendBaseQuotaConfigJson {
         af_impressionPv.setDefaultValue(0);
         af_impressionPv.setExtractValueJsonPath("$.event_value.af_content_id");
         af_impressionPv.setValueEnum("countStringWithComma");
+        //查看商品UV
+        ReportQuotaFieldConfig af_impressionUv = new ReportQuotaFieldConfig();
+        af_impressionUv.setQuotaFieldName("exposure_uv");
+        af_impressionUv.setDefaultValue("_skip");
+        af_impressionUv.setExtractValueJsonPath("$.appsflyer_device_id");
+        af_impressionUv.setValueEnum("quotaStringValueExtractFromLog");
 
         List<JsonLogFilter> af_impressionFilters = new ArrayList<>();
         JsonLogFilter af_impressionFilter = new JsonLogFilter();
@@ -108,8 +114,9 @@ public class AppListRecommendBaseQuotaConfigJson {
         af_impressionFilters.add(af_impressionFilter);
 
         af_impressionPv.setJsonLogFilters(af_impressionFilters);
-
+        af_impressionUv.setJsonLogFilters(af_impressionFilters);
         reportQuotaFieldConfigs.add(af_impressionPv);
+        reportQuotaFieldConfigs.add(af_impressionUv);
 
         //点击量
         ReportQuotaFieldConfig af_view_productPv = new ReportQuotaFieldConfig();

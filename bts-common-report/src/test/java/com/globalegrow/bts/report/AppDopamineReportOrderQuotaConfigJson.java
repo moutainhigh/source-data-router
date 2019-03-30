@@ -47,9 +47,15 @@ public class AppDopamineReportOrderQuotaConfigJson {
         btsFilter3.setFilterRule("not_null");
         globaleFilters.add(btsFilter3);*/
 
+        JsonLogFilter recommend_homepageFilter = new JsonLogFilter();
+        recommend_homepageFilter.setValueFilter("recommend_homepage");
+        recommend_homepageFilter.setJsonPath("$.event_value.af_inner_mediasource");
+        globaleFilters.add(recommend_homepageFilter);
+
         JsonLogFilter cartFilter = new JsonLogFilter();
         cartFilter.setJsonPath("$.event_name");
         cartFilter.setValueFilter("af_add_to_bag");
+
         JsonLogFilter reportFilter = new JsonLogFilter();
         reportFilter.setJsonPath("$.db_order_info.report_name");
         reportFilter.setValueFilter("BTS_ZAFUL_ORDER_DOPAMINE_APP");

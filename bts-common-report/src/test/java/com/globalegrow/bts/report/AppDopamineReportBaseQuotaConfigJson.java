@@ -47,6 +47,11 @@ public class AppDopamineReportBaseQuotaConfigJson {
         btsFilter3.setFilterRule("not_null");
         globaleFilters.add(btsFilter3);
 
+        JsonLogFilter recommend_homepageFilter = new JsonLogFilter();
+        recommend_homepageFilter.setValueFilter("recommend_homepage");
+        recommend_homepageFilter.setJsonPath("$.event_value.af_inner_mediasource");
+        globaleFilters.add(recommend_homepageFilter);
+
         globaleFilters.add(btsFilter);
 
         rule.setGlobaleJsonFilters(globaleFilters);
@@ -81,27 +86,6 @@ public class AppDopamineReportBaseQuotaConfigJson {
 
     private void quota(List<ReportQuotaFieldConfig> reportQuotaFieldConfigs) {
 
-        /*// push 落地页 pv uv
-        ReportQuotaFieldConfig appPushPv = new ReportQuotaFieldConfig();
-        appPushPv.setQuotaFieldName("view_push_page");
-        appPushPv.setDefaultValue(0);
-        appPushPv.setValueEnum("countOneWithFilter");
-
-        ReportQuotaFieldConfig appPushUv = new ReportQuotaFieldConfig();
-        appPushUv.setQuotaFieldName("view_push_uv");
-        appPushUv.setDefaultValue("_skip");
-        appPushUv.setExtractValueJsonPath("$.appsflyer_device_id");
-        appPushUv.setValueEnum("quotaStringValueExtractFromLog");
-
-        List<JsonLogFilter> pushFilters = new ArrayList<>();
-        JsonLogFilter pushFilter = new JsonLogFilter();
-        pushFilter.setValueFilter("af_view_pushpage");
-        pushFilter.setJsonPath("$.event_name");
-        pushFilters.add(pushFilter);
-
-        reportQuotaFieldConfigs.add(appPushPv);
-        reportQuotaFieldConfigs.add(appPushUv);*/
-
         // 曝光数 pv uv
         ReportQuotaFieldConfig af_impressionPv = new ReportQuotaFieldConfig();
         af_impressionPv.setQuotaFieldName("exposure_count");
@@ -131,6 +115,7 @@ public class AppDopamineReportBaseQuotaConfigJson {
         ReportQuotaFieldConfig af_view_productPv = new ReportQuotaFieldConfig();
         af_view_productPv.setQuotaFieldName("good_click");
         af_view_productPv.setDefaultValue(0);
+        af_view_productPv.setExtractValueJsonPath("$.event name");
         af_view_productPv.setValueEnum("countOneWithFilter");
 
         ReportQuotaFieldConfig af_view_productUv = new ReportQuotaFieldConfig();
@@ -187,6 +172,7 @@ public class AppDopamineReportBaseQuotaConfigJson {
         ReportQuotaFieldConfig af_add_to_wishlistPv = new ReportQuotaFieldConfig();
         af_add_to_wishlistPv.setQuotaFieldName("good_collect");
         af_add_to_wishlistPv.setDefaultValue(0);
+        af_add_to_wishlistPv.setExtractValueJsonPath("$.event name");
         af_add_to_wishlistPv.setValueEnum("countOneWithFilter");
 
         ReportQuotaFieldConfig af_add_to_wishlistUv = new ReportQuotaFieldConfig();

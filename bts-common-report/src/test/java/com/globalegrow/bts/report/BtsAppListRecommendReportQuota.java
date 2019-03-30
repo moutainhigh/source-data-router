@@ -4,7 +4,7 @@ package com.globalegrow.bts.report;
  * app分类页推荐报表指标字段
  */
 public class BtsAppListRecommendReportQuota extends BtsReport {
-    private int exposure_count = 0;//商品(SKU)曝光
+    private int exposure_count = 0;//商品曝光数
 
     private int good_click = 0;//点击量
 
