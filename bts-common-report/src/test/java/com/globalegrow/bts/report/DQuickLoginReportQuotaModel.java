@@ -22,6 +22,8 @@ public class DQuickLoginReportQuotaModel {
     private Long timestamp = 0L;
     private int shopping_car_pv=0;
     private String shopping_car_uv="_skip";
+    private int check_out_pv=0;
+    private String check_out_uv="_skip";
     private int car_login_pv=0;
     private String car_login_uv="_skip";
     private int login_pv=0;
@@ -42,6 +44,11 @@ public class DQuickLoginReportQuotaModel {
     private String car_forgot_pwd_uv="_skip";
     private int forgot_pwd_pv=0;
     private String forgot_pwd_uv="_skip";
+    private String platform="_skip";
+    private int order_confirm_pv=0;
+    private String order_confirm_uv="_skip";
+    private int placeorder_pv=0;
+    private String placeorder_uv="_skip";
 
     public int getShopping_car_pv() {
         return shopping_car_pv;
@@ -56,6 +63,22 @@ public class DQuickLoginReportQuotaModel {
 
     public void setShopping_car_uv(String shopping_car_uv) {
         this.shopping_car_uv = shopping_car_uv;
+    }
+
+    public int getCheck_out_pv() {
+        return check_out_pv;
+    }
+
+    public void setCheck_out_pv(int check_out_pv) {
+        this.check_out_pv = check_out_pv;
+    }
+
+    public String getCheck_out_uv() {
+        return check_out_uv;
+    }
+
+    public void setCheck_out_uv(String check_out_uv) {
+        this.check_out_uv = check_out_uv;
     }
 
     public int getLogin_pv() {
@@ -240,5 +263,45 @@ public class DQuickLoginReportQuotaModel {
 
     public void setForgot_pwd_uv(String forgot_pwd_uv) {
         this.forgot_pwd_uv = forgot_pwd_uv;
+    }
+
+    public String getPlatform() {
+        return platform;
+    }
+
+    public void setPlatform(String platform) {
+        this.platform = platform;
+    }
+
+    public int getOrder_confirm_pv() {
+        return order_confirm_pv;
+    }
+
+    public void setOrder_confirm_pv(int order_confirm_pv) {
+        this.order_confirm_pv = order_confirm_pv;
+    }
+
+    public String getOrder_confirm_uv() {
+        return order_confirm_uv;
+    }
+
+    public void setOrder_confirm_uv(String order_confirm_uv) {
+        this.order_confirm_uv = order_confirm_uv;
+    }
+
+    public int getPlaceorder_pv() {
+        return placeorder_pv;
+    }
+
+    public void setPlaceorder_pv(int placeorder_pv) {
+        this.placeorder_pv = placeorder_pv;
+    }
+
+    public String getPlaceorder_uv() {
+        return placeorder_uv;
+    }
+
+    public void setPlaceorder_uv(String placeorder_uv) {
+        this.placeorder_uv = placeorder_uv;
     }
 }

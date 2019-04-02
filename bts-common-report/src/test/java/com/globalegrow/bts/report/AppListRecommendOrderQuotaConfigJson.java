@@ -56,10 +56,10 @@ public class AppListRecommendOrderQuotaConfigJson {
         btsFilter4.setFilterRule("contains");
         globaleFilters.add(btsFilter4);
 
-        JsonLogFilter btsFilter5 = new JsonLogFilter();
-        btsFilter5.setJsonPath("$.event_value.af_sort");
-        btsFilter5.setValueFilter("recommend");
-        globaleFilters.add(btsFilter5);
+//        JsonLogFilter btsFilter5 = new JsonLogFilter();
+//        btsFilter5.setJsonPath("$.event_value.af_sort");
+//        btsFilter5.setValueFilter("recommend");
+//        globaleFilters.add(btsFilter5);
 
         JsonLogFilter cartFilter = new JsonLogFilter();
         cartFilter.setJsonPath("$.event_name");

@@ -51,8 +51,10 @@ public class AppRecommendReportBaseQuotaConfigJson {
         globaleFilters.add(btsFilter3);
 
         globaleFilters.add(btsFilter);
-
-        rule.setGlobaleJsonFilters(globaleFilters);
+        JsonLogFilter recommend_cartpageFilter = new JsonLogFilter();
+        recommend_cartpageFilter.setValueFilter("recommend_cartpage");
+        recommend_cartpageFilter.setJsonPath("$.event_value.af_inner_mediasource");
+        globaleFilters.add(recommend_cartpageFilter);
 
         rule.setReportName("BTS_ZAFUL_ORDER_CART_RECOMMEND_APP");
         rule.setDescription("zaful APP 购物车推荐报表");
