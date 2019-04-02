@@ -36,7 +36,7 @@ public class KylinReportController extends CommonController{
 
     @SentinelResource(value = "bts_report",blockHandler = "exceptionHandler",fallback = "exceptionHandler")
     @RequestMapping(produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
-    public ReportPageDto btsReport(@RequestBody BtsReportParameterDto btsReportParameterDto) {
+    public ReportPageDto btsReport(@RequestBody BtsReportParameterDto btsReportParameterDto) throws Exception {
         this.logger.debug("报表请求参数: {}", btsReportParameterDto);
         // 判断是否为 EMP 邮件接口
         BtsReportKylinConfig btsReportKylinConfig = this.btsReportConfigService.configMixedQuery(btsReportParameterDto);

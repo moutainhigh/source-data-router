@@ -9,8 +9,8 @@ import java.util.Map;
 
 public interface BtsReportService {
 
-    ReportPageDto btsReport(BtsReportParameterDto btsReportParameterDto);
+    ReportPageDto btsReport(BtsReportParameterDto btsReportParameterDto) throws Exception;
 
-    ReportPageDto btsReport(BtsReportKylinConfig btsReportKylinConfig, BtsReportParameterDto btsReportParameterDto);
+    ReportPageDto btsReport(BtsReportKylinConfig btsReportKylinConfig, BtsReportParameterDto btsReportParameterDto) throws Exception;
 
 }

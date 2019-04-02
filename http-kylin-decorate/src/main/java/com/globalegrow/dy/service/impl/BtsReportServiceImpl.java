@@ -7,13 +7,12 @@ import com.globalegrow.dy.enums.ReportServerType;
 import com.globalegrow.dy.model.BtsReportKylinConfig;
 import com.globalegrow.dy.service.BtsReportConfigService;
 import com.globalegrow.dy.service.BtsReportService;
-import com.globalegrow.util.GsonUtil;
+import com.globalegrow.util.JacksonUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.StringSubstitutor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
@@ -21,7 +20,10 @@ import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import java.text.DecimalFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service
 public class BtsReportServiceImpl implements BtsReportService {
@@ -67,7 +69,7 @@ public class BtsReportServiceImpl implements BtsReportService {
     // /*, sync = true*//*condition = "#btsReportKylinConfig.getData().size() > 0",#result != null && */
     @Override
     //@Cacheable(cacheNames = "bts_report_data_cache", key = "#btsReportParameterDto.getCacheKey()", unless = "#result.data.size() == 0")
-    public ReportPageDto btsReport(BtsReportParameterDto btsReportParameterDto) {
+    public ReportPageDto btsReport(BtsReportParameterDto btsReportParameterDto) throws Exception {
         BtsReportKylinConfig btsReportKylinConfig = this.btsReportConfigService.configMixedQuery(btsReportParameterDto);
         if (btsReportKylinConfig != null) {
             return this.reportPageDto(btsReportKylinConfig, btsReportParameterDto);
@@ -78,11 +80,11 @@ public class BtsReportServiceImpl implements BtsReportService {
 
     @Override
     //@Cacheable(cacheNames = "bts_report_cache_2", key = "#btsReportParameterDto.getCacheKey()",/*condition = "#btsReportKylinConfig.getData().size() > 0",#result != null && */ unless = "#result.data.size() == 0")
-    public ReportPageDto btsReport(BtsReportKylinConfig btsReportKylinConfig, BtsReportParameterDto btsReportParameterDto) {
+    public ReportPageDto btsReport(BtsReportKylinConfig btsReportKylinConfig, BtsReportParameterDto btsReportParameterDto) throws Exception {
         return this.reportPageDto(btsReportKylinConfig, btsReportParameterDto);
     }
 
-    private ReportPageDto reportPageDto(BtsReportKylinConfig btsReportKylinConfig, BtsReportParameterDto btsReportParameterDto) {
+    private ReportPageDto reportPageDto(BtsReportKylinConfig btsReportKylinConfig, BtsReportParameterDto btsReportParameterDto) throws Exception {
         Long start = System.currentTimeMillis();
         ReportPageDto mapReportPageDto = new ReportPageDto();
         mapReportPageDto.setCurrentPage(btsReportParameterDto.getStartPage());
@@ -304,7 +306,7 @@ public class BtsReportServiceImpl implements BtsReportService {
      * @param btsReportParameterDto
      * @param btsReportKylinConfig
      */
-    public List<Object> empReport(BtsReportParameterDto btsReportParameterDto, BtsReportKylinConfig btsReportKylinConfig) {
+    public List<Object> empReport(BtsReportParameterDto btsReportParameterDto, BtsReportKylinConfig btsReportKylinConfig) throws Exception {
         List<String> groupByFields = btsReportParameterDto.getGroupByFields();
         StringBuilder stringBuilder = new StringBuilder(btsReportKylinConfig.getKylinQueryAdress());
         /*Map<String, Object> getParameters = new HashMap<>();
@@ -327,7 +329,7 @@ public class BtsReportServiceImpl implements BtsReportService {
         }
         String o = this.restTemplate.getForObject(stringBuilder.toString(), String.class);
         System.out.println(o);
-        Map<String, Object> result = GsonUtil.readValue(o, Map.class);
+        Map<String, Object> result = JacksonUtil.readValue(o, Map.class);
 
         List<Map<String, String>> data = (List<Map<String, String>>) result.get("data");
         List<Object> outReportData = new ArrayList<>();
@@ -337,9 +339,9 @@ public class BtsReportServiceImpl implements BtsReportService {
                     Map<String, String> rowData = new HashMap<>();
                     reportData.entrySet().forEach(e -> {
                         if ("plan_id".equals(e.getKey())) {
-                            rowData.put("BTS_PLANID", e.getValue());
+                            rowData.put("BTS_PLANID", String.valueOf(e.getValue()));
                         } else if ("version_id".equals(e.getKey())) {
-                            rowData.put("BTS_VERSIONID", e.getValue());
+                            rowData.put("BTS_VERSIONID", String.valueOf(e.getValue()));
                         } else if ("day".equals(e.getKey())) {
                             rowData.put("DAY_START", e.getValue());
                         } else {
@@ -377,7 +379,6 @@ public class BtsReportServiceImpl implements BtsReportService {
                     Map<String, String> avgRow = new HashMap<>();
                     handleEmpReportResult(avgReport, m, avgRow);
                 });
-                // System.out.println(GsonUtil.toJson(avgReport));
                 return avgReport;
             } else if ("all".equals(btsReportParameterDto.getType())) {
                 List<Object> allReport = new ArrayList<>();
@@ -387,14 +388,12 @@ public class BtsReportServiceImpl implements BtsReportService {
                     avgRow.putAll(m);
                     handleEmpReportResult(allReport, m, avgRow);
                 });
-                // System.out.println(GsonUtil.toJson(allReport));
                 return allReport;
             }
 
         } catch (Exception e) {
             logger.error("解析 EMP 返回数据异常:{}", o, e);
         }
-        //System.out.println(GsonUtil.toJson(outReportData));
         return outReportData;
     }
 
