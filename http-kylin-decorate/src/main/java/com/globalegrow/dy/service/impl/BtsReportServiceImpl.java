@@ -312,14 +312,17 @@ public class BtsReportServiceImpl implements BtsReportService {
         /*Map<String, Object> getParameters = new HashMap<>();
         getParameters.put("module_name", "marketing_email");*/
         stringBuilder.append("&plan_id=" + btsReportParameterDto.getPlanId());
-        if (groupByFields == null || groupByFields.size() == 0 || (groupByFields.contains("bts_planid") && groupByFields.contains("bts_versionid") && groupByFields.contains("day_start"))) {
+        Map<String, Map<String, String>> betweenFields = btsReportParameterDto.getBetweenFields();
+        if(groupByFields == null || groupByFields.size() == 0 || (groupByFields.contains("bts_planid") && groupByFields.contains("bts_versionid")
+                && groupByFields.contains("day_start") && betweenFields != null && betweenFields.size() > 0)){
+            stringBuilder.append("&data_flag=4");
+        }else if (groupByFields == null || groupByFields.size() == 0 || (groupByFields.contains("bts_planid") && groupByFields.contains("bts_versionid") && groupByFields.contains("day_start"))) {
             stringBuilder.append("&data_flag=3");
         } else if (groupByFields.contains("bts_planid") && groupByFields.contains("bts_versionid") && !groupByFields.contains("day_start")) {
             stringBuilder.append("&data_flag=2");
         } else if (groupByFields.contains("bts_planid") && !groupByFields.contains("bts_versionid")) {
             stringBuilder.append("&data_flag=1");
         }
-        Map<String, Map<String, String>> betweenFields = btsReportParameterDto.getBetweenFields();
         if (betweenFields != null && betweenFields.size() > 0) {
             Map<String, String> dayBetween = betweenFields.get("day_start");
             if (dayBetween != null && dayBetween.size() > 0) {
