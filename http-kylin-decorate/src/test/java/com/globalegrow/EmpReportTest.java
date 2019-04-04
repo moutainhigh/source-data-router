@@ -38,7 +38,7 @@ public class EmpReportTest {
     public void before() {
         btsReportKylinConfig.setKylinQueryAdress("http://ems.appinthestore.com/marketing/api-bts-email-info/get-sys-email-info?module_name=marketing_email&uuqid=orderShippedOut");
         btsReportParameterDto.setPlanId(548L);
-        btsReportParameterDto.setType("all");
+        btsReportParameterDto.setType("query");
         List<String> groupBy = new ArrayList<>();
         groupBy.add("bts_planid");
         groupBy.add("bts_versionid");
@@ -46,8 +46,8 @@ public class EmpReportTest {
         btsReportParameterDto.setGroupByFields(groupBy);
         Map<String, Map<String, String>> betweenFields = new HashMap<>();
         Map<String, String> dayBetween = new HashMap<>();
-        dayBetween.put("min", "2019-03-28");
-        dayBetween.put("max", "2019-04-03");
+        dayBetween.put("min", "2019-04-01");
+        dayBetween.put("max", "2019-04-02");
         betweenFields.put("day_start", dayBetween);
         btsReportParameterDto.setBetweenFields(betweenFields);
     }
@@ -137,8 +137,9 @@ public class EmpReportTest {
                     } else {
                         avgRow.put(e.getKey().replace("SUM_", "AVG_"), formatDivResult(Float.valueOf(e.getValue()) / Float.valueOf(m.get("SPECIMEN"))));
                     }
-                    avgReport.add(avgRow);
+                    //avgReport.add(avgRow);
                 });
+                avgReport.add(avgRow);
             });
             System.out.println(GsonUtil.toJson(avgReport));
         } else if ("all".equals(btsReportParameterDto.getType())) {
@@ -154,8 +155,8 @@ public class EmpReportTest {
                     } else {
                         avgRow.put(e.getKey().replace("SUM_", "AVG_"), formatDivResult(Float.valueOf(e.getValue()) / Float.valueOf(m.get("SPECIMEN"))));
                     }
-                    allReport.add(avgRow);
                 });
+                allReport.add(avgRow);
             });
             System.out.println(GsonUtil.toJson(allReport));
         }

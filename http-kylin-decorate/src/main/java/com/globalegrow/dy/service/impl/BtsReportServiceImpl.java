@@ -409,8 +409,8 @@ public class BtsReportServiceImpl implements BtsReportService {
             } else {
                 avgRow.put(e.getKey().replace("SUM_", "AVG_"), formatDivResult(Float.valueOf(e.getValue()) / Float.valueOf(m.get("SPECIMEN"))));
             }
-            allReport.add(avgRow);
         });
+        allReport.add(avgRow);
     }
 
     private String divLongFloat(String top, String bottom) {
