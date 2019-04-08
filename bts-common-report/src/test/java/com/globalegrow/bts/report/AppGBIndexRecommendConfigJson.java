@@ -57,6 +57,13 @@ public class AppGBIndexRecommendConfigJson {
         btsFilter4.setFilterRule("contains");
         globaleFilters.add(btsFilter4);
 
+        JsonLogFilter btsFilter5 = new JsonLogFilter();
+        btsFilter5.setJsonPath("$.event_value.af_inner_mediasource.tab");
+        btsFilter5.setFilterRule("or");
+        btsFilter5.setValueFilter("Popular,Populaire,Популярное,Popolare,Populär,Popüler");
+
+        globaleFilters.add(btsFilter5);
+
         rule.setGlobaleJsonFilters(globaleFilters);
 
         rule.setReportName("BTS_GB_INDEX_RECOMMEND_APP");
