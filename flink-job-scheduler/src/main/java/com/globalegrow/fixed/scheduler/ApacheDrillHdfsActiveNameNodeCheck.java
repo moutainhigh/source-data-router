@@ -19,7 +19,7 @@ import org.springframework.web.client.RestTemplate;
 import javax.annotation.PostConstruct;
 import java.util.Map;
 
-@Component
+//@Component
 @Data
 @Slf4j
 public class ApacheDrillHdfsActiveNameNodeCheck {
@@ -45,7 +45,7 @@ public class ApacheDrillHdfsActiveNameNodeCheck {
      * 初始化查询 Apache drill 当前配置
      * SELECT hostname FROM sys.drillbits WHERE `current` = true;
      */
-    @PostConstruct
+    //@PostConstruct
     public void init() {
         // 大禹 hdfs 当前配置
         Map<String, Object> result = this.restTemplate.getForObject(this.apacheDrillAdress + this.dyDfsDrillConfig, Map.class);
@@ -65,7 +65,7 @@ public class ApacheDrillHdfsActiveNameNodeCheck {
     /**
      * 每分钟检查一次 hdfs 地址是否已切换
      */
-    @Scheduled(fixedDelay = 60000)
+    //@Scheduled(fixedDelay = 60000)
     public void run() throws Exception {
         String currentDyAddress = HdfsUtil.getDyActiceService();
 

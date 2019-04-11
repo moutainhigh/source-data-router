@@ -67,7 +67,7 @@ public class BuryLogDataSyncByDay {
     @Autowired
     private RestTemplate restTemplate;
 
-    @Scheduled(cron = "${app.cron.bury-log-data}")
+    //@Scheduled(cron = "${app.cron.bury-log-data}")
     public void run() throws InterruptedException {
 
 
@@ -180,7 +180,7 @@ public class BuryLogDataSyncByDay {
     }
 
     //@Scheduled(cron = "${app.cron.bury-log-data-flink-job-status}")
-    @Scheduled(fixedDelay = 15000)
+    //@Scheduled(fixedDelay = 15000)
     public void jobStatusCheck() throws InterruptedException {
 
         //log.info("开始检查任务执行状态");
