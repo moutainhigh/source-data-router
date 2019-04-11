@@ -71,7 +71,7 @@ public class ZafulRecommendReport extends AbstractFlinkJobSerialScheduler {
     private String currentBtsOrderRecountJobId = "";
     private AtomicInteger currentBtsOrderRecountJobStatus = new AtomicInteger(0);
 
-    @Scheduled(cron = "${app.cron.bury-log-data:0 1 0 * * ?}")
+//    @Scheduled(cron = "${app.cron.bury-log-data:0 1 0 * * ?}")
     public void cart14JobRun() throws InterruptedException {
         // 检查 pc app 的 目录是否存在
         String currentDay = DateUtil.yesterday().toString("yyyy/MM/dd");
@@ -90,7 +90,7 @@ public class ZafulRecommendReport extends AbstractFlinkJobSerialScheduler {
         this.cart14OrderJobs.put(jobId, flinkBashJob);
     }
 
-    @Scheduled(cron = "${app.cron.cart14-data:0 30 0 * * ?}")
+  //  @Scheduled(cron = "${app.cron.cart14-data:0 30 0 * * ?}")
     public void checkCart14Status() throws InterruptedException {
         String currentDay = DateUtil.yesterday().toString("yyyy/MM/dd");
         String orderTableDate = currentDay.replaceAll("/", "");
@@ -155,7 +155,7 @@ public class ZafulRecommendReport extends AbstractFlinkJobSerialScheduler {
      *
      * @throws InterruptedException
      */
-    @Scheduled(cron = "${app.cron.cart14-data:0 2 0 * * ?}")
+    //@Scheduled(cron = "${app.cron.cart14-data:0 2 0 * * ?}")
     public void initOrderRecounterJobs() throws InterruptedException, ParseException {
         this.checkOrderInfo();
         String buryDate = DateUtil.yesterday().toString("yyyy/MM/dd");
@@ -197,7 +197,7 @@ public class ZafulRecommendReport extends AbstractFlinkJobSerialScheduler {
 
     }
 
-    @Scheduled(fixedDelay = 10000)
+    //@Scheduled(fixedDelay = 10000)
     public void runBtsOrderRecount() throws InterruptedException {
 
         if (this.recountOrderBtsJobs.size() > 0 && this.currentBtsOrderRecountJobStatus.get() == 0 && StringUtils.isEmpty(this.currentBtsOrderRecountJobId)) {
@@ -216,7 +216,7 @@ public class ZafulRecommendReport extends AbstractFlinkJobSerialScheduler {
 
     }
 
-    @Scheduled(fixedDelay = 10000)
+    //@Scheduled(fixedDelay = 10000)
     public void checkOrderRecountBts() {
 
         String status = this.checkJobStatus(this.currentBtsOrderRecountJobId);
@@ -235,7 +235,7 @@ public class ZafulRecommendReport extends AbstractFlinkJobSerialScheduler {
     /**
      * 全部任务执行完成后 给表添加分区
      */
-    @Scheduled(cron = "${app.cron.cart14-data:0 30 1 * * ?}")
+    //@Scheduled(cron = "${app.cron.cart14-data:0 30 1 * * ?}")
     public void checkJobStatus() throws InterruptedException {
 
         String yestoday = DateUtil.yesterday().toString("yyyy/MM/dd");
@@ -288,7 +288,7 @@ public class ZafulRecommendReport extends AbstractFlinkJobSerialScheduler {
      * 失败的任务放到基类当前任务中，按顺序执行
      * @throws InterruptedException
      */
-    @Scheduled(fixedDelay = 10000)
+    //@Scheduled(fixedDelay = 10000)
     public void runAllQuoteAndBtsQuote() throws InterruptedException {
 
         if (this.allQuoteJobs.size() > 0) {
@@ -312,7 +312,7 @@ public class ZafulRecommendReport extends AbstractFlinkJobSerialScheduler {
         this.checkHdfsPath(this.zafulOrderGoodsInfoPath + ytd + "/" + SUCCESS_FULL_FILE);
     }
 
-    @Scheduled(fixedDelay = 10000)
+    //@Scheduled(fixedDelay = 10000)
     @Override
     public void run() throws InterruptedException {
 
