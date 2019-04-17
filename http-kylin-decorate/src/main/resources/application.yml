@@ -181,7 +181,7 @@ spring:
     driver-class-name: com.mysql.jdbc.Driver
     url: jdbc:mysql://glbg_all_prd_mysql_m.gw-internel.com:3307/dy_report?useSSL=false&useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true
     username: dy_report
-    password: mejwzQmKcI
+    password: h6eUzIRzVP
     druid:
       initial-size: 2
       max-active: 5
