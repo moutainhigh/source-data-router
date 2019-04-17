@@ -180,8 +180,8 @@ spring:
     type: com.alibaba.druid.pool.DruidDataSource
     driver-class-name: com.mysql.jdbc.Driver
     url: jdbc:mysql://glbg_all_prd_mysql_m.gw-internel.com:3307/dy_report?useSSL=false&useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true
-    username: root
-    password: 1qRPaINi5lbY3n6r
+    username: dy_report
+    password: mejwzQmKcI
     druid:
       initial-size: 2
       max-active: 5
