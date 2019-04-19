@@ -12,7 +12,7 @@ spring:
 spring:
   profiles: dev
   application:
-    name: dy-app-user-feature-dev
+    name: dy-goods-feature-dec
   cloud:
     sentinel:
       transport:
@@ -21,7 +21,7 @@ spring:
 logging:
   #  config: classpath:logback-spring.xml
   path: logs
-  file: logs/dy-app-user-feature.log
+  file: logs/dy-goods-feature.log
   level:
     root: debug
     org.springframework: ERROR
@@ -41,7 +41,7 @@ server:
 spring:
   profiles: prod
   application:
-    name: dy-app-user-feature-prod
+    name: dy-goods-feature-prod
   cloud:
     sentinel:
       transport:
@@ -51,7 +51,7 @@ spring:
 logging:
   #  config: classpath:logback-spring.xml
   path: logs
-  file: logs/dy-app-user-feature.log
+  file: logs/dy-goods-feature.log
   level:
     root: info
     org.springframework: ERROR
