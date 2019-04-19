@@ -43,6 +43,17 @@ public class FBADUserFeatureController extends CommonController {
         rule1.setGrade(RuleConstant.FLOW_GRADE_QPS);
         rule1.setLimitApp("default");
         rules.add(rule1);
+
+        //user_base_info_fbad_feature
+
+        FlowRule rule2 = new FlowRule();
+        rule2.setResource("user_base_info_fbad_feature");
+        // set limit qps to 20
+        rule2.setCount(5000);
+        rule2.setGrade(RuleConstant.FLOW_GRADE_QPS);
+        rule2.setLimitApp("default");
+        rules.add(rule2);
+
         FlowRuleManager.loadRules(rules);
 
     }
