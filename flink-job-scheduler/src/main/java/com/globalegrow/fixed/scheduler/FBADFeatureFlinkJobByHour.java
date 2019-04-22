@@ -26,7 +26,7 @@ public class FBADFeatureFlinkJobByHour {
     @Autowired
     private DelayQueue<DyHdfsCheckExistsJobMessage> flinkJobQueens;
 
-    private static final String rootHdfsPath = "hdfs:///user/wuchao/dw_zaful_recommend/zaful_app_abset_id_user_fb_all_every_hour/add_time=${date_hour}/part-00000";
+    private static final String rootHdfsPath = "/user/hive/warehouse/dw_zaful_recommend.db/zaful_app_abset_id_user_fb_all_every_hour/add_time=2019032103";
 
     private String flinkCommandLine = "/usr/local/services/flink/flink-yarn/flink-1.5.0/bin/flink run -d -m yarn-cluster -yn 1 -yjm 1024 -ytm 1024 /usr/local/services/flink/fb-ad-user-feature-es-0.1.jar --job.hdfs.path ${hdfs_path}";
 
@@ -40,9 +40,9 @@ public class FBADFeatureFlinkJobByHour {
     @Scheduled(cron = "${app.cron.fbad-freatrue}")
     public void run() {
         // 首先运行检查 hdfs 文件是否存在，如果不存在则放入延时队列中
-        int thisHour = DateUtil.thisHour(true);
-        log.info("当前小时数： {} ", thisHour);
-        String fileDatePath = "";
+        //int thisHour = DateUtil.thisHour(true);
+        //log.info("当前小时数： {} ", thisHour);
+        /*String fileDatePath = "";
         if (thisHour == 0) {
             log.info("{} 点跑前一天 23 点数据", thisHour);
             fileDatePath = DateUtil.yesterday().toString("yyyyMMdd") + "23";
@@ -53,12 +53,12 @@ public class FBADFeatureFlinkJobByHour {
                 fileDatePath = DateFormatUtils.format(new Date(), "yyyyMMdd") + (thisHour - 1);
             }
 
-        }
-        String hdfsPath = CommonTextUtils.replaceOneParameter(rootHdfsPath, "date_hour", fileDatePath);
+        }*/
+        String hdfsPath =  HdfsUtil.getBigDataActiveNamenode() + rootHdfsPath;//CommonTextUtils.replaceOneParameter(rootHdfsPath, "date_hour", fileDatePath);
         String flinkRunCommandLine = CommonTextUtils.replaceOneParameter(flinkCommandLine, "hdfs_path", hdfsPath);
-        log.info("检查文件 {} 是否存在", hdfsPath);
-        if (HdfsUtil.dyFileExist(hdfsPath)) {
-            log.info("文件 {} 存在, 执行 flink 任务", hdfsPath);
+        //log.info("检查文件 {} 是否存在", hdfsPath);
+        //if (HdfsUtil.dyFileExist(hdfsPath)) {
+            //log.info("文件 {} 存在, 执行 flink 任务", hdfsPath);
             Process process = null;
             //List<String> processList = new ArrayList<String>();
             try {
@@ -85,11 +85,11 @@ public class FBADFeatureFlinkJobByHour {
 
 
 
-        }else {
+        /*}else {
             log.info("文件 {} 不存在，将任务放入延时队列中 ", hdfsPath);
             DyHdfsCheckExistsJobMessage jobQueen = new DyHdfsCheckExistsJobMessage(hdfsPath, System.currentTimeMillis(), 300000L, flinkRunCommandLine);
             this.flinkJobQueens.offer(jobQueen);
-        }
+        }*/
     }
 
 }
