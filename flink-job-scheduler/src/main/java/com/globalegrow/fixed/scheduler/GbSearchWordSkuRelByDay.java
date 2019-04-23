@@ -27,7 +27,7 @@ public class GbSearchWordSkuRelByDay extends AbstractFlinkJobSerialScheduler{
     public void run() throws InterruptedException {
         String lastDayPath = hdfsPath + DateUtil.yesterday().toString("yyyy-MM-dd");
         this.checkHdfsPath("hdfs://glbgnameservice" + lastDayPath);
-        FlinkBashJob job = new FlinkBashJob("gb-search-word-sku-rel", this.commandLine +  HdfsUtil.getBigDataActiveNamenode() + lastDayPath);
+        FlinkBashJob job = new FlinkBashJob("gb-search-word-sku-rel", this.commandLine + lastDayPath);
         this.flinkBashJobs.offer(job);
         this.runFlinkJob();
     }
