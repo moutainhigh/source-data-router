@@ -19,8 +19,8 @@ import java.util.concurrent.DelayQueue;
 @Component
 public class ZafulAppUserBaseInfoAndFBADFeature extends AbstractFlinkJobSerialScheduler{
 
-    @Autowired
-    private DelayQueue<DyHdfsCheckExistsJobMessage> flinkJobQueens;
+//    @Autowired
+//    private DelayQueue<DyHdfsCheckExistsJobMessage> flinkJobQueens;
 
     //private String hdfsPath = "hdfs:///user/wuchao/dw_zaful_recommend/zaful_app_abset_id_user_fb_cookieid_fb/add_time=${last_day}/part-00000";
     private String hdfsPath = "/user/hive/warehouse/dw_zaful_recommend.db/zaful_app_abset_id_user_fb_cookieid_fb/add_time=${last_day}/";
@@ -38,7 +38,8 @@ public class ZafulAppUserBaseInfoAndFBADFeature extends AbstractFlinkJobSerialSc
         log.info("检查文件 {} 是否存在", checkPhpPath);
         this.checkHdfsPath(checkPhpPath);
         FlinkBashJob job = new FlinkBashJob("zaful-user-feature-with-facebook-ad-feature", yesterdayCommandLine);
-        this.execFlinkJob(job);
+        this.flinkBashJobs.offer(job);
+        this.runFlinkJob();
         /*if (HdfsUtil.dyFileExist(checkPhpPath)) {
             log.info("文件 {} 存在，执行任务", yesterdayCommandLine);
 

@@ -29,7 +29,7 @@ public abstract class AbstractFlinkJobSerialScheduler {
 
     public static final String SUCCESS_FULL_FILE = "_SUCCESS";
 
-    private LinkedBlockingDeque<FlinkBashJob> flinkBashJobs = new LinkedBlockingDeque<>();
+    protected LinkedBlockingDeque<FlinkBashJob> flinkBashJobs = new LinkedBlockingDeque<>();
 
     Map<String, FlinkBashJob> currentBuryLogJobs = new ConcurrentHashMap<>();
 
