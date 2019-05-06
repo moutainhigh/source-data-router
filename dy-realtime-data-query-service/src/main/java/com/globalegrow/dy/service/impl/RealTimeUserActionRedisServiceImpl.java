@@ -77,8 +77,7 @@ public class RealTimeUserActionRedisServiceImpl implements RealTimeUserActionSer
             ClusterServersConfig clusterServersConfig = config.useClusterServers();
             clusterServersConfig.addNodeAddress(nodes.split(","));
             clusterServersConfig.setPassword(redisPassword);
-//            clusterServersConfig.setRetryAttempts(1);
-//            clusterServersConfig.setRetryInterval(500);
+            clusterServersConfig.setFailedSlaveReconnectionInterval(1000);
             if ("MASTER_SLAVE".equals(this.readModel)) {
                 clusterServersConfig.setReadMode(ReadMode.MASTER_SLAVE);
             }
@@ -140,14 +139,14 @@ public class RealTimeUserActionRedisServiceImpl implements RealTimeUserActionSer
                     skus.stream().forEach(value -> list.add(new UserActionData(value.substring(0, value.lastIndexOf("_")), Long.valueOf(value.substring(value.lastIndexOf("_") + 1)))));
 
                     // 放入 redis 并添加 es 查询标签
-                    rList.addAll(skus.stream().map(value -> value + searchWordSplitString).collect(Collectors.toList()));
+                    rList.addAllAsync(skus.stream().map(value -> value + searchWordSplitString).collect(Collectors.toList()));
                     // 设置过期时间
-                    rList.expire(this.redisExpireTime, TimeUnit.SECONDS);
+                    rList.expireAsync(this.redisExpireTime, TimeUnit.SECONDS);
                 } else {
 
                     // 添加一条空
-                    rList.add(this.emptyEvent);
-                    rList.expire(this.redisExpireTime, TimeUnit.SECONDS);
+                    rList.addAsync(this.emptyEvent);
+                    rList.expireAsync(this.redisExpireTime, TimeUnit.SECONDS);
 
                 }
 
@@ -177,31 +176,23 @@ public class RealTimeUserActionRedisServiceImpl implements RealTimeUserActionSer
 
                             rList.clear();
                             // 添加 es mark
-                            //rList.addAllAsync(history1000.stream().map(value -> value + searchWordSplitString).collect(Collectors.toList()));
-                            //rList.expireAsync(this.redisExpireTime, TimeUnit.SECONDS);
-
-                            rList.addAll(history1000.stream().map(value -> value + searchWordSplitString).collect(Collectors.toList()));
-                            rList.expire(this.redisExpireTime, TimeUnit.SECONDS);
+                            rList.addAllAsync(history1000.stream().map(value -> value + searchWordSplitString).collect(Collectors.toList()));
+                            rList.expireAsync(this.redisExpireTime, TimeUnit.SECONDS);
 
                         } else {
                             // 添加 es mark
                             rList.clear();
                             // 添加 es mark
-                           // rList.addAllAsync(redisList.stream().map(value -> value + searchWordSplitString).collect(Collectors.toList()));
-                            rList.addAll(redisList.stream().map(value -> value + searchWordSplitString).collect(Collectors.toList()));
-                            rList.expire(this.redisExpireTime, TimeUnit.SECONDS);
-                           // rList.expireAsync(this.redisExpireTime, TimeUnit.SECONDS);
+                            rList.addAllAsync(redisList.stream().map(value -> value + searchWordSplitString).collect(Collectors.toList()));
+                            rList.expireAsync(this.redisExpireTime, TimeUnit.SECONDS);
                             // rList.expireAsync(this.redisExpireTime, TimeUnit.SECONDS);
                         }
 
                         if (list.size() == 0) {
 
                             // 添加一条空
-                            //rList.addAsync(this.emptyEvent);
-                            //rList.expireAsync(this.redisExpireTime, TimeUnit.SECONDS);
-
-                            rList.add(this.emptyEvent);
-                            rList.expire(this.redisExpireTime, TimeUnit.SECONDS);
+                            rList.addAsync(this.emptyEvent);
+                            rList.expireAsync(this.redisExpireTime, TimeUnit.SECONDS);
 
                         }
 

@@ -12,7 +12,7 @@
     <artifactId>flink-job-scheduler</artifactId>
 
     <properties>
-        <thymeleaf.version>3.0.5.RELEASE</thymeleaf.version>
+        <!--<thymeleaf.version>3.0.5.RELEASE</thymeleaf.version>-->
         <thymeleaf-layout-dialect.version>2.0.0</thymeleaf-layout-dialect.version>
     </properties>
 

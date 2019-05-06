@@ -1,3 +1,4 @@
+/*
 package com.globalegrow.dy.config;
 
 import com.google.gson.Gson;
@@ -37,19 +38,22 @@ public class MyJestAutoConfig {
                                  ObjectProvider<List<HttpClientConfigBuilderCustomizer>> builderCustomizers) {
         this.properties = properties;
         this.gsonProvider = gson;
-        this.builderCustomizers = builderCustomizers.getIfAvailable();
-    }
-
-    @Bean(destroyMethod = "shutdownClient", name = "myJestClient")
+        this.builderCustomizers = builderCusto*/
+/*@Bean(destroyMethod = "shutdownClient", name = "myJestClient")
     @ConditionalOnMissingBean
     @Qualifier("myJestClient")
     public JestClient jestClient() {
         JestClientFactory factory = new JestClientFactory();
         factory.setHttpClientConfig(createHttpClientConfig());
         return factory.getObject();
+    }*//*
+mizers.getIfAvailable();
     }
 
-    protected HttpClientConfig createHttpClientConfig() {
+
+
+   */
+/* protected HttpClientConfig createHttpClientConfig() {
         HttpClientConfig.Builder builder = new HttpClientConfig.Builder(
                 this.properties.getUris());
         if (StringUtils.hasText(this.properties.getUsername())) {
@@ -73,7 +77,8 @@ public class MyJestAutoConfig {
         builder.maxTotalConnection(2500);
         customize(builder);
         return builder.build();
-    }
+    }*//*
+
 
     private void customize(HttpClientConfig.Builder builder) {
         if (this.builderCustomizers != null) {
@@ -84,3 +89,4 @@ public class MyJestAutoConfig {
     }
 
 }
+*/

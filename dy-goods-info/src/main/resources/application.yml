@@ -12,7 +12,7 @@ spring:
 spring:
   profiles: dev
   application:
-    name: dy-goods-feature-dec
+    name: dy-goods-feature-dev
   cloud:
     sentinel:
       transport:

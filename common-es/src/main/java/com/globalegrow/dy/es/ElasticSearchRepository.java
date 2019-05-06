@@ -70,8 +70,17 @@ public class ElasticSearchRepository {
         return this.client.prepareUpdate(index, type, id).setDoc(data).execute().actionGet();
     }
 
+
+    public String getSingleFieldById(String index, String type, String id, String field){
+        GetResponse getResponse = this.getResponse(index, type, id);
+        if (getResponse.isExists()) {
+            return (String) getResponse.getSourceAsMap().get(field);
+        }
+        return "";
+    }
+
     public Map<String, Object> getDoc(String index, String type, String id){
-        return getResponse(index, type, id).getSourceAsMap();
+        return this.getResponse(index, type, id).getSourceAsMap();
     }
 
     public GetResponse getResponse(String index, String type, String id){

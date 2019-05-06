@@ -10,6 +10,8 @@ import com.globalegrow.dy.controller.CommonController;
 import com.globalegrow.dy.zaful.app.user.feature.dto.FbADFeatureRequest;
 import com.globalegrow.dy.zaful.app.user.feature.dto.FbADFeatureResponse;
 import com.globalegrow.dy.zaful.app.user.feature.service.FBADUserFeatureService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +25,7 @@ import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.List;
 
+@Api(tags = "facebook 广告特征数据接口")
 @RestController
 @RequestMapping("fb-ad-user-feature")
 @Data
@@ -54,6 +57,15 @@ public class FBADUserFeatureController extends CommonController {
         rule2.setLimitApp("default");
         rules.add(rule2);
 
+        //zaful_app_user_layer
+        FlowRule rule3 = new FlowRule();
+        rule3.setResource("zaful_app_user_layer");
+        // set limit qps to 20
+        rule3.setCount(5000);
+        rule2.setGrade(RuleConstant.FLOW_GRADE_QPS);
+        rule3.setLimitApp("default");
+        rules.add(rule3);
+
         FlowRuleManager.loadRules(rules);
 
     }
@@ -63,6 +75,7 @@ public class FBADUserFeatureController extends CommonController {
      * @param request
      * @return
      */
+    @ApiOperation(value = "根据 facebook 广告 id 获取广告特征")
     @SentinelResource(value = "fb_ad_user_feature", blockHandler = "failed", fallback = "failed")
     @PostMapping(produces = "application/json;charset=UTF-8")
     public FbADFeatureResponse getAdUserFeatureDataById(@Validated @RequestBody FbADFeatureRequest request){
