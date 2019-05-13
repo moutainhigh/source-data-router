@@ -189,7 +189,7 @@
                 <configuration>
                     <descriptors>
                         <!--D:\WORK\lakala\git\dqs\dqs-data-import\src\main\resources-->
-                        <descriptor>src/main/resources/distribution/assembly.xml</descriptor>
+                        <descriptor>src/main/resources/${profiles.active}/distribution/assembly.xml</descriptor>
                     </descriptors>
                     <!-- <descriptorRefs>
                          <descriptorRef>jar-with-dependencies</descriptorRef>
