@@ -61,8 +61,9 @@ spring:
     zkServers: 172.31.61.192:2181,172.31.62.7:2181,172.31.59.31:2181,172.31.62.153:2181,172.31.36.227:2181,172.31.40.73:2181
   elasticsearch:
     jest:
-      uris[0]: http://172.31.51.59:9200
-      uris[1]: http://172.31.51.250:9200
+      uris[0]: http://172.31.43.158:9202
+      uris[1]: http://172.31.47.84:9202
+      uris[2]: http://172.31.55.231:9202
       read-timeout: 20000
       connection-timeout: 20000
       username: esearch-ai-aws
