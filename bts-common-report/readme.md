@@ -1,3 +1,9 @@
+# 埋点报表指标配置工程
+将埋点信息按配置规则转换为 json 指标信息，供 kylin 进行计算
+
+## wiki 地址
+http://wiki.hqygou.com:8090/pages/viewpage.action?pageId=99485929 
+## 常用命令
 dy_bts_search_rec_report zaful 搜索算法报表<br>
 bin/kafka-console-consumer.sh --bootstrap-server 172.31.22.179:9092 --topic dy_bts_search_rec_report <br>
 bin/kafka-topics.sh --zookeeper 172.31.61.192:2181,172.31.59.31:2181,172.31.62.153:2181,172.31.36.227:2181,172.31.40.73:2181 --create --topic dy_bts_search_rec_report --partitions 1 --replication-factor 1<br>
