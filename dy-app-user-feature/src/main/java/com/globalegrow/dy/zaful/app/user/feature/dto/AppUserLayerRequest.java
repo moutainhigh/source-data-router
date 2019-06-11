@@ -14,7 +14,7 @@ import javax.validation.constraints.NotBlank;
 @ApiModel("用户分层数据请求对象")
 public class AppUserLayerRequest extends DyRequest {
 
-    @Length(min = 1, max = 256, message = "站点名长度必须在 0-256 之间")
+    @Length(min = 1, max = 256, message = "cookie id 长度必须在 0-256 之间")
     @NotBlank(message = "用户 cookie id 不能为空")
     @ApiModelProperty("app 埋点 appsflyer_device_id ， 必填")
     private String device_id;
