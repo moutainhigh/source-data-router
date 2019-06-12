@@ -1,6 +1,7 @@
 # 埋点报表指标配置工程
 将埋点信息按配置规则转换为 json 指标信息，供 kylin 进行计算
-
+<br>
+35.153.241.61   172.31.33.169
 ## wiki 地址
 http://wiki.hqygou.com:8090/pages/viewpage.action?pageId=99485929 
 ## 常用命令
