@@ -2,6 +2,7 @@ package com.globalegrow.fixed.scheduler;
 
 import com.globalegrow.fixed.queen.FlinkBashJob;
 import com.globalegrow.hdfs.utils.HdfsUtil;
+import com.globalegrow.utils.FlinkJobStatusCheckUtils;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -143,10 +144,11 @@ public abstract class AbstractFlinkJobSerialScheduler {
 
     public String checkJobStatus(String jobId) {
         try {
-            Map<String, Object> result = this.restTemplate.getForObject(this.flinkJobHistoryServer + jobId, Map.class);
-            if (result != null && StringUtils.isNotEmpty((String) result.get("state"))) {
-                return (String) result.get("state");
-            }
+//            Map<String, Object> result = this.restTemplate.getForObject(this.flinkJobHistoryServer + jobId, Map.class);
+//            if (result != null && StringUtils.isNotEmpty((String) result.get("state"))) {
+//                return (String) result.get("state");
+//            }
+            return FlinkJobStatusCheckUtils.getJobStatusByJobId(jobId);
         } catch (RestClientException e) {
             e.printStackTrace();
         }

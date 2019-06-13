@@ -17,6 +17,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 @Component
 @Data
 @Slf4j
+@Deprecated
 public class BuryLogDataFlinkJob {
 
     @Autowired

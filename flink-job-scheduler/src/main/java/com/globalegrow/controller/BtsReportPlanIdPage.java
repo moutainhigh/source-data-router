@@ -21,6 +21,7 @@ import java.util.stream.Collectors;
 //@Controller
 @Slf4j
 @RequestMapping("zaful-rec-bts-page")
+@Deprecated
 public class BtsReportPlanIdPage {
 
     @Autowired

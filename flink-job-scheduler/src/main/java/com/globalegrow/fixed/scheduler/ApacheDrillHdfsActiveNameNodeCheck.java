@@ -22,6 +22,7 @@ import java.util.Map;
 //@Component
 @Data
 @Slf4j
+@Deprecated
 public class ApacheDrillHdfsActiveNameNodeCheck {
 
     @Value("${app.drill.storage}")

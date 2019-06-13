@@ -23,6 +23,7 @@ import java.util.concurrent.LinkedBlockingDeque;
 @Component
 @Data
 @Slf4j
+@Deprecated
 public class BuryLogDataSyncByDay {
 
     private String rootPcPath = "/bigdata/ods/log_clean/ods_pc_burial_log/current_day/";

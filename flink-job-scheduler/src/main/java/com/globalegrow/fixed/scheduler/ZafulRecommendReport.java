@@ -32,6 +32,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 @Component
 @Data
 @Slf4j
+@Deprecated
 public class ZafulRecommendReport extends AbstractFlinkJobSerialScheduler {
 
     private String zafulOrderInfoPath = "hdfs://glbgnameservice/bigdata/ods/zaful/ods_m_zaful_eload_order_info/dt=";

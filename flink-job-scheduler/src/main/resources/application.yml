@@ -67,3 +67,5 @@ app:
     bury-log-data-flink-job-status: 10 15 0 * * ?
     drill:
       storage: http://bts-flink01:8047/storage/
+    notice:
+      url: http://172.31.32.98:7087/targetConfig/sysn/notice

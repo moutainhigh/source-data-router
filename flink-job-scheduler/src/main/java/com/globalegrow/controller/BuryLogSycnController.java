@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("bury-log")
 @Data
 @Slf4j
+@Deprecated
 public class BuryLogSycnController {
 
     @Autowired
