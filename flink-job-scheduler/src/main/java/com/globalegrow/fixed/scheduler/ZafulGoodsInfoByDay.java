@@ -75,72 +75,74 @@ public class ZafulGoodsInfoByDay {
             // 商品统计信息 1 天
             String gdstat1 = "hdfs://glbgnameservice" + this.goodsStatisticsFilePath + pathDate;
             this.checkHdfsPath(gdstat1);
-            FlinkBashJob goodsState1 = new FlinkBashJob("zaful_goods_statistics_1", this.flinkJobCommandPrefix + " -ynm feature_items_v2_2_ods_info " + this.zafulGoodsStatusJar + " --filePath " + this.goodsStatisticsFilePath + " --good.dimension 1 --index-name dy_zaful_goods_statistics_1 --es.source.fields item_id,pv_cnt,pv_uv,pv_per_cnt,ipv_cnt,ipv_uv,ipv_per_cnt,bag_cnt,bag_uv,bag_per_cnt,favorite_cnt,favorite_uv,favorite_per_cnt,order_item_cnt,order_uv,order_per_cnt,cvr,uv_cvr,order_cnt,order_income,ctr,uv_ctr,platform" + " --file.date " + pathDate);
-            log.info("zaful 商品统计信息 1 天 {}", goodsBaseInfoJob);
+            FlinkBashJob goodsState1 = new FlinkBashJob("zaful_goods_statistics_1", this.flinkJobCommandPrefix + " -ynm feature_items_v2_2_ods_info " + this.zafulGoodsStatusJar + " --filePath " + this.goodsStatisticsFilePath + " --good.dimension 1 --index-name dy_zaful_goods_statistics_1 --es.source.fields item_id,pv_cnt,pv_uv,pv_per_cnt,ipv_cnt,ipv_uv,ipv_per_cnt,bag_cnt,bag_uv,bag_per_cnt,favorite_cnt,favorite_uv,favorite_per_cnt,order_item_cnt,order_uv,order_per_cnt,cvr,uv_cvr,order_cnt,order_income,ctr,uv_ctr,platform" + " --file.date " + yesterday);
+            log.info("zaful 商品统计信息 1 天 {}", goodsState1);
             this.flinkBashJobs.offer(goodsState1);
 
             String gdstat3 = "hdfs://glbgnameservice" + this.goodsStatistics3FilePath + pathDate;
             this.checkHdfsPath(gdstat3);
-            this.flinkBashJobs.offer(new FlinkBashJob("zaful_goods_statistics_3", this.flinkJobCommandPrefix + "  -ynm feature_items_v2_2_ods_info_three_days " + this.zafulGoodsStatusJar + " --filePath " + this.goodsStatistics3FilePath + " --good.dimension 3 --index-name dy_zaful_goods_statistics_greater_than_1 --es.source.fields item_id,pv_cnt,pv_uv,pv_per_cnt,ipv_cnt,ipv_uv,ipv_per_cnt,bag_cnt,bag_uv,bag_per_cnt,favorite_cnt,favorite_uv,favorite_per_cnt,order_item_cnt,order_uv,order_per_cnt,cvr,uv_cvr,order_cnt,order_income,ctr,uv_ctr,platform --job-name zaful-goods-statistics-es_3_ " + " --file.date " + pathDate));
+            FlinkBashJob job_gdstat3 = new FlinkBashJob("zaful_goods_statistics_3", this.flinkJobCommandPrefix + "  -ynm feature_items_v2_2_ods_info_three_days " + this.zafulGoodsStatusJar + " --filePath " + this.goodsStatistics3FilePath + " --good.dimension 3 --index-name dy_zaful_goods_statistics_greater_than_1 --es.source.fields item_id,pv_cnt,pv_uv,pv_per_cnt,ipv_cnt,ipv_uv,ipv_per_cnt,bag_cnt,bag_uv,bag_per_cnt,favorite_cnt,favorite_uv,favorite_per_cnt,order_item_cnt,order_uv,order_per_cnt,cvr,uv_cvr,order_cnt,order_income,ctr,uv_ctr,platform --job-name zaful-goods-statistics-es_3_ " + " --file.date " + yesterday);
+            log.info("zaful 商品统计信息 3 天 {}", job_gdstat3);
+            this.flinkBashJobs.offer(job_gdstat3);
 
             String gdstat7 = "hdfs://glbgnameservice" + this.goodsStatistics7FilePath + pathDate;
             this.checkHdfsPath(gdstat7);
-            FlinkBashJob goodsState3 = new FlinkBashJob("zaful_goods_statistics_7", this.flinkJobCommandPrefix + "  -ynm feature_items_v2_2_ods_info_seven_days " + this.zafulGoodsStatusJar + " --filePath " + this.goodsStatistics7FilePath + " --good.dimension 7 --index-name dy_zaful_goods_statistics_greater_than_1 --es.source.fields item_id,pv_cnt,pv_uv,pv_per_cnt,ipv_cnt,ipv_uv,ipv_per_cnt,bag_cnt,bag_uv,bag_per_cnt,favorite_cnt,favorite_uv,favorite_per_cnt,order_item_cnt,order_uv,order_per_cnt,cvr,uv_cvr,order_cnt,order_income,ctr,uv_ctr,platform --job-name zaful-goods-statistics-es_7_" + " --file.date " + pathDate);
+            FlinkBashJob goodsState3 = new FlinkBashJob("zaful_goods_statistics_7", this.flinkJobCommandPrefix + "  -ynm feature_items_v2_2_ods_info_seven_days " + this.zafulGoodsStatusJar + " --filePath " + this.goodsStatistics7FilePath + " --good.dimension 7 --index-name dy_zaful_goods_statistics_greater_than_1 --es.source.fields item_id,pv_cnt,pv_uv,pv_per_cnt,ipv_cnt,ipv_uv,ipv_per_cnt,bag_cnt,bag_uv,bag_per_cnt,favorite_cnt,favorite_uv,favorite_per_cnt,order_item_cnt,order_uv,order_per_cnt,cvr,uv_cvr,order_cnt,order_income,ctr,uv_ctr,platform --job-name zaful-goods-statistics-es_7_" + " --file.date " + yesterday);
             log.info("zaful 商品统计信息 3 天 {}", goodsState3);
             this.flinkBashJobs.offer(goodsState3);
 
             String gdstat15 = "hdfs://glbgnameservice" + this.goodsStatistics15FilePath + pathDate;
             this.checkHdfsPath(gdstat15);
-            FlinkBashJob jobgdstat15 = new FlinkBashJob("zaful_goods_statistics_15", this.flinkJobCommandPrefix + "  -ynm feature_items_v2_2_ods_info_fifteen_days " + this.zafulGoodsStatusJar + " --filePath " + this.goodsStatistics15FilePath + " --good.dimension 15 --index-name dy_zaful_goods_statistics_greater_than_1 --es.source.fields item_id,pv_cnt,pv_uv,pv_per_cnt,ipv_cnt,ipv_uv,ipv_per_cnt,bag_cnt,bag_uv,bag_per_cnt,favorite_cnt,favorite_uv,favorite_per_cnt,order_item_cnt,order_uv,order_per_cnt,cvr,uv_cvr,order_cnt,order_income,ctr,uv_ctr,platform --job-name zaful-goods-statistics-es_15_" + " --file.date " + pathDate);
+            FlinkBashJob jobgdstat15 = new FlinkBashJob("zaful_goods_statistics_15", this.flinkJobCommandPrefix + "  -ynm feature_items_v2_2_ods_info_fifteen_days " + this.zafulGoodsStatusJar + " --filePath " + this.goodsStatistics15FilePath + " --good.dimension 15 --index-name dy_zaful_goods_statistics_greater_than_1 --es.source.fields item_id,pv_cnt,pv_uv,pv_per_cnt,ipv_cnt,ipv_uv,ipv_per_cnt,bag_cnt,bag_uv,bag_per_cnt,favorite_cnt,favorite_uv,favorite_per_cnt,order_item_cnt,order_uv,order_per_cnt,cvr,uv_cvr,order_cnt,order_income,ctr,uv_ctr,platform --job-name zaful-goods-statistics-es_15_" + " --file.date " + yesterday);
             log.info("zaful 商品统计信息 15 天 {}", gdstat15);
             this.flinkBashJobs.offer(jobgdstat15);
 
             String gdstat30 = "hdfs://glbgnameservice" + this.goodsStatistics30FilePath + pathDate;
             this.checkHdfsPath(gdstat30);
-            FlinkBashJob job_gdstat30 = new FlinkBashJob("zaful_goods_statistics_30", this.flinkJobCommandPrefix + "  -ynm feature_items_v2_2_ods_info_thirty_days " + this.zafulGoodsStatusJar + " --filePath " + this.goodsStatistics30FilePath + " --good.dimension 30 --index-name dy_zaful_goods_statistics_greater_than_1 --es.source.fields item_id,pv_cnt,pv_uv,pv_per_cnt,ipv_cnt,ipv_uv,ipv_per_cnt,bag_cnt,bag_uv,bag_per_cnt,favorite_cnt,favorite_uv,favorite_per_cnt,order_item_cnt,order_uv,order_per_cnt,cvr,uv_cvr,order_cnt,order_income,ctr,uv_ctr,platform --job-name zaful-goods-statistics-es_30_" + " --file.date " + pathDate);
+            FlinkBashJob job_gdstat30 = new FlinkBashJob("zaful_goods_statistics_30", this.flinkJobCommandPrefix + "  -ynm feature_items_v2_2_ods_info_thirty_days " + this.zafulGoodsStatusJar + " --filePath " + this.goodsStatistics30FilePath + " --good.dimension 30 --index-name dy_zaful_goods_statistics_greater_than_1 --es.source.fields item_id,pv_cnt,pv_uv,pv_per_cnt,ipv_cnt,ipv_uv,ipv_per_cnt,bag_cnt,bag_uv,bag_per_cnt,favorite_cnt,favorite_uv,favorite_per_cnt,order_item_cnt,order_uv,order_per_cnt,cvr,uv_cvr,order_cnt,order_income,ctr,uv_ctr,platform --job-name zaful-goods-statistics-es_30_" + " --file.date " + yesterday);
             log.info("zaful 商品统计信息 30 天 {}", job_gdstat30);
             this.flinkBashJobs.offer(job_gdstat30);
 
             // 商品统计信息 国家
             String gdstatCountry1 = "hdfs://glbgnameservice" + this.goodsCountryStatisticsFilePath + pathDate;
             this.checkHdfsPath(gdstatCountry1);
-            FlinkBashJob job_gdstatCountry1 = new FlinkBashJob("zaful_goods_country_stat_1", this.flinkJobCommandPrefix + "  -ynm feature_items_country_v2_2_ods_info " + this.zafulGoodsStatusJar + " --filePath " + this.goodsCountryStatisticsFilePath + " --good.dimension 1 --index-name dy_zaful_country_goods_statistics_1 --es.source.fields item_id,country,pv_cnt,pv_uv,pv_per_cnt,ipv_cnt,ipv_uv,ipv_per_cnt,bag_cnt,bag_uv,bag_per_cnt,favorite_cnt,favorite_uv,favorite_per_cnt,order_item_cnt,order_uv,order_per_cnt,cvr,uv_cvr,order_cnt,order_income,ctr,uv_ctr,platform --job-name zaful-goods-country-statistics-es_1_" + " --file.date " + pathDate);
+            FlinkBashJob job_gdstatCountry1 = new FlinkBashJob("zaful_goods_country_stat_1", this.flinkJobCommandPrefix + "  -ynm feature_items_country_v2_2_ods_info " + this.zafulGoodsStatusJar + " --filePath " + this.goodsCountryStatisticsFilePath + " --good.dimension 1 --index-name dy_zaful_country_goods_statistics_1 --es.source.fields item_id,country,pv_cnt,pv_uv,pv_per_cnt,ipv_cnt,ipv_uv,ipv_per_cnt,bag_cnt,bag_uv,bag_per_cnt,favorite_cnt,favorite_uv,favorite_per_cnt,order_item_cnt,order_uv,order_per_cnt,cvr,uv_cvr,order_cnt,order_income,ctr,uv_ctr,platform --job-name zaful-goods-country-statistics-es_1_" + " --file.date " + yesterday);
             log.info("zaful 商品统计信息国家 1 天 {}", job_gdstatCountry1);
             this.flinkBashJobs.offer(job_gdstatCountry1);
 
             String gdstatCountry3 = "hdfs://glbgnameservice" + this.goodsCountryStatistics3FilePath + pathDate;
             this.checkHdfsPath(gdstatCountry3);
-            FlinkBashJob job_gdstatCountry3 = new FlinkBashJob("zaful_goods_country_stat_3", this.flinkJobCommandPrefix + "  -ynm feature_items_country_v2_2_ods_info_three_days " + this.zafulGoodsStatusJar + " --filePath " + this.goodsCountryStatistics3FilePath + " --good.dimension 3 --index-name dy_zaful_country_goods_statistics_greater_than_1 --es.source.fields item_id,country,pv_cnt,pv_uv,pv_per_cnt,ipv_cnt,ipv_uv,ipv_per_cnt,bag_cnt,bag_uv,bag_per_cnt,favorite_cnt,favorite_uv,favorite_per_cnt,order_item_cnt,order_uv,order_per_cnt,cvr,uv_cvr,order_cnt,order_income,ctr,uv_ctr,platform --job-name zaful-goods-country-statistics-es_3_" + " --file.date " + pathDate);
+            FlinkBashJob job_gdstatCountry3 = new FlinkBashJob("zaful_goods_country_stat_3", this.flinkJobCommandPrefix + "  -ynm feature_items_country_v2_2_ods_info_three_days " + this.zafulGoodsStatusJar + " --filePath " + this.goodsCountryStatistics3FilePath + " --good.dimension 3 --index-name dy_zaful_country_goods_statistics_greater_than_1 --es.source.fields item_id,country,pv_cnt,pv_uv,pv_per_cnt,ipv_cnt,ipv_uv,ipv_per_cnt,bag_cnt,bag_uv,bag_per_cnt,favorite_cnt,favorite_uv,favorite_per_cnt,order_item_cnt,order_uv,order_per_cnt,cvr,uv_cvr,order_cnt,order_income,ctr,uv_ctr,platform --job-name zaful-goods-country-statistics-es_3_" + " --file.date " + yesterday);
             log.info("zaful 商品统计信息国家 3 天 {}", job_gdstatCountry3);
             this.flinkBashJobs.offer(job_gdstatCountry3);
 
             String gdstatCountry7 = "hdfs://glbgnameservice" + this.goodsCountryStatistics7FilePath + pathDate;
             this.checkHdfsPath(gdstatCountry7);
-            FlinkBashJob job_gdstatCountry7 = new FlinkBashJob("zaful_goods_country_stat_7", this.flinkJobCommandPrefix + "  -ynm feature_items_country_v2_2_ods_info_seven_days " + this.zafulGoodsStatusJar + " --filePath " + this.goodsCountryStatistics7FilePath + " --good.dimension 7 --index-name dy_zaful_country_goods_statistics_greater_than_1 --es.source.fields item_id,country,pv_cnt,pv_uv,pv_per_cnt,ipv_cnt,ipv_uv,ipv_per_cnt,bag_cnt,bag_uv,bag_per_cnt,favorite_cnt,favorite_uv,favorite_per_cnt,order_item_cnt,order_uv,order_per_cnt,cvr,uv_cvr,order_cnt,order_income,ctr,uv_ctr,platform --job-name zaful-goods-country-statistics-es_7_" + " --file.date " + pathDate);
+            FlinkBashJob job_gdstatCountry7 = new FlinkBashJob("zaful_goods_country_stat_7", this.flinkJobCommandPrefix + "  -ynm feature_items_country_v2_2_ods_info_seven_days " + this.zafulGoodsStatusJar + " --filePath " + this.goodsCountryStatistics7FilePath + " --good.dimension 7 --index-name dy_zaful_country_goods_statistics_greater_than_1 --es.source.fields item_id,country,pv_cnt,pv_uv,pv_per_cnt,ipv_cnt,ipv_uv,ipv_per_cnt,bag_cnt,bag_uv,bag_per_cnt,favorite_cnt,favorite_uv,favorite_per_cnt,order_item_cnt,order_uv,order_per_cnt,cvr,uv_cvr,order_cnt,order_income,ctr,uv_ctr,platform --job-name zaful-goods-country-statistics-es_7_" + " --file.date " + yesterday);
             log.info("zaful 商品统计信息国家 7 天 {}", job_gdstatCountry7);
             this.flinkBashJobs.offer(job_gdstatCountry7);
 
             String gdstatCountry15 = "hdfs://glbgnameservice" + this.goodsCountryStatistics15FilePath + pathDate;
             this.checkHdfsPath(gdstatCountry15);
-            FlinkBashJob job_gdstatCountry15 = new FlinkBashJob("zaful_goods_stat_15", this.flinkJobCommandPrefix + "  -ynm feature_items_country_v2_2_ods_info_fifteen_days " + this.zafulGoodsStatusJar + " --filePath  " + this.goodsCountryStatistics15FilePath + "  --good.dimension 15 --index-name dy_zaful_country_goods_statistics_greater_than_1 --es.source.fields item_id,country,pv_cnt,pv_uv,pv_per_cnt,ipv_cnt,ipv_uv,ipv_per_cnt,bag_cnt,bag_uv,bag_per_cnt,favorite_cnt,favorite_uv,favorite_per_cnt,order_item_cnt,order_uv,order_per_cnt,cvr,uv_cvr,order_cnt,order_income,ctr,uv_ctr,platform --job-name zaful-goods-country-statistics-es_15_" + " --file.date " + pathDate);
+            FlinkBashJob job_gdstatCountry15 = new FlinkBashJob("zaful_goods_stat_15", this.flinkJobCommandPrefix + "  -ynm feature_items_country_v2_2_ods_info_fifteen_days " + this.zafulGoodsStatusJar + " --filePath  " + this.goodsCountryStatistics15FilePath + "  --good.dimension 15 --index-name dy_zaful_country_goods_statistics_greater_than_1 --es.source.fields item_id,country,pv_cnt,pv_uv,pv_per_cnt,ipv_cnt,ipv_uv,ipv_per_cnt,bag_cnt,bag_uv,bag_per_cnt,favorite_cnt,favorite_uv,favorite_per_cnt,order_item_cnt,order_uv,order_per_cnt,cvr,uv_cvr,order_cnt,order_income,ctr,uv_ctr,platform --job-name zaful-goods-country-statistics-es_15_" + " --file.date " + yesterday);
             log.info("zaful 商品统计信息国家 15 天 {}", job_gdstatCountry15);
             this.flinkBashJobs.offer(job_gdstatCountry15);
 
 
             String gdstatCountry30 = "hdfs://glbgnameservice" + this.goodsCountryStatistics30FilePath + pathDate;
             this.checkHdfsPath(gdstatCountry30);
-            FlinkBashJob job_gdstatCountry30 = new FlinkBashJob("zaful_goods_stat_30", this.flinkJobCommandPrefix + "  -ynm feature_items_country_v2_2_ods_info_thirty_days " + this.zafulGoodsStatusJar + " --filePath " + this.goodsCountryStatistics30FilePath + " --good.dimension 30 --index-name dy_zaful_country_goods_statistics_greater_than_1 --es.source.fields item_id,country,pv_cnt,pv_uv,pv_per_cnt,ipv_cnt,ipv_uv,ipv_per_cnt,bag_cnt,bag_uv,bag_per_cnt,favorite_cnt,favorite_uv,favorite_per_cnt,order_item_cnt,order_uv,order_per_cnt,cvr,uv_cvr,order_cnt,order_income,ctr,uv_ctr,platform --job-name zaful-goods-country-statistics-es_30_" + " --file.date " + pathDate);
+            FlinkBashJob job_gdstatCountry30 = new FlinkBashJob("zaful_goods_stat_30", this.flinkJobCommandPrefix + "  -ynm feature_items_country_v2_2_ods_info_thirty_days " + this.zafulGoodsStatusJar + " --filePath " + this.goodsCountryStatistics30FilePath + " --good.dimension 30 --index-name dy_zaful_country_goods_statistics_greater_than_1 --es.source.fields item_id,country,pv_cnt,pv_uv,pv_per_cnt,ipv_cnt,ipv_uv,ipv_per_cnt,bag_cnt,bag_uv,bag_per_cnt,favorite_cnt,favorite_uv,favorite_per_cnt,order_item_cnt,order_uv,order_per_cnt,cvr,uv_cvr,order_cnt,order_income,ctr,uv_ctr,platform --job-name zaful-goods-country-statistics-es_30_" + " --file.date " + yesterday);
             log.info("zaful 商品统计信息国家 30 天 {}", job_gdstatCountry30);
             this.flinkBashJobs.offer(job_gdstatCountry30);
 
             String goodsTendency = "hdfs://glbgnameservice" + "/user/hive/warehouse/dw_zaful_recommend.db/feature_items_v2_2_ods_info_new_label/" + pathDate;
             this.checkHdfsPath(goodsTendency);
-            FlinkBashJob job_goodsTendency = new FlinkBashJob("zaful-goods-statistics-es_tendency", this.flinkJobCommandPrefix + "  -ynm feature_items_v2_2_ods_info_new_label " + this.zafulGoodsStatusJar + " --filePath /user/hive/warehouse/dw_zaful_recommend.db/feature_items_v2_2_ods_info_new_label/ --good.dimension -1 --index-name dy_zaful_goods_statistics_tendency --es.source.fields item_id,ctr_rising_tendency,cvr_rising_tendency,ctr_stability_index,cvr_stability_index,heat_index,platform --job-name zaful-goods-statistics-es_tendency" + " --file.date " + pathDate);
+            FlinkBashJob job_goodsTendency = new FlinkBashJob("zaful-goods-statistics-es_tendency", this.flinkJobCommandPrefix + "  -ynm feature_items_v2_2_ods_info_new_label " + this.zafulGoodsStatusJar + " --filePath /user/hive/warehouse/dw_zaful_recommend.db/feature_items_v2_2_ods_info_new_label/ --good.dimension -1 --index-name dy_zaful_goods_statistics_tendency --es.source.fields item_id,ctr_rising_tendency,cvr_rising_tendency,ctr_stability_index,cvr_stability_index,heat_index,platform --job-name zaful-goods-statistics-es_tendency" + " --file.date " + yesterday);
             log.info("zaful 商品趋势信息 {}", job_goodsTendency);
             this.flinkBashJobs.offer(job_goodsTendency);
             String goodsTendencyCountry = "hdfs://glbgnameservice" + "/user/hive/warehouse/dw_zaful_recommend.db/feature_items_v2_2_ods_info_new_label_country/" + pathDate;
             this.checkHdfsPath(goodsTendencyCountry);
-            FlinkBashJob job_goodsTendencyCountry = new FlinkBashJob("zaful-goods-statistics-tendency_country", this.flinkJobCommandPrefix + "  -ynm feature_items_v2_2_ods_info_new_label_country " + this.zafulGoodsStatusJar + " --filePath /user/hive/warehouse/dw_zaful_recommend.db/feature_items_v2_2_ods_info_new_label_country/ --good.dimension -1 --index-name dy_zaful_goods_statistics_tendency_country --es.source.fields item_id,ctr_rising_tendency,cvr_rising_tendency,ctr_stability_index,cvr_stability_index,heat_index,country,platform --job-name zaful-goods-statistics-tendency_country" + " --file.date " + pathDate);
+            FlinkBashJob job_goodsTendencyCountry = new FlinkBashJob("zaful-goods-statistics-tendency_country", this.flinkJobCommandPrefix + "  -ynm feature_items_v2_2_ods_info_new_label_country " + this.zafulGoodsStatusJar + " --filePath /user/hive/warehouse/dw_zaful_recommend.db/feature_items_v2_2_ods_info_new_label_country/ --good.dimension -1 --index-name dy_zaful_goods_statistics_tendency_country --es.source.fields item_id,ctr_rising_tendency,cvr_rising_tendency,ctr_stability_index,cvr_stability_index,heat_index,country,platform --job-name zaful-goods-statistics-tendency_country" + " --file.date " + yesterday);
             log.info("zaful 商品趋势信息分国家 {}", job_goodsTendencyCountry);
             this.flinkBashJobs.offer(job_goodsTendencyCountry);
         } catch (InterruptedException e) {
@@ -148,7 +150,7 @@ public class ZafulGoodsInfoByDay {
         }
     }
 
-    @Scheduled(fixedDelay = 60000)
+    @Scheduled(fixedDelay = 600000)
     public void runFlinkJob() throws InterruptedException {
 
         FlinkBashJob job = this.flinkBashJobs.take();
@@ -183,8 +185,8 @@ public class ZafulGoodsInfoByDay {
                 String line = "";
                 while ((line = input.readLine()) != null) {
                     //processList.add(line);
-                    log.info("任务错误信息: {}", line);
-
+                    log.error("任务错误信息: {}, job_info", line, job);
+                    this.flinkBashJobs.offer(job);
                     error.append(line);
                 }
             }
@@ -199,7 +201,7 @@ public class ZafulGoodsInfoByDay {
     @Scheduled(fixedDelay = 15000)
     public void jobStatusCheck() throws InterruptedException {
 
-        //log.info("开始检查任务执行状态");
+        log.info("开始检查 zaful 商品信息任务执行状态, 当前任务 {} 数 {}", this.currentBuryLogJobs, this.currentBuryLogJobs.size());
 
         List<String> finished = new ArrayList<>();
 

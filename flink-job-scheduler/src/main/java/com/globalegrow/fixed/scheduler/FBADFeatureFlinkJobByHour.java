@@ -39,6 +39,7 @@ public class FBADFeatureFlinkJobByHour {
     //private static
     @Scheduled(cron = "${app.cron.fbad-freatrue}")
     public void run() {
+        log.info("zaful app 用户 Facebook 广告信息任务");
         // 首先运行检查 hdfs 文件是否存在，如果不存在则放入延时队列中
         //int thisHour = DateUtil.thisHour(true);
         //log.info("当前小时数： {} ", thisHour);
