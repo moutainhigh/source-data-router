@@ -24,7 +24,7 @@ public class FlinkJobStatusCheckUtils {
 
                 Map<String,Object> result = list.stream().filter(map1 -> "/jobs/overview".equals(map1.get("path"))).findFirst().get();
 
-                log.info("job 运行结果",result);
+                log.info("job 运行结果 {}",result);
                 Map<String, Object> jobson = JacksonUtil.readValue((String) result.get("json"), Map.class);
 
                 List<Map<String, Object>> jobs = (List<Map<String, Object>>) jobson.get("jobs");

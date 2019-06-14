@@ -33,4 +33,6 @@ public class FlinkBashJob {
 
     private Map<String, String> noticeInfo = new HashMap<>();
 
+    private final Long startCheckTime = System.currentTimeMillis();
+
 }

@@ -30,6 +30,7 @@ public class ZafulAppUserBaseInfoAndFBADFeature extends AbstractFlinkJobSerialSc
     @Override
     @Scheduled(cron = "${app.cron.zaful-app-user-fb-freatrue}")
     public void run() throws InterruptedException {
+        log.info("zaful app 用户基本信息与用户 Facebook 特征");
         String hdfsPathLastDay = CommonTextUtils.replaceOneParameter(this.hdfsPath, "last_day", DateUtil.yesterday().toString("yyyyMMdd"));
 
         String checkPhpPath = "hdfs://glbgnameservice" + hdfsPathLastDay;
@@ -38,31 +39,9 @@ public class ZafulAppUserBaseInfoAndFBADFeature extends AbstractFlinkJobSerialSc
         log.info("检查文件 {} 是否存在", checkPhpPath);
         this.checkHdfsPath(checkPhpPath);
         FlinkBashJob job = new FlinkBashJob("zaful-user-feature-with-facebook-ad-feature", yesterdayCommandLine);
+        log.info("flink job to run : {}", job);
         this.flinkBashJobs.offer(job);
         this.runFlinkJob();
-        /*if (HdfsUtil.dyFileExist(checkPhpPath)) {
-            log.info("文件 {} 存在，执行任务", yesterdayCommandLine);
-
-            Process process = null;
-            //List<String> processList = new ArrayList<String>();
-            try {
-                process = Runtime.getRuntime().exec(yesterdayCommandLine);
-                try (BufferedReader input = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
-                    String line = "";
-                    while ((line = input.readLine()) != null) {
-                        //processList.add(line);
-                        log.info(line);
-                    }
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-        }*/ /*else {
-            log.info("文件不存在, 放入延时队列中");
-            DyHdfsCheckExistsJobMessage jobQueen = new DyHdfsCheckExistsJobMessage(hdfsPath, System.currentTimeMillis(), 300000L, yesterdayCommandLine);
-            this.flinkJobQueens.offer(jobQueen);
-        }*/
     }
 
 }
