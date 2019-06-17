@@ -21,6 +21,9 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingDeque;
 
+/**
+ * zaful 商品特征信息离线初始化
+ */
 @Slf4j
 @Component
 @Data
@@ -51,7 +54,7 @@ public class ZafulGoodsInfoByDay {
     @Autowired
     private RestTemplate restTemplate;
 
-    private final String flinkJobCommandPrefix = "/usr/local/services/flink/flink-yarn/flink-1.5.0/bin/flink run -d -m yarn-cluster -yqu root.flink -yn 1 -yjm 1024 -ytm 1024";
+    private final String flinkJobCommandPrefix = "/usr/local/services/flink/flink-yarn/flink-1.5.0/bin/flink run -d -m yarn-cluster -ynm zaful-goods-base-info -yqu root.flink -yn 1 -yjm 1024 -ytm 1024";
 
     private final String zafulGoodsStatusJar = " /usr/local/services/flink/zaful-goods-statistics-es-0.1.jar ";
 
