@@ -19,3 +19,6 @@ http://wiki.hqygou.com:8090/pages/viewpage.action?pageId=88638111
 |dy_app_gb_event-af_create_order_success|dy_app_gb|gb 用户行为事件 T+1 下单成功|
 |dy_app_gb_event-af_add_to_wishlist|dy_app_gb|gb 用户行为事件 T+1 加收藏|
 |dy_app_gb_event-af_add_to_bag|dy_app_gb|gb 用户行为事件 T+1 加入购物车|
+
+## 对应 redis key 前缀
+dy_rt_p_
