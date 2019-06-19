@@ -6,7 +6,8 @@ clean install -Dmaven.test.skip=true -e -Pprod
 af_view_product,af_add_to_bag,af_add_to_wishlist,af_create_order_success,af_search,af_purchase
 
 ## 接口文档
-http://wiki.hqygou.com:8090/pages/viewpage.action?pageId=88638111
+http://wiki.hqygou.com:8090/pages/viewpage.action?pageId=88638111<br>
+http://wiki.hqygou.com:8090/pages/viewpage.action?pageId=113247758
 ## 对应 es 索引
 |索引名|别名|备注|
 |---|---|---|
@@ -22,3 +23,7 @@ http://wiki.hqygou.com:8090/pages/viewpage.action?pageId=88638111
 
 ## 对应 redis key 前缀
 dy_rt_p_
+
+## 部署信息
+/usr/local/service/dy-realtime-data-query-service <br>
+172.31.27.225、172.31.29.140、172.31.44.72、172.31.33.169
