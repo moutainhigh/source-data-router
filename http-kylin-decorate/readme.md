@@ -8,7 +8,7 @@
 
 ### 报表配置查询
 
-## 缓存清理
+## 缓存清理（未启用）
 172.31.44.72<br>
 curl "http://localhost:38093/report-config/bts-kylin?planId=45&productLineCode=ZF&queryType=query" <br>
 curl "http://localhost:38093/report-config/bts-field?planId=45&productLineCode=ZF" <br>
@@ -54,3 +54,7 @@ curl "http://localhost:38093/report-config/bts-field?planId=45&productLineCode=Z
 	"status": 0
 }
 ```
+
+# 部署服务器
+172.31.44.72、172.31.33.169<br>
+目录：/usr/local/service/http-kylin-decorate

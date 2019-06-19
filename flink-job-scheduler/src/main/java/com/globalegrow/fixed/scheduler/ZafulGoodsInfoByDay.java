@@ -58,6 +58,10 @@ public class ZafulGoodsInfoByDay {
 
     private final String zafulGoodsStatusJar = " /usr/local/services/flink/zaful-goods-statistics-es-0.1.jar ";
 
+    /**
+     * 每天凌晨 5 点 15 运行
+     * @throws InterruptedException
+     */
     @Scheduled(cron = "${app.cron.zaful-goods-info:0 15 5 * * ?}")
     public void run() throws InterruptedException {
         log.info("zaful 商品信息，开始组装 flink 任务");
