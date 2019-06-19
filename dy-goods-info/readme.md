@@ -21,3 +21,8 @@ http://wiki.hqygou.com:8090/pages/viewpage.action?pageId=134218205
 http://gitlab.egomsl.com/BTS/flink-realtime-counter/tree/master/gb-obs-label-mysql-es-data-init
 
 
+## 部署信息
+/usr/local/service/dy-goods-info <br>
+172.31.29.140、172.31.27.225
+
+
