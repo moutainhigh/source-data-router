@@ -26,3 +26,7 @@ http://wiki.hqygou.com:8090/pages/viewpage.action?pageId=117637318
 
 ## 用户分层数据 oozie 任务文档
 http://wiki.hqygou.com:8090/pages/viewpage.action?pageId=136971327
+
+## 部署信息
+/usr/local/service/dy-app-user-feature <br>
+172.31.27.225、172.31.29.140、172.31.44.72、172.31.33.169
