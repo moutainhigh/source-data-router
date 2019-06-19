@@ -21,7 +21,7 @@ curl http://172.31.33.169:38195/report/remove?reportName=BTS_GB_PAY_REPORT_REC <
 curl http://172.31.33.169:38195/report/threads <br>
 curl http://172.31.33.169:38195/order/threads <br>
 curl http://172.31.33.169:38195/order?configPath=/usr/local/services/bts-common-report-1.0-SNAPSHOT/bin/bts_zaful_search_rec_report_order.json <br>
-## 订单处理逻辑设计
+## 订单处理逻辑设计（此逻辑弃用）
 1、消费 binlog，获取订单表、订单商品表数据，以站点名 + 订单 id 为 key 放入 redis，数据结构为 list，过滤掉订单状态大于 8 的订单，订单商品表 log 事件到达时，<br>
    1、订单状态为 0 ，计算下单商品数、GMV；<br>
    2、订单状态为1、8 时，计算销售额（分两个字段计算，1：加购数量*单价 goods_price*goods_number 2：计算 goods_pay_amount 字段 ）<br>
