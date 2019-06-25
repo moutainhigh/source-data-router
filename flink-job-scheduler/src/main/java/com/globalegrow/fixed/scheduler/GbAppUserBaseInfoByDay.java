@@ -10,6 +10,7 @@ import java.util.concurrent.DelayQueue;
 
 @Slf4j
 //@Component
+@Deprecated
 public class GbAppUserBaseInfoByDay {
 
     @Autowired

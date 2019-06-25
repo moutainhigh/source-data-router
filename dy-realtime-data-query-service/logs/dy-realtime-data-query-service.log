@@ -1,39 +1,45 @@
-[2019-01-16 17:11:06.558] [main] [INFO ] com.globalegrow.EsQueryTest - Starting EsQueryTest on 3F-wangzhongfu with PID 5900 (started by wangzhongfu in E:\work\globale\git\source-data-router\dy-realtime-data-query-service)
-[2019-01-16 17:11:06.565] [main] [INFO ] com.globalegrow.EsQueryTest - The following profiles are active: dev
-[2019-01-16 17:11:14.509] [main] [WARN ] o.h.v.m.ParameterMessageInterpolator - HV000184: ParameterMessageInterpolator has been chosen, EL interpolation will not be supported
-[2019-01-16 17:11:18.806] [main] [INFO ] io.searchbox.client.AbstractJestClient - Setting server pool to a list of 6 servers: [http://100.26.74.93:9202,http://100.26.77.0:9202,http://18.215.206.192:9202,http://50.16.25.252:9202,http://54.144.128.124:9202,http://18.204.149.153:9202]
-[2019-01-16 17:11:18.844] [main] [INFO ] io.searchbox.client.JestClientFactory - Using multi thread/connection supporting pooling connection manager
-[2019-01-16 17:11:19.540] [main] [INFO ] io.searchbox.client.JestClientFactory - Using custom GSON instance
-[2019-01-16 17:11:19.541] [main] [INFO ] io.searchbox.client.JestClientFactory - Node Discovery disabled...
-[2019-01-16 17:11:19.541] [main] [INFO ] io.searchbox.client.JestClientFactory - Idle connection reaping disabled...
-[2019-01-16 17:11:20.391] [main] [ERROR] o.s.b.diagnostics.LoggingFailureAnalysisReporter - 
-
-***************************
-APPLICATION FAILED TO START
-***************************
-
-Description:
-
-Field realTimeUserActionHbaseServiceImpl in com.globalegrow.dy.controller.UserActionController required a bean of type 'com.globalegrow.dy.service.RealTimeUserActionHbaseService' that could not be found.
-
-
-Action:
-
-Consider defining a bean of type 'com.globalegrow.dy.service.RealTimeUserActionHbaseService' in your configuration.
-
-[2019-01-16 17:11:20.435] [main] [ERROR] o.springframework.test.context.TestContextManager - Caught exception while allowing TestExecutionListener [org.springframework.test.context.web.ServletTestExecutionListener@22635ba0] to prepare test instance [com.globalegrow.EsQueryTest@65383667]
-java.lang.IllegalStateException: Failed to load ApplicationContext
-	at org.springframework.test.context.cache.DefaultCacheAwareContextLoaderDelegate.loadContext(DefaultCacheAwareContextLoaderDelegate.java:124)
-	at org.springframework.test.context.support.DefaultTestContext.getApplicationContext(DefaultTestContext.java:83)
-	at org.springframework.test.context.web.ServletTestExecutionListener.setUpRequestContextIfNecessary(ServletTestExecutionListener.java:189)
-	at org.springframework.test.context.web.ServletTestExecutionListener.prepareTestInstance(ServletTestExecutionListener.java:131)
-	at org.springframework.test.context.TestContextManager.prepareTestInstance(TestContextManager.java:230)
-	at org.springframework.test.context.junit4.SpringJUnit4ClassRunner.createTest(SpringJUnit4ClassRunner.java:228)
-	at org.springframework.test.context.junit4.SpringJUnit4ClassRunner$1.runReflectiveCall(SpringJUnit4ClassRunner.java:287)
+[2019-05-10 16:06:41.046] [main] [INFO ] com.globalegrow.EsQueryTest - Starting EsQueryTest on 3F-wangzhongfu with PID 5128 (started by wangzhongfu in E:\work\globale\git\source-data-router\dy-realtime-data-query-service)
+[2019-05-10 16:06:41.053] [main] [INFO ] com.globalegrow.EsQueryTest - The following profiles are active: dev
+[2019-05-10 16:06:51.174] [main] [INFO ] io.searchbox.client.AbstractJestClient - Setting server pool to a list of 3 servers: [http://100.26.74.93:9202,http://100.26.77.0:9202,http://18.215.206.192:9202]
+[2019-05-10 16:06:51.189] [main] [INFO ] io.searchbox.client.JestClientFactory - Using multi thread/connection supporting pooling connection manager
+[2019-05-10 16:06:51.963] [main] [INFO ] io.searchbox.client.JestClientFactory - Using custom GSON instance
+[2019-05-10 16:06:51.964] [main] [INFO ] io.searchbox.client.JestClientFactory - Node Discovery disabled...
+[2019-05-10 16:06:51.964] [main] [INFO ] io.searchbox.client.JestClientFactory - Idle connection reaping disabled...
+[2019-05-10 16:06:53.942] [main] [INFO ] org.redisson.Version - Redisson 3.8.2
+[2019-05-10 16:07:05.069] [main] [WARN ] org.redisson.connection.SentinelConnectionManager - Can't connect to sentinel server. Unable to connect to: redis://172.31.26.152:6380
+[2019-05-10 16:07:15.092] [main] [WARN ] org.redisson.connection.SentinelConnectionManager - Can't connect to sentinel server. Unable to connect to: redis://172.31.26.237:6380
+[2019-05-10 16:07:25.096] [main] [WARN ] org.redisson.connection.SentinelConnectionManager - Can't connect to sentinel server. Unable to connect to: redis://172.31.26.162:6383
+[2019-05-10 16:07:27.438] [main] [ERROR] org.springframework.boot.SpringApplication - Application run failed
+org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'userActionController': Unsatisfied dependency expressed through field 'realTimeUserActionServiceImpl'; nested exception is org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'realTimeUserActionRedisServiceImpl': Invocation of init method failed; nested exception is org.redisson.client.RedisConnectionException: At least two sentinels should be defined in Redis configuration!
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredFieldElement.inject(AutowiredAnnotationBeanPostProcessor.java:596)
+	at org.springframework.beans.factory.annotation.InjectionMetadata.inject(InjectionMetadata.java:90)
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor.postProcessProperties(AutowiredAnnotationBeanPostProcessor.java:374)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.populateBean(AbstractAutowireCapableBeanFactory.java:1411)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:592)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:515)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:320)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:222)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:318)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:199)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:849)
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:877)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:549)
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:775)
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:397)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:316)
+	at org.springframework.boot.test.context.SpringBootContextLoader.loadContext(SpringBootContextLoader.java:127)
+	at org.springframework.test.context.cache.DefaultCacheAwareContextLoaderDelegate.loadContextInternal(DefaultCacheAwareContextLoaderDelegate.java:99)
+	at org.springframework.test.context.cache.DefaultCacheAwareContextLoaderDelegate.loadContext(DefaultCacheAwareContextLoaderDelegate.java:117)
+	at org.springframework.test.context.support.DefaultTestContext.getApplicationContext(DefaultTestContext.java:108)
+	at org.springframework.test.context.web.ServletTestExecutionListener.setUpRequestContextIfNecessary(ServletTestExecutionListener.java:190)
+	at org.springframework.test.context.web.ServletTestExecutionListener.prepareTestInstance(ServletTestExecutionListener.java:132)
+	at org.springframework.test.context.TestContextManager.prepareTestInstance(TestContextManager.java:246)
+	at org.springframework.test.context.junit4.SpringJUnit4ClassRunner.createTest(SpringJUnit4ClassRunner.java:227)
+	at org.springframework.test.context.junit4.SpringJUnit4ClassRunner$1.runReflectiveCall(SpringJUnit4ClassRunner.java:289)
 	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
-	at org.springframework.test.context.junit4.SpringJUnit4ClassRunner.methodBlock(SpringJUnit4ClassRunner.java:289)
-	at org.springframework.test.context.junit4.SpringJUnit4ClassRunner.runChild(SpringJUnit4ClassRunner.java:247)
-	at org.springframework.test.context.junit4.SpringJUnit4ClassRunner.runChild(SpringJUnit4ClassRunner.java:94)
+	at org.springframework.test.context.junit4.SpringJUnit4ClassRunner.methodBlock(SpringJUnit4ClassRunner.java:291)
+	at org.springframework.test.context.junit4.SpringJUnit4ClassRunner.runChild(SpringJUnit4ClassRunner.java:246)
+	at org.springframework.test.context.junit4.SpringJUnit4ClassRunner.runChild(SpringJUnit4ClassRunner.java:97)
 	at org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)
 	at org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)
 	at org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)
@@ -42,75 +48,54 @@ java.lang.IllegalStateException: Failed to load ApplicationContext
 	at org.springframework.test.context.junit4.statements.RunBeforeTestClassCallbacks.evaluate(RunBeforeTestClassCallbacks.java:61)
 	at org.springframework.test.context.junit4.statements.RunAfterTestClassCallbacks.evaluate(RunAfterTestClassCallbacks.java:70)
 	at org.junit.runners.ParentRunner.run(ParentRunner.java:363)
-	at org.springframework.test.context.junit4.SpringJUnit4ClassRunner.run(SpringJUnit4ClassRunner.java:191)
+	at org.springframework.test.context.junit4.SpringJUnit4ClassRunner.run(SpringJUnit4ClassRunner.java:190)
 	at org.junit.runner.JUnitCore.run(JUnitCore.java:137)
 	at com.intellij.junit4.JUnit4IdeaTestRunner.startRunnerWithArgs(JUnit4IdeaTestRunner.java:68)
 	at com.intellij.rt.execution.junit.IdeaTestRunner$Repeater.startRunnerWithArgs(IdeaTestRunner.java:47)
 	at com.intellij.rt.execution.junit.JUnitStarter.prepareStreamsAndStart(JUnitStarter.java:242)
 	at com.intellij.rt.execution.junit.JUnitStarter.main(JUnitStarter.java:70)
-Caused by: org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'userActionController': Unsatisfied dependency expressed through field 'realTimeUserActionHbaseServiceImpl'; nested exception is org.springframework.beans.factory.NoSuchBeanDefinitionException: No qualifying bean of type 'com.globalegrow.dy.service.RealTimeUserActionHbaseService' available: expected at least 1 bean which qualifies as autowire candidate. Dependency annotations: {@org.springframework.beans.factory.annotation.Autowired(required=true), @org.springframework.beans.factory.annotation.Qualifier(value=realTimeUserActionHbaseServiceImpl)}
-	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredFieldElement.inject(AutowiredAnnotationBeanPostProcessor.java:588)
-	at org.springframework.beans.factory.annotation.InjectionMetadata.inject(InjectionMetadata.java:88)
-	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor.postProcessPropertyValues(AutowiredAnnotationBeanPostProcessor.java:366)
-	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.populateBean(AbstractAutowireCapableBeanFactory.java:1272)
-	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:553)
-	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:483)
-	at org.springframework.beans.factory.support.AbstractBeanFactory$1.getObject(AbstractBeanFactory.java:312)
-	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:230)
-	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:308)
-	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:197)
-	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:761)
-	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:867)
-	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:543)
-	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:693)
-	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:360)
-	at org.springframework.boot.SpringApplication.run(SpringApplication.java:303)
-	at org.springframework.boot.test.context.SpringBootContextLoader.loadContext(SpringBootContextLoader.java:121)
-	at org.springframework.test.context.cache.DefaultCacheAwareContextLoaderDelegate.loadContextInternal(DefaultCacheAwareContextLoaderDelegate.java:98)
-	at org.springframework.test.context.cache.DefaultCacheAwareContextLoaderDelegate.loadContext(DefaultCacheAwareContextLoaderDelegate.java:116)
-	... 24 common frames omitted
-Caused by: org.springframework.beans.factory.NoSuchBeanDefinitionException: No qualifying bean of type 'com.globalegrow.dy.service.RealTimeUserActionHbaseService' available: expected at least 1 bean which qualifies as autowire candidate. Dependency annotations: {@org.springframework.beans.factory.annotation.Autowired(required=true), @org.springframework.beans.factory.annotation.Qualifier(value=realTimeUserActionHbaseServiceImpl)}
-	at org.springframework.beans.factory.support.DefaultListableBeanFactory.raiseNoMatchingBeanFound(DefaultListableBeanFactory.java:1493)
-	at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1104)
-	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1066)
-	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredFieldElement.inject(AutowiredAnnotationBeanPostProcessor.java:585)
+Caused by: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'realTimeUserActionRedisServiceImpl': Invocation of init method failed; nested exception is org.redisson.client.RedisConnectionException: At least two sentinels should be defined in Redis configuration!
+	at org.springframework.beans.factory.annotation.InitDestroyAnnotationBeanPostProcessor.postProcessBeforeInitialization(InitDestroyAnnotationBeanPostProcessor.java:139)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.applyBeanPostProcessorsBeforeInitialization(AbstractAutowireCapableBeanFactory.java:414)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1770)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:593)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:515)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:320)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:222)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:318)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:199)
+	at org.springframework.beans.factory.config.DependencyDescriptor.resolveCandidate(DependencyDescriptor.java:277)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1247)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1167)
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredFieldElement.inject(AutowiredAnnotationBeanPostProcessor.java:593)
 	... 42 common frames omitted
-[2019-01-16 17:17:02.528] [main] [INFO ] com.globalegrow.EsQueryTest - Starting EsQueryTest on 3F-wangzhongfu with PID 15092 (started by wangzhongfu in E:\work\globale\git\source-data-router\dy-realtime-data-query-service)
-[2019-01-16 17:17:02.529] [main] [INFO ] com.globalegrow.EsQueryTest - The following profiles are active: dev
-[2019-01-16 17:17:05.832] [main] [WARN ] o.h.v.m.ParameterMessageInterpolator - HV000184: ParameterMessageInterpolator has been chosen, EL interpolation will not be supported
-[2019-01-16 17:17:15.399] [main] [INFO ] io.searchbox.client.AbstractJestClient - Setting server pool to a list of 6 servers: [http://100.26.74.93:9202,http://100.26.77.0:9202,http://18.215.206.192:9202,http://50.16.25.252:9202,http://54.144.128.124:9202,http://18.204.149.153:9202]
-[2019-01-16 17:17:15.402] [main] [INFO ] io.searchbox.client.JestClientFactory - Using multi thread/connection supporting pooling connection manager
-[2019-01-16 17:17:16.032] [main] [INFO ] io.searchbox.client.JestClientFactory - Using custom GSON instance
-[2019-01-16 17:17:16.032] [main] [INFO ] io.searchbox.client.JestClientFactory - Node Discovery disabled...
-[2019-01-16 17:17:16.033] [main] [INFO ] io.searchbox.client.JestClientFactory - Idle connection reaping disabled...
-[2019-01-16 17:17:16.393] [main] [ERROR] o.s.b.diagnostics.LoggingFailureAnalysisReporter - 
-
-***************************
-APPLICATION FAILED TO START
-***************************
-
-Description:
-
-Field configuration in com.globalegrow.common.hbase.AbstractHbaseDataPersistence required a bean of type 'org.apache.hadoop.conf.Configuration' that could not be found.
-
-
-Action:
-
-Consider defining a bean of type 'org.apache.hadoop.conf.Configuration' in your configuration.
-
-[2019-01-16 17:17:16.409] [main] [ERROR] o.springframework.test.context.TestContextManager - Caught exception while allowing TestExecutionListener [org.springframework.test.context.web.ServletTestExecutionListener@22635ba0] to prepare test instance [com.globalegrow.EsQueryTest@a5bbaec]
+Caused by: org.redisson.client.RedisConnectionException: At least two sentinels should be defined in Redis configuration!
+	at org.redisson.connection.SentinelConnectionManager.<init>(SentinelConnectionManager.java:159)
+	at org.redisson.config.ConfigSupport.createConnectionManager(ConfigSupport.java:195)
+	at org.redisson.Redisson.<init>(Redisson.java:122)
+	at org.redisson.Redisson.create(Redisson.java:161)
+	at com.globalegrow.dy.service.impl.RealTimeUserActionRedisServiceImpl.before(RealTimeUserActionRedisServiceImpl.java:94)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at org.springframework.beans.factory.annotation.InitDestroyAnnotationBeanPostProcessor$LifecycleElement.invoke(InitDestroyAnnotationBeanPostProcessor.java:363)
+	at org.springframework.beans.factory.annotation.InitDestroyAnnotationBeanPostProcessor$LifecycleMetadata.invokeInitMethods(InitDestroyAnnotationBeanPostProcessor.java:307)
+	at org.springframework.beans.factory.annotation.InitDestroyAnnotationBeanPostProcessor.postProcessBeforeInitialization(InitDestroyAnnotationBeanPostProcessor.java:136)
+	... 54 common frames omitted
+[2019-05-10 16:07:27.441] [main] [ERROR] o.springframework.test.context.TestContextManager - Caught exception while allowing TestExecutionListener [org.springframework.test.context.web.ServletTestExecutionListener@2925bf5b] to prepare test instance [com.globalegrow.EsQueryTest@5584d9c6]
 java.lang.IllegalStateException: Failed to load ApplicationContext
-	at org.springframework.test.context.cache.DefaultCacheAwareContextLoaderDelegate.loadContext(DefaultCacheAwareContextLoaderDelegate.java:124)
-	at org.springframework.test.context.support.DefaultTestContext.getApplicationContext(DefaultTestContext.java:83)
-	at org.springframework.test.context.web.ServletTestExecutionListener.setUpRequestContextIfNecessary(ServletTestExecutionListener.java:189)
-	at org.springframework.test.context.web.ServletTestExecutionListener.prepareTestInstance(ServletTestExecutionListener.java:131)
-	at org.springframework.test.context.TestContextManager.prepareTestInstance(TestContextManager.java:230)
-	at org.springframework.test.context.junit4.SpringJUnit4ClassRunner.createTest(SpringJUnit4ClassRunner.java:228)
-	at org.springframework.test.context.junit4.SpringJUnit4ClassRunner$1.runReflectiveCall(SpringJUnit4ClassRunner.java:287)
+	at org.springframework.test.context.cache.DefaultCacheAwareContextLoaderDelegate.loadContext(DefaultCacheAwareContextLoaderDelegate.java:125)
+	at org.springframework.test.context.support.DefaultTestContext.getApplicationContext(DefaultTestContext.java:108)
+	at org.springframework.test.context.web.ServletTestExecutionListener.setUpRequestContextIfNecessary(ServletTestExecutionListener.java:190)
+	at org.springframework.test.context.web.ServletTestExecutionListener.prepareTestInstance(ServletTestExecutionListener.java:132)
+	at org.springframework.test.context.TestContextManager.prepareTestInstance(TestContextManager.java:246)
+	at org.springframework.test.context.junit4.SpringJUnit4ClassRunner.createTest(SpringJUnit4ClassRunner.java:227)
+	at org.springframework.test.context.junit4.SpringJUnit4ClassRunner$1.runReflectiveCall(SpringJUnit4ClassRunner.java:289)
 	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
-	at org.springframework.test.context.junit4.SpringJUnit4ClassRunner.methodBlock(SpringJUnit4ClassRunner.java:289)
-	at org.springframework.test.context.junit4.SpringJUnit4ClassRunner.runChild(SpringJUnit4ClassRunner.java:247)
-	at org.springframework.test.context.junit4.SpringJUnit4ClassRunner.runChild(SpringJUnit4ClassRunner.java:94)
+	at org.springframework.test.context.junit4.SpringJUnit4ClassRunner.methodBlock(SpringJUnit4ClassRunner.java:291)
+	at org.springframework.test.context.junit4.SpringJUnit4ClassRunner.runChild(SpringJUnit4ClassRunner.java:246)
+	at org.springframework.test.context.junit4.SpringJUnit4ClassRunner.runChild(SpringJUnit4ClassRunner.java:97)
 	at org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)
 	at org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)
 	at org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)
@@ -119,352 +104,59 @@ java.lang.IllegalStateException: Failed to load ApplicationContext
 	at org.springframework.test.context.junit4.statements.RunBeforeTestClassCallbacks.evaluate(RunBeforeTestClassCallbacks.java:61)
 	at org.springframework.test.context.junit4.statements.RunAfterTestClassCallbacks.evaluate(RunAfterTestClassCallbacks.java:70)
 	at org.junit.runners.ParentRunner.run(ParentRunner.java:363)
-	at org.springframework.test.context.junit4.SpringJUnit4ClassRunner.run(SpringJUnit4ClassRunner.java:191)
+	at org.springframework.test.context.junit4.SpringJUnit4ClassRunner.run(SpringJUnit4ClassRunner.java:190)
 	at org.junit.runner.JUnitCore.run(JUnitCore.java:137)
 	at com.intellij.junit4.JUnit4IdeaTestRunner.startRunnerWithArgs(JUnit4IdeaTestRunner.java:68)
 	at com.intellij.rt.execution.junit.IdeaTestRunner$Repeater.startRunnerWithArgs(IdeaTestRunner.java:47)
 	at com.intellij.rt.execution.junit.JUnitStarter.prepareStreamsAndStart(JUnitStarter.java:242)
 	at com.intellij.rt.execution.junit.JUnitStarter.main(JUnitStarter.java:70)
-Caused by: org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'commonHbaseMapper': Unsatisfied dependency expressed through field 'configuration'; nested exception is org.springframework.beans.factory.NoSuchBeanDefinitionException: No qualifying bean of type 'org.apache.hadoop.conf.Configuration' available: expected at least 1 bean which qualifies as autowire candidate. Dependency annotations: {@org.springframework.beans.factory.annotation.Autowired(required=true)}
-	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredFieldElement.inject(AutowiredAnnotationBeanPostProcessor.java:588)
-	at org.springframework.beans.factory.annotation.InjectionMetadata.inject(InjectionMetadata.java:88)
-	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor.postProcessPropertyValues(AutowiredAnnotationBeanPostProcessor.java:366)
-	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.populateBean(AbstractAutowireCapableBeanFactory.java:1272)
-	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:553)
-	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:483)
-	at org.springframework.beans.factory.support.AbstractBeanFactory$1.getObject(AbstractBeanFactory.java:312)
-	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:230)
-	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:308)
-	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:197)
-	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:761)
-	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:867)
-	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:543)
-	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:693)
-	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:360)
-	at org.springframework.boot.SpringApplication.run(SpringApplication.java:303)
-	at org.springframework.boot.test.context.SpringBootContextLoader.loadContext(SpringBootContextLoader.java:121)
-	at org.springframework.test.context.cache.DefaultCacheAwareContextLoaderDelegate.loadContextInternal(DefaultCacheAwareContextLoaderDelegate.java:98)
-	at org.springframework.test.context.cache.DefaultCacheAwareContextLoaderDelegate.loadContext(DefaultCacheAwareContextLoaderDelegate.java:116)
+Caused by: org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'userActionController': Unsatisfied dependency expressed through field 'realTimeUserActionServiceImpl'; nested exception is org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'realTimeUserActionRedisServiceImpl': Invocation of init method failed; nested exception is org.redisson.client.RedisConnectionException: At least two sentinels should be defined in Redis configuration!
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredFieldElement.inject(AutowiredAnnotationBeanPostProcessor.java:596)
+	at org.springframework.beans.factory.annotation.InjectionMetadata.inject(InjectionMetadata.java:90)
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor.postProcessProperties(AutowiredAnnotationBeanPostProcessor.java:374)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.populateBean(AbstractAutowireCapableBeanFactory.java:1411)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:592)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:515)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:320)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:222)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:318)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:199)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:849)
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:877)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:549)
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:775)
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:397)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:316)
+	at org.springframework.boot.test.context.SpringBootContextLoader.loadContext(SpringBootContextLoader.java:127)
+	at org.springframework.test.context.cache.DefaultCacheAwareContextLoaderDelegate.loadContextInternal(DefaultCacheAwareContextLoaderDelegate.java:99)
+	at org.springframework.test.context.cache.DefaultCacheAwareContextLoaderDelegate.loadContext(DefaultCacheAwareContextLoaderDelegate.java:117)
 	... 24 common frames omitted
-Caused by: org.springframework.beans.factory.NoSuchBeanDefinitionException: No qualifying bean of type 'org.apache.hadoop.conf.Configuration' available: expected at least 1 bean which qualifies as autowire candidate. Dependency annotations: {@org.springframework.beans.factory.annotation.Autowired(required=true)}
-	at org.springframework.beans.factory.support.DefaultListableBeanFactory.raiseNoMatchingBeanFound(DefaultListableBeanFactory.java:1493)
-	at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1104)
-	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1066)
-	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredFieldElement.inject(AutowiredAnnotationBeanPostProcessor.java:585)
+Caused by: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'realTimeUserActionRedisServiceImpl': Invocation of init method failed; nested exception is org.redisson.client.RedisConnectionException: At least two sentinels should be defined in Redis configuration!
+	at org.springframework.beans.factory.annotation.InitDestroyAnnotationBeanPostProcessor.postProcessBeforeInitialization(InitDestroyAnnotationBeanPostProcessor.java:139)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.applyBeanPostProcessorsBeforeInitialization(AbstractAutowireCapableBeanFactory.java:414)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1770)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:593)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:515)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:320)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:222)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:318)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:199)
+	at org.springframework.beans.factory.config.DependencyDescriptor.resolveCandidate(DependencyDescriptor.java:277)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1247)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1167)
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredFieldElement.inject(AutowiredAnnotationBeanPostProcessor.java:593)
 	... 42 common frames omitted
-[2019-01-16 17:18:58.997] [main] [INFO ] com.globalegrow.EsQueryTest - Starting EsQueryTest on 3F-wangzhongfu with PID 18592 (started by wangzhongfu in E:\work\globale\git\source-data-router\dy-realtime-data-query-service)
-[2019-01-16 17:18:58.999] [main] [INFO ] com.globalegrow.EsQueryTest - The following profiles are active: dev
-[2019-01-16 17:19:03.164] [main] [INFO ] io.searchbox.client.AbstractJestClient - Setting server pool to a list of 6 servers: [http://100.26.74.93:9202,http://100.26.77.0:9202,http://18.215.206.192:9202,http://50.16.25.252:9202,http://54.144.128.124:9202,http://18.204.149.153:9202]
-[2019-01-16 17:19:03.166] [main] [INFO ] io.searchbox.client.JestClientFactory - Using multi thread/connection supporting pooling connection manager
-[2019-01-16 17:19:03.249] [main] [INFO ] io.searchbox.client.JestClientFactory - Using custom GSON instance
-[2019-01-16 17:19:03.249] [main] [INFO ] io.searchbox.client.JestClientFactory - Node Discovery disabled...
-[2019-01-16 17:19:03.249] [main] [INFO ] io.searchbox.client.JestClientFactory - Idle connection reaping disabled...
-[2019-01-16 17:19:03.664] [main] [WARN ] com.netflix.config.sources.URLConfigurationSource - No URLs will be polled as dynamic configuration sources.
-[2019-01-16 17:19:03.664] [main] [INFO ] com.netflix.config.sources.URLConfigurationSource - To enable URLs as dynamic configuration sources, define System property archaius.configurationSource.additionalUrls or make config.properties available on classpath.
-[2019-01-16 17:19:03.670] [main] [INFO ] com.netflix.config.DynamicPropertyFactory - DynamicPropertyFactory is initialized with configuration sources: com.netflix.config.ConcurrentCompositeConfiguration@a96d56c
-[2019-01-16 17:19:08.790] [main] [INFO ] com.globalegrow.EsQueryTest - Started EsQueryTest in 10.78 seconds (JVM running for 16.713)
-[2019-01-16 17:23:16.981] [main] [INFO ] com.globalegrow.EsQueryTest - Starting EsQueryTest on 3F-wangzhongfu with PID 17324 (started by wangzhongfu in E:\work\globale\git\source-data-router\dy-realtime-data-query-service)
-[2019-01-16 17:23:16.982] [main] [INFO ] com.globalegrow.EsQueryTest - The following profiles are active: dev
-[2019-01-16 17:23:21.088] [main] [INFO ] io.searchbox.client.AbstractJestClient - Setting server pool to a list of 6 servers: [http://100.26.74.93:9202,http://100.26.77.0:9202,http://18.215.206.192:9202,http://50.16.25.252:9202,http://54.144.128.124:9202,http://18.204.149.153:9202]
-[2019-01-16 17:23:21.089] [main] [INFO ] io.searchbox.client.JestClientFactory - Using multi thread/connection supporting pooling connection manager
-[2019-01-16 17:23:21.190] [main] [INFO ] io.searchbox.client.JestClientFactory - Using custom GSON instance
-[2019-01-16 17:23:21.191] [main] [INFO ] io.searchbox.client.JestClientFactory - Node Discovery disabled...
-[2019-01-16 17:23:21.191] [main] [INFO ] io.searchbox.client.JestClientFactory - Idle connection reaping disabled...
-[2019-01-16 17:23:21.412] [main] [WARN ] com.netflix.config.sources.URLConfigurationSource - No URLs will be polled as dynamic configuration sources.
-[2019-01-16 17:23:21.412] [main] [INFO ] com.netflix.config.sources.URLConfigurationSource - To enable URLs as dynamic configuration sources, define System property archaius.configurationSource.additionalUrls or make config.properties available on classpath.
-[2019-01-16 17:23:21.418] [main] [INFO ] com.netflix.config.DynamicPropertyFactory - DynamicPropertyFactory is initialized with configuration sources: com.netflix.config.ConcurrentCompositeConfiguration@a96d56c
-[2019-01-16 17:23:26.489] [main] [INFO ] com.globalegrow.EsQueryTest - Started EsQueryTest in 10.2 seconds (JVM running for 17.593)
-[2019-01-16 17:25:38.078] [main] [INFO ] com.globalegrow.EsQueryTest - Starting EsQueryTest on 3F-wangzhongfu with PID 2728 (started by wangzhongfu in E:\work\globale\git\source-data-router\dy-realtime-data-query-service)
-[2019-01-16 17:25:38.079] [main] [INFO ] com.globalegrow.EsQueryTest - The following profiles are active: dev
-[2019-01-16 17:25:42.171] [main] [INFO ] io.searchbox.client.AbstractJestClient - Setting server pool to a list of 6 servers: [http://100.26.74.93:9202,http://100.26.77.0:9202,http://18.215.206.192:9202,http://50.16.25.252:9202,http://54.144.128.124:9202,http://18.204.149.153:9202]
-[2019-01-16 17:25:42.173] [main] [INFO ] io.searchbox.client.JestClientFactory - Using multi thread/connection supporting pooling connection manager
-[2019-01-16 17:25:42.257] [main] [INFO ] io.searchbox.client.JestClientFactory - Using custom GSON instance
-[2019-01-16 17:25:42.257] [main] [INFO ] io.searchbox.client.JestClientFactory - Node Discovery disabled...
-[2019-01-16 17:25:42.257] [main] [INFO ] io.searchbox.client.JestClientFactory - Idle connection reaping disabled...
-[2019-01-16 17:25:42.494] [main] [WARN ] com.netflix.config.sources.URLConfigurationSource - No URLs will be polled as dynamic configuration sources.
-[2019-01-16 17:25:42.494] [main] [INFO ] com.netflix.config.sources.URLConfigurationSource - To enable URLs as dynamic configuration sources, define System property archaius.configurationSource.additionalUrls or make config.properties available on classpath.
-[2019-01-16 17:25:42.498] [main] [INFO ] com.netflix.config.DynamicPropertyFactory - DynamicPropertyFactory is initialized with configuration sources: com.netflix.config.ConcurrentCompositeConfiguration@6ab4a5b
-[2019-01-16 17:25:47.347] [main] [INFO ] com.globalegrow.EsQueryTest - Started EsQueryTest in 9.955 seconds (JVM running for 11.475)
-[2019-01-16 17:26:28.880] [main] [INFO ] com.globalegrow.EsQueryTest - Starting EsQueryTest on 3F-wangzhongfu with PID 6312 (started by wangzhongfu in E:\work\globale\git\source-data-router\dy-realtime-data-query-service)
-[2019-01-16 17:26:28.881] [main] [INFO ] com.globalegrow.EsQueryTest - The following profiles are active: dev
-[2019-01-16 17:26:32.983] [main] [INFO ] io.searchbox.client.AbstractJestClient - Setting server pool to a list of 6 servers: [http://100.26.74.93:9202,http://100.26.77.0:9202,http://18.215.206.192:9202,http://50.16.25.252:9202,http://54.144.128.124:9202,http://18.204.149.153:9202]
-[2019-01-16 17:26:32.985] [main] [INFO ] io.searchbox.client.JestClientFactory - Using multi thread/connection supporting pooling connection manager
-[2019-01-16 17:26:33.075] [main] [INFO ] io.searchbox.client.JestClientFactory - Using custom GSON instance
-[2019-01-16 17:26:33.075] [main] [INFO ] io.searchbox.client.JestClientFactory - Node Discovery disabled...
-[2019-01-16 17:26:33.075] [main] [INFO ] io.searchbox.client.JestClientFactory - Idle connection reaping disabled...
-[2019-01-16 17:26:33.272] [main] [WARN ] com.netflix.config.sources.URLConfigurationSource - No URLs will be polled as dynamic configuration sources.
-[2019-01-16 17:26:33.272] [main] [INFO ] com.netflix.config.sources.URLConfigurationSource - To enable URLs as dynamic configuration sources, define System property archaius.configurationSource.additionalUrls or make config.properties available on classpath.
-[2019-01-16 17:26:33.278] [main] [INFO ] com.netflix.config.DynamicPropertyFactory - DynamicPropertyFactory is initialized with configuration sources: com.netflix.config.ConcurrentCompositeConfiguration@1fdca564
-[2019-01-16 17:26:38.450] [main] [INFO ] com.globalegrow.EsQueryTest - Started EsQueryTest in 10.577 seconds (JVM running for 12.175)
-[2019-01-16 17:28:03.775] [main] [INFO ] com.globalegrow.EsQueryTest - Starting EsQueryTest on 3F-wangzhongfu with PID 18636 (started by wangzhongfu in E:\work\globale\git\source-data-router\dy-realtime-data-query-service)
-[2019-01-16 17:28:03.776] [main] [INFO ] com.globalegrow.EsQueryTest - The following profiles are active: dev
-[2019-01-16 17:28:07.224] [main] [INFO ] io.searchbox.client.AbstractJestClient - Setting server pool to a list of 6 servers: [http://100.26.74.93:9202,http://100.26.77.0:9202,http://18.215.206.192:9202,http://50.16.25.252:9202,http://54.144.128.124:9202,http://18.204.149.153:9202]
-[2019-01-16 17:28:07.228] [main] [INFO ] io.searchbox.client.JestClientFactory - Using multi thread/connection supporting pooling connection manager
-[2019-01-16 17:28:07.324] [main] [INFO ] io.searchbox.client.JestClientFactory - Using custom GSON instance
-[2019-01-16 17:28:07.324] [main] [INFO ] io.searchbox.client.JestClientFactory - Node Discovery disabled...
-[2019-01-16 17:28:07.324] [main] [INFO ] io.searchbox.client.JestClientFactory - Idle connection reaping disabled...
-[2019-01-16 17:28:07.500] [main] [WARN ] com.netflix.config.sources.URLConfigurationSource - No URLs will be polled as dynamic configuration sources.
-[2019-01-16 17:28:07.500] [main] [INFO ] com.netflix.config.sources.URLConfigurationSource - To enable URLs as dynamic configuration sources, define System property archaius.configurationSource.additionalUrls or make config.properties available on classpath.
-[2019-01-16 17:28:07.506] [main] [INFO ] com.netflix.config.DynamicPropertyFactory - DynamicPropertyFactory is initialized with configuration sources: com.netflix.config.ConcurrentCompositeConfiguration@1fdca564
-[2019-01-16 17:28:11.914] [main] [INFO ] com.globalegrow.EsQueryTest - Started EsQueryTest in 9.538 seconds (JVM running for 10.731)
-[2019-01-16 17:30:59.770] [main] [INFO ] com.globalegrow.EsQueryTest - Starting EsQueryTest on 3F-wangzhongfu with PID 9692 (started by wangzhongfu in E:\work\globale\git\source-data-router\dy-realtime-data-query-service)
-[2019-01-16 17:30:59.771] [main] [INFO ] com.globalegrow.EsQueryTest - The following profiles are active: dev
-[2019-01-16 17:31:03.799] [main] [INFO ] io.searchbox.client.AbstractJestClient - Setting server pool to a list of 6 servers: [http://100.26.74.93:9202,http://100.26.77.0:9202,http://18.215.206.192:9202,http://50.16.25.252:9202,http://54.144.128.124:9202,http://18.204.149.153:9202]
-[2019-01-16 17:31:03.803] [main] [INFO ] io.searchbox.client.JestClientFactory - Using multi thread/connection supporting pooling connection manager
-[2019-01-16 17:31:03.938] [main] [INFO ] io.searchbox.client.JestClientFactory - Using custom GSON instance
-[2019-01-16 17:31:03.938] [main] [INFO ] io.searchbox.client.JestClientFactory - Node Discovery disabled...
-[2019-01-16 17:31:03.939] [main] [INFO ] io.searchbox.client.JestClientFactory - Idle connection reaping disabled...
-[2019-01-16 17:31:04.409] [main] [WARN ] com.netflix.config.sources.URLConfigurationSource - No URLs will be polled as dynamic configuration sources.
-[2019-01-16 17:31:04.410] [main] [INFO ] com.netflix.config.sources.URLConfigurationSource - To enable URLs as dynamic configuration sources, define System property archaius.configurationSource.additionalUrls or make config.properties available on classpath.
-[2019-01-16 17:31:04.416] [main] [INFO ] com.netflix.config.DynamicPropertyFactory - DynamicPropertyFactory is initialized with configuration sources: com.netflix.config.ConcurrentCompositeConfiguration@1fdca564
-[2019-01-16 17:31:08.600] [main] [INFO ] com.globalegrow.EsQueryTest - Started EsQueryTest in 9.514 seconds (JVM running for 11.094)
-[2019-01-16 17:47:38.679] [main] [INFO ] com.globalegrow.EsQueryTest - Starting EsQueryTest on 3F-wangzhongfu with PID 2136 (started by wangzhongfu in E:\work\globale\git\source-data-router\dy-realtime-data-query-service)
-[2019-01-16 17:47:38.680] [main] [INFO ] com.globalegrow.EsQueryTest - The following profiles are active: dev
-[2019-01-16 17:47:44.425] [main] [INFO ] io.searchbox.client.AbstractJestClient - Setting server pool to a list of 6 servers: [http://100.26.74.93:9202,http://100.26.77.0:9202,http://18.215.206.192:9202,http://50.16.25.252:9202,http://54.144.128.124:9202,http://18.204.149.153:9202]
-[2019-01-16 17:47:44.427] [main] [INFO ] io.searchbox.client.JestClientFactory - Using multi thread/connection supporting pooling connection manager
-[2019-01-16 17:47:44.506] [main] [INFO ] io.searchbox.client.JestClientFactory - Using custom GSON instance
-[2019-01-16 17:47:44.506] [main] [INFO ] io.searchbox.client.JestClientFactory - Node Discovery disabled...
-[2019-01-16 17:47:44.506] [main] [INFO ] io.searchbox.client.JestClientFactory - Idle connection reaping disabled...
-[2019-01-16 17:47:44.776] [main] [WARN ] com.netflix.config.sources.URLConfigurationSource - No URLs will be polled as dynamic configuration sources.
-[2019-01-16 17:47:44.777] [main] [INFO ] com.netflix.config.sources.URLConfigurationSource - To enable URLs as dynamic configuration sources, define System property archaius.configurationSource.additionalUrls or make config.properties available on classpath.
-[2019-01-16 17:47:44.783] [main] [INFO ] com.netflix.config.DynamicPropertyFactory - DynamicPropertyFactory is initialized with configuration sources: com.netflix.config.ConcurrentCompositeConfiguration@2abe9173
-[2019-01-16 17:47:51.891] [main] [INFO ] com.globalegrow.EsQueryTest - Started EsQueryTest in 14.143 seconds (JVM running for 15.536)
-[2019-01-18 17:22:27.498] [main] [INFO ] com.globalegrow.EsQueryTest - Starting EsQueryTest on 3F-wangzhongfu with PID 14116 (started by wangzhongfu in E:\work\globale\git\source-data-router\dy-realtime-data-query-service)
-[2019-01-18 17:22:27.514] [main] [INFO ] com.globalegrow.EsQueryTest - The following profiles are active: dev
-[2019-01-18 17:22:32.429] [main] [INFO ] io.searchbox.client.AbstractJestClient - Setting server pool to a list of 3 servers: [http://100.26.74.93:9202,http://100.26.77.0:9202,http://18.215.206.192:9202]
-[2019-01-18 17:22:32.431] [main] [INFO ] io.searchbox.client.JestClientFactory - Using multi thread/connection supporting pooling connection manager
-[2019-01-18 17:22:32.547] [main] [INFO ] io.searchbox.client.JestClientFactory - Using custom GSON instance
-[2019-01-18 17:22:32.547] [main] [INFO ] io.searchbox.client.JestClientFactory - Node Discovery disabled...
-[2019-01-18 17:22:32.547] [main] [INFO ] io.searchbox.client.JestClientFactory - Idle connection reaping disabled...
-[2019-01-18 17:22:32.784] [main] [WARN ] com.netflix.config.sources.URLConfigurationSource - No URLs will be polled as dynamic configuration sources.
-[2019-01-18 17:22:32.785] [main] [INFO ] com.netflix.config.sources.URLConfigurationSource - To enable URLs as dynamic configuration sources, define System property archaius.configurationSource.additionalUrls or make config.properties available on classpath.
-[2019-01-18 17:22:32.790] [main] [INFO ] com.netflix.config.DynamicPropertyFactory - DynamicPropertyFactory is initialized with configuration sources: com.netflix.config.ConcurrentCompositeConfiguration@43f9dd56
-[2019-01-18 17:22:37.174] [main] [INFO ] com.globalegrow.EsQueryTest - Started EsQueryTest in 10.732 seconds (JVM running for 20.423)
-[2019-01-18 17:23:55.607] [main] [INFO ] com.globalegrow.EsQueryTest - Starting EsQueryTest on 3F-wangzhongfu with PID 19712 (started by wangzhongfu in E:\work\globale\git\source-data-router\dy-realtime-data-query-service)
-[2019-01-18 17:23:55.608] [main] [INFO ] com.globalegrow.EsQueryTest - The following profiles are active: dev
-[2019-01-18 17:23:59.495] [main] [INFO ] io.searchbox.client.AbstractJestClient - Setting server pool to a list of 3 servers: [http://100.26.74.93:9202,http://100.26.77.0:9202,http://18.215.206.192:9202]
-[2019-01-18 17:23:59.497] [main] [INFO ] io.searchbox.client.JestClientFactory - Using multi thread/connection supporting pooling connection manager
-[2019-01-18 17:23:59.617] [main] [INFO ] io.searchbox.client.JestClientFactory - Using custom GSON instance
-[2019-01-18 17:23:59.617] [main] [INFO ] io.searchbox.client.JestClientFactory - Node Discovery disabled...
-[2019-01-18 17:23:59.617] [main] [INFO ] io.searchbox.client.JestClientFactory - Idle connection reaping disabled...
-[2019-01-18 17:23:59.845] [main] [WARN ] com.netflix.config.sources.URLConfigurationSource - No URLs will be polled as dynamic configuration sources.
-[2019-01-18 17:23:59.845] [main] [INFO ] com.netflix.config.sources.URLConfigurationSource - To enable URLs as dynamic configuration sources, define System property archaius.configurationSource.additionalUrls or make config.properties available on classpath.
-[2019-01-18 17:23:59.850] [main] [INFO ] com.netflix.config.DynamicPropertyFactory - DynamicPropertyFactory is initialized with configuration sources: com.netflix.config.ConcurrentCompositeConfiguration@235d29d6
-[2019-01-18 17:24:04.569] [main] [INFO ] com.globalegrow.EsQueryTest - Started EsQueryTest in 10.07 seconds (JVM running for 11.622)
-[2019-01-18 17:36:40.319] [main] [INFO ] com.globalegrow.EsQueryTest - Starting EsQueryTest on 3F-wangzhongfu with PID 16904 (started by wangzhongfu in E:\work\globale\git\source-data-router\dy-realtime-data-query-service)
-[2019-01-18 17:36:40.336] [main] [INFO ] com.globalegrow.EsQueryTest - The following profiles are active: dev
-[2019-01-18 17:36:44.902] [main] [INFO ] io.searchbox.client.AbstractJestClient - Setting server pool to a list of 3 servers: [http://100.26.74.93:9202,http://100.26.77.0:9202,http://18.215.206.192:9202]
-[2019-01-18 17:36:44.904] [main] [INFO ] io.searchbox.client.JestClientFactory - Using multi thread/connection supporting pooling connection manager
-[2019-01-18 17:36:44.999] [main] [INFO ] io.searchbox.client.JestClientFactory - Using custom GSON instance
-[2019-01-18 17:36:44.999] [main] [INFO ] io.searchbox.client.JestClientFactory - Node Discovery disabled...
-[2019-01-18 17:36:44.999] [main] [INFO ] io.searchbox.client.JestClientFactory - Idle connection reaping disabled...
-[2019-01-18 17:36:45.222] [main] [WARN ] com.netflix.config.sources.URLConfigurationSource - No URLs will be polled as dynamic configuration sources.
-[2019-01-18 17:36:45.222] [main] [INFO ] com.netflix.config.sources.URLConfigurationSource - To enable URLs as dynamic configuration sources, define System property archaius.configurationSource.additionalUrls or make config.properties available on classpath.
-[2019-01-18 17:36:45.226] [main] [INFO ] com.netflix.config.DynamicPropertyFactory - DynamicPropertyFactory is initialized with configuration sources: com.netflix.config.ConcurrentCompositeConfiguration@43f9dd56
-[2019-01-18 17:36:50.347] [main] [INFO ] com.globalegrow.EsQueryTest - Started EsQueryTest in 11.204 seconds (JVM running for 24.48)
-[2019-01-18 17:37:27.482] [main] [INFO ] com.globalegrow.EsQueryTest - Starting EsQueryTest on 3F-wangzhongfu with PID 12644 (started by wangzhongfu in E:\work\globale\git\source-data-router\dy-realtime-data-query-service)
-[2019-01-18 17:37:27.483] [main] [INFO ] com.globalegrow.EsQueryTest - The following profiles are active: dev
-[2019-01-18 17:37:31.143] [main] [INFO ] io.searchbox.client.AbstractJestClient - Setting server pool to a list of 3 servers: [http://100.26.74.93:9202,http://100.26.77.0:9202,http://18.215.206.192:9202]
-[2019-01-18 17:37:31.145] [main] [INFO ] io.searchbox.client.JestClientFactory - Using multi thread/connection supporting pooling connection manager
-[2019-01-18 17:37:31.242] [main] [INFO ] io.searchbox.client.JestClientFactory - Using custom GSON instance
-[2019-01-18 17:37:31.242] [main] [INFO ] io.searchbox.client.JestClientFactory - Node Discovery disabled...
-[2019-01-18 17:37:31.242] [main] [INFO ] io.searchbox.client.JestClientFactory - Idle connection reaping disabled...
-[2019-01-18 17:37:31.487] [main] [WARN ] com.netflix.config.sources.URLConfigurationSource - No URLs will be polled as dynamic configuration sources.
-[2019-01-18 17:37:31.487] [main] [INFO ] com.netflix.config.sources.URLConfigurationSource - To enable URLs as dynamic configuration sources, define System property archaius.configurationSource.additionalUrls or make config.properties available on classpath.
-[2019-01-18 17:37:31.492] [main] [INFO ] com.netflix.config.DynamicPropertyFactory - DynamicPropertyFactory is initialized with configuration sources: com.netflix.config.ConcurrentCompositeConfiguration@43f9dd56
-[2019-01-18 17:37:37.111] [main] [INFO ] com.globalegrow.EsQueryTest - Started EsQueryTest in 10.24 seconds (JVM running for 11.637)
-[2019-01-18 17:41:32.411] [main] [INFO ] com.globalegrow.EsQueryTest - Starting EsQueryTest on 3F-wangzhongfu with PID 15280 (started by wangzhongfu in E:\work\globale\git\source-data-router\dy-realtime-data-query-service)
-[2019-01-18 17:41:32.429] [main] [INFO ] com.globalegrow.EsQueryTest - The following profiles are active: dev
-[2019-01-18 17:41:36.276] [main] [INFO ] io.searchbox.client.AbstractJestClient - Setting server pool to a list of 3 servers: [http://100.26.74.93:9202,http://100.26.77.0:9202,http://18.215.206.192:9202]
-[2019-01-18 17:41:36.278] [main] [INFO ] io.searchbox.client.JestClientFactory - Using multi thread/connection supporting pooling connection manager
-[2019-01-18 17:41:36.364] [main] [INFO ] io.searchbox.client.JestClientFactory - Using custom GSON instance
-[2019-01-18 17:41:36.365] [main] [INFO ] io.searchbox.client.JestClientFactory - Node Discovery disabled...
-[2019-01-18 17:41:36.365] [main] [INFO ] io.searchbox.client.JestClientFactory - Idle connection reaping disabled...
-[2019-01-18 17:41:36.641] [main] [WARN ] com.netflix.config.sources.URLConfigurationSource - No URLs will be polled as dynamic configuration sources.
-[2019-01-18 17:41:36.641] [main] [INFO ] com.netflix.config.sources.URLConfigurationSource - To enable URLs as dynamic configuration sources, define System property archaius.configurationSource.additionalUrls or make config.properties available on classpath.
-[2019-01-18 17:41:36.647] [main] [INFO ] com.netflix.config.DynamicPropertyFactory - DynamicPropertyFactory is initialized with configuration sources: com.netflix.config.ConcurrentCompositeConfiguration@235d29d6
-[2019-01-18 17:41:42.047] [main] [INFO ] com.globalegrow.EsQueryTest - Started EsQueryTest in 10.309 seconds (JVM running for 20.958)
-[2019-01-18 17:55:06.453] [main] [INFO ] com.globalegrow.EsQueryTest - Starting EsQueryTest on 3F-wangzhongfu with PID 1340 (started by wangzhongfu in E:\work\globale\git\source-data-router\dy-realtime-data-query-service)
-[2019-01-18 17:55:06.539] [main] [INFO ] com.globalegrow.EsQueryTest - The following profiles are active: dev
-[2019-01-18 17:55:19.970] [main] [INFO ] io.searchbox.client.AbstractJestClient - Setting server pool to a list of 3 servers: [http://100.26.74.93:9202,http://100.26.77.0:9202,http://18.215.206.192:9202]
-[2019-01-18 17:55:19.998] [main] [INFO ] io.searchbox.client.JestClientFactory - Using multi thread/connection supporting pooling connection manager
-[2019-01-18 17:55:20.800] [main] [INFO ] io.searchbox.client.JestClientFactory - Using custom GSON instance
-[2019-01-18 17:55:20.800] [main] [INFO ] io.searchbox.client.JestClientFactory - Node Discovery disabled...
-[2019-01-18 17:55:20.800] [main] [INFO ] io.searchbox.client.JestClientFactory - Idle connection reaping disabled...
-[2019-01-18 17:55:21.373] [main] [ERROR] o.s.b.diagnostics.LoggingFailureAnalysisReporter - 
-
-***************************
-APPLICATION FAILED TO START
-***************************
-
-Description:
-
-Field jestClient in com.globalegrow.dy.service.impl.UserBaseInfoServiceEsImpl required a bean of type 'io.searchbox.client.JestClient' that could not be found.
-
-
-Action:
-
-Consider defining a bean of type 'io.searchbox.client.JestClient' in your configuration.
-
-[2019-01-18 17:55:21.412] [main] [ERROR] o.springframework.test.context.TestContextManager - Caught exception while allowing TestExecutionListener [org.springframework.test.context.web.ServletTestExecutionListener@52e677af] to prepare test instance [com.globalegrow.EsQueryTest@7d904ff1]
-java.lang.IllegalStateException: Failed to load ApplicationContext
-	at org.springframework.test.context.cache.DefaultCacheAwareContextLoaderDelegate.loadContext(DefaultCacheAwareContextLoaderDelegate.java:124)
-	at org.springframework.test.context.support.DefaultTestContext.getApplicationContext(DefaultTestContext.java:83)
-	at org.springframework.test.context.web.ServletTestExecutionListener.setUpRequestContextIfNecessary(ServletTestExecutionListener.java:189)
-	at org.springframework.test.context.web.ServletTestExecutionListener.prepareTestInstance(ServletTestExecutionListener.java:131)
-	at org.springframework.test.context.TestContextManager.prepareTestInstance(TestContextManager.java:230)
-	at org.springframework.test.context.junit4.SpringJUnit4ClassRunner.createTest(SpringJUnit4ClassRunner.java:228)
-	at org.springframework.test.context.junit4.SpringJUnit4ClassRunner$1.runReflectiveCall(SpringJUnit4ClassRunner.java:287)
-	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
-	at org.springframework.test.context.junit4.SpringJUnit4ClassRunner.methodBlock(SpringJUnit4ClassRunner.java:289)
-	at org.springframework.test.context.junit4.SpringJUnit4ClassRunner.runChild(SpringJUnit4ClassRunner.java:247)
-	at org.springframework.test.context.junit4.SpringJUnit4ClassRunner.runChild(SpringJUnit4ClassRunner.java:94)
-	at org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)
-	at org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)
-	at org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)
-	at org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)
-	at org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)
-	at org.springframework.test.context.junit4.statements.RunBeforeTestClassCallbacks.evaluate(RunBeforeTestClassCallbacks.java:61)
-	at org.springframework.test.context.junit4.statements.RunAfterTestClassCallbacks.evaluate(RunAfterTestClassCallbacks.java:70)
-	at org.junit.runners.ParentRunner.run(ParentRunner.java:363)
-	at org.springframework.test.context.junit4.SpringJUnit4ClassRunner.run(SpringJUnit4ClassRunner.java:191)
-	at org.junit.runner.JUnitCore.run(JUnitCore.java:137)
-	at com.intellij.junit4.JUnit4IdeaTestRunner.startRunnerWithArgs(JUnit4IdeaTestRunner.java:68)
-	at com.intellij.rt.execution.junit.IdeaTestRunner$Repeater.startRunnerWithArgs(IdeaTestRunner.java:47)
-	at com.intellij.rt.execution.junit.JUnitStarter.prepareStreamsAndStart(JUnitStarter.java:242)
-	at com.intellij.rt.execution.junit.JUnitStarter.main(JUnitStarter.java:70)
-Caused by: org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'userActionController': Unsatisfied dependency expressed through field 'userBaseInfoService'; nested exception is org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'userBaseInfoServiceEsImpl': Unsatisfied dependency expressed through field 'jestClient'; nested exception is org.springframework.beans.factory.NoSuchBeanDefinitionException: No qualifying bean of type 'io.searchbox.client.JestClient' available: expected at least 1 bean which qualifies as autowire candidate. Dependency annotations: {@org.springframework.beans.factory.annotation.Autowired(required=true), @org.springframework.beans.factory.annotation.Qualifier(value=myJestClient)}
-	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredFieldElement.inject(AutowiredAnnotationBeanPostProcessor.java:588)
-	at org.springframework.beans.factory.annotation.InjectionMetadata.inject(InjectionMetadata.java:88)
-	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor.postProcessPropertyValues(AutowiredAnnotationBeanPostProcessor.java:366)
-	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.populateBean(AbstractAutowireCapableBeanFactory.java:1272)
-	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:553)
-	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:483)
-	at org.springframework.beans.factory.support.AbstractBeanFactory$1.getObject(AbstractBeanFactory.java:312)
-	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:230)
-	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:308)
-	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:197)
-	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:761)
-	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:867)
-	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:543)
-	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:693)
-	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:360)
-	at org.springframework.boot.SpringApplication.run(SpringApplication.java:303)
-	at org.springframework.boot.test.context.SpringBootContextLoader.loadContext(SpringBootContextLoader.java:121)
-	at org.springframework.test.context.cache.DefaultCacheAwareContextLoaderDelegate.loadContextInternal(DefaultCacheAwareContextLoaderDelegate.java:98)
-	at org.springframework.test.context.cache.DefaultCacheAwareContextLoaderDelegate.loadContext(DefaultCacheAwareContextLoaderDelegate.java:116)
-	... 24 common frames omitted
-Caused by: org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'userBaseInfoServiceEsImpl': Unsatisfied dependency expressed through field 'jestClient'; nested exception is org.springframework.beans.factory.NoSuchBeanDefinitionException: No qualifying bean of type 'io.searchbox.client.JestClient' available: expected at least 1 bean which qualifies as autowire candidate. Dependency annotations: {@org.springframework.beans.factory.annotation.Autowired(required=true), @org.springframework.beans.factory.annotation.Qualifier(value=myJestClient)}
-	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredFieldElement.inject(AutowiredAnnotationBeanPostProcessor.java:588)
-	at org.springframework.beans.factory.annotation.InjectionMetadata.inject(InjectionMetadata.java:88)
-	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor.postProcessPropertyValues(AutowiredAnnotationBeanPostProcessor.java:366)
-	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.populateBean(AbstractAutowireCapableBeanFactory.java:1272)
-	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:553)
-	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:483)
-	at org.springframework.beans.factory.support.AbstractBeanFactory$1.getObject(AbstractBeanFactory.java:312)
-	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:230)
-	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:308)
-	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:202)
-	at org.springframework.beans.factory.config.DependencyDescriptor.resolveCandidate(DependencyDescriptor.java:208)
-	at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1138)
-	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1066)
-	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredFieldElement.inject(AutowiredAnnotationBeanPostProcessor.java:585)
-	... 42 common frames omitted
-Caused by: org.springframework.beans.factory.NoSuchBeanDefinitionException: No qualifying bean of type 'io.searchbox.client.JestClient' available: expected at least 1 bean which qualifies as autowire candidate. Dependency annotations: {@org.springframework.beans.factory.annotation.Autowired(required=true), @org.springframework.beans.factory.annotation.Qualifier(value=myJestClient)}
-	at org.springframework.beans.factory.support.DefaultListableBeanFactory.raiseNoMatchingBeanFound(DefaultListableBeanFactory.java:1493)
-	at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1104)
-	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1066)
-	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredFieldElement.inject(AutowiredAnnotationBeanPostProcessor.java:585)
-	... 55 common frames omitted
-[2019-01-18 17:57:42.411] [main] [INFO ] com.globalegrow.EsQueryTest - Starting EsQueryTest on 3F-wangzhongfu with PID 3632 (started by wangzhongfu in E:\work\globale\git\source-data-router\dy-realtime-data-query-service)
-[2019-01-18 17:57:42.413] [main] [INFO ] com.globalegrow.EsQueryTest - The following profiles are active: dev
-[2019-01-18 17:57:47.088] [main] [INFO ] io.searchbox.client.AbstractJestClient - Setting server pool to a list of 3 servers: [http://100.26.74.93:9202,http://100.26.77.0:9202,http://18.215.206.192:9202]
-[2019-01-18 17:57:47.090] [main] [INFO ] io.searchbox.client.JestClientFactory - Using multi thread/connection supporting pooling connection manager
-[2019-01-18 17:57:47.183] [main] [INFO ] io.searchbox.client.JestClientFactory - Using custom GSON instance
-[2019-01-18 17:57:47.184] [main] [INFO ] io.searchbox.client.JestClientFactory - Node Discovery disabled...
-[2019-01-18 17:57:47.184] [main] [INFO ] io.searchbox.client.JestClientFactory - Idle connection reaping disabled...
-[2019-01-18 17:57:47.330] [main] [ERROR] o.s.b.diagnostics.LoggingFailureAnalysisReporter - 
-
-***************************
-APPLICATION FAILED TO START
-***************************
-
-Description:
-
-Field jestClient in com.globalegrow.dy.service.impl.UserBaseInfoServiceEsImpl required a bean of type 'io.searchbox.client.JestClient' that could not be found.
-
-
-Action:
-
-Consider defining a bean of type 'io.searchbox.client.JestClient' in your configuration.
-
-[2019-01-18 17:57:47.335] [main] [ERROR] o.springframework.test.context.TestContextManager - Caught exception while allowing TestExecutionListener [org.springframework.test.context.web.ServletTestExecutionListener@4ae3c1cd] to prepare test instance [com.globalegrow.EsQueryTest@5e1dde44]
-java.lang.IllegalStateException: Failed to load ApplicationContext
-	at org.springframework.test.context.cache.DefaultCacheAwareContextLoaderDelegate.loadContext(DefaultCacheAwareContextLoaderDelegate.java:124)
-	at org.springframework.test.context.support.DefaultTestContext.getApplicationContext(DefaultTestContext.java:83)
-	at org.springframework.test.context.web.ServletTestExecutionListener.setUpRequestContextIfNecessary(ServletTestExecutionListener.java:189)
-	at org.springframework.test.context.web.ServletTestExecutionListener.prepareTestInstance(ServletTestExecutionListener.java:131)
-	at org.springframework.test.context.TestContextManager.prepareTestInstance(TestContextManager.java:230)
-	at org.springframework.test.context.junit4.SpringJUnit4ClassRunner.createTest(SpringJUnit4ClassRunner.java:228)
-	at org.springframework.test.context.junit4.SpringJUnit4ClassRunner$1.runReflectiveCall(SpringJUnit4ClassRunner.java:287)
-	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
-	at org.springframework.test.context.junit4.SpringJUnit4ClassRunner.methodBlock(SpringJUnit4ClassRunner.java:289)
-	at org.springframework.test.context.junit4.SpringJUnit4ClassRunner.runChild(SpringJUnit4ClassRunner.java:247)
-	at org.springframework.test.context.junit4.SpringJUnit4ClassRunner.runChild(SpringJUnit4ClassRunner.java:94)
-	at org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)
-	at org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)
-	at org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)
-	at org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)
-	at org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)
-	at org.springframework.test.context.junit4.statements.RunBeforeTestClassCallbacks.evaluate(RunBeforeTestClassCallbacks.java:61)
-	at org.springframework.test.context.junit4.statements.RunAfterTestClassCallbacks.evaluate(RunAfterTestClassCallbacks.java:70)
-	at org.junit.runners.ParentRunner.run(ParentRunner.java:363)
-	at org.springframework.test.context.junit4.SpringJUnit4ClassRunner.run(SpringJUnit4ClassRunner.java:191)
-	at org.junit.runner.JUnitCore.run(JUnitCore.java:137)
-	at com.intellij.junit4.JUnit4IdeaTestRunner.startRunnerWithArgs(JUnit4IdeaTestRunner.java:68)
-	at com.intellij.rt.execution.junit.IdeaTestRunner$Repeater.startRunnerWithArgs(IdeaTestRunner.java:47)
-	at com.intellij.rt.execution.junit.JUnitStarter.prepareStreamsAndStart(JUnitStarter.java:242)
-	at com.intellij.rt.execution.junit.JUnitStarter.main(JUnitStarter.java:70)
-Caused by: org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'userActionController': Unsatisfied dependency expressed through field 'userBaseInfoService'; nested exception is org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'userBaseInfoServiceEsImpl': Unsatisfied dependency expressed through field 'jestClient'; nested exception is org.springframework.beans.factory.NoSuchBeanDefinitionException: No qualifying bean of type 'io.searchbox.client.JestClient' available: expected at least 1 bean which qualifies as autowire candidate. Dependency annotations: {@org.springframework.beans.factory.annotation.Autowired(required=true), @org.springframework.beans.factory.annotation.Qualifier(value=myJestClient)}
-	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredFieldElement.inject(AutowiredAnnotationBeanPostProcessor.java:588)
-	at org.springframework.beans.factory.annotation.InjectionMetadata.inject(InjectionMetadata.java:88)
-	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor.postProcessPropertyValues(AutowiredAnnotationBeanPostProcessor.java:366)
-	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.populateBean(AbstractAutowireCapableBeanFactory.java:1272)
-	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:553)
-	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:483)
-	at org.springframework.beans.factory.support.AbstractBeanFactory$1.getObject(AbstractBeanFactory.java:312)
-	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:230)
-	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:308)
-	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:197)
-	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:761)
-	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:867)
-	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:543)
-	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:693)
-	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:360)
-	at org.springframework.boot.SpringApplication.run(SpringApplication.java:303)
-	at org.springframework.boot.test.context.SpringBootContextLoader.loadContext(SpringBootContextLoader.java:121)
-	at org.springframework.test.context.cache.DefaultCacheAwareContextLoaderDelegate.loadContextInternal(DefaultCacheAwareContextLoaderDelegate.java:98)
-	at org.springframework.test.context.cache.DefaultCacheAwareContextLoaderDelegate.loadContext(DefaultCacheAwareContextLoaderDelegate.java:116)
-	... 24 common frames omitted
-Caused by: org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'userBaseInfoServiceEsImpl': Unsatisfied dependency expressed through field 'jestClient'; nested exception is org.springframework.beans.factory.NoSuchBeanDefinitionException: No qualifying bean of type 'io.searchbox.client.JestClient' available: expected at least 1 bean which qualifies as autowire candidate. Dependency annotations: {@org.springframework.beans.factory.annotation.Autowired(required=true), @org.springframework.beans.factory.annotation.Qualifier(value=myJestClient)}
-	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredFieldElement.inject(AutowiredAnnotationBeanPostProcessor.java:588)
-	at org.springframework.beans.factory.annotation.InjectionMetadata.inject(InjectionMetadata.java:88)
-	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor.postProcessPropertyValues(AutowiredAnnotationBeanPostProcessor.java:366)
-	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.populateBean(AbstractAutowireCapableBeanFactory.java:1272)
-	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:553)
-	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:483)
-	at org.springframework.beans.factory.support.AbstractBeanFactory$1.getObject(AbstractBeanFactory.java:312)
-	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:230)
-	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:308)
-	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:202)
-	at org.springframework.beans.factory.config.DependencyDescriptor.resolveCandidate(DependencyDescriptor.java:208)
-	at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1138)
-	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1066)
-	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredFieldElement.inject(AutowiredAnnotationBeanPostProcessor.java:585)
-	... 42 common frames omitted
-Caused by: org.springframework.beans.factory.NoSuchBeanDefinitionException: No qualifying bean of type 'io.searchbox.client.JestClient' available: expected at least 1 bean which qualifies as autowire candidate. Dependency annotations: {@org.springframework.beans.factory.annotation.Autowired(required=true), @org.springframework.beans.factory.annotation.Qualifier(value=myJestClient)}
-	at org.springframework.beans.factory.support.DefaultListableBeanFactory.raiseNoMatchingBeanFound(DefaultListableBeanFactory.java:1493)
-	at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1104)
-	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1066)
-	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredFieldElement.inject(AutowiredAnnotationBeanPostProcessor.java:585)
-	... 55 common frames omitted
+Caused by: org.redisson.client.RedisConnectionException: At least two sentinels should be defined in Redis configuration!
+	at org.redisson.connection.SentinelConnectionManager.<init>(SentinelConnectionManager.java:159)
+	at org.redisson.config.ConfigSupport.createConnectionManager(ConfigSupport.java:195)
+	at org.redisson.Redisson.<init>(Redisson.java:122)
+	at org.redisson.Redisson.create(Redisson.java:161)
+	at com.globalegrow.dy.service.impl.RealTimeUserActionRedisServiceImpl.before(RealTimeUserActionRedisServiceImpl.java:94)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at org.springframework.beans.factory.annotation.InitDestroyAnnotationBeanPostProcessor$LifecycleElement.invoke(InitDestroyAnnotationBeanPostProcessor.java:363)
+	at org.springframework.beans.factory.annotation.InitDestroyAnnotationBeanPostProcessor$LifecycleMetadata.invokeInitMethods(InitDestroyAnnotationBeanPostProcessor.java:307)
+	at org.springframework.beans.factory.annotation.InitDestroyAnnotationBeanPostProcessor.postProcessBeforeInitialization(InitDestroyAnnotationBeanPostProcessor.java:136)
+	... 54 common frames omitted

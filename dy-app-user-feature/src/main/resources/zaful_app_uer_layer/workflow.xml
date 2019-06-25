@@ -1,0 +1,44 @@
+<workflow-app name="${ooize_jobname}" xmlns="uri:oozie:workflow:0.5">
+    <start to="zaful_user_layer_workflow_spark" />
+    <action name="zaful_user_layer_workflow_spark">
+        <spark xmlns="uri:oozie:spark-action:0.1">
+            <job-tracker>${jobTracker}</job-tracker>
+            <name-node>${nameNode}</name-node>
+            <configuration>
+                <property>
+                    <name>oozie.action.sharelib.for.spark</name>
+                    <value>spark2</value>
+                </property>
+            </configuration>
+            <master>yarn</master>
+            <mode>cluster</mode>
+            <name>zaful_user_layer_workflow_spark</name>
+            <class>com.globalegrow.dy.tianchi.statistics.ZafulAppUserLayer</class>
+            <jar>${nameNode}/user/wangzhongfu/spark_job/zaful_app_user_layer/tianchi-1.0-SNAPSHOT.jar</jar>
+            <spark-opts>--queue ai.offline --executor-memory 2g --driver-memory 4g --driver-cores 2 --num-executors 20 --executor-cores 2  --conf spark.yarn.jars=*.jars</spark-opts>
+        </spark>
+        <ok to="end"/>
+        <error to="failed_mail"/>
+    </action>
+
+
+    <action name="failed_mail">
+        <email xmlns="uri:oozie:email-action:0.2">
+            <to>wangzhongfu@globalegrow.com</to>
+            <subject>zaful_user_layer failed</subject>
+            <body>zaful_user_layer daily stat failed!
+                Stat DATE:${timestamp()},
+                Error message:[${wf:errorMessage(wf:lastErrorNode())}].
+            </body>
+        </email>
+        <ok to="end" />
+        <error to="kill" />
+    </action>
+
+    <kill name="kill">
+        <message>Job failed, error
+            message[${wf:errorMessage(wf:lastErrorNode())}]</message>
+    </kill>
+    <end name="end" />
+
+</workflow-app>

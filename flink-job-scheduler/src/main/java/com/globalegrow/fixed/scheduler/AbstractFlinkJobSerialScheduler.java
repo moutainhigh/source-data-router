@@ -2,6 +2,7 @@ package com.globalegrow.fixed.scheduler;
 
 import com.globalegrow.fixed.queen.FlinkBashJob;
 import com.globalegrow.hdfs.utils.HdfsUtil;
+import com.globalegrow.utils.FlinkJobStatusCheckUtils;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -45,7 +46,7 @@ public abstract class AbstractFlinkJobSerialScheduler {
     //@Scheduled(fixedDelay = 60000)
     public void runFlinkJob() throws InterruptedException {
 
-        if (atomicInteger.get() == 0 && this.flinkBashJobs.size() > 0) {
+        if (this.atomicInteger.get() == 0 && this.flinkBashJobs.size() > 0) {
             FlinkBashJob job = this.flinkBashJobs.take();
             String jobId = this.execFlinkJob(job);
             this.currentBuryLogJobs.put(jobId, job);
@@ -57,6 +58,7 @@ public abstract class AbstractFlinkJobSerialScheduler {
     }
 
     public String execFlinkJob(FlinkBashJob job) {
+        log.info("执行 flink job {}", job);
         Process process;
         String jobId = null;
         //List<String> processList = new ArrayList<String>();
@@ -100,15 +102,22 @@ public abstract class AbstractFlinkJobSerialScheduler {
     @Scheduled(fixedDelay = 15000)
     public void jobStatusCheck() throws InterruptedException {
 
-        //log.info("开始检查任务执行状态");
+        log.info("开始检查任务执行状态, 当前任务 {} 数 {}", this.currentBuryLogJobs, this.currentBuryLogJobs.size());
 
         List<String> finished = new ArrayList<>();
 
         this.currentBuryLogJobs.entrySet().forEach(stringFlinkBashJobEntry -> {
 
-            log.info("检查 flink job {} 的状态", stringFlinkBashJobEntry.getKey());
+            log.info("检查 flink job {} 的状态, 任务信息 {}", stringFlinkBashJobEntry.getKey(), stringFlinkBashJobEntry.getValue());
             try {
-                    String status = checkJobStatus(stringFlinkBashJobEntry.getKey());
+                if ((System.currentTimeMillis() - stringFlinkBashJobEntry.getValue().getStartCheckTime()) > 86400000 * 3) {
+                    log.error("flink 任务 id: {}, 详情: {} ,超过 3 h 未检查到任务状态");
+                    this.atomicInteger.set(0);
+                    finished.add(stringFlinkBashJobEntry.getKey());
+                }
+
+                String status = checkJobStatus(stringFlinkBashJobEntry.getKey());
+                if (!FlinkJobStatusCheckUtils.NOT_FOUND.equals(status)) {
                     if ("FINISHED".equals(status)) {
                         log.info("任务 {} 执行成功，清空当前任务 id", stringFlinkBashJobEntry.getKey());
                         finished.add(stringFlinkBashJobEntry.getKey());
@@ -118,10 +127,14 @@ public abstract class AbstractFlinkJobSerialScheduler {
                         log.error("{} 任务执行失败，重新放入队列执行", this.currentBuryLogJobs.get(stringFlinkBashJobEntry.getKey()));
                         this.flinkBashJobs.offer(this.currentBuryLogJobs.get(stringFlinkBashJobEntry.getKey()));
                         finished.add(stringFlinkBashJobEntry.getKey());
+                        this.atomicInteger.set(0);
                     }
                     if (this.flinkBashJobs.size() == 0) {
                         log.info("所有任务执行完毕，通知第三方");
+                        this.atomicInteger.set(0);
                     }
+                }
+
 
             } catch (Exception e) {
                 if (e instanceof HttpClientErrorException) {
@@ -131,6 +144,7 @@ public abstract class AbstractFlinkJobSerialScheduler {
                 } else {
                     // 发送邮件
                     log.error("任务状态检查出错", e);
+                    this.atomicInteger.set(0);
                 }
 
             }
@@ -143,10 +157,11 @@ public abstract class AbstractFlinkJobSerialScheduler {
 
     public String checkJobStatus(String jobId) {
         try {
-            Map<String, Object> result = this.restTemplate.getForObject(this.flinkJobHistoryServer + jobId, Map.class);
-            if (result != null && StringUtils.isNotEmpty((String) result.get("state"))) {
-                return (String) result.get("state");
-            }
+//            Map<String, Object> result = this.restTemplate.getForObject(this.flinkJobHistoryServer + jobId, Map.class);
+//            if (result != null && StringUtils.isNotEmpty((String) result.get("state"))) {
+//                return (String) result.get("state");
+//            }
+            return FlinkJobStatusCheckUtils.getJobStatusByJobId(jobId);
         } catch (RestClientException e) {
             e.printStackTrace();
         }

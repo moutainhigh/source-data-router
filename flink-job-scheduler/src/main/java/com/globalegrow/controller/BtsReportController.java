@@ -19,6 +19,7 @@ import java.util.stream.Collectors;
 @RequestMapping("bts-report")
 @Data
 @Slf4j
+@Deprecated
 public class BtsReportController {
 
 
