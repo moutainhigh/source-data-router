@@ -18,6 +18,7 @@ public class KylinConfigController extends CommonController{
         return "success";
     }
 
+
     @RequestMapping("bts-field")
     public String removeBtsFieldConfig(Long planId, String produceLineCode) {
         this.btsReportConfigService.removeBtsReportFieldConfig(planId, produceLineCode);
