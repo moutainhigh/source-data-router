@@ -2,7 +2,6 @@ package com.globalegrow.web;
 
 import com.globalegrow.report.LogDataCache;
 import com.globalegrow.report.ReportBuildRule;
-import com.globalegrow.report.ReportExecutorService;
 import com.globalegrow.report.ReportHandleRunnable;
 import com.globalegrow.util.JacksonUtil;
 import org.apache.commons.io.FileUtils;
@@ -42,6 +41,7 @@ public class ReportController {
     }
 
     @GetMapping
+    @Deprecated
     public String addReport(String configPath) throws Exception {
         String config = FileUtils.readFileToString(new File(configPath), "utf-8");
         ReportBuildRule reportBuildRule = JacksonUtil.readValue(config, ReportBuildRule.class);

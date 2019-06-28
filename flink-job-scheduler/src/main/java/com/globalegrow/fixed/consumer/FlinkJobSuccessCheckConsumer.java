@@ -11,6 +11,7 @@ import java.util.concurrent.DelayQueue;
 @Data
 @Slf4j
 @RequiredArgsConstructor
+@Deprecated
 public class FlinkJobSuccessCheckConsumer implements Runnable{
 
     @NonNull

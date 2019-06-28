@@ -13,6 +13,7 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 @Data
 @ToString
+@Deprecated
 public abstract class AbstractFlinkJobQueen implements Delayed {
 
     protected Long id;
@@ -22,20 +23,22 @@ public abstract class AbstractFlinkJobQueen implements Delayed {
 
     /**
      * 是否满足可过滤条件，如 hdfs 文件是否存在等等
+     *
      * @return
      */
-     public boolean canRun(){
-         return true;
-     }
+    public boolean canRun() {
+        return true;
+    }
+
 
     public boolean runFlinkJob() {
-         log.info("job rerun");
+        log.info("job rerun");
         if (this.canRun()) {
             Process process = null;
             //List<String> processList = new ArrayList<String>();
             try {
                 process = Runtime.getRuntime().exec(this.getFlinkJobCommandLine());
-                try(BufferedReader input = new BufferedReader(new InputStreamReader(process.getInputStream()))){
+                try (BufferedReader input = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
                     String line = "";
                     while ((line = input.readLine()) != null) {
                         //processList.add(line);
@@ -53,7 +56,7 @@ public abstract class AbstractFlinkJobQueen implements Delayed {
 
     @Override
     public long getDelay(TimeUnit unit) {
-        return  unit.convert(this.executeTime - System.nanoTime(), TimeUnit.NANOSECONDS);
+        return unit.convert(this.executeTime - System.nanoTime(), TimeUnit.NANOSECONDS);
     }
 
     @Override

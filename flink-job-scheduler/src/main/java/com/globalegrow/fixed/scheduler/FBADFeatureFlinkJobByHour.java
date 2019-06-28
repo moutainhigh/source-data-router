@@ -1,13 +1,10 @@
 package com.globalegrow.fixed.scheduler;
 
-import cn.hutool.core.date.DateUtil;
 import com.globalegrow.fixed.consumer.DelayQueenConsumer;
-import com.globalegrow.fixed.queen.AbstractFlinkJobQueen;
 import com.globalegrow.fixed.queen.DyHdfsCheckExistsJobMessage;
 import com.globalegrow.hdfs.utils.HdfsUtil;
 import com.globalegrow.util.CommonTextUtils;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.time.DateFormatUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -16,7 +13,6 @@ import javax.annotation.PostConstruct;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Date;
 import java.util.concurrent.DelayQueue;
 
 @Slf4j
@@ -24,6 +20,7 @@ import java.util.concurrent.DelayQueue;
 public class FBADFeatureFlinkJobByHour {
 
     @Autowired
+    @Deprecated
     private DelayQueue<DyHdfsCheckExistsJobMessage> flinkJobQueens;
 
     private static final String rootHdfsPath = "/user/hive/warehouse/dw_zaful_recommend.db/zaful_app_abset_id_user_fb_all_every_hour/add_time=2019032103";
@@ -31,9 +28,10 @@ public class FBADFeatureFlinkJobByHour {
     private String flinkCommandLine = "/usr/local/services/flink/flink-yarn/flink-1.5.0/bin/flink run -d -m yarn-cluster -yn 1 -yjm 1024 -ytm 1024 /usr/local/services/flink/fb-ad-user-feature-es-0.1.jar --job.hdfs.path ${hdfs_path}";
 
     @PostConstruct
+    @Deprecated
     public void init() {
         DelayQueenConsumer queenConsumer = new DelayQueenConsumer(flinkJobQueens);
-        new Thread(queenConsumer).start();;
+        new Thread(queenConsumer).start();
     }
 
     //private static

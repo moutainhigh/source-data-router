@@ -6,6 +6,8 @@ import lombok.Data;
 import java.util.concurrent.TimeUnit;
 
 @Data
+@Deprecated
+
 public class DyHdfsCheckExistsJobMessage extends AbstractFlinkJobQueen{
 
     protected String hdfsPath;

@@ -5,16 +5,15 @@ import com.globalegrow.hdfs.utils.HdfsUtil;
 import lombok.Data;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.time.DateFormatUtils;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Date;
 
 @Data
 @ToString
 @Slf4j
+@Deprecated
 public class FlinkJobScheduleBigDataDfsThread implements Runnable {
 
     // 命令中需要被替换的日期对象
