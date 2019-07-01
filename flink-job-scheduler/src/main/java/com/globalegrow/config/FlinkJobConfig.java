@@ -15,11 +15,13 @@ import java.util.concurrent.LinkedBlockingDeque;
 public class FlinkJobConfig {
 
     @Bean
+    @Deprecated
     public DelayQueue<DyHdfsCheckExistsJobMessage> flinkJobQueens() {
         return new DelayQueue<>();
     }
 
     @Bean
+    @Deprecated
     public DelayQueue<FlinkJobStatesCheck> flinkJobStatesChecks() {
         return new DelayQueue<>();
     }

@@ -20,6 +20,7 @@ import java.util.concurrent.Executors;
  */
 @RestController
 @RequestMapping("order")
+@Deprecated
 public class ReportOrderController {
 
     @Autowired

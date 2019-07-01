@@ -1,6 +1,5 @@
 package com.globalegrow.fixed.consumer;
 
-import com.globalegrow.fixed.queen.AbstractFlinkJobQueen;
 import com.globalegrow.fixed.queen.DyHdfsCheckExistsJobMessage;
 import lombok.Data;
 import lombok.NonNull;
@@ -12,6 +11,8 @@ import java.util.concurrent.DelayQueue;
 @Data
 @Slf4j
 @RequiredArgsConstructor
+@Deprecated
+
 public class DelayQueenConsumer implements Runnable {
 
     @NonNull

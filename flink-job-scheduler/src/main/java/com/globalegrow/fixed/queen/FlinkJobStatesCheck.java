@@ -10,6 +10,7 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 @Data
 @ToString
+@Deprecated
 public class FlinkJobStatesCheck implements Delayed {
 
     protected Long id;

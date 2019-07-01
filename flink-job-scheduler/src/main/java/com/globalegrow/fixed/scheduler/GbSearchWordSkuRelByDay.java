@@ -3,7 +3,6 @@ package com.globalegrow.fixed.scheduler;
 import cn.hutool.core.date.DateUtil;
 import com.globalegrow.fixed.queen.DyHdfsCheckExistsJobMessage;
 import com.globalegrow.fixed.queen.FlinkBashJob;
-import com.globalegrow.hdfs.utils.HdfsUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -16,6 +15,7 @@ import java.util.concurrent.DelayQueue;
 public class GbSearchWordSkuRelByDay extends AbstractFlinkJobSerialScheduler{
 
     @Autowired
+    @Deprecated
     private DelayQueue<DyHdfsCheckExistsJobMessage> flinkJobQueens;
 
     String hdfsPath = "/user/hive/warehouse/dw_proj.db/zaful_app_search_word_fourteen_days_report/add_time=";

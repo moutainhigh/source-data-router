@@ -219,7 +219,7 @@ public class MyLogStringUtils {
                         }
 
                         /*
-                         * ASCII test also catches surrogates
+                         * ASCII continueLabelTest also catches surrogates
                          */
                         int ch = oldstr.charAt(i+j);
                         if (ch > 127) {

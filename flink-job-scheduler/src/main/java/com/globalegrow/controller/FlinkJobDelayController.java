@@ -1,6 +1,5 @@
 package com.globalegrow.controller;
 
-import com.globalegrow.fixed.queen.AbstractFlinkJobQueen;
 import com.globalegrow.fixed.queen.DyHdfsCheckExistsJobMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,6 +10,7 @@ import java.util.concurrent.DelayQueue;
 
 @RestController
 @RequestMapping("delay-job")
+@Deprecated
 public class FlinkJobDelayController {
 
     @Autowired
