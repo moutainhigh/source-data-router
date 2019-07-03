@@ -48,11 +48,11 @@
             <artifactId>sentinel-core</artifactId>
             <version>1.4.1</version>
         </dependency>
-        <dependency>
-            <groupId>com.alibaba.csp</groupId>
-            <artifactId>sentinel-transport-simple-http</artifactId>
-            <version>1.4.1</version>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>com.alibaba.csp</groupId>-->
+            <!--<artifactId>sentinel-transport-simple-http</artifactId>-->
+            <!--<version>1.4.1</version>-->
+        <!--</dependency>-->
         <dependency>
             <groupId>com.globalegrow.dy</groupId>
             <artifactId>data-router-common</artifactId>

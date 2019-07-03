@@ -37,9 +37,9 @@ spring:
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
     driver-class-name: com.mysql.jdbc.Driver
-    url: jdbc:mysql://10.33.4.240/test?useSSL=false&useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true
+    url: jdbc:mysql://127.0.0.1:3306/dy_report?useSSL=false&useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true
     username: root
-    password: root
+    password: 123456
     druid:
       initial-size: 2
       max-active: 5
@@ -66,12 +66,12 @@ spring:
   redis:
     timeout: 86400
     password: 6e1KWyC29w
+#    sentinel:
+#      master: sentinel-172.31.42.160-6383
+#      nodes: 172.31.34.55:6384,172.31.42.160:6384,172.31.54.133:6383
     sentinel:
-      master: sentinel-172.31.42.160-6383
-      nodes: 172.31.34.55:6384,172.31.42.160:6384,172.31.54.133:6383
-    #sentinel:
-      #master: sentinel-192.168.0.31-6420
-      #nodes: 192.168.0.45:26406,192.168.0.31:6421,192.168.0.32:6422
+      master: sentinel-192.168.0.31-6420
+      nodes: 192.168.0.45:26406,192.168.0.31:6421,192.168.0.32:6422
   elasticsearch:
     jest:
       uris: http://18.213.71.71:9200,http://18.213.41.233:9200,http://52.204.111.230:9200

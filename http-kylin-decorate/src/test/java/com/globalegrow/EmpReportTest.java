@@ -16,7 +16,6 @@ import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.context.annotation.Bean;
-import org.springframework.http.HttpEntity;
 import org.springframework.http.client.ClientHttpRequestFactory;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.web.client.RestTemplate;
