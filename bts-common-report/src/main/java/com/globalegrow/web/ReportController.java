@@ -32,6 +32,7 @@ public class ReportController {
         ExecutorService old = this.executorServiceMap.get(reportBuildRule.getReportName());
         if (old != null) {
             old.shutdownNow();
+
         }
         ExecutorService executorService = Executors.newFixedThreadPool(1);
         executorService.execute(new ReportHandleRunnable(this.logDataCache, reportBuildRule));
