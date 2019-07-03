@@ -16,6 +16,7 @@ spring:
   cloud:
     sentinel:
       transport:
+        #正式环境本地连接用外网地址不然连接不上，上线用内网地址
         dashboard: 52.200.84.145:48194
       eager: true
 logging:
@@ -30,9 +31,11 @@ logging:
   pattern:
     file: '[%d{yyyy-MM-dd HH:mm:ss.SSS}] [%thread] [%-5level] %logger{50} - %msg%n'
 app:
+  #正式环境本地连接用外网地址不然连接不上，上线用内网地址
   es:
     cluster-name: esearch-aws-dy
     socket:
+      #address: 100.26.74.93:9302,100.26.77.0:9302,18.215.206.192:9302
       address: 100.26.74.93:9302,100.26.77.0:9302,18.215.206.192:9302
 
 server:
@@ -45,7 +48,8 @@ spring:
   cloud:
     sentinel:
       transport:
-        dashboard: 172.31.44.72:48194
+        #dashboard: 172.31.44.72:48194
+        dashboard: 52.200.84.145:48194
         #port: 38193
       eager: true
 logging:
@@ -60,10 +64,12 @@ logging:
   pattern:
     file: '[%d{yyyy-MM-dd HH:mm:ss.SSS}] [%thread] [%-5level] %logger{50} - %msg%n'
 app:
+  #正式环境本地连接用外网地址不然连接不上，上线用内网地址
   es:
     cluster-name: esearch-aws-dy
     socket:
-      address: 172.31.47.84:9302,172.31.43.158:9302,172.31.55.231:9302
+      #address: 172.31.47.84:9302,172.31.43.158:9302,172.31.55.231:9302
+      address: 100.26.74.93:9302,100.26.77.0:9302,18.215.206.192:9302
 
 server:
   port: 38194

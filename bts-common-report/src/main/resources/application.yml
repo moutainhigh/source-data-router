@@ -27,26 +27,41 @@ spring:
   hbase:
     zkServers: 172.31.61.192:2181,172.31.62.7:2181,172.31.59.31:2181,172.31.62.153:2181,172.31.36.227:2181,172.31.40.73:2181
   elasticsearch:
+    #正式环境本地连接用外网地址不然连接不上，上线用内网地址
     jest:
-      uris[0]: http://172.31.51.59:9200
-      uris[1]: http://172.31.51.250:9200
+      uris[0]: http://54.144.128.124:9202
+      uris[1]: http://100.26.77.0:9202
+      uris[2]: http://100.26.74.93:9202
       read-timeout: 20000
       connection-timeout: 20000
       username: esearch-ai-aws
       password: a@ss&2@1aaAQ
   kafka:
-    bootstrap-servers: 172.31.35.194:9092,172.31.50.250:9092,172.31.63.112:9092
+    #测试kafka，外网ip
+    #bootstrap-servers: 172.31.35.194:9092,172.31.50.250:9092,172.31.63.112:9092
+    bootstrap-servers: 52.21.158.25:9092,54.156.168.17:9092,34.235.224.156:9092
+
     consumer:
       auto-offset-reset: latest
       value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       group-id: mysql-bin-log-zaful-common-report-dev
   redis:
+    #测试地址，外网ip
     timeout: 86400
     password: 6e1KWyC29w
-    sentinel:
-      master: mymaster
-      nodes: 172.31.19.189:26380,172.31.19.189:26381,172.31.19.189:26382
+    cluster:
+      nodes[0]: 54.156.168.17:6381
+      nodes[1]: 54.156.168.17:6382
+      nodes[2]: 34.235.224.156:6383
+      nodes[3]: 34.235.224.156:6384
+      nodes[4]: 18.211.140.191:6381
+      nodes[5]: 34.235.224.156:6384
+      nodes[6]: 18.211.140.191:6381
+
+#    sentinel:
+#      master: mymaster
+#      nodes: 172.31.19.189:26380,172.31.19.189:26381,172.31.19.189:26382
 
 dy_bts_zaful_report_order: dy_bts_zaful_report_order_dev
 dy_bts_gb_report_order: dy_bts_gb_report_order_dev

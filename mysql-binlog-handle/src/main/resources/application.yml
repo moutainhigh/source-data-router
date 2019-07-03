@@ -13,18 +13,27 @@ logging:
 spring:
   profiles: test
   kafka:
+    #测试地址，外网ip
     consumer:
-      bootstrap-servers: 172.18.0.2:9092
+      #bootstrap-servers: 172.18.0.2:9092
+      bootstrap-servers: 52.21.158.25:9092,54.156.168.17:9092,34.235.224.156:9092
       auto-offset-reset: latest
       value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       group-id: mysql-bin-log-zaful
   redis:
+    #测试地址，外网ip
       timeout: 86400
       password: 6e1KWyC29w
-      sentinel:
-        master: sentinel-172.31.42.160-6383
-        nodes: 172.31.34.55:6384,172.31.42.160:6384,172.31.54.133:6383
+      cluster:
+        nodes[0]: 54.156.168.17:6381
+        nodes[1]: 54.156.168.17:6382
+        nodes[2]: 34.235.224.156:6383
+        nodes[3]: 34.235.224.156:6384
+        nodes[4]: 18.211.140.191:6381
+        nodes[5]: 34.235.224.156:6384
+        nodes[6]: 18.211.140.191:6381
+
 
 app:
   kafka:

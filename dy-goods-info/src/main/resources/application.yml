@@ -15,6 +15,7 @@ spring:
     name: dy-goods-feature-dev
   cloud:
     sentinel:
+      #正式环境本地连接用外网地址不然连接不上，上线用内网地址
       transport:
         dashboard: 52.200.84.145:48194
       eager: true
@@ -30,6 +31,7 @@ logging:
   pattern:
     file: '[%d{yyyy-MM-dd HH:mm:ss.SSS}] [%thread] [%-5level] %logger{50} - %msg%n'
 app:
+  #正式环境本地连接用外网地址不然连接不上，上线用内网地址
   es:
     cluster-name: esearch-aws-dy
     socket:

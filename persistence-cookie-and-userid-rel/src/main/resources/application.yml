@@ -15,27 +15,39 @@ spring:
   hbase:
     zkServers: 172.18.0.2:2181
   kafka:
+    #测试地址，外网ip
     consumer:
-      bootstrap-servers: 172.18.0.2:9092
+#      bootstrap-servers: 172.18.0.2:9092
+      bootstrap-servers: 52.21.158.25:9092,54.156.168.17:9092,34.235.224.156:9092
       auto-offset-reset: earliest
       value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       group-id: group-cu-rel
   elasticsearch:
+    #正式环境本地连接用外网地址不然连接不上，上线用内网地址
     jest:
-      uris[0]: http://172.31.43.158:9202
-      uris[1]: http://172.31.47.84:9202
-      uris[2]: http://172.31.55.231:9202
+      uris[0]: http://54.144.128.124:9202
+      uris[1]: http://100.26.77.0:9202
+      uris[2]: http://100.26.74.93:9202
       read-timeout: 20000
       connection-timeout: 20000
       username: esearch-ai-aws
       password: a@ss&2@1aaAQ
   redis:
+    #测试地址，外网ip
     timeout: 86400
     password: 6e1KWyC29w
-    sentinel:
-      master: sentinel-172.31.42.160-6383
-      nodes: 172.31.24.20:6383
+#    sentinel:
+#      master: sentinel-172.31.42.160-6383
+#      nodes: 172.31.24.20:6383
+    cluster:
+      nodes[0]: 54.156.168.17:6381
+      nodes[1]: 54.156.168.17:6382
+      nodes[2]: 34.235.224.156:6383
+      nodes[3]: 34.235.224.156:6384
+      nodes[4]: 18.211.140.191:6381
+      nodes[5]: 34.235.224.156:6384
+      nodes[6]: 18.211.140.191:6381
     #出现异常最大重试此时  
     maxAttempts: 3
     pool:
