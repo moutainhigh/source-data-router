@@ -9,7 +9,7 @@
             <job-tracker>${jobTracker}</job-tracker>
             <name-node>${nameNode}</name-node>
             <jdbc-url>jdbc:hive2://bts-master:10000/default</jdbc-url>
-            <script>/user/wangzhongfu/hql_files/user_layer.q</script>
+            <script>/user/xuqiufeng/hql_files/user_layer.q</script>
               <param>dt=${dt}</param>
               <param>order_dt=${order_dt}</param>
 
@@ -21,7 +21,7 @@
 
 	<action name="failed_mail">
 		<email xmlns="uri:oozie:email-action:0.2">
-			<to>wangzhongfu@globalegrow.com</to>
+			<to>xuqiufeng@globalegrow.com</to>
 			<subject>zaful_user_layer failed</subject>
 			<body>zaful_user_layer daily stat failed!
                   Stat DATE:${timestamp()},

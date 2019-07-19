@@ -2,6 +2,6 @@ package com.globalegrow.dy.enums;
 
 public enum QueryConditions {
 
-    groupByFields,whereFields,orderByFields,selectFields
+    groupByFields,whereFields,orderByFields,selectFields,dateType
 
 }

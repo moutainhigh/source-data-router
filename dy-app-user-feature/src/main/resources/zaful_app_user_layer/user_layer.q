@@ -1,7 +1,7 @@
-set mapreduce.map.child.java.opts="-Xmx2048m";
-set mapreduce.map.memory.mb=2300;
-set mapreduce.reduce.child.java.opts="-Xmx2048m";
-set mapreduce.reduce.memory.mb=2300;
+set mapreduce.map.child.java.opts="-Xmx12096m";
+set mapreduce.map.memory.mb=12096;
+set mapreduce.reduce.child.java.opts="-Xmx12096m";
+set mapreduce.reduce.memory.mb=12096;
 insert OVERWRITE table tmp.zaful_app_user_visit 
 select platform,appsflyer_device_id,
 sum(case when event_name in ('af_add_to_wishlist', 'af_add_to_bag') or (event_name='af_view_product' AND get_json_object(event_value, '$.af_changed_size_or_color') = '0') then 1
@@ -26,8 +26,8 @@ from (select platform,appsflyer_device_id,event_count from tmp.zaful_app_user_vi
  left join (select user_id from dw.zaful_old_user old_user where old_user.dt = '${dt}') b
  on c.user_id = b.user_id) a;
  
-add jar hdfs:///user/wangzhongfu/elasticsearch-hadoop-5.6.4.jar;
+add jar hdfs:///user/xuqiufeng/elasticsearch-hadoop-5.6.4.jar;
 SET hive.mapred.reduce.tasks.speculative.execution = false;
 SET mapreduce.map.speculative = false;
 SET mapreduce.reduce.speculative = false;
-insert OVERWRITE table tmp.zaful_app_user_layer select appsflyer_device_id,type as layer_type,dt from dw.zaful_app_user_new_and_old where dt = '${dt}';
+insert OVERWRITE table tmp.zaful_app_user_layer select appsflyer_device_id, as layer_type,dt from dw.zaful_app_user_new_and_old where dt = '${dt}';type

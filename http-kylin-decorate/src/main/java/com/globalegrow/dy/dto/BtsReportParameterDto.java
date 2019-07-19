@@ -30,6 +30,8 @@ public class BtsReportParameterDto implements Serializable {
     private String productLineCode;
     // 实验 code
     private String planCode;
+    // datetype--"hours_start","day_start"
+    private String dateType;
 
     public String getPlanCode() {
         return planCode;
@@ -111,6 +113,14 @@ public class BtsReportParameterDto implements Serializable {
         this.pageSize = pageSize;
     }
 
+    public String getDateType() {
+        return dateType;
+    }
+
+    public void setDateType(String dateType) {
+        this.dateType = dateType;
+    }
+
     @Override
     public String toString() {
         return "BtsReportParameterDto{" +
@@ -123,6 +133,7 @@ public class BtsReportParameterDto implements Serializable {
                 ", pageSize=" + pageSize +
                 ", type='" + type + '\'' +
                 ", productLineCode='" + productLineCode + '\'' +
+                ", dateType='" + dateType + '\'' +
                 ", planCode='" + planCode + '\'' +
                 '}';
     }

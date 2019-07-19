@@ -99,7 +99,7 @@ public class BtsReportServiceImpl implements BtsReportService {
                 return mapReportPageDto;
             }
             this.logger.debug("bts report config info: {}", btsReportKylinConfig);
-            String sourceSql = btsReportKylinConfig.getKylinQuerySql();
+             String sourceSql = btsReportKylinConfig.getKylinQuerySql();
             Map valuesMap = new HashMap();
             this.logger.debug("处理分组");
             if (btsReportParameterDto.getGroupByFields() != null && btsReportParameterDto.getGroupByFields().size() > 0) {
@@ -108,6 +108,10 @@ public class BtsReportServiceImpl implements BtsReportService {
             this.logger.debug("处理 where 条件");
             valuesMap.put(QueryConditions.whereFields.name(), this.whereFields(btsReportParameterDto, btsReportKylinConfig));
 
+            if (StringUtils.isNotBlank(btsReportParameterDto.getDateType())) {
+                this.logger.debug("处理dateType");
+                valuesMap.put(QueryConditions.dateType.name(),btsReportParameterDto.getDateType());
+            }
             this.logger.debug("处理排序字段");
             StringBuilder orderBy = new StringBuilder();
             if (btsReportParameterDto.getOrderFields() != null && btsReportParameterDto.getOrderFields().size() > 0) {
@@ -128,6 +132,7 @@ public class BtsReportServiceImpl implements BtsReportService {
             }*/
 
             valuesMap.put(QueryConditions.orderByFields.name(), orderBy.toString());
+
 
             this.logger.debug("组装 sql");
             StringSubstitutor sub = new StringSubstitutor(valuesMap);
@@ -152,7 +157,7 @@ public class BtsReportServiceImpl implements BtsReportService {
             try {
                 result = this.restTemplate.postForObject(btsReportKylinConfig.getKylinQueryAdress(), params, Map.class);
             } catch (RestClientException e) {
-                this.logger.error("kylin 查询异常",  e);
+                this.logger.error("kylin 查询异常", e);
                 return mapReportPageDto;
             }
             //this.logger.debug("报表返回结果: {}", result);
@@ -279,7 +284,7 @@ public class BtsReportServiceImpl implements BtsReportService {
                     } else {
                         where.append(" " + entry.getKey() + "= date '" + entry.getValue() + "' ");
                     }
-                }else if("MINUTE_START".equals(entry.getKey())){
+                } else if ("MINUTE_START".equals(entry.getKey())) {
                     //TIMESTAMP
                     this.logger.debug("between 日期类型处理");
                     if (StringUtils.isNotEmpty(where.toString())) {
@@ -313,10 +318,10 @@ public class BtsReportServiceImpl implements BtsReportService {
         getParameters.put("module_name", "marketing_email");*/
         stringBuilder.append("&plan_id=" + btsReportParameterDto.getPlanId());
         Map<String, Map<String, String>> betweenFields = btsReportParameterDto.getBetweenFields();
-        if(groupByFields == null || groupByFields.size() == 0 || (groupByFields.contains("bts_planid") && groupByFields.contains("bts_versionid")
-                && groupByFields.contains("day_start") && betweenFields != null && betweenFields.size() > 0)){
+        if (groupByFields == null || groupByFields.size() == 0 || (groupByFields.contains("bts_planid") && groupByFields.contains("bts_versionid")
+                && groupByFields.contains("day_start") && betweenFields != null && betweenFields.size() > 0)) {
             stringBuilder.append("&data_flag=4");
-        }else if (groupByFields == null || groupByFields.size() == 0 || (groupByFields.contains("bts_planid") && groupByFields.contains("bts_versionid") && groupByFields.contains("day_start"))) {
+        } else if (groupByFields == null || groupByFields.size() == 0 || (groupByFields.contains("bts_planid") && groupByFields.contains("bts_versionid") && groupByFields.contains("day_start"))) {
             stringBuilder.append("&data_flag=3");
         } else if (groupByFields.contains("bts_planid") && groupByFields.contains("bts_versionid") && !groupByFields.contains("day_start")) {
             stringBuilder.append("&data_flag=2");
