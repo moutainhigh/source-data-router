@@ -32,17 +32,16 @@ spring:
   elasticsearch:
     #正式环境本地连接用外网地址不然连接不上，上线用内网地址
     jest:
-        uris[0]: http://54.144.128.124:9202
-        uris[1]: http://100.26.77.0:9202
-        uris[2]: http://100.26.74.93:9202
-#      uris[0]: http://100.26.74.93:9202
-#      uris[1]: http://100.26.77.0:9202
-#      uris[2]: http://18.215.206.192:9202
+      uris[0]: http://100.26.74.93:9202
+      uris[1]: http://100.26.77.0:9202
+      #      uris[0]: http://100.26.74.93:9202
+      #      uris[1]: http://100.26.77.0:9202
+      #      uris[2]: http://18.215.206.192:9202
       #uris[3]: http://50.16.25.252:9202
       #uris[4]: http://54.144.128.124:9202
       #uris[5]: http://18.204.149.153:9202
-      read-timeout: 5000
-      connection-timeout: 5000
+      read-timeout: 50000
+      connection-timeout: 50000
       username: esearch-ai-aws
       password: a@ss&2@1aaAQ
   cloud:
@@ -68,16 +67,15 @@ app:
     table-name: dy-user-event
     column-family: cf
 
-redis:
-  #测试redis设置外网地址
-  type: cluster
-    nodes: redis://54.156.168.17:6381,redis://54.156.168.17:6382,redis://34.235.224.156:6381,redis://34.235.224.156:6382,redis://34.235.224.156:6383,redis://34.235.224.156:6384,redis://18.211.140.191:6381
-    password: 6e1KWyC29w
-    expire-seconds: 86400
-    key-prefix: dy_&&_app
-    read-model: MASTER_SLAVE
-    fufill:
-      es: false
+#redis:
+#  type: cluster
+#  nodes: redis://10.33.4.254:6379
+#  #nodes: redis://172.31.57.199:6381,redis://172.31.57.199:6382,redis://172.31.52.145:6381,redis://172.31.52.145:6382,redis://172.31.52.145:6383,redis://172.31.52.145:6384,redis://172.31.47.22:6381
+#  expire-seconds: 86400
+#  key-prefix: dy_&&_app
+#  read-model: MASTER_SLAVE
+#  fufill:
+#    es: false
 #  type: sentinel
 #  master: sentinel-172.31.26.237-6379
 #  nodes: redis://172.31.26.152:6380,redis://172.31.26.237:6380,redis://172.31.26.162:6383
@@ -130,7 +128,7 @@ redis:
   read-model: MASTER_SLAVE
 ---
 spring:
-  profiles: pressure-test
+  profiles: test
   application:
     name: dy-realtime-data-query-service-prod-pressure-test
   hbase:
@@ -170,7 +168,6 @@ app:
 redis:
   type: cluster
   nodes: redis://54.156.168.17:6381,redis://54.156.168.17:6382,redis://34.235.224.156:6381,redis://34.235.224.156:6382,redis://34.235.224.156:6383,redis://34.235.224.156:6384,redis://18.211.140.191:6381
-  #nodes: redis://172.31.57.199:6381,redis://172.31.57.199:6382,redis://172.31.52.145:6381,redis://172.31.52.145:6382,redis://172.31.52.145:6383,redis://172.31.52.145:6384,redis://172.31.47.22:6381
   password: 6e1KWyC29w
   expire-seconds: 86400
   key-prefix: dy_&&_app

@@ -147,7 +147,7 @@
             <properties>
                 <profiles.active>dev</profiles.active>
                 <project.packaging>jar</project.packaging>
-                <build.profile.id>dev</build.profile.id>
+                <!--<build.profile.id>dev</build.profile.id>-->
             </properties>
             <activation>
                 <activeByDefault>true</activeByDefault>

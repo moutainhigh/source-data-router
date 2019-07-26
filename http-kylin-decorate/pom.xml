@@ -49,9 +49,9 @@
             <version>1.4.1</version>
         </dependency>
         <!--<dependency>-->
-            <!--<groupId>com.alibaba.csp</groupId>-->
-            <!--<artifactId>sentinel-transport-simple-http</artifactId>-->
-            <!--<version>1.4.1</version>-->
+        <!--<groupId>com.alibaba.csp</groupId>-->
+        <!--<artifactId>sentinel-transport-simple-http</artifactId>-->
+        <!--<version>1.4.1</version>-->
         <!--</dependency>-->
         <dependency>
             <groupId>com.globalegrow.dy</groupId>
@@ -132,9 +132,10 @@
             <properties>
                 <profiles.active>dev</profiles.active>
                 <project.packaging>jar</project.packaging>
-                <build.profile.id>dev</build.profile.id>
             </properties>
-
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
         </profile>
         <profile>
             <!-- 测试环境 -->
@@ -143,9 +144,7 @@
                 <profiles.active>test</profiles.active>
                 <project.packaging>jar</project.packaging>
             </properties>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
+
         </profile>
         <profile>
             <!-- 生产环境 -->

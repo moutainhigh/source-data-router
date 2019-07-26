@@ -21,7 +21,7 @@ insert OVERWRITE table dw.zaful_app_user_new_and_old PARTITION (dt='${dt}')
   ( select c.appsflyer_device_id,case when c.event_count = 0 then '00' when c.event_count > 0 and c.user_id <> '' then '10' when c.event_count > 0 and c.user_id = '' then '11'  else '00' end as return_visit,b.user_id from  (select appsflyer_device_id,event_count,user_id from dw.zaful_app_return_visit visit where visit.dt='${dt}' ) c
     left join (select user_id from dw.zaful_old_user old_user where old_user.dt = '${dt}') b
       on c.user_id = b.user_id) a;
-
+---这是老的，新的直接写es
 add jar hdfs:///user/wangzhongfu/elasticsearch-hadoop-5.6.4.jar;
 SET hive.mapred.reduce.tasks.speculative.execution = false;
 SET mapreduce.map.speculative = false;

@@ -14,8 +14,11 @@
             <mode>cluster</mode>
             <name>zaful_user_layer_workflow_spark</name>
             <class>com.globalegrow.dy.tianchi.statistics.ZafulAppUserLayer</class>
-            <jar>${nameNode}/user/wangzhongfu/spark_job/zaful_app_user_layer/tianchi-1.0-SNAPSHOT.jar</jar>
-            <spark-opts>--queue ai.offline --executor-memory 2g --driver-memory 4g --driver-cores 2 --num-executors 20 --executor-cores 2  --conf spark.yarn.jars=*.jars</spark-opts>
+            <jar>${nameNode}/user/xuqiufeng/spark/spark-oozie/userLayer/tianchi-1.0-SNAPSHOT-jar-with-dependencies.jar</jar>
+            <spark-opts>--executor-memory 6g --num-executors 40 --executor-cores 1
+                --driver-memory 4g --driver-cores 1 --name statistics_zaful_app_user_layer
+                --queue root.users.xuqiufeng --master yarn --deploy-mode cluster --jars
+                hdfs:///user/xuqiufeng/lib/elasticsearch-spark-20_2.11-5.6.4.jar --conf spark.yarn.maxAppAttempts=1 --conf spark.yarn.jars=*.jars  </spark-opts>
         </spark>
         <ok to="end"/>
         <error to="failed_mail"/>
@@ -24,7 +27,7 @@
 
     <action name="failed_mail">
         <email xmlns="uri:oozie:email-action:0.2">
-            <to>wangzhongfu@globalegrow.com</to>
+            <to>xuqiufeng@globalegrow.com</to>
             <subject>zaful_user_layer failed</subject>
             <body>zaful_user_layer daily stat failed!
                 Stat DATE:${timestamp()},
