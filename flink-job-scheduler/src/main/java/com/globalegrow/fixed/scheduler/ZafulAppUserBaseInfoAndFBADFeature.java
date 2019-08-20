@@ -18,7 +18,7 @@ public class ZafulAppUserBaseInfoAndFBADFeature extends AbstractFlinkJobSerialSc
     //private String hdfsPath = "hdfs:///user/wuchao/dw_zaful_recommend/zaful_app_abset_id_user_fb_cookieid_fb/add_time=${last_day}/part-00000";
     private String hdfsPath = "/user/hive/warehouse/dw_zaful_recommend.db/zaful_app_abset_id_user_fb_cookieid_fb/add_time=${last_day}/";
 
-    private String flinkCommandLine = "/usr/local/services/flink/flink-yarn/flink-1.5.0/bin/flink run -d -m yarn-cluster -yn 1 -yjm 1024 -ytm 1024 -s 1 -nm app-user-feature-es /usr/local/services/flink/app-user-feature-es-0.1.jar --job.hdfs.path ${hdfs_path} --index-name dy_app_zaful_user_feature";
+    private String flinkCommandLine = "/usr/local/services/flink/flink-yarn/flink-1.5.0/bin/flink run -d -m yarn-cluster -yn 1 -yjm 1024 -ytm 1024 -yqu root.flink -ynm zaful-app-user-feature-es /usr/local/services/flink/app-user-feature-es-0.1.jar --job.hdfs.path ${hdfs_path} --index-name dy_app_zaful_user_feature";
 
     @Override
     @Scheduled(cron = "${app.cron.zaful-app-user-fb-freatrue}")

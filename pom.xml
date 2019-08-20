@@ -29,6 +29,7 @@
         <module>dy-app-user-feature</module>
         <module>flink-job-scheduler</module>
         <module>dy-goods-info</module>
+        <module>bts-planinfo-query</module>
         <!--<module>kafka-to-hbase</module> -->
         <!-- <module>log-data-dimensions</module> -->
         <!--<module>log-data-dimensions-recommend</module> -->

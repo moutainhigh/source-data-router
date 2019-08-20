@@ -25,7 +25,7 @@ public class FBADFeatureFlinkJobByHour {
 
     private static final String rootHdfsPath = "/user/hive/warehouse/dw_zaful_recommend.db/zaful_app_abset_id_user_fb_all_every_hour/add_time=2019032103";
 
-    private String flinkCommandLine = "/usr/local/services/flink/flink-yarn/flink-1.5.0/bin/flink run -d -m yarn-cluster -yn 1 -yjm 1024 -ytm 1024 /usr/local/services/flink/fb-ad-user-feature-es-0.1.jar --job.hdfs.path ${hdfs_path}";
+    private String flinkCommandLine = "/usr/local/services/flink/flink-yarn/flink-1.5.0/bin/flink run -d -m yarn-cluster -yn 1 -yjm 1024 -ytm 1024 -yqu root.flink -ynm fb-ad-user-feature-es /usr/local/services/flink/fb-ad-user-feature-es-0.1.jar --job.hdfs.path ${hdfs_path}";
 
     @PostConstruct
     @Deprecated

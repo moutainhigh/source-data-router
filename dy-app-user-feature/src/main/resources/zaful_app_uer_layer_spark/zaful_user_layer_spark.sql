@@ -1,3 +1,4 @@
+---这是老的，新的直接写es，用spark写，整个脚本都不要了
 insert OVERWRITE table tmp.zaful_app_user_visit
   select platform,appsflyer_device_id,
   sum(case when event_name in ('af_add_to_wishlist', 'af_add_to_bag') or (event_name='af_view_product' AND get_json_object(event_value, '$.af_changed_size_or_color') = '0') then 1
@@ -12,8 +13,8 @@ insert OVERWRITE table dw.zaful_app_return_visit PARTITION(dt='${dt}')
   select a.platform,a.appsflyer_device_id,b.user_id,a.event_count
 
   from (select platform,appsflyer_device_id,event_count from tmp.zaful_app_user_visit) a
-    left  join (select distinct identify,user_id from dw.zaful_dim_user_cookie_mapping c where c.mapping_date BETWEEN date_add('${dt}',-90) AND '${dt}'  AND c.user_id is not null AND c.user_id <> 0 and c.user_id <> '') b
-      on a.appsflyer_device_id = b.identify;
+ left  join (select identify,user_id from (select identify,user_id,ROW_NUMBER() OVER(PARTITION BY identify ORDER BY mapping_date desc) AS rn from dw.zaful_dim_user_cookie_mapping c where c.site = 'zaful' and c.platform in ('ios','android') and c.mapping_date BETWEEN date_add('${dt}',-90) AND '${dt}'  AND c.user_id is not null AND c.user_id <> 0 and c.user_id <> '') c1 where c1.rn = 1) b
+    on a.appsflyer_device_id = b.identify;
 
 
 insert OVERWRITE table dw.zaful_app_user_new_and_old PARTITION (dt='${dt}')
@@ -21,7 +22,7 @@ insert OVERWRITE table dw.zaful_app_user_new_and_old PARTITION (dt='${dt}')
   ( select c.appsflyer_device_id,case when c.event_count = 0 then '00' when c.event_count > 0 and c.user_id <> '' then '10' when c.event_count > 0 and c.user_id = '' then '11'  else '00' end as return_visit,b.user_id from  (select appsflyer_device_id,event_count,user_id from dw.zaful_app_return_visit visit where visit.dt='${dt}' ) c
     left join (select user_id from dw.zaful_old_user old_user where old_user.dt = '${dt}') b
       on c.user_id = b.user_id) a;
----这是老的，新的直接写es
+
 add jar hdfs:///user/wangzhongfu/elasticsearch-hadoop-5.6.4.jar;
 SET hive.mapred.reduce.tasks.speculative.execution = false;
 SET mapreduce.map.speculative = false;
