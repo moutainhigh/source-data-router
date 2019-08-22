@@ -8,8 +8,6 @@
     <artifactId>source-data-router</artifactId>
     <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
-
-
     <modules>
 
         <module>data-router-common</module>
@@ -30,6 +28,8 @@
         <module>flink-job-scheduler</module>
         <module>dy-goods-info</module>
         <module>bts-planinfo-query</module>
+        <module>dy-cube-build-service</module>
+        <module>dy-bury-log-collect-service</module>
         <!--<module>kafka-to-hbase</module> -->
         <!-- <module>log-data-dimensions</module> -->
         <!--<module>log-data-dimensions-recommend</module> -->

@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.globalegrow.com.globalegrow.burypointcollect.mapper.KylinBuildTaskMapper">
+
+	<resultMap type="com.globalegrow.com.globalegrow.burypointcollect.bean.KylinBuildTaskBean"
+		id="kylinBuildTaskBeanMap">
+		<id column="id" property="id" jdbcType="BIGINT" />
+		<result column="task_name" property="taskName" jdbcType="VARCHAR" />
+		<result column="cube_url" property="cubeUrl" jdbcType="VARCHAR" />
+		<result column="trigger_cron" property="triggerCron"
+			jdbcType="VARCHAR" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		id, task_name, cube_url, trigger_cron
+	</sql>
+	<select id="getKylinBuildTask" resultMap="kylinBuildTaskBeanMap">
+		select
+		<include refid="Base_Column_List" />
+		from kylin_build_task
+		where task_name = #{taskName}
+	</select>
+
+	<select id="getKylinBuildTasks" resultMap="kylinBuildTaskBeanMap">
+		select
+		<include refid="Base_Column_List" />
+		from kylin_build_task order by update_time desc 
+		limit #{from},#{size}
+	</select>
+	
+	<delete id="deleteKylinBuildTaskByTaskName" parameterType="String">
+		DELETE FROM
+		kylin_build_task WHERE task_name = #{taskName}
+	</delete>
+	
+	<insert id="saveKylinBuildTask"
+            parameterType="com.globalegrow.com.globalegrow.burypointcollect.bean.KylinBuildTaskBean" keyProperty="id"
+            useGeneratedKeys="true">
+		insert kylin_build_task
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="taskName != null">
+				task_name,
+			</if>
+			<if test="cubeUrl != null">
+				cube_url,
+			</if>
+			<if test="triggerCron != null">
+				trigger_cron,
+			</if>
+			<if test="updateTime != null">
+				update_time
+			</if>
+		</trim>
+
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="taskName != null">
+				#{taskName,jdbcType=VARCHAR},
+			</if>
+			<if test="cubeUrl != null">
+				#{cubeUrl,jdbcType=VARCHAR},
+			</if>
+			<if test="triggerCron != null">
+				#{triggerCron,jdbcType=VARCHAR},
+			</if>
+			<if test="updateTime != null">
+				#{updateTime,jdbcType=TIMESTAMP},
+			</if>
+		</trim>
+	</insert>
+
+	<update id="updateKylinBuildTask"
+		parameterType="com.globalegrow.com.globalegrow.burypointcollect.bean.KylinBuildTaskBean">
+		update kylin_build_task
+		<set>
+			<if test="taskName != null">
+				task_name=#{taskName,jdbcType=VARCHAR},
+			</if>
+			<if test="cubeUrl != null">
+				cube_url=#{cubeUrl,jdbcType=VARCHAR},
+			</if>
+			<if test="triggerCron != null">
+				trigger_cron=#{triggerCron,jdbcType=VARCHAR},
+			</if>
+			<if test="updateTime != null">
+				update_time=#{updateTime,jdbcType=TIMESTAMP},
+			</if>
+		</set>
+		where task_name = #{taskName,jdbcType=BIGINT}
+	</update>
+</mapper>

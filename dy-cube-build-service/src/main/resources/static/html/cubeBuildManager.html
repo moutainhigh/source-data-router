@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>cube构建管理</title>
+<meta http-equiv="Access-Control-Allow-Origin" content="*" />
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<script src="../js/jquery-2.1.0.min.js"></script>
+<script src="../js/cubeBuildManager.js"></script>
+<!-- <script type="text/javascript" src="../js/cubeBuildManager.js"></script> -->
+<style type="text/css">
+.main_page {
+	width: 100%;
+}
+
+.task_list_zone {
+	position: relative;
+	height: 800px;
+	width: 1000px;
+	top: 100px;
+	/* margin: 0 auto; */
+	z-index: 99999;
+	background: #ffffff;
+	border: 1px solid #ccc;
+	background: #ffffff;
+	margin-top: 15px;
+	margin-left: 120px;
+}
+
+.task_list_zone table {
+	font-family: verdana, arial, sans-serif;
+	font-size: 13px;
+	color: #333333;
+	border-color: #666666;
+	border-collapse: collapse;
+	margin-top: 70px;
+	margin-left: 120px;
+}
+
+.task_list_zone table th {
+	border-width: 1px;
+	padding: 8px;
+	border-style: solid;
+	border-color: #666666;
+	background-color: #dedede;
+}
+
+.task_list_zone table td {
+	border-width: 1px;
+	padding: 8px;
+	border-style: solid;
+	border-color: #666666;
+	background-color: #ffffff;
+}
+
+.new_build_task_box {
+	height: 800px;
+	width: 600px;
+	top: 100px;
+	z-index: 99999;
+	background: #ffffff;
+	border: 1px solid #ccc;
+	background: #ffffff;
+	margin-top: -700px;
+	margin-left: 1200px;
+}
+
+.task_title {
+	margin-top: 100px;
+	margin-left: 250px;
+}
+
+.taskName-box {
+	position: absolute;
+	width: 420px;
+	height: 40px;
+	line-height: 40px;
+	margin-top: 70px;
+	margin-left: 100px;
+	font-weight: 700;
+}
+
+.taskName-input {
+	display: inline-block;
+	margin-left: 50px;
+}
+
+.cubeUrl-box {
+	position: absolute;
+	width: 420px;
+	height: 40px;
+	line-height: 40px;
+	margin-top: 170px;
+	margin-left: 100px;
+	font-weight: 700;
+}
+
+.cubeUrl-input {
+	display: inline-block;
+	margin-left: 50px;
+}
+
+.triggerCron-box {
+	position: absolute;
+	width: 420px;
+	height: 40px;
+	line-height: 40px;
+	margin-top: 270px;
+	margin-left: 100px;
+	font-weight: 700;
+}
+
+.triggerCron-input {
+	display: inline-block;
+	margin-left: 32px;
+}
+
+.build-input {
+	height: 35px;
+	width: 290px;
+	border: 2px solid #ccc;
+	border-radius: 5px;
+}
+
+.submit-box {
+	position: absolute;
+	width: 80px;
+	height: 40px;
+	line-height: 40px;
+	margin-top: 370px;
+	margin-left: 300px;
+	border-radius: 5px;
+	background: grey;
+}
+
+#submit-button {
+	display: inline-block;
+	width: 80px;
+	height: 40px;
+	border-radius: 5px;
+	background: #ccc;
+}
+
+.pagination {
+	text-align: center;
+	font-size: 12px;
+	padding: 10px 0;
+	display: inline-block;
+	position:absolute;
+    left:300px;
+    top:740px;
+}
+
+.pagination span {
+	display: inline-block;
+	padding: 0 10px;
+	height: 28px;
+	line-height: 28px;
+	border: 1px solid #ddd;
+	border-radius: 4px;
+	text-decoration: none;
+	color: #999;
+	cursor: pointer;
+	margin-right: 5px;
+}
+
+.pagination span.disabled {
+	color: #bfbfbf;
+	background: #f5f5f5;
+	cursor: no-drop;
+	border: 1px solid #ddd;
+}
+
+.pagination span.current {
+	color: #fff;
+	background: #f04848;
+	border: 1px solid #f04848;
+}
+</style>
+</head>
+
+<body>
+	<div class="task_list_zone">
+		<form>
+			<table>
+				<!--<caption>标题</caption> -->
+				<thead>
+					<tr>
+						<th>任务名称</th>
+						<th>cubeUrl</th>
+						<th>任务定时器</th>
+						<th></th>
+						<th></th>
+					</tr>
+				</thead>
+				<tbody class="task-tbody" id="task-tbody">
+					<tr id="tr_example">
+						<td>example</td>
+						<td>http://172.31.61.192:7070</td>
+						<td>0 0/15 * * * ?</td>
+						<td class="task-edit">编辑</td>
+						<td class="task-delete">删除</td>
+					</tr>
+				<tbody>
+			</table>
+		</form>
+		<div class="pagination">
+			<span class="current" id="first-page">首页</span> <span
+				class="disabled" id="pre-page">上一页</span> <span id="next-page">下一页</span>
+		</div>
+
+	</div>
+
+	<div class="new_build_task_box">
+		<form>
+			<div class="task_title">
+				<h2>新建或者更新</h2>
+			</div>
+
+			<div class="taskName-box">
+				<label for="taskName">任务名称</label>
+				<div class="taskName-input">
+					<input class="build-input" type="text" id="taskName"
+						name="taskName" />
+				</div>
+			</div>
+
+			<div class="cubeUrl-box">
+				<label for="cubeUrl">cubeUrl</label>
+				<div class="cubeUrl-input">
+					<input class="build-input" type="text" id="cubeUrl" name="cubeUrl" />
+				</div>
+			</div>
+			<div class="triggerCron-box">
+				<label for="triggerCron">任务定时器</label>
+				<div class="triggerCron-input">
+					<input class="build-input" type="text" id="triggerCron"
+						name="triggerCron" />
+				</div>
+			</div>
+			<div class="submit-box">
+				<input id="submit-button" type="submit" value="提交">
+			</div>
+		</form>
+	</div>
+</body>
+</html>
