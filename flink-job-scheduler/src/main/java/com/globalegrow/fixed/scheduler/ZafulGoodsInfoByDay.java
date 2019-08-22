@@ -29,7 +29,7 @@ import java.util.concurrent.LinkedBlockingDeque;
 @Data
 public class ZafulGoodsInfoByDay {
 
-    private String goodsInfoFlinkJobByDay = "/usr/local/services/flink/flink-yarn/flink-1.5.0/bin/flink run -d -m yarn-cluster -yqu root.flink -yn 1 -yjm 1024 -ytm 1024 /usr/local/services/flink/zaful-goods-base-info-es-0.1.jar";
+    private String goodsInfoFlinkJobByDay = "/usr/local/services/flink/flink-yarn/flink-1.5.0/bin/flink run -d -m yarn-cluster -yn 1 -yjm 1024 -ytm 1024 -yqu root.flink -ynm zaful-goods-base-info-es /usr/local/services/flink/zaful-goods-base-info-es-0.1.jar";
 
     private String goodsBaseInfoFilePath = "/user/hive/warehouse/temp_zaful_recommend.db/feature_items_base_info_ods_desc/";
 
@@ -54,7 +54,7 @@ public class ZafulGoodsInfoByDay {
     @Autowired
     private RestTemplate restTemplate;
 
-    private final String flinkJobCommandPrefix = "/usr/local/services/flink/flink-yarn/flink-1.5.0/bin/flink run -d -m yarn-cluster -ynm zaful-goods-base-info -yqu root.flink -yn 1 -yjm 1024 -ytm 1024";
+    private final String flinkJobCommandPrefix = "/usr/local/services/flink/flink-yarn/flink-1.5.0/bin/flink run -d -m yarn-cluster -yn 1 -yjm 1024 -ytm 1024 -yqu root.flink";
 
     private final String zafulGoodsStatusJar = " /usr/local/services/flink/zaful-goods-statistics-es-0.1.jar ";
 
