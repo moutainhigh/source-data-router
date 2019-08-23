@@ -10,9 +10,11 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>dy-cube-build-service</artifactId>
-    <version>1.0.0</version>
+    <version>1.0-SNAPSHOT</version>
+    <packaging>jar</packaging>
+
     <description>cube build 定时调度</description>
-    
+
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -92,7 +94,9 @@
                             <addClasspath>true</addClasspath>
                             <classpathPrefix>lib</classpathPrefix>
                             <!-- 程序启动入口 -->
-                            <mainClass>com.globalegrow.com.globalegrow.dyCubeBuildService.ServiceStart</mainClass>
+                            <mainClass>
+                                com.globalegrow.com.globalegrow.dyCubeBuildService.ServiceStart
+                            </mainClass>
                         </manifest>
                         <manifestEntries>
                             <Class-Path>./</Class-Path>

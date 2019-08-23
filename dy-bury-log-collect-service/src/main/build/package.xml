@@ -45,6 +45,12 @@
             <filtered>true</filtered>
         </file>
         <file>
+            <source>${project.basedir}/src/main/resources/application-dev.properties</source>
+            <fileMode>644</fileMode>
+            <outputDirectory>./conf</outputDirectory>
+            <filtered>true</filtered>
+        </file>
+        <file>
             <source>${project.basedir}/src/main/resources/logback-spring.xml</source>
             <fileMode>644</fileMode>
             <outputDirectory>./conf</outputDirectory>
