@@ -11,7 +11,6 @@
 
     <artifactId>dy-cube-build-service</artifactId>
     <version>1.0.0</version>
-    <name>cubebuildservice</name>
     <description>cube build 定时调度</description>
     
 
@@ -29,15 +28,6 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-logging</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-aop</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.mybatis.spring.boot</groupId>
@@ -102,7 +92,7 @@
                             <addClasspath>true</addClasspath>
                             <classpathPrefix>lib</classpathPrefix>
                             <!-- 程序启动入口 -->
-                            <mainClass>com.globalegrow.com.globalegrow.burypointcollect.ServiceStart</mainClass>
+                            <mainClass>com.globalegrow.com.globalegrow.dyCubeBuildService.ServiceStart</mainClass>
                         </manifest>
                         <manifestEntries>
                             <Class-Path>./</Class-Path>

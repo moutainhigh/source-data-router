@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.globalegrow.com.globalegrow.burypointcollect.mapper.KylinBuildTaskMapper">
+<mapper namespace="com.globalegrow.com.globalegrow.dyCubeBuildService.mapper.KylinBuildTaskMapper">
 
-	<resultMap type="com.globalegrow.com.globalegrow.burypointcollect.bean.KylinBuildTaskBean"
+	<resultMap type="com.globalegrow.com.globalegrow.dyCubeBuildService.bean.KylinBuildTaskBean"
 		id="kylinBuildTaskBeanMap">
 		<id column="id" property="id" jdbcType="BIGINT" />
 		<result column="task_name" property="taskName" jdbcType="VARCHAR" />
@@ -34,7 +34,7 @@
 	</delete>
 	
 	<insert id="saveKylinBuildTask"
-            parameterType="com.globalegrow.com.globalegrow.burypointcollect.bean.KylinBuildTaskBean" keyProperty="id"
+            parameterType="com.globalegrow.com.globalegrow.dyCubeBuildService.bean.KylinBuildTaskBean" keyProperty="id"
             useGeneratedKeys="true">
 		insert kylin_build_task
 		<trim prefix="(" suffix=")" suffixOverrides=",">
@@ -69,7 +69,7 @@
 	</insert>
 
 	<update id="updateKylinBuildTask"
-		parameterType="com.globalegrow.com.globalegrow.burypointcollect.bean.KylinBuildTaskBean">
+		parameterType="com.globalegrow.com.globalegrow.dyCubeBuildService.bean.KylinBuildTaskBean">
 		update kylin_build_task
 		<set>
 			<if test="taskName != null">

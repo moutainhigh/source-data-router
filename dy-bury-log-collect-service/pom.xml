@@ -11,7 +11,7 @@
 
     <artifactId>dy-bury-log-collect-service</artifactId>
     <version>1.0.0</version>
-    <name>com.globalegrow.burypointcollect</name>
+    <name>com.globalegrow.dyCubeBuildService</name>
     <description>数据采集服务</description>
 
 
@@ -29,15 +29,6 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-logging</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-aop</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>com.alibaba</groupId>

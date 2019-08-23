@@ -2,7 +2,7 @@
 <configuration>
 	<logger name="org.springframework.web" level="INFO" />
     <!-- 项目名称 -->
-    <property name="PROJECT_NAME" value="burypointcollect" />
+    <property name="PROJECT_NAME" value="dy-bury-log-collect-service" />
 
     <!--定义日志文件的存储地址 勿在 LogBack 的配置中使用相对路径-->
     <!-- <property name="LOG_HOME" value="d:/logs" /> -->

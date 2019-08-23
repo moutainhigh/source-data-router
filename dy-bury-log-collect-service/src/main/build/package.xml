@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<assembly xmlns="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.3" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<assembly xmlns="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.3"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
           xsi:schemaLocation="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.3 http://maven.apache.org/xsd/assembly-1.1.3.xsd">
     <id>package</id>
     <formats>
@@ -23,24 +24,14 @@
             <outputDirectory>./exec</outputDirectory>
             <lineEnding>unix</lineEnding>
         </file>
-        <file>
-            <source>${project.basedir}/src/main/resources/exec/startcntr.sh</source>
-            <fileMode>755</fileMode>
-            <outputDirectory>./exec</outputDirectory>
-            <lineEnding>unix</lineEnding>
-        </file>
+
         <file>
             <source>${project.basedir}/src/main/resources/exec/stop.sh</source>
             <fileMode>755</fileMode>
             <outputDirectory>./exec</outputDirectory>
             <lineEnding>unix</lineEnding>
         </file>
-        <file>
-            <source>${project.basedir}/src/main/resources/exec/start-container.sh</source>
-            <fileMode>755</fileMode>
-            <outputDirectory>./exec</outputDirectory>
-            <lineEnding>unix</lineEnding>
-        </file>
+
         <file>
             <source>${project.basedir}/src/main/resources/application-prod.properties</source>
             <fileMode>644</fileMode>
@@ -59,12 +50,7 @@
             <outputDirectory>./conf</outputDirectory>
             <filtered>true</filtered>
         </file>
-        <file>
-            <source>${project.basedir}/src/main/resources/service_config.properties</source>
-            <fileMode>644</fileMode>
-            <outputDirectory>./conf</outputDirectory>
-            <filtered>true</filtered>
-        </file>
+
     </files>
     <dependencySets>
         <dependencySet>
