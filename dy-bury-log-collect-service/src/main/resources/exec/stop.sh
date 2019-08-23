@@ -1,5 +1,5 @@
 #!/bin/sh 
-APP_NAME=dy-cube-build-service-1.0-SNAPSHOT.jar
+APP_NAME=dy-gw-service-1.0-SNAPSHOT.jar
 tpid=`ps -ef|grep $APP_NAME|grep -v grep|grep -v kill|awk '{print $2}'`
 if [ ${tpid} ]; then
     echo 'Stop Process...'  

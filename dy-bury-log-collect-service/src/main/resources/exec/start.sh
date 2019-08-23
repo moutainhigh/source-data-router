@@ -1,6 +1,6 @@
 #!/bin/bash
 . /etc/profile
-PRJ_NAME='dy-cube-build-service'
+PRJ_NAME='dy-bury-log-collect-service'
 if [ ! -d "/usr/local/services/$PRJ_NAME/logs" ];then
       mkdir  "/usr/local/services/$PRJ_NAME/logs"
 fi
