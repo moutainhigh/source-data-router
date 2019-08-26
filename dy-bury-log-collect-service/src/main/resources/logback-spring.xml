@@ -6,7 +6,7 @@
 
     <!--定义日志文件的存储地址 勿在 LogBack 的配置中使用相对路径-->
     <!-- <property name="LOG_HOME" value="d:/logs" /> -->
-    <springProperty scope="context" name="LOG_HOME" source="logging.path" defaultValue="/usr/local/services/apache-tomcat-8.0.33/BuryPointCollect-8087/Logs"/>
+    <springProperty scope="context" name="LOG_HOME" source="logging.path" defaultValue="/usr/local/services/dy-bury-log-collect-service/logs"/>
 
     <!-- 控制台输出 -->
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
