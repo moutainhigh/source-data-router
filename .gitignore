@@ -99,9 +99,7 @@ build.log
 #  ^\.pc/
 
 #SHITTY output not in target directory
-build.log
 
 
-bts-planinfo-query/src/main/resources/
-bts-planinfo-query/src/test/
-flink-job-scheduler/src/test/java/com/globalegrow/test.java
+
+

@@ -133,9 +133,7 @@
                 <profiles.active>dev</profiles.active>
                 <project.packaging>jar</project.packaging>
             </properties>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
+
         </profile>
         <profile>
             <!-- 测试环境 -->
@@ -153,6 +151,9 @@
                 <profiles.active>prod</profiles.active>
                 <project.packaging>jar</project.packaging>
             </properties>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
         </profile>
 
     </profiles>

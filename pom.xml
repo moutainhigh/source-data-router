@@ -25,6 +25,7 @@
         <module>dy-cube-build-service</module>
         <module>dy-bury-log-collect-service</module>
         <module>http-kylin-decorate</module>
+        <module>http-kylin-decorate</module>
         <!--<module>kafka-to-hbase</module> -->
         <!-- <module>log-data-dimensions</module> -->
         <!--<module>log-data-dimensions-recommend</module> -->
