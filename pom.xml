@@ -9,20 +9,15 @@
     <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
     <modules>
-
         <module>data-router-common</module>
         <module>spring-common-controller</module>
-
         <module>persistence-cookie-and-userid-rel</module>
         <module>common-hbase</module>
         <module>common-redis</module>
         <module>mysql-binlog-handle</module>
-
         <module>common-es</module>
         <module>http-kylin-decorate</module>
-
         <module>dy-realtime-data-query-service</module>
-
         <module>bts-common-report</module>
         <module>dy-app-user-feature</module>
         <module>flink-job-scheduler</module>
@@ -49,7 +44,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>1.5.14.RELEASE</version>
+        <version>2.1.4.RELEASE</version>
         <relativePath/>
     </parent>
 

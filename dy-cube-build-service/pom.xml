@@ -95,7 +95,7 @@
                             <classpathPrefix>lib</classpathPrefix>
                             <!-- 程序启动入口 -->
                             <mainClass>
-                                com.globalegrow.com.globalegrow.dyCubeBuildService.ServiceStart
+                                com.globalegrow.dyCubeBuildService.ServiceStart
                             </mainClass>
                         </manifest>
                         <manifestEntries>
