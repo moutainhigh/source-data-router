@@ -179,11 +179,7 @@ public class DateUtils extends PropertyEditorSupport {
 		int year2 = calendar2.get(Calendar.YEAR);
 		int month2 = calendar2.get(Calendar.MONTH);
 		int day2 = calendar2.get(Calendar.DAY_OF_MONTH);
-		if (year1 == year2 && month1 == month2 && day1 == day2) {
-			return true;
-		} else {
-			return false;
-		}
+        return year1 == year2 && month1 == month2 && day1 == day2;
 
 	}
 
@@ -197,8 +193,7 @@ public class DateUtils extends PropertyEditorSupport {
 	 */
 	public static boolean isBetweenTime(String fromTime, String toTime, Date thisTime) {
 		long fromDate = 0;
-		;
-		long toDate = 0;
+        long toDate = 0;
 		try {
 			fromDate = formatDateSdfHms().parse(fromTime).getTime();
 			toDate = formatDateSdfHms().parse(toTime).getTime();
@@ -208,11 +203,7 @@ public class DateUtils extends PropertyEditorSupport {
 					+ e.getMessage());
 		}
 		long thisDate = thisTime.getTime();
-		if (thisDate > fromDate && thisDate < toDate) {
-			return true;
-		} else {
-			return false;
-		}
+        return thisDate > fromDate && thisDate < toDate;
 	}
 	
 	/**
@@ -227,11 +218,7 @@ public class DateUtils extends PropertyEditorSupport {
 		long fromDate = fromTime.getTime();
 		long toDate = toTime.getTime();
 		long thisDate = thisTime.getTime();
-		if (thisDate > fromDate && thisDate < toDate) {
-			return true;
-		} else {
-			return false;
-		}
+        return thisDate > fromDate && thisDate < toDate;
 	}
 
 	public static SimpleDateFormat formatDateSdf() {

@@ -40,7 +40,7 @@ public class QuotaTest {
     }
 
     private Map<String, Object> finalJsonMap(String source) {
-        Map<String, Object> sourceMap = NginxLogConvertUtil.getNginxLogParameters(source);;
+        Map<String, Object> sourceMap = NginxLogConvertUtil.getNginxLogParameters(source);
         Map<String,Object> finalMap = new HashMap<>();
         sourceMap.entrySet().stream().forEach(e -> {
             String value = String.valueOf(e.getValue());

@@ -26,7 +26,7 @@ public enum ResponseCodeEnum {
 	 */
 	private String message;
 
-	private ResponseCodeEnum(String code, String message) {
+	ResponseCodeEnum(String code, String message) {
 		this.code = code;
 		this.message = message;
 	}

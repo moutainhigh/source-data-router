@@ -15,7 +15,7 @@ public enum SkuRequestTypeEnum {
 
 	private String value;
 
-	private SkuRequestTypeEnum(Integer code, String value) {
+	SkuRequestTypeEnum(Integer code, String value) {
 		this.code = code;
 		this.value = value;
 	}

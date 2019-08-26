@@ -1,6 +1,7 @@
 package com.globalegrow.dyCubeBuildService.utils;
 
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
@@ -50,13 +51,11 @@ public final class EncryptUtil {
 	public static String sign(String paramString, String signType) {
 		try {
 			MessageDigest sha1 = MessageDigest.getInstance(signType);
-			return byte2hex(sha1.digest(paramString.getBytes("utf-8")));
+			return byte2hex(sha1.digest(paramString.getBytes(StandardCharsets.UTF_8)));
 		} catch (NoSuchAlgorithmException e) {
 			throw new IllegalArgumentException(e);
-		} catch (UnsupportedEncodingException e) {
-			throw new IllegalArgumentException(e);
 		}
-	}
+    }
 
 	/**
 	 * 校验请求的签名是否合法

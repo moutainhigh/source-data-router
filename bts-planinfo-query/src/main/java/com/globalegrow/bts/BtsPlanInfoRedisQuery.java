@@ -19,10 +19,11 @@ public class BtsPlanInfoRedisQuery
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     public enum zafulBts {
-        versionid, bucketid, planid; }
+        versionid, bucketid, planid
+    }
 
     public enum bts {
-        bucket_id, plan_id, version_id;
+        bucket_id, plan_id, version_id
     }
 
 
@@ -96,16 +97,16 @@ public class BtsPlanInfoRedisQuery
             }
         }
         if (ubcta.startsWith("{")) {
-            return buildBtsMap((Map)GsonUtil.readValue(ubcta, Map.class));
+            return buildBtsMap(GsonUtil.readValue(ubcta, Map.class));
         }
         return null;
     }
 
     private Map<String, String> buildBtsMap(Map<String, String> ubMap) {
         this.logger.debug("�������� ubcta ����: {}", ubMap);
-        String planid = (String)ubMap.get(zafulBts.planid.name());
-        String versionId = (String)ubMap.get(zafulBts.versionid.name());
-        String bucketid = (String)ubMap.get(zafulBts.bucketid.name());
+        String planid = ubMap.get(zafulBts.planid.name());
+        String versionId = ubMap.get(zafulBts.versionid.name());
+        String bucketid = ubMap.get(zafulBts.bucketid.name());
         if (StringUtils.isNotEmpty(planid) && StringUtils.isNotEmpty(versionId) && StringUtils.isNotEmpty(bucketid)) {
             Map<String, String> btsMap = new HashMap<String, String>();
             btsMap.put(bts.plan_id.name(), planid);

@@ -16,7 +16,6 @@
         <module>common-redis</module>
         <module>mysql-binlog-handle</module>
         <module>common-es</module>
-        <module>http-kylin-decorate</module>
         <module>dy-realtime-data-query-service</module>
         <module>bts-common-report</module>
         <module>dy-app-user-feature</module>
@@ -25,6 +24,7 @@
         <module>bts-planinfo-query</module>
         <module>dy-cube-build-service</module>
         <module>dy-bury-log-collect-service</module>
+        <module>http-kylin-decorate</module>
         <!--<module>kafka-to-hbase</module> -->
         <!-- <module>log-data-dimensions</module> -->
         <!--<module>log-data-dimensions-recommend</module> -->

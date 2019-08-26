@@ -186,7 +186,7 @@ public class FileUtil {
      */
     public static void saveToDisk(InputStream inputStream, String file) throws IOException {
         try (BufferedOutputStream stream = new BufferedOutputStream(
-                new FileOutputStream(new File(file)));) {
+                new FileOutputStream(new File(file)))) {
             FileCopyUtils.copy(inputStream, stream);
         }
     }

@@ -31,7 +31,7 @@ public abstract class AbstractHbaseDataPersistence {
 
 	public void insertData(String tableName, Map<String, Object> data, String rowKey, String columnFamily) {
 		try {
-			try (Table table = connection.getTable(TableName.valueOf(tableName));) {
+			try (Table table = connection.getTable(TableName.valueOf(tableName))) {
 				Put put = new Put(Bytes.toBytes(rowKey));
 				data.forEach((k, v) -> {
 					put.addColumn(Bytes.toBytes(columnFamily), Bytes.toBytes(k), Bytes.toBytes(String.valueOf(v)));
@@ -51,7 +51,7 @@ public abstract class AbstractHbaseDataPersistence {
 	public void deleteByRowKey(String tableName, String rowKey) {
 		try {
 			// Map<String, Object> dataMap = JacksonUtil.readValue(data, Map.class);
-			try (Table table = connection.getTable(TableName.valueOf(tableName));) {
+			try (Table table = connection.getTable(TableName.valueOf(tableName))) {
 				Delete delete = new Delete(Bytes.toBytes(rowKey));
 				// 默认自动提交
 				table.delete(delete);
@@ -64,7 +64,7 @@ public abstract class AbstractHbaseDataPersistence {
 	public Object selectRowKeyFamilyColumn(String tableName, String rowKey, String qualifier, String columnFamily) {
 		try {
 			try (
-				Table table = connection.getTable(TableName.valueOf(tableName));) {
+				Table table = connection.getTable(TableName.valueOf(tableName))) {
 				Get get = new Get(Bytes.toBytes(rowKey));
 				get.addColumn(Bytes.toBytes(columnFamily), Bytes.toBytes(qualifier));
 				Result result = table.get(get);

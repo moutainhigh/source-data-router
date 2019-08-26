@@ -10,6 +10,7 @@ import org.junit.Test;
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
 import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -80,7 +81,7 @@ public class JsonTest {
             System.out.println(MyLogStringUtils.unescape_perl_string(value));
         });*/
         System.out.println("并行处理耗时：" + (System.currentTimeMillis() - start));
-        String Utf8 = new String(s.getBytes(), "utf-8");
+        String Utf8 = new String(s.getBytes(), StandardCharsets.UTF_8);
         System.out.println(Utf8);
         System.out.println(URLDecoder.decode(s, "utf-8"));
         System.out.println(UrlUtils.urlDecode(s));
@@ -92,7 +93,7 @@ public class JsonTest {
     }
 
     public static String str2Hex(String str) throws UnsupportedEncodingException {
-        String hexRaw = String.format("%x", new BigInteger(1, str.getBytes("UTF-8")));
+        String hexRaw = String.format("%x", new BigInteger(1, str.getBytes(StandardCharsets.UTF_8)));
         char[] hexRawArr = hexRaw.toCharArray();
         StringBuilder hexFmtStr = new StringBuilder();
         final String SEP = "\\x";
@@ -103,7 +104,7 @@ public class JsonTest {
     }
 
     public static String hex2Str(String str) throws UnsupportedEncodingException {
-        String strArr[] = str.split("\\\\"); // 分割拿到形如 xE9 的16进制数据
+        String[] strArr = str.split("\\\\"); // 分割拿到形如 xE9 的16进制数据
         System.out.println(strArr);
         byte[] byteArr = new byte[strArr.length - 1];
         for (int i = 1; i < strArr.length; i++) {
@@ -111,7 +112,7 @@ public class JsonTest {
             byteArr[i - 1] = hexInt.byteValue();
         }
 
-        return new String(byteArr, "UTF-8");
+        return new String(byteArr, StandardCharsets.UTF_8);
     }
 
     @Test

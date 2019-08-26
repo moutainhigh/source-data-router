@@ -77,7 +77,7 @@ public class ReportOrderHandleRunnable implements Runnable {
                     for (ConsumerRecord<String, String> consumerRecord : records) {
                         String source = consumerRecord.value();
                         this.logger.debug("{} 报表消息: {}", this.reportBuildRule.getReportName(), source);
-                        ReadContext ctx = JsonPath.parse(source);;
+                        ReadContext ctx = JsonPath.parse(source);
 
                         if (this.reportBuildRule.getGlobaleFilter()) {
                             this.logger.debug("已开启全局过滤, 过滤规则: {}", this.reportBuildRule.getGlobaleJsonFilters());
@@ -177,7 +177,6 @@ public class ReportOrderHandleRunnable implements Runnable {
             }
         } finally {
             this.consumer.close();
-            ;
         }
     }
 

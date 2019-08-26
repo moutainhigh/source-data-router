@@ -35,7 +35,7 @@ public class UrlUtils {
      * @return 检查结果
      */
     public static Boolean notEmpty(String s) {
-        return s==null||s.trim().length()<1 ? false : true;
+        return s != null && s.trim().length() >= 1;
     }
 
     // 将 s 进行 BASE64 编码

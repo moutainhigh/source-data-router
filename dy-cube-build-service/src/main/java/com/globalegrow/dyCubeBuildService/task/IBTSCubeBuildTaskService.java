@@ -15,7 +15,7 @@ import java.util.Map;
 
 public interface IBTSCubeBuildTaskService {
 
-	public void task();
+	void task();
 
 	/**
 	 * 自动增量构建cube

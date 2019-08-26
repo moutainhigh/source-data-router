@@ -239,7 +239,6 @@ public class ReportHandleRunnable implements Runnable {
             }
         } finally {
             this.consumer.close();
-            ;
         }
     }
 
@@ -321,9 +320,9 @@ public class ReportHandleRunnable implements Runnable {
     public Map<String, Object> finalJsonMap(String source) throws Exception {
         Map<String, Object> sourceMap = null;
         if (this.reportBuildRule.getReportName().endsWith(LogDataRedisCache.APP_REPORT_END_FLAG)) {
-            sourceMap = AppLogConvertUtil.getAppLogParameters(source);;
+            sourceMap = AppLogConvertUtil.getAppLogParameters(source);
         }else{
-            sourceMap = NginxLogConvertUtil.getNginxLogParameters(source);;
+            sourceMap = NginxLogConvertUtil.getNginxLogParameters(source);
         }
         Map<String, Object> finalMap = new HashMap<>();
 

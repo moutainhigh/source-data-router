@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
+import java.nio.charset.StandardCharsets;
 
 @Component
 @Slf4j
@@ -82,8 +83,8 @@ public class HdfsUtil {
         try (org.apache.hadoop.fs.FileSystem fileSystem = org.apache.hadoop.fs.FileSystem.get(dyConfiguration)) {
 
             try (FSDataInputStream hdfsInStream = fileSystem.open(new Path(filePath));
-                 InputStreamReader isr = new InputStreamReader(hdfsInStream, "utf-8");
-                 BufferedReader br = new BufferedReader(isr);) {
+                 InputStreamReader isr = new InputStreamReader(hdfsInStream, StandardCharsets.UTF_8);
+                 BufferedReader br = new BufferedReader(isr)) {
                 StringBuilder stringBuilder = new StringBuilder();
                 String line;
                 while ((line = br.readLine()) != null) {
@@ -101,10 +102,10 @@ public class HdfsUtil {
     public static void updateDyHdfsFile(String filePath, String content) {
         try (org.apache.hadoop.fs.FileSystem fileSystem = org.apache.hadoop.fs.FileSystem.get(dyConfiguration)) {
             FSDataInputStream hdfsInStream = fileSystem.open(new Path(filePath));
-            InputStreamReader isr = new InputStreamReader(hdfsInStream, "utf-8");
+            InputStreamReader isr = new InputStreamReader(hdfsInStream, StandardCharsets.UTF_8);
 
             try (FSDataOutputStream hdfsOutStream = fileSystem.create(new Path(filePath))) {
-                byte[] str = content.getBytes("UTF-8");
+                byte[] str = content.getBytes(StandardCharsets.UTF_8);
                 hdfsOutStream.write(str);
             }
 

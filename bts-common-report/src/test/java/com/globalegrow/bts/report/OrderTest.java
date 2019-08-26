@@ -14,7 +14,7 @@ public class OrderTest {
     public void test() throws Exception {
         Map<String, Object> objectMap = JacksonUtil.readValue(s, Map.class);
         objectMap.entrySet().stream().forEach(e -> {
-            System.out.println(String.valueOf(e.getValue()));
+            System.out.println(e.getValue());
         });
     }
 

@@ -60,8 +60,8 @@ public class BuryPointKafkaDataListener {
 				if (StringUtils.isBlank(userId) && isFmdEvent) {
 					
 
-					String id = String.valueOf(mapJsonLog.get("glb_od")) + "_" + String.valueOf(mapJsonLog.get("glb_d"))
-							+ "_" + String.valueOf(mapJsonLog.get("glb_dc"));
+					String id = mapJsonLog.get("glb_od") + "_" + mapJsonLog.get("glb_d")
+							+ "_" + mapJsonLog.get("glb_dc");
 					this.logger.debug("根据 cookie 站点等信息查询用户 id 信息: {}", id);
 					Get get = new Get.Builder("cookie-userid-rel", MD5CipherUtil.generatePassword(id)).type("userid")
 							.build();

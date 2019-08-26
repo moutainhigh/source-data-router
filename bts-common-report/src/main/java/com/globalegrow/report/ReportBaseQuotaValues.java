@@ -153,7 +153,6 @@ public enum ReportBaseQuotaValues {
                 String planId = ctx.read("$.event_value.af_plan_id", String.class);
                 String versionId = ctx.read("$.event_value.af_version_id", String.class);
                 String bucketId = ctx.read("$.event_value.af_bucket_id", String.class);
-                ;
 
                 if (StringUtils.isNotEmpty(planId) && StringUtils.isNotEmpty(versionId) && StringUtils.isNotEmpty(bucketId)
                         && !"null".equals(planId) && !"null".equals(versionId) && !"null".equals(bucketId)) {
