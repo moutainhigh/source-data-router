@@ -1,13 +1,9 @@
 package com.globalegrow.burylogcollectservice.service.impl;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import com.globalegrow.burylogcollectservice.common.constant.GlobalConstants;
+import com.globalegrow.burylogcollectservice.service.IBuryPointService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -16,10 +12,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
-import com.globalegrow.burylogcollectservice.common.constant.GlobalConstants;
-import com.globalegrow.burylogcollectservice.service.IBuryPointService;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service("buryPointService")
 public class BuryPointServiceImpl implements IBuryPointService {
@@ -191,12 +190,14 @@ public class BuryPointServiceImpl implements IBuryPointService {
 				logger.error("glb_filter parseObject error:", e);
 			}
 		}
-		if ("glb_p".equals(key)) {
-			if(StringUtils.isNotBlank(value)) {
-				String [] glbPs = value.split("-");
-				logMap.put("cat_id", glbPs[1]);
-			}
-		}
+		//这里一直在报错，估计是底层格式改了，但是没有人知道这个干嘛的，也不好处理。猜测注释调应该没有问题，这里报错越界和null
+		// ，其实也是解析不出数据，那么不设置这个也没有问题。总数没有数据
+//		if ("glb_p".equals(key)) {
+//			if(StringUtils.isNotBlank(value)) {
+//				String [] glbPs = value.split("-");
+//				logMap.put("cat_id", glbPs[1]);
+//			}
+//		}
 	}
 
 	private void processSkuinfo(Map<String, Object> logMap, String key, String value) {
