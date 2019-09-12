@@ -12,7 +12,6 @@ gen### Actionscript template
 bin-debug/
 bin-release/
 [Oo]bj/
-[Bb]in/
 
 # Other files and folders
 .settings/
@@ -81,7 +80,6 @@ gen
 
 # building
 target
-build
 null
 tmp*
 temp*
@@ -103,3 +101,7 @@ build.log
 
 
 
+bts-common-report/src/test/java/com/globalegrow/bts/report/AppListRecommendBaseQuotaConfigJsonTest.java
+bts-planinfo-query/src/main/resources/
+bts-planinfo-query/src/test/
+http-kylin-decorate/src/test/
