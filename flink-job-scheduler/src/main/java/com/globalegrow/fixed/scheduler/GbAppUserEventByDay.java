@@ -43,8 +43,9 @@ public class GbAppUserEventByDay extends AbstractFlinkJobSerialScheduler {
         String bigdatahdfsPath = HdfsUtil.getBigDataActiveNamenode();
         String hdfsCommad = CommonTextUtils.replaceOneParameter(this.commandLine, "name_node_server1",
                 bigdatahdfsPath);
+        String hdfsPathCommandLine = bigdatahdfsPath + yesterdayhdfsPath;
         String finalCommad = CommonTextUtils.replaceOneParameter(hdfsCommad, "yestoday_file1",
-                bigdatahdfsPath.concat(yesterdayhdfsPath));
+                hdfsPathCommandLine);
         FlinkBashJob job = new FlinkBashJob("gb-app-user-event-init-everyday", finalCommad);
         this.flinkBashJobs.offer(job);
         this.runFlinkJob();
