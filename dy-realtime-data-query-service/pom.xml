@@ -160,6 +160,7 @@
                 <profiles.active>test</profiles.active>
                 <project.packaging>jar</project.packaging>
             </properties>
+
         </profile>
         <profile>
             <!-- 生产环境 -->

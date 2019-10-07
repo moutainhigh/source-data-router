@@ -5,7 +5,6 @@ import com.globalegrow.hdfs.utils.HdfsUtil;
 import com.globalegrow.utils.FlinkJobStatusCheckUtils;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.client.HttpClientErrorException;
@@ -48,6 +47,7 @@ public abstract class AbstractFlinkJobSerialScheduler {
 
         if (this.atomicInteger.get() == 0 && this.flinkBashJobs.size() > 0) {
             FlinkBashJob job = this.flinkBashJobs.take();
+            log.info("FlinkBashJob", job.getJobName()+job.getFlinkCommandLine());
             String jobId = this.execFlinkJob(job);
             this.currentBuryLogJobs.put(jobId, job);
             this.atomicInteger.set(1);

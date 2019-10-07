@@ -1,16 +1,12 @@
 package com.globalegrow.fixed.scheduler;
 
 import cn.hutool.core.date.DateUtil;
-import com.globalegrow.fixed.queen.DyHdfsCheckExistsJobMessage;
 import com.globalegrow.fixed.queen.FlinkBashJob;
 import com.globalegrow.hdfs.utils.HdfsUtil;
 import com.globalegrow.util.CommonTextUtils;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-
-import java.util.concurrent.DelayQueue;
 
 /**
  * 每天将 gb app 用户行为中的 点击、加购、加收藏、下单、支付 事件初始化至 es 索引中
@@ -21,9 +17,6 @@ import java.util.concurrent.DelayQueue;
 public class GbAppUserEventByDay extends AbstractFlinkJobSerialScheduler {
 
 
-    @Autowired
-    @Deprecated
-    private DelayQueue<DyHdfsCheckExistsJobMessage> flinkJobQueens;
 
     String hdfsPath = "/bigdata/ods/log_clean/ods_app_burial_log/${last_day}/gearbest";
 
@@ -41,11 +34,15 @@ public class GbAppUserEventByDay extends AbstractFlinkJobSerialScheduler {
                 DateUtil.yesterday().toString("yyyy/MM/dd"));
         this.checkHdfsPath("hdfs://glbgnameservice" + yesterdayhdfsPath);
         String bigdatahdfsPath = HdfsUtil.getBigDataActiveNamenode();
+        log.info("gb app用户BigDataActiveNamenode"+bigdatahdfsPath);
         String hdfsCommad = CommonTextUtils.replaceOneParameter(this.commandLine, "name_node_server1",
                 bigdatahdfsPath);
+        log.info("gb app用户hdfsCommad"+hdfsCommad);
         String hdfsPathCommandLine = bigdatahdfsPath + yesterdayhdfsPath;
+        log.info("gb app用户hdfsPathCommandLine"+hdfsPathCommandLine);
         String finalCommad = CommonTextUtils.replaceOneParameter(hdfsCommad, "yestoday_file1",
                 hdfsPathCommandLine);
+        log.info("gb app用户finalCommad"+finalCommad);
         FlinkBashJob job = new FlinkBashJob("gb-app-user-event-init-everyday", finalCommad);
         this.flinkBashJobs.offer(job);
         this.runFlinkJob();
