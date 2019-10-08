@@ -2,8 +2,9 @@
     <id>dist</id>
     <formats>
         <format>zip</format>
-       <!-- <format>tar.gz</format>-->
+        <!-- <format>tar.gz</format>-->
     </formats>
+    <includeBaseDirectory>false</includeBaseDirectory>
     <fileSets>
         <fileSet>
             <directory>${project.basedir}/src/main/resources/templates/</directory>
@@ -12,6 +13,13 @@
         <fileSet>
             <directory>${project.basedir}/src/main/resources/static/</directory>
             <outputDirectory>/conf/static</outputDirectory>
+        </fileSet>
+        <fileSet>
+            <directory>${project.build.directory}</directory>
+            <outputDirectory>./app</outputDirectory>
+            <includes>
+                <include>*.jar</include>
+            </includes>
         </fileSet>
     </fileSets>
     <files>

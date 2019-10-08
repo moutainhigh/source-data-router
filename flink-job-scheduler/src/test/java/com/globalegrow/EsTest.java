@@ -26,17 +26,17 @@ public class EsTest {
 
     @Test
     public void testIndexAddAlias() throws InterruptedException, ExecutionException, IOException {
-        this.elasticSearchRepository.indexAddAlias("wzf_temp_test", "test");
+        this.elasticSearchRepository.indexAddAlias("wzf_temp_test", "TestRunner");
     }
 
     @Test
     public void testDeleteIndex() {
-        this.elasticSearchRepository.deleteIndex("test");
+        this.elasticSearchRepository.deleteIndex("TestRunner");
     }
 
     @Test
     public void testCreateIndexWithAlias() {
-        this.elasticSearchRepository.createIndex("wzf_test_index", "test", 3, 1);
+        this.elasticSearchRepository.createIndex("wzf_test_index", "TestRunner", 3, 1);
     }
 
 }
