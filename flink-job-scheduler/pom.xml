@@ -28,8 +28,8 @@
             </exclusions>
         </dependency>
         <!--<dependency>-->
-            <!--<groupId>org.springframework.boot</groupId>-->
-            <!--<artifactId>spring-boot-starter-thymeleaf</artifactId>-->
+        <!--<groupId>org.springframework.boot</groupId>-->
+        <!--<artifactId>spring-boot-starter-thymeleaf</artifactId>-->
         <!--</dependency>-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -112,7 +112,7 @@
                 <build.profile.id>dev</build.profile.id>
             </properties>
             <!--<activation>-->
-                <!--<activeByDefault>true</activeByDefault>-->
+            <!--<activeByDefault>true</activeByDefault>-->
             <!--</activation>-->
         </profile>
         <profile>
@@ -219,23 +219,22 @@
                 </executions>
             </plugin>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-assembly-plugin</artifactId>
-                <version>3.0.0</version>
                 <configuration>
+                    <!-- not append assembly id in release file name -->
+                    <appendAssemblyId>false</appendAssemblyId>
                     <descriptors>
-                        <!--D:\WORK\lakala\git\dqs\dqs-data-import\src\main\resources-->
+                        <!-- 注意这里的路径 -->
                         <descriptor>src/main/resources/distribution/assembly.xml</descriptor>
                     </descriptors>
-                    <!-- <descriptorRefs>
-                         <descriptorRef>jar-with-dependencies</descriptorRef>
-                     </descriptorRefs>-->
-                    <!-- <finalName>gs-spring-boot-distribution</finalName>-->
+                    <archiverConfig>
+                        <encoding>utf-8</encoding>
+                    </archiverConfig>
                 </configuration>
                 <executions>
                     <execution>
-                        <id>make-assembly</id> <!-- this is used for inheritance merges -->
-                        <phase>package</phase> <!-- bind to the packaging phase -->
+                        <id>make-assembly</id>
+                        <phase>package</phase>
                         <goals>
                             <goal>single</goal>
                         </goals>
