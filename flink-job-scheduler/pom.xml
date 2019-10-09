@@ -221,13 +221,9 @@
                 <version>3.0.0</version>
                 <configuration>
                     <descriptors>
-                        <!--D:\WORK\lakala\git\dqs\dqs-data-import\src\main\resources-->
                         <descriptor>src/main/resources/distribution/assembly.xml</descriptor>
                     </descriptors>
-                    <!-- <descriptorRefs>
-                         <descriptorRef>jar-with-dependencies</descriptorRef>
-                     </descriptorRefs>-->
-                    <!-- <finalName>gs-spring-boot-distribution</finalName>-->
+
                 </configuration>
                 <executions>
                     <execution>
