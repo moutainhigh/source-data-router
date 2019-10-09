@@ -4,7 +4,6 @@
         <format>zip</format>
         <!-- <format>tar.gz</format>-->
     </formats>
-    <includeBaseDirectory>false</includeBaseDirectory>
     <fileSets>
         <fileSet>
             <directory>${project.basedir}/src/main/resources/templates/</directory>
@@ -51,8 +50,8 @@
     </files>
     <dependencySets>
         <dependencySet>
-            <outputDirectory>lib</outputDirectory>
             <scope>runtime</scope>
+            <outputDirectory>/lib</outputDirectory>
         </dependencySet>
     </dependencySets>
 </assembly>
