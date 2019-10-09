@@ -219,22 +219,23 @@
                 </executions>
             </plugin>
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-assembly-plugin</artifactId>
+                <version>3.0.0</version>
                 <configuration>
-                    <!-- not append assembly id in release file name -->
-                    <appendAssemblyId>false</appendAssemblyId>
                     <descriptors>
-                        <!-- 注意这里的路径 -->
+                        <!--D:\WORK\lakala\git\dqs\dqs-data-import\src\main\resources-->
                         <descriptor>src/main/resources/distribution/assembly.xml</descriptor>
                     </descriptors>
-                    <archiverConfig>
-                        <encoding>utf-8</encoding>
-                    </archiverConfig>
+                    <!-- <descriptorRefs>
+                         <descriptorRef>jar-with-dependencies</descriptorRef>
+                     </descriptorRefs>-->
+                    <!-- <finalName>gs-spring-boot-distribution</finalName>-->
                 </configuration>
                 <executions>
                     <execution>
-                        <id>make-assembly</id>
-                        <phase>package</phase>
+                        <id>make-assembly</id> <!-- this is used for inheritance merges -->
+                        <phase>package</phase> <!-- bind to the packaging phase -->
                         <goals>
                             <goal>single</goal>
                         </goals>
