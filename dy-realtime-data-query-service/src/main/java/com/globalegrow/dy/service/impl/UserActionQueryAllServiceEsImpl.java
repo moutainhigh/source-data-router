@@ -12,6 +12,7 @@ import io.searchbox.core.SearchScroll;
 import io.searchbox.params.Parameters;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
@@ -19,12 +20,8 @@ import org.elasticsearch.index.query.RangeQueryBuilder;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.elasticsearch.search.sort.FieldSortBuilder;
 import org.elasticsearch.search.sort.SortBuilder;
-import org.elasticsearch.search.sort.SortOrder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -86,7 +83,10 @@ public class UserActionQueryAllServiceEsImpl implements UserActionQueryAllServic
                 userActions.put(userBaseInfo.getDevice_id(), actions);
 
                 for (String eventName : request.getType()) {
-                    List<UserActionData> userActionData = this.getAllUserActionsByDeviceId(userBaseInfo.getDevice_id(), eventName, request.getSite().toLowerCase(), startDate);
+                    List<UserActionData> userActionData =
+                            this.getAllUserActionsByDeviceId(userBaseInfo.getDevice_id(),
+                                    request.getUserId(), eventName, request.getSite().toLowerCase(),
+                                    startDate);
 
                     actions.put(eventName, new TreeSet<>(userActionData));
 
@@ -112,7 +112,8 @@ public class UserActionQueryAllServiceEsImpl implements UserActionQueryAllServic
      * @param startDate
      * @return
      */
-    private List<UserActionData> getAllUserActionsByDeviceId(String deviceId, String eventName, String site, Long startDate) {
+    private List<UserActionData> getAllUserActionsByDeviceId(String deviceId, String userId, String eventName,
+                                                             String site, Long startDate) {
         List<UserActionData> userActionData = new ArrayList<>();
         String esIndex = appIndexPrefix.replace("&&", site);
         BoolQueryBuilder queryBuilder = QueryBuilders.boolQuery();
@@ -125,6 +126,11 @@ public class UserActionQueryAllServiceEsImpl implements UserActionQueryAllServic
 
         QueryBuilder device_id = QueryBuilders.termsQuery("device_id.keyword", deviceId);
         queryBuilder.filter(device_id);
+
+        if (StringUtils.isNotBlank(userId)) {
+            QueryBuilder user_id = QueryBuilders.termsQuery("user_id.keyword", userId);
+            queryBuilder.filter(user_id);
+        }
 
         SortBuilder sortBuilder = new FieldSortBuilder("_doc");
         //sortBuilder.order(SortOrder.DESC);

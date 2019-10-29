@@ -19,6 +19,8 @@ public class UserActionQueryAllRequest extends EsPageRequest {
 
     private String cookieId;
 
+    private String userId;
+
     @NotBlank(message = "网站源不能为空")
     private String site;
 

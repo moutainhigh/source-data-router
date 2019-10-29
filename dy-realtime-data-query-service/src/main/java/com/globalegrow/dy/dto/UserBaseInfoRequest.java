@@ -19,6 +19,8 @@ public class UserBaseInfoRequest extends EsPageRequest {
 
     private String cookieId;
 
+    private String userId;
+
     private List<String> platform = new ArrayList<>();
     @Max(1000)
     @Min(0)

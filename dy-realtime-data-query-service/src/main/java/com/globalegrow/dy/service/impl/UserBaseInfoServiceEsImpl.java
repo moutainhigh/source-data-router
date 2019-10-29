@@ -21,11 +21,7 @@ import org.elasticsearch.index.query.RangeQueryBuilder;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.elasticsearch.search.sort.FieldSortBuilder;
 import org.elasticsearch.search.sort.SortBuilder;
-import org.elasticsearch.search.sort.SortOrder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -67,11 +63,15 @@ public class UserBaseInfoServiceEsImpl implements UserBaseInfoService {
                 queryBuilder.filter(platform);
             }
             // 按用户设备 id 过滤
-            if (StringUtils.isNotEmpty(request.getCookieId())) {
+            if (StringUtils.isNotBlank(request.getCookieId())) {
                 QueryBuilder device_id = QueryBuilders.termsQuery("device_id.keyword", request.getCookieId());
                 queryBuilder.filter(device_id);
             }
-
+            // 按用户 id 过滤
+            if (StringUtils.isNotBlank(request.getUserId())) {
+                QueryBuilder user_id = QueryBuilders.termsQuery("user_id.keyword", request.getUserId());
+                queryBuilder.filter(user_id);
+            }
             // 按时间过滤
             if (request.getStartDate() != null) {
                 QueryBuilder timeFilter = QueryBuilders.rangeQuery("timestamp");
