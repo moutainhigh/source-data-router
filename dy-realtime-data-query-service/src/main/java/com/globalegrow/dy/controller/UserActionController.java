@@ -13,6 +13,7 @@ import com.globalegrow.dy.service.SearchWordSkusService;
 import com.globalegrow.dy.service.UserActionQueryAllService;
 import com.globalegrow.dy.service.UserBaseInfoService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -106,13 +107,16 @@ public class UserActionController {
     @SentinelResource(value = "user_all_event", blockHandler = "userAllEventBlockHandler")
     @RequestMapping(value = "all", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     public UserActionQueryAllResponse getAllUserActions(@Validated @RequestBody UserActionQueryAllRequest request) {
-        int length = request.getUserId().split(",").length;
-        if (length > 100) {
-            UserActionQueryAllResponse userActionQueryAllResponse=new UserActionQueryAllResponse();
-            userActionQueryAllResponse.setMessage("userId is to much");
-            userActionQueryAllResponse.setSuccess(false);
-            return userActionQueryAllResponse;
+        if (StringUtils.isNotBlank(request.getUserId()) ) {
+            int length = request.getUserId().split(",").length;
+            if (length > 100) {
+                UserActionQueryAllResponse userActionQueryAllResponse=new UserActionQueryAllResponse();
+                userActionQueryAllResponse.setMessage("userId is to much");
+                userActionQueryAllResponse.setSuccess(false);
+                return userActionQueryAllResponse;
+            }
         }
+
 
 
         return this.userActionQueryAllService.getAllUserActions(request);
