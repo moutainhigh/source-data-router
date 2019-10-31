@@ -106,6 +106,15 @@ public class UserActionController {
     @SentinelResource(value = "user_all_event", blockHandler = "userAllEventBlockHandler")
     @RequestMapping(value = "all", produces = "application/json;charset=UTF-8", method = RequestMethod.POST)
     public UserActionQueryAllResponse getAllUserActions(@Validated @RequestBody UserActionQueryAllRequest request) {
+        int length = request.getUserId().split(",").length;
+        if (length > 100) {
+            UserActionQueryAllResponse userActionQueryAllResponse=new UserActionQueryAllResponse();
+            userActionQueryAllResponse.setMessage("userId is to much");
+            userActionQueryAllResponse.setSuccess(false);
+            return userActionQueryAllResponse;
+        }
+
+
         return this.userActionQueryAllService.getAllUserActions(request);
     }
 

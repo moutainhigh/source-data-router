@@ -69,7 +69,7 @@ public class UserBaseInfoServiceEsImpl implements UserBaseInfoService {
             }
             // 按用户 id 过滤
             if (StringUtils.isNotBlank(request.getUserId())) {
-                QueryBuilder user_id = QueryBuilders.termsQuery("user_id.keyword", request.getUserId());
+                QueryBuilder user_id = QueryBuilders.termsQuery("user_id.keyword", request.getUserId().split(","));
                 queryBuilder.filter(user_id);
             }
             // 按时间过滤

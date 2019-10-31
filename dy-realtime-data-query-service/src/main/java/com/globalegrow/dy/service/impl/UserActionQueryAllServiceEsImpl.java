@@ -63,6 +63,7 @@ public class UserActionQueryAllServiceEsImpl implements UserActionQueryAllServic
 
         UserActionQueryAllResponse allResponse = new UserActionQueryAllResponse();
 
+
         UserBaseInfoRequest userBaseInfoRequest = new UserBaseInfoRequest();
         BeanUtils.copyProperties(request, userBaseInfoRequest);
 
@@ -80,16 +81,19 @@ public class UserActionQueryAllServiceEsImpl implements UserActionQueryAllServic
 
                 Map<String, Set<UserActionData>> actions = new HashMap<>();
 
-                userActions.put(userBaseInfo.getDevice_id(), actions);
 
                 for (String eventName : request.getType()) {
                     List<UserActionData> userActionData =
                             this.getAllUserActionsByDeviceId(userBaseInfo.getDevice_id(),
                                     request.getUserId(), eventName, request.getSite().toLowerCase(),
                                     startDate);
+                    if (!userActionData.isEmpty()) {
+                        actions.put(eventName, new TreeSet<>(userActionData));
+                    }
 
-                    actions.put(eventName, new TreeSet<>(userActionData));
-
+                }
+                if (!actions.isEmpty()) {
+                    userActions.put(userBaseInfo.getDevice_id(), actions);
                 }
 
 
@@ -128,7 +132,7 @@ public class UserActionQueryAllServiceEsImpl implements UserActionQueryAllServic
         queryBuilder.filter(device_id);
 
         if (StringUtils.isNotBlank(userId)) {
-            QueryBuilder user_id = QueryBuilders.termsQuery("user_id.keyword", userId);
+            QueryBuilder user_id = QueryBuilders.termsQuery("user_id.keyword", userId.split(","));
             queryBuilder.filter(user_id);
         }
 
