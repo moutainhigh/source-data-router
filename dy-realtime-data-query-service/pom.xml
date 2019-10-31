@@ -149,7 +149,9 @@
                 <project.packaging>jar</project.packaging>
                 <!--<build.profile.id>dev</build.profile.id>-->
             </properties>
-
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
         </profile>
         <profile>
             <!-- 测试环境 -->
